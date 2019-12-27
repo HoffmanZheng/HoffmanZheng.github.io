@@ -5,7 +5,7 @@
     <link>http://example.org/posts/</link>
     <description>Recent content in Posts on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>zh-Hans</language>
+    <language>en-us</language>
     <lastBuildDate>Thu, 26 Dec 2019 21:49:47 +0100</lastBuildDate>
     
 	<atom:link href="http://example.org/posts/index.xml" rel="self" type="application/rss+xml" />
