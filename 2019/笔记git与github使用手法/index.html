@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="http://localhost:1313/2014/creating-a-new-theme/" />
+  
+  <link rel="canonical" href="http://localhost:1313/2019/%E7%AC%94%E8%AE%B0git%E4%B8%8Egithub%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           笔记：Git与Github使用手法 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="笔记：Git与Github使用手法 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/localhost:1313\/"
+    },
+    "articleSection" : "posts",
+    "name" : "笔记：Git与Github使用手法",
+    "headline" : "笔记：Git与Github使用手法",
+    "description" : "[TOC]\nAbstract 本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。\n一、Git 本地仓库（版本管理）  应用场景一：  甲方：我这个背景颜色要五彩斑斓的黑 甲方：我还是想要土耳其沙滩上空蓝天的那种蓝色，你再改下 甲方：我还是觉得原先设计的那种颜色比较好看，改回去把 我：好的（MMP，不早说，我现在已经没法撤销了！）  应用场景二：  老板：给我做一个页面 我：花了几天，做出来了，请过目 老板：不够醒目，再改改 老板娘：我觉得挺好，要是背景能做成五彩斑斓的黑就好了 我：好嘞，我做两份你们对比一下（MMP，你们俩就不能统一意见吗！）  应用场景三：  老板：昨天夜里我和老板娘达成一致了，两个版本都要，我的放在上面，老板娘的在下面 我：好的，我合并一下 (￣▽￣)\x26#34;  Git 工作流程：\n  安装 Git  参考伯克利课程 CS61b 中的教程安装 Git\n 配置 Git  git config --global user.name \x2b 你的英文名 git config --global user.email \x2b 你的邮箱 git config --global push.default simple git config --global core.quotepath false \/\/ 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao.Zheng",
+    "creator" : "Chenghao.Zheng",
+    "publisher": "Chenghao.Zheng",
+    "accountablePerson" : "Chenghao.Zheng",
+    "copyrightHolder" : "Chenghao.Zheng",
+    "copyrightYear" : "2019",
+    "datePublished": "2019-12-26 21:49:47 \x2b0100 CET",
+    "dateModified" : "2019-12-26 21:49:47 \x2b0100 CET",
+    "url" : "http:\/\/localhost:1313\/2019\/%E7%AC%94%E8%AE%B0git%E4%B8%8Egithub%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95\/",
+    "wordCount" : "429",
+    "keywords" : [  "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://localhost:1313/">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+                <a class="menu-item" href="/about/" title="About Hugo">About Hugo</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://localhost:1313/">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+                <a class="menu-item" href="/about/" title="About Hugo">About Hugo</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">笔记：Git与Github使用手法</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://localhost:1313/" rel="author">Chenghao.Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2019-12-26 itemprop="datePublished">December 26, 2019</time>
+                </span>
+                in
+                
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>[TOC]</p>
+<h1 id="abstract">Abstract</h1>
+<p>本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。</p>
+<h1 id="git-">一、Git 本地仓库（版本管理）</h1>
+<ul>
+<li>应用场景一：</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">甲方：我这个背景颜色要五彩斑斓的黑
+甲方：我还是想要土耳其沙滩上空蓝天的那种蓝色，你再改下
+甲方：我还是觉得原先设计的那种颜色比较好看，改回去把
+我：好的（MMP，不早说，我现在已经没法撤销了！）
+</code></pre></div><ul>
+<li>应用场景二：</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">老板：给我做一个页面
+我：花了几天，做出来了，请过目
+老板：不够醒目，再改改
+老板娘：我觉得挺好，要是背景能做成五彩斑斓的黑就好了
+我：好嘞，我做两份你们对比一下（MMP，你们俩就不能统一意见吗！）
+</code></pre></div><ul>
+<li>应用场景三：</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">老板：昨天夜里我和老板娘达成一致了，两个版本都要，我的放在上面，老板娘的在下面
+我：好的，我合并一下 <span style="color:#f92672">(</span>￣▽￣<span style="color:#f92672">)</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">
+</span></code></pre></div><ul>
+<li>
+<p>Git 工作流程：</p>
+<p><img src="../../static/images/work_process_git.png" alt="git工作流程"></p>
+</li>
+</ul>
+<ol start="0">
+<li>安装 Git</li>
+</ol>
+<p><a href="https://sp18.datastructur.es/materials/lab/lab1setup/windows.html">参考伯克利课程 CS61b 中的教程安装 Git</a></p>
+<ol>
+<li>配置 Git</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git config --global user.name + 你的英文名
+git config --global user.email + 你的邮箱
+git config --global push.default simple
+git config --global core.quotepath false   // 不会对0×80以上的字符进行quote，中文显示正常。
+git config --global core.editor <span style="color:#e6db74">&#34;code --wait&#34;</span>
+git config --global core.autocrlf input
+git config --global --list                 // 查看当前配置列表
+vi ~/.gitconfig                            // 编辑配置文件
+</code></pre></div><ol start="2">
+<li>Git 本地仓库（应用场景一）</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">cd + 目标路径
+git init                              // 初始化，当前目录创建 .git 文件夹
+git add + 文件 / 文件夹 / .            // 选择要提交的内容
+git commit -m <span style="color:#e6db74">&#34;版本信息 / 更新日志&#34;</span>     // 写更新日志，提交代码快照
+git log 
+git reflog                            // 查看所有备份记录
+git status
+git reset --hard XXXXXX               // 版本回溯 写commit号前6位
+git reset --hard HEAD^                // 回到上一个版本，可以多加^回到之前的版本。
+</code></pre></div><p>注：</p>
+<ul>
+<li>可以在目录下新建个 <code>.gitignore</code> 文件，把不需要 <code>git</code> 管理的文件/文件夹路径写进去。常见的有<code>.idea</code> <code>.vscode</code> 等。</li>
+<li>在使用 <code>git reset</code> 回溯版本之前，一定要确保当前代码已经 <code>commit</code> 过了，因为这个操作会使当前没有 <code>commit</code> 的变动消失。</li>
+</ul>
+<ol start="3">
+<li>Git 分支管理（应用场景二）</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git branch                               // 查看现在存在的分支
+git branch + newBranchName               // 新建分支，把当前代码快照复制到该分支
+git checkout branchName / master         // 切换分支
+history                                  // 查看所有操作记录
+</code></pre></div><ol start="4">
+<li>Git 合并分支（应用场景三）</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git checkout branchName / master        // 进入要保留的分支
+git merge brachName                     // 将brach合并至当前分支
+git add --&gt; git commit
+git branch -d branchName                // 删除分支
+</code></pre></div><p>注：</p>
+<ul>
+<li>合并分支时会检查代码是否有冲突，有冲突的话需要解决冲突，搜索 <code>====</code> 选择要保留的代码，再次合并。</li>
+</ul>
+<ol start="5">
+<li>其他操作</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">start .                               // 在资源管理器打开当前文件夹
+subl <span style="color:#f92672">(</span>文件 / 文件夹<span style="color:#f92672">)</span>                   // 快速打开sublime
+git rm -r --cached + filename         // 删除add的路径
+git add fileName --&gt; git stash        // 暂时不像提交代码（通灵术）
+git stash pop
+</code></pre></div><h1 id="github-">二、Github 远程仓库（云端备份）</h1>
+<ul>
+<li>应用场景</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">我需要同时在公司和家里写代码
+笔记本被女朋友的奶茶泡坏了
+不小心运行了 rm -rf/
+在云端实时备份代码就能解决以上所有问题呢 <span style="color:#f92672">(</span>ง •̀-•́<span style="color:#f92672">)</span>ง
+</code></pre></div><ol>
+<li>SSH key 验证身份（关联Github账号）</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C + 你的邮箱           // 生成公钥文件
+cat ~/.ssh/id_rsa.pub                          // 打开生成的公钥文件，复制公钥到网页
+ssh -T git@github.com                          // 测试配对成功
+</code></pre></div><p>注：</p>
+<ul>
+<li>此操作旨在将本地 Git 与 Github 账号建立连接，在本地创建 <code>ssh key</code> 来创建连接，生成公钥、私钥，复制粘贴公钥到 Github上，<code>$cat id_rsa.pub</code> 显示出公钥复制粘贴到 Github 上，<code>头像-&gt; setting-&gt; SSH and GPG keys-&gt; new ssh key</code>，这样就建立好了远程仓库和本地仓库的连接。</li>
+<li>存在远程仓库，如何与本地建立连接：克隆该仓库的 ssh 地址。</li>
+<li>存在本地项目，如何与远程仓库建立连接：初始化本地仓库 &mdash;&gt; <code>git remote add + 远程仓库ssh地址</code></li>
+</ul>
+<ol start="2">
+<li>远程仓库操作</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git remote add origin git@xxxxxxx（ssh）       
+git push -u origin master                      // 推送本地master分支到远程master分支
+git pull                                       // 从远程同步到本地
+// 上传其他分支
+git push origin branchName:branchName
+git checkout branchName --&gt; git push -u origin branchName
+git clone git@xxxxxx                           // 下载别人的代码，只能用 https
+git remote -v                                  // 查看链接的远程仓库
+git remote remove brachName                    // 删除仓库
+git remote set-url https：//xx                 // 重置，如果之前弄错了
+</code></pre></div><p>注：</p>
+<ul>
+<li>origin为远程仓库的名字，可以更改但不推荐。</li>
+<li><a href="https://jscode.me/t/topic/789/2">clone下载速度很慢怎么办？</a></li>
+<li>Github国内的替代品有：
+<ul>
+<li><a href="https://dev.tencent.com/">腾讯云开发者平台</a></li>
+<li><a href="https://gitee.com/">码云Gitee</a></li>
+<li><a href="https://about.gitlab.com/">Gitlab</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="github--1">三、Github 团队协作</h1>
+<ol>
+<li>在拥有对方仓库 <code>读 / 写</code> 权限的情况下</li>
+</ol>
+<ul>
+<li>将对方仓库 <code>clone</code> 到本地进行修改，在对方仓库在新建 <code>branch</code> 进行<code>commit、push</code> 操作，随后提交 <code>pull request</code> ，备注修改内容及意见。</li>
+</ul>
+<ol start="2">
+<li>在没有拥有对方仓库 <code>读 / 写</code> 权限的情况下</li>
+</ol>
+<ul>
+<li>将对方仓库 <code>fork</code> 到自己仓库，再 <code>clone</code> 到本地进行修改，<code>commit、push</code> 之后到对方仓库提交 <code>pull request</code> ，备注修改内容及意见。</li>
+</ul>
+<h1 id="-git-">四、实用 Git 技巧</h1>
+<ul>
+<li>快捷键设置</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">vi ~/.bash_profile
+alias ga<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git add&#34;</span>
+alias gc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git commit -v&#34;</span>
+alias gp<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git push&#34;</span>
+alias gst<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git status&#34;</span>
+alias gco<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git checkout&#34;</span>
+alias glog<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s%Cgreen(%cr) (bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit -- | less&#34;</span>  // 美化git log输出
+source ~/.bash_profile                                    // 让它生效
+</code></pre></div><p>注：</p>
+<ul>
+<li><code>git rebase</code> 可以美化提交历史，现阶段用不到，略。</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://localhost:1313/2019/%E7%AC%94%E8%AE%B0git%E4%B8%8Egithub%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95/>http://localhost:1313/2019/%E7%AC%94%E8%AE%B0git%E4%B8%8Egithub%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://localhost:1313/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://localhost:1313/2014/creating-a-new-theme/" class="prev" rel="prev" title="Creating a New Theme"><i class="iconfont icon-left"></i>&nbsp;Creating a New Theme</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2019</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://localhost:1313/">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

@@ -2,23 +2,71 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on 人间一场大梦</title>
-    <link>http://example.org/posts/</link>
+    <link>http://localhost:1313/posts/</link>
     <description>Recent content in Posts on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 26 Dec 2019 21:49:47 +0100</lastBuildDate>
     
-	<atom:link href="http://example.org/posts/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>笔记：Git与Github使用手法</title>
-      <link>http://example.org/posts/%E7%AC%94%E8%AE%B0git%E4%B8%8Egithub%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95/</link>
+      <link>http://localhost:1313/2019/%E7%AC%94%E8%AE%B0git%E4%B8%8Egithub%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95/</link>
       <pubDate>Thu, 26 Dec 2019 21:49:47 +0100</pubDate>
       
-      <guid>http://example.org/posts/%E7%AC%94%E8%AE%B0git%E4%B8%8Egithub%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95/</guid>
-      <description>Git 本地仓库（版本管理）  应用场景一：  甲方：我这个背景颜色要五彩斑斓的黑 甲方：我还是想要土耳其沙滩上空蓝天的那种蓝色，你再改下 甲方：我还是觉得原先设计的那种颜色比较好看，改回去把 我：好的（MMP，不早说，我现在已经没法撤销了！）  应用场景二：  老板：给我做一个页面 我：花了几天，做出来了，请过目 老板：不够醒目，再改改 老板娘：我觉得挺好，要是背景能做成五彩斑斓的黑就好了 我：好嘞，我做两份你们对比一下（MMP，你们俩就不能统一意见吗！）  应用场景三：  老板：昨天夜里我和老板娘达成一致了，两个版本都要，我的放在上面，老板娘的在下面 我：好的，我合并一下 (￣▽￣)&amp;quot; 安装 Git  参考伯克利课程 CS61b 中的教程安装 Git
- 配置 Git  git config --global user.name + 你的英文名 git config --global user.email + 你的邮箱 git config --global push.default simple git config --global core.quotepath false // 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor &amp;#34;code --wait&amp;#34; git config --global core.autocrlf input git config --global --list // 查看当前配置 vi ~/.</description>
+      <guid>http://localhost:1313/2019/%E7%AC%94%E8%AE%B0git%E4%B8%8Egithub%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95/</guid>
+      <description>[TOC]
+Abstract 本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。
+一、Git 本地仓库（版本管理）  应用场景一：  甲方：我这个背景颜色要五彩斑斓的黑 甲方：我还是想要土耳其沙滩上空蓝天的那种蓝色，你再改下 甲方：我还是觉得原先设计的那种颜色比较好看，改回去把 我：好的（MMP，不早说，我现在已经没法撤销了！）  应用场景二：  老板：给我做一个页面 我：花了几天，做出来了，请过目 老板：不够醒目，再改改 老板娘：我觉得挺好，要是背景能做成五彩斑斓的黑就好了 我：好嘞，我做两份你们对比一下（MMP，你们俩就不能统一意见吗！）  应用场景三：  老板：昨天夜里我和老板娘达成一致了，两个版本都要，我的放在上面，老板娘的在下面 我：好的，我合并一下 (￣▽￣)&amp;#34;  Git 工作流程：
+  安装 Git  参考伯克利课程 CS61b 中的教程安装 Git
+ 配置 Git  git config --global user.name + 你的英文名 git config --global user.email + 你的邮箱 git config --global push.default simple git config --global core.quotepath false // 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.</description>
+    </item>
+    
+    <item>
+      <title>Creating a New Theme</title>
+      <link>http://localhost:1313/2014/creating-a-new-theme/</link>
+      <pubDate>Sun, 28 Sep 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2014/creating-a-new-theme/</guid>
+      <description>Introduction This tutorial will show you how to create a simple theme in Hugo. I assume that you are familiar with HTML, the bash command line, and that you are comfortable using Markdown to format content. I&#39;ll explain how Hugo uses templates and how you can organize your templates to create a theme. I won&#39;t cover using CSS to style your theme.
+We&#39;ll start with creating a new site with a very basic template.</description>
+    </item>
+    
+    <item>
+      <title>(Hu)go Template Primer</title>
+      <link>http://localhost:1313/2014/goisforlovers/</link>
+      <pubDate>Mon, 28 Jul 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2014/goisforlovers/</guid>
+      <description>Hugo uses the excellent go html/template library for its template engine. It is an extremely lightweight engine that provides a very small amount of logic. In our experience that it is just the right amount of logic to be able to create a good static website. If you have used other template systems from different languages or frameworks you will find a lot of similarities in go templates.
+This document is a brief primer on using go templates.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started with Hugo</title>
+      <link>http://localhost:1313/2014/hugoisforlovers/</link>
+      <pubDate>Wed, 02 Apr 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2014/hugoisforlovers/</guid>
+      <description>Step 1. Install Hugo Goto hugo releases and download the appropriate version for your os and architecture.
+Save it somewhere specific as we will be using it in the next step.
+More complete instructions are available at installing hugo
+Step 2. Build the Docs Hugo has its own example site which happens to also be the documentation site you are reading right now.
+Follow the following steps:
+ Clone the hugo repository Go into the repo Run hugo in server mode and build the docs Open your browser to http://localhost:1313  Corresponding pseudo commands:</description>
+    </item>
+    
+    <item>
+      <title>Migrate to Hugo from Jekyll</title>
+      <link>http://localhost:1313/2014/migrate-from-jekyll/</link>
+      <pubDate>Mon, 10 Mar 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://localhost:1313/2014/migrate-from-jekyll/</guid>
+      <description>Move static content to static Jekyll has a rule that any directory not starting with _ will be copied as-is to the _site output. Hugo keeps all static content under static. You should therefore move it all there. With Jekyll, something that looked like
+▾ &amp;lt;root&amp;gt;/▾ images/logo.png should become
+▾ &amp;lt;root&amp;gt;/▾ static/▾ images/logo.png Additionally, you&#39;ll want any files that should reside at the root (such as CNAME) to be moved to static.</description>
     </item>
     
   </channel>

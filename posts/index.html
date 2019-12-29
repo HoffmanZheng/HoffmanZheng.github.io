@@ -1,127 +1,192 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  
+  
+  <link rel="canonical" href="http://localhost:1313/posts/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Posts | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Posts | 人间一场大梦">
     
-    <title>Posts - 人间一场大梦</title>
-    
-    <meta name="description" content="">
-    <meta name="author" content="">
-    
-    <link href="http://example.org/an-old-hope.min.css" rel="stylesheet">
-    <link href="http://example.org/style.css" rel="stylesheet">
-    
-    <link rel="apple-touch-icon" href="http://example.org/apple-touch-icon.png">
-    <link rel="icon" href="http://example.org/favicon.ico">
-    
-    <meta name="generator" content="Hugo 0.62.0" />
-    
-    <link rel="alternate" type="application/atom+xml" href="http://example.org/index.xml" title="人间一场大梦">
-    
-    
-    
-    <script>
-      function setTheme() {
-        const time = new Date();
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
 
-        const prev = localStorage.getItem('date');
-        const date = String(time.getMonth() + 1) + '.' + String(time.getDate());
 
-        const now = time.getTime();
-        let sunrise;
-        let sunset;
+  
+    <link href="http://localhost:1313/posts/index.xml" rel="alternate" type="application/rss+xml" title="人间一场大梦" />
+    <link href="http://localhost:1313/posts/index.xml" rel="feed" type="application/rss+xml" title="人间一场大梦" />
+  
+  
+ 
 
-        function setBodyClass() {
-          if (now > sunrise && now < sunset) return;
-          document.body.classList.add('dark');
-        }
+</head>
 
-        if (date !== prev) {
-          fetch('https://api.ipgeolocation.io/astronomy?apiKey=5ed37d85103e4defa5df4c5298ed5215')
-            .then(res => res.json())
-            .then(data => {
-              sunrise = data.sunrise.split(':').map(Number);
-              sunset = data.sunset.split(':').map(Number);
-            })
-            .catch(() => {
-              sunrise = [7, 0];
-              sunset = [19, 0];
-            })
-            .finally(() => {
-              sunrise = time.setHours(sunrise[0], sunrise[1], 0);
-              sunset = time.setHours(sunset[0], sunset[1], 0);
-              setBodyClass();
-              localStorage.setItem('sunrise', sunrise);
-              localStorage.setItem('sunset', sunset);
-            });
-          localStorage.setItem('date', date);
-        } else {
-          sunrise = Number(localStorage.getItem('sunrise'));
-          sunset = Number(localStorage.getItem('sunset'));
-          setBodyClass();
-        }
-      }
-    </script>
-  </head>
-  <body class="list">
-    <script>
-      setTheme();
-    </script>
-    <header class="header">
-      <nav class="nav">
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://localhost:1313/">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item active" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+                <a class="menu-item" href="/about/" title="About Hugo">About Hugo</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://localhost:1313/">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item active" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+                <a class="menu-item" href="/about/" title="About Hugo">About Hugo</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<div class="post-warp archive">
+    
+    <h3>2019</h3>
+
+    
+    <article class="archive-item">
+        <a href="/2019/%E7%AC%94%E8%AE%B0git%E4%B8%8Egithub%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95/" class="archive-item-link">笔记：Git与Github使用手法</a>
+        <span class="archive-item-date">
+            December 26, 2019
+        </span>
+    </article>
+     
+    <h3>2018</h3>
+
+    
+    <article class="archive-item">
+        <a href="/posts/news/" class="archive-item-link">Hugo News</a>
+        <span class="archive-item-date">
+            August 29, 2018
+        </span>
+    </article>
+     
+    <h3>2014</h3>
+
+    
+    <article class="archive-item">
+        <a href="/2014/creating-a-new-theme/" class="archive-item-link">Creating a New Theme</a>
+        <span class="archive-item-date">
+            September 28, 2014
+        </span>
+    </article>
+    
+    <article class="archive-item">
+        <a href="/2014/goisforlovers/" class="archive-item-link">(Hu)go Template Primer</a>
+        <span class="archive-item-date">
+            July 28, 2014
+        </span>
+    </article>
+    
+    <article class="archive-item">
+        <a href="/2014/hugoisforlovers/" class="archive-item-link">Getting Started with Hugo</a>
+        <span class="archive-item-date">
+            April 2, 2014
+        </span>
+    </article>
+    
+    <article class="archive-item">
+        <a href="/2014/migrate-from-jekyll/" class="archive-item-link">Migrate to Hugo from Jekyll</a>
+        <span class="archive-item-date">
+            March 10, 2014
+        </span>
+    </article>
+     
+    
+
+</div>
+
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
         
-        <p class="logo"><a href="http://example.org/">人间一场大梦</a></p>
+        <span itemprop="copyrightYear">2019 - 2019</span>
         
-        
-      </nav>
-    </header>
-    <main class="main">
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://localhost:1313/">Chenghao.Zheng</a> | </span> 
+         
 
-
-
-
-
-<header class="page-header">
-  <h1>Posts</h1>
-</header>
-
-
-
-
-
-
-<article class="post-entry">
-  <header class="entry-header">
-    <h2>笔记：Git与Github使用手法</h2>
-  </header>
-  <section class="entry-content">
-   <p>Git 本地仓库（版本管理）  应用场景一：  甲方：我这个背景颜色要五彩斑斓的黑 甲方：我还是想要土耳其沙滩上空蓝天的那种蓝色，你再改下 甲方：我还是觉得原先设计的那种颜色比较好看，改回去把 我：好的（MMP，不早说，我现在已经没法撤销了！）  应用场景二：  老板：给我做一个页面 我：花了几天，做出来了，请过目 老板：不够醒目，再改改 老板娘：我觉得挺好，要是背景能做成五彩斑斓的黑就好了 我：好嘞，我做两份你们对比一下（MMP，你们俩就不能统一意见吗！）  应用场景三：  老板：昨天夜里我和老板娘达成一致了，两个版本都要，我的放在上面，老板娘的在下面 我：好的，我合并一下 (￣▽￣)&#34; 安装 Git  参考伯克利课程 CS61b 中的教程安装 Git
- 配置 Git  git config --global user.name &#43; 你的英文名 git config --global user.email &#43; 你的邮箱 git config --global push.default simple git config --global core.quotepath false // 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor &#34;code --wait&#34; git config --global core.autocrlf input git config --global --list // 查看当前配置 vi ~/....</p>
-  </section>
-  <footer class="entry-footer">
-    <time>December 26, 2019</time>
-  </footer>
-  <a class="entry-link" href="http://example.org/posts/%E7%AC%94%E8%AE%B0git%E4%B8%8Egithub%E4%BD%BF%E7%94%A8%E6%89%8B%E6%B3%95/"></a>
-</article>
-
-
-
-
-
-</main>
-<footer class="footer">
-  <span>&copy; 2019 <a href="http://example.org/">人间一场大梦</a></span>
-  <span>&middot;</span>
-  <span>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo️️</a>️</span>
-  <span>&middot;</span>
-  <span>Theme️ <a href="https://github.com/nanxiaobei/hugo-paper" rel="noopener" target="_blank">Paper</a></span>
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
 </footer>
-<script src="http://example.org/highlight.min.js"></script>
-<script>
-  hljs.initHighlightingOnLoad();
-</script>
-</body>
-</html>
 
+
+
+
+
+
+
+
+
+
+
+    
+    <script src="/js/vendor_main.min.js" async=""></script>
+
+
+
+     </div>
+  </body>
+</html>
