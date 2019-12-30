@@ -1,7 +1,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>人间一场大梦 on 人间一场大梦</title>
-    <link>http:chenghao.monster/</link>
+    <link>http://chenghao.monster/</link>
     <description>Recent content in 人间一场大梦 on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
@@ -10,10 +10,10 @@
     
     <item>
       <title>Posts</title>
-      <link>http:chenghao.monster/posts/</link>
+      <link>http://chenghao.monster/posts/</link>
       <pubDate>Thu, 26 Dec 2019 21:49:47 +0100</pubDate>
       
-      <guid>http:chenghao.monster/posts/</guid>
+      <guid>http://chenghao.monster/posts/</guid>
       <description></description>
     </item>
     

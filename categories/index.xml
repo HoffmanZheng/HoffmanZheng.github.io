@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 人间一场大梦</title>
-    <link>http:chenghao.monster/categories/</link>
+    <link>http://chenghao.monster/categories/</link>
     <description>Recent content in Categories on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 26 Dec 2019 21:49:47 +0100</lastBuildDate>
     
-	<atom:link href="http:chenghao.monster/categories/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://chenghao.monster/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Study notes</title>
-      <link>http:chenghao.monster/categories/study-notes/</link>
+      <link>http://chenghao.monster/categories/study-notes/</link>
       <pubDate>Thu, 26 Dec 2019 21:49:47 +0100</pubDate>
       
-      <guid>http:chenghao.monster/categories/study-notes/</guid>
+      <guid>http://chenghao.monster/categories/study-notes/</guid>
       <description></description>
     </item>
     
