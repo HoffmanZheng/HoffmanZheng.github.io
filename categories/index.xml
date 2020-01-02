@@ -6,7 +6,11 @@
     <description>Recent content in Categories on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+<<<<<<< HEAD
     <lastBuildDate>Thu, 02 Jan 2020 16:11:47 +0100</lastBuildDate>
+=======
+    <lastBuildDate>Sun, 29 Dec 2019 23:37:47 +0100</lastBuildDate>
+>>>>>>> b6420af7f6b0bcb369bbcd9a73190ea498cf24fd
     
 	<atom:link href="http://chenghao.monster/categories/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +18,11 @@
     <item>
       <title>Study notes</title>
       <link>http://chenghao.monster/categories/study-notes/</link>
+<<<<<<< HEAD
       <pubDate>Thu, 02 Jan 2020 16:11:47 +0100</pubDate>
+=======
+      <pubDate>Sun, 29 Dec 2019 23:37:47 +0100</pubDate>
+>>>>>>> b6420af7f6b0bcb369bbcd9a73190ea498cf24fd
       
       <guid>http://chenghao.monster/categories/study-notes/</guid>
       <description></description>

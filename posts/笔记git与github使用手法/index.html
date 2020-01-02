@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <title>笔记：Git与Github使用手法 - 人间一场大梦</title>
+    
+    <meta name="description" content="Git 本地仓库（版本管理）  应用场景一：  甲方：我这个背景颜色要五彩斑斓的黑 甲方：我还是想要土耳其沙滩上空蓝天的那种蓝色，你再改下 甲方：我还是觉得原先设计的那种颜色比较好看，改回去把 我：好的（MMP，不早说，我现在已经没法撤销了！）  应用场景二：  老板：给我做一个页面 我：花了几天，做出来了，请过目 老板：不够醒目，再改改 老板娘：我觉得挺好，要是背景能做成五彩斑斓的黑就好了 我：好嘞，我做两份你们对比一下（MMP，你们俩就不能统一意见吗！）  应用场景三：  老板：昨天夜里我和老板娘达成一致了，两个版本都要，我的放在上面，老板娘的在下面 我：好的，我合并一下 (￣▽￣)&quot; 安装 Git  参考伯克利课程 CS61b 中的教程安装 Git
+ 配置 Git  git config --global user.name &#43; 你的英文名 git config --global user.email &#43; 你的邮箱 git config --global push.default simple git config --global core.quotepath false // 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor &#34;code --wait&#34; git config --global core.autocrlf input git config --global --list // 查看当前配置 vi ~/.">
+    <meta name="author" content="">
+    
+    <link href="http://example.org/an-old-hope.min.css" rel="stylesheet">
+    <link href="http://example.org/style.css" rel="stylesheet">
+    
+    <link rel="apple-touch-icon" href="http://example.org/apple-touch-icon.png">
+    <link rel="icon" href="http://example.org/favicon.ico">
+    
+    <meta name="generator" content="Hugo 0.62.0" />
+    
+    <link rel="alternate" type="application/atom+xml" href="http://example.org/index.xml" title="人间一场大梦">
+    
+    
+    
+    <script>
+      function setTheme() {
+        const time = new Date();
+
+        const prev = localStorage.getItem('date');
+        const date = String(time.getMonth() + 1) + '.' + String(time.getDate());
+
+        const now = time.getTime();
+        let sunrise;
+        let sunset;
+
+        function setBodyClass() {
+          if (now > sunrise && now < sunset) return;
+          document.body.classList.add('dark');
+        }
+
+        if (date !== prev) {
+          fetch('https://api.ipgeolocation.io/astronomy?apiKey=5ed37d85103e4defa5df4c5298ed5215')
+            .then(res => res.json())
+            .then(data => {
+              sunrise = data.sunrise.split(':').map(Number);
+              sunset = data.sunset.split(':').map(Number);
+            })
+            .catch(() => {
+              sunrise = [7, 0];
+              sunset = [19, 0];
+            })
+            .finally(() => {
+              sunrise = time.setHours(sunrise[0], sunrise[1], 0);
+              sunset = time.setHours(sunset[0], sunset[1], 0);
+              setBodyClass();
+              localStorage.setItem('sunrise', sunrise);
+              localStorage.setItem('sunset', sunset);
+            });
+          localStorage.setItem('date', date);
+        } else {
+          sunrise = Number(localStorage.getItem('sunrise'));
+          sunset = Number(localStorage.getItem('sunset'));
+          setBodyClass();
+        }
+      }
+    </script>
+  </head>
+  <body class="single">
+    <script>
+      setTheme();
+    </script>
+    <header class="header">
+      <nav class="nav">
+        
+        <p class="logo"><a href="http://example.org/">人间一场大梦</a></p>
+        
+        
+      </nav>
+    </header>
+    <main class="main">
+
+
+<article class="post-single">
+  <header class="post-header">
+    <h1 class="post-title">笔记：Git与Github使用手法</h1>
+    <div class="post-meta">December 26, 2019</div>
+  </header>
+  <div class="post-content"><h1 id="git-">Git 本地仓库（版本管理）</h1>
+<ul>
+<li>应用场景一：</li>
+</ul>
+<pre><code>甲方：我这个背景颜色要五彩斑斓的黑
+甲方：我还是想要土耳其沙滩上空蓝天的那种蓝色，你再改下
+甲方：我还是觉得原先设计的那种颜色比较好看，改回去把
+我：好的（MMP，不早说，我现在已经没法撤销了！）
+</code></pre><ul>
+<li>应用场景二：</li>
+</ul>
+<pre><code>老板：给我做一个页面
+我：花了几天，做出来了，请过目
+老板：不够醒目，再改改
+老板娘：我觉得挺好，要是背景能做成五彩斑斓的黑就好了
+我：好嘞，我做两份你们对比一下（MMP，你们俩就不能统一意见吗！）
+</code></pre><ul>
+<li>应用场景三：</li>
+</ul>
+<pre><code>老板：昨天夜里我和老板娘达成一致了，两个版本都要，我的放在上面，老板娘的在下面
+我：好的，我合并一下 (￣▽￣)&quot;
+</code></pre><ol start="0">
+<li>安装 Git</li>
+</ol>
+<p><a href="https://sp18.datastructur.es/materials/lab/lab1setup/windows.html">参考伯克利课程 CS61b 中的教程安装 Git</a></p>
+<ol>
+<li>配置 Git</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git config --global user.name + 你的英文名
+git config --global user.email + 你的邮箱
+git config --global push.default simple
+git config --global core.quotepath false   // 不会对0×80以上的字符进行quote，中文显示正常。
+git config --global core.editor <span style="color:#e6db74">&#34;code --wait&#34;</span>
+git config --global core.autocrlf input
+git config --global --list                 // 查看当前配置
+vi ~/.gitconfig                            // 编辑配置文件
+</code></pre></div><ol start="2">
+<li>Git 本地仓库（应用场景一）</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">cd + 目标路径
+git init                              // 初始化，当前目录创建 .git 文件夹
+git add + 文件 / 文件夹 / .            // 选择要提交的内容
+git commit -m <span style="color:#e6db74">&#34;版本信息 / 更新日志&#34;</span>     // 写更新日志，提交代码快照
+git log 
+git reflog                            // 查看所有备份记录
+git status
+git reset --hard XXXXXX               // 版本回溯 写commit号前6位
+</code></pre></div><p>注：</p>
+<ul>
+<li>可以在目录下新建个 <code>.gitignore</code> 文件，把不需要 <code>git</code> 管理的文件/文件夹路径写进去。常见的有<code>.idea</code> <code>.vscode</code> 等。</li>
+<li>在使用 <code>git reset</code> 回溯版本之前，一定要确保当前代码已经 <code>commit</code> 过了，因为这个操作会使当前没有 <code>commit</code> 的变动消失。</li>
+</ul>
+<ol start="3">
+<li>Git 分支管理（应用场景二）</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git branch                               // 查看现在存在的分支
+git branch + newBranchName               // 新建分支，把当前代码快照复制到该分支
+git checkout branchName / master         // 切换分支
+history                                  // 查看所有操作记录
+</code></pre></div><ol start="4">
+<li>Git 合并分支（应用场景三）</li>
+</ol>
+<pre><code>git checkout branchName / master        // 进入要保留的分支
+git merge brachName                     // 将brach合并至当前分支
+git add --&gt; git commit
+git branch -d branchName                // 删除分支
+</code></pre><p>注：</p>
+<ul>
+<li>合并分支时会检查代码是否有冲突，有冲突的话需要解决冲突，搜索 <code>====</code> 选择要保留的代码，再次合并。</li>
+</ul>
+<ol start="5">
+<li>其他操作</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">start .                               // 在资源管理器打开当前文件夹
+subl <span style="color:#f92672">(</span>文件 / 文件夹<span style="color:#f92672">)</span>                   // 快速打开sublime
+git rm -r --cached + filename         // 删除add的路径
+git add fileName --&gt; git stash        // 暂时不像提交代码（通灵术）
+git stash pop
+</code></pre></div><h1 id="github-">Github 远程仓库（云端备份）</h1>
+<ul>
+<li>应用场景</li>
+</ul>
+<pre><code>我需要同时在公司和家里写代码
+笔记本被女朋友的奶茶泡坏了
+不小心运行了 rm -rf/
+在云端实时备份代码就能解决以上所有问题呢 (ง •̀-•́)ง
+</code></pre><ol>
+<li>SSH key 验证身份（关联Github账号）</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C 你的邮箱           // 生成公钥文件
+cat ~/.ssh/id_rsa.pub                          // 打开公钥文件，复制公钥到网页
+ssh -T git@github.com                          // 测试配对成功
+</code></pre></div><ol start="2">
+<li>远程仓库操作</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git remote add origin git@xxxxxxx（ssh）       
+git push -u origin master                      // 推送本地master分支到远程master分支
+git pull                                       // 从远程同步到本地
+// 上传其他分支
+git push origin branchName:branchName
+git checkout branchName --&gt; git push -u origin branchName
+git clone git@xxxxxx                           // 下载别人的代码，只能用 https
+git remote -v                                  // 查看链接的远程仓库
+git remote remove brachName                    // 删除仓库
+git remote set-url https：//xx                 // 重置，如果之前弄错了
+</code></pre></div><p>注：</p>
+<ul>
+<li>origin为远程仓库的名字，可以更改但不推荐。</li>
+<li><a href="https://jscode.me/t/topic/789/2">clone下载速度很慢怎么办？</a></li>
+<li>Github国内的替代品有：
+<ul>
+<li><a href="https://dev.tencent.com/">腾讯云开发者平台</a></li>
+<li><a href="https://gitee.com/">码云Gitee</a></li>
+<li><a href="https://about.gitlab.com/">Gitlab</a></li>
+</ul>
+</li>
+</ul>
+<h1 id="git">实用Git技巧</h1>
+<ul>
+<li>快捷键设置</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">vi ~/.bashrc
+alias ga<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git add&#34;</span>
+alias gc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git commit -v&#34;</span>
+alias gp<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git push&#34;</span>
+alias gst<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git status&#34;</span>
+alias gco<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git checkout&#34;</span>
+alias glog<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s%Cgreen(%cr) (bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit -- | less&#34;</span>  // 美化git log输出
+source ~/.bashrc                                     // 让它生效
+</code></pre></div><p>注：</p>
+<ul>
+<li><code>git rebase</code> 可以美化提交历史，现阶段用不到，略。</li>
+</ul>
+</div>
+  
+  
+  
+  
+  
+</article>
+
+</main>
+<footer class="footer">
+  <span>&copy; 2019 <a href="http://example.org/">人间一场大梦</a></span>
+  <span>&middot;</span>
+  <span>Powered by <a href="https://gohugo.io/" rel="noopener" target="_blank">Hugo️️</a>️</span>
+  <span>&middot;</span>
+  <span>Theme️ <a href="https://github.com/nanxiaobei/hugo-paper" rel="noopener" target="_blank">Paper</a></span>
+</footer>
+<script src="http://example.org/highlight.min.js"></script>
+<script>
+  hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>
+
