@@ -22,10 +22,10 @@
   <title>
        
        
-           Java：Collections、Arrays工具类及常见方法 | 人间一场大梦
+           Java：Collection、Map 工具类及常见方法 | 人间一场大梦
        
   </title>
-  <meta name="title" content="Java：Collections、Arrays工具类及常见方法 | 人间一场大梦">
+  <meta name="title" content="Java：Collection、Map 工具类及常见方法 | 人间一场大梦">
     
   
   <link rel="stylesheet" href="/font/iconfont.css">
@@ -44,9 +44,9 @@
          "@id": "http:\/\/chenghao.monster"
     },
     "articleSection" : "posts",
-    "name" : "Java：Collections、Arrays工具类及常见方法",
-    "headline" : "Java：Collections、Arrays工具类及常见方法",
-    "description" : "本篇介绍 Java 中的集合类框架的基础知识，其源码实现、相关面试题会在之后更新，敬请期待。\n一、Collection 继承体系 1. 集合 Collection 介绍  为什么需要集合？  集合使 Java 可以处理多个同类型的对象（List \/ Set），亦或是多个键值对类型的数据（Map）。   集合的常用功能：  添加：add(Object obj)、addAll(Collection c)； 删除：clear()、remove(Object)、removeAll(Collection)； 判断包含：isEmpty()、contains(Object)、containsAll(Collection)；  contains 方法进行判定时，==会调用 equals 方法==，所以在用集合存储引用对象（非原生数据类型）时需要重写 equals 和 HashCode 方法。   遍历获取：Iteratoriterator()； 长度：size()； 交集：retainAll(Collection c)； 若有元素被移除，==此操作会改变原有实例集合==。   迭代器（Iterator）：  以内部类的方式遍历集合中的元素，有以下方法：  hasNext()； next()； remove()；   构造思路：  写一个 iterator() 方法返回一个自己的迭代器， 创建一个自己的迭代器继承 Iterator 接口，重写接口的三个方法。 使用时：用 iterator() 创建迭代器，再用迭代器去调用其中的三个方法。      2. List：对付顺序的好帮手  List 是插入有序的，元素可重复的。 List 有个自己的迭代器 ListIterator ，比普通的迭代器多出几个功能：向前遍历、添加元素、设置元素等。 List 常用的实现类有  ArrayList ：底层数据结构是数组，线程不安全。 LinkedList ：底层数据结构是链表，线程不安全。 Vector ：底层数据结构是数组，线程安全。    3.",
+    "name" : "Java：Collection、Map 工具类及常见方法",
+    "headline" : "Java：Collection、Map 工具类及常见方法",
+    "description" : "本篇介绍 Java 中的集合类框架的基础知识，其源码实现、相关面试题会在之后更新，敬请期待。\n一、Collection 继承体系 1. 集合 Collection 介绍  为什么需要集合？  集合使 Java 可以处理多个同类型的对象（List \/ Set），亦或是多个键值对类型的数据（Map）。   集合的常用功能：  添加：add(Object obj)、addAll(Collection c)； 删除：clear()、remove(Object)、removeAll(Collection)； 判断包含：isEmpty()、contains(Object)、containsAll(Collection)；  contains 方法进行判定时，会调用 equals 方法，所以在用集合存储引用对象（非原生数据类型）时需要重写 equals 和 HashCode 方法。   遍历获取：Iteratoriterator()； 长度：size()； 交集：retainAll(Collection c)； 若有元素被移除，此操作会改变原有实例集合。   迭代器（Iterator）：  以内部类的方式遍历集合中的元素，有以下方法：  hasNext()； next()； remove()；   构造思路：  写一个 iterator() 方法返回一个自己的迭代器， 创建一个自己的迭代器继承 Iterator 接口，重写接口的三个方法。 使用时：用 iterator() 创建迭代器，再用迭代器去调用其中的三个方法。      2. List：对付顺序的好帮手  List 是插入有序的，元素可重复的。 List 有个自己的迭代器 ListIterator ，比普通的迭代器多出几个功能：向前遍历、添加元素、设置元素等。 List 常用的实现类有  ArrayList ：底层数据结构是数组，线程不安全。 LinkedList ：底层数据结构是链表，线程不安全。 Vector ：底层数据结构是数组，线程安全。    3.",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -116,7 +116,7 @@
       		
 <article class="post-warp" itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Java：Collections、Arrays工具类及常见方法</h1>
+        <h1 class="post-title" itemprop="name headline">Java：Collection、Map 工具类及常见方法</h1>
         <div class="post-meta">
                 Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
                 <span class="post-time">
@@ -149,9 +149,9 @@
           
 
           <p>本篇介绍 Java 中的集合类框架的基础知识，其源码实现、相关面试题会在之后更新，敬请期待。</p>
-<h3 id="collection-">一、Collection 继承体系</h3>
+<h1 id="collection-">一、Collection 继承体系</h1>
 <p><img src="/images/Collections.png" alt="Collection 继承体系"></p>
-<h4 id="1--collection-">1. 集合 Collection 介绍</h4>
+<h3 id="1--collection-">1. 集合 Collection 介绍</h3>
 <ul>
 <li>为什么需要集合？
 <ul>
@@ -164,12 +164,12 @@
 <li>删除：clear()、remove(Object)、removeAll(Collection)；</li>
 <li>判断包含：isEmpty()、contains(Object)、containsAll(Collection)；
 <ul>
-<li>contains 方法进行判定时，==会调用 <code>equals</code> 方法==，所以在用集合存储引用对象（非原生数据类型）时需要重写 <code>equals</code> 和 <code>HashCode</code> 方法。</li>
+<li>contains 方法进行判定时，会调用 <code>equals</code> 方法，所以在用集合存储引用对象（非原生数据类型）时需要重写 <code>equals</code> 和 <code>HashCode</code> 方法。</li>
 </ul>
 </li>
 <li>遍历获取：Iterator<!-- raw HTML omitted --> iterator()；</li>
 <li>长度：size()；</li>
-<li>交集：retainAll(Collection c)； 若有元素被移除，==此操作会改变原有实例集合==。</li>
+<li>交集：retainAll(Collection c)； 若有元素被移除，此操作会改变原有实例集合。</li>
 </ul>
 </li>
 <li>迭代器（Iterator）：
@@ -188,7 +188,7 @@
 </ul>
 </li>
 </ul>
-<h4 id="2-list">2. List：对付顺序的好帮手</h4>
+<h3 id="2-list">2. List：对付顺序的好帮手</h3>
 <ul>
 <li>List 是插入有序的，元素可重复的。</li>
 <li>List 有个自己的迭代器 <code>ListIterator</code> ，比普通的迭代器多出几个功能：向前遍历、添加元素、设置元素等。</li>
@@ -200,7 +200,7 @@
 </ul>
 </li>
 </ul>
-<h4 id="3-set">3. Set：注重独一无二的性质</h4>
+<h3 id="3-set">3. Set：注重独一无二的性质</h3>
 <ul>
 <li>Set 是插入无序的，元素不可重复的。</li>
 <li>Set 常用实现类有
@@ -211,7 +211,7 @@
 </ul>
 </li>
 </ul>
-<h4 id="4-mapkey">4. Map：用Key来搜索的专家（映射）</h4>
+<h3 id="4-mapkey">4. Map：用Key来搜索的专家（映射）</h3>
 <ul>
 <li>如果数据是键值对类型的，就需要选择 <code>HashMap</code> 进行存储。如果要保持插入顺序，可以选择 <code>LinkedHashMap</code> ，如果需要排序则选择 <code>TreeMap</code> 。</li>
 <li>Key 不能重复（是唯一的），每个 Key 最多只能映射到一个值，但多个 Key 可以引用相同的对象。</li>
@@ -236,13 +236,13 @@ HashSet 有的功能 HashMap 都有，所有 HashSet 里面包了一个 HashMap<
 </ul>
 </li>
 </ul>
-<h4 id="5-guava">5. Guava</h4>
+<h3 id="5-guava">5. Guava</h3>
 <ul>
 <li>是 <code>Google</code> 写的集合框架，在原生 JDK Collection 的基础上增添了更多有用的实现，如：<code>MultiSet</code> 可以存储相同的元素，并告诉你他们存了多少次；<code>BidirectionMap</code> 可以从 <code>value</code> 映射回 <code>Key</code> 值。</li>
 <li>思想：不要重复发明轮子，尽量使用经过实战检验的类库。</li>
 </ul>
-<h3 id="heading">二、集合框架常见面试问题（敬请期待）</h3>
-<h4 id="1-arraylist--linkedlist-">1. ArrayList 与 LinkedList 区别?</h4>
+<h2 id="heading">二、集合框架常见面试问题（敬请期待）</h2>
+<h3 id="1-arraylist--linkedlist-">1. ArrayList 与 LinkedList 区别?</h3>
 <ul>
 <li>补充内容:RandomAccess接口</li>
 <li>补充内容:双向链表和双向循环链表</li>
@@ -253,7 +253,7 @@ HashSet 有的功能 HashMap 都有，所有 HashSet 里面包了一个 HashMap<
 </ul>
 </li>
 </ul>
-<h4 id="2-hashmap--hashtable-">2. HashMap 和 Hashtable 的区别</h4>
+<h3 id="2-hashmap--hashtable-">2. HashMap 和 Hashtable 的区别</h3>
 <ul>
 <li>HashMap 和 HashSet区别</li>
 <li>HashSet如何检查重复</li>
@@ -273,7 +273,7 @@ HashSet 有的功能 HashMap 都有，所有 HashSet 里面包了一个 HashMap<
 </ul>
 </li>
 </ul>
-<h4 id="3-comparable--comparator">3. comparable 和 Comparator的区别</h4>
+<h3 id="3-comparable--comparator">3. comparable 和 Comparator的区别</h3>
 <ul>
 <li>comparable接口实际上是出自 <code>java.lang</code> 包 它有一个 <code>compareTo(Object obj)</code> 方法用来排序
 <ul>
@@ -286,14 +286,14 @@ HashSet 有的功能 HashMap 都有，所有 HashSet 里面包了一个 HashMap<
 </ul>
 </li>
 </ul>
-<h5 id="31-comparator">3.1 Comparator定制排序</h5>
+<h4 id="31-comparator">3.1 Comparator定制排序</h4>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>arrayList<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 	<span style="color:#a6e22e">@Override</span>
 	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Integer o1<span style="color:#f92672">,</span> Integer o2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 		<span style="color:#66d9ef">return</span> o2<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>o1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>    <span style="color:#75715e">// 从小到大排序，变成了从大到小。
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>               <span style="color:#75715e">// 用匿名内部类 重写比较器，定制原生数据类型的比较方法。
-</span></code></pre></div><h5 id="32--compareto-">3.2 重写 compareTo 方法实现按年龄来排序</h5>
+</span></code></pre></div><h4 id="32--compareto-">3.2 重写 compareTo 方法实现按年龄来排序</h4>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span>  <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Person<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> age<span style="color:#f92672">;</span>
@@ -316,7 +316,7 @@ HashSet 有的功能 HashMap 都有，所有 HashSet 里面包了一个 HashMap<
         <span style="color:#66d9ef">return</span> age<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>                     <span style="color:#75715e">// 对于非原生数据类型，需要其实现 comparable 接口，来进行排序。
-</span></code></pre></div><h4 id="4-">4. 如何选用集合?</h4>
+</span></code></pre></div><h3 id="4-">4. 如何选用集合?</h3>
 <ul>
 <li>主要根据集合的特点来选用，比如我们需要根据键值获取到元素值时就选用 Map 接口下的集合，需要排序时选择 TreeMap，不需要排序时就选择HashMap,需要保证线程安全就选用 ConcurrentHashMap。</li>
 <li>当我们只需要存放元素值时，就选择实现Collection接口的集合，需要保证元素唯一时选择实现 Set 接口的集合比如 TreeSet 或 HashSet，不需要就选择实现List接口的比如ArrayList或LinkedList，然后再根据实现这些接口的集合的特点来选用。</li>
