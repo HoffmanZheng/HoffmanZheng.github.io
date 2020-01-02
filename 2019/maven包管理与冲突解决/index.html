@@ -10,7 +10,7 @@
   
   
   <link rel="prev" href="http://chenghao.monster/2019/git-%E4%B8%8E-github-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/" />
-  <link rel="next" href="http://chenghao.monster/2019/javacollectionsarrays%E5%B7%A5%E5%85%B7%E7%B1%BB%E5%8F%8A%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95/" />
+  
   <link rel="canonical" href="http://chenghao.monster/2019/maven%E5%8C%85%E7%AE%A1%E7%90%86%E4%B8%8E%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -147,12 +147,12 @@
           
 
           <p>Maven 作为一个强大的项目管理工具，可以自动管理 Java 包的传递性依赖，解决包的依赖冲突并对依赖的 scope 进行控制。 本篇对其功能和用法做简单的介绍。</p>
-<h2 id="heading">一、包管理的必要性</h2>
+<h3 id="heading">一、包管理的必要性</h3>
 <ul>
 <li>JVM 的作用就是执行一个类的字节码，当它需要加载一个新的类时，就会去 <code>Classpath</code> 中寻找这个类。包的 <code>全限定类名</code> 是包的唯一标识，当 <code>Classpath</code> 中出现（不同版本的）同名包时，JVM 会选择 <code>Classpath中出现最早的包</code> 进行加载（<code>Classpath Hell</code>）。</li>
 <li>包的调用存在传递性依赖，即你所调用的包同时还调用了其他别的包，这会导致一个项目的实现需要调用相当数量的第三方包，使包的管理与更新成了一个很大的难题。（同时也使自己的代码在别人的机器上不能正常的运行）</li>
 </ul>
-<h2 id="maven">二、Maven：包管理工具</h2>
+<h3 id="maven">二、Maven：包管理工具</h3>
 <h4 id="1-">1. 包的约定与语义化版本</h4>
 <ul>
 <li>Maven 收录了几乎所有的 Java 包保存在其远程的 <a href="http://repo1.maven.org/maven2/">中央仓库</a>，并对包的 ID 给出了三个约定，分别为 <code>Groupid、Artifactid、version</code> ，用结构化的方式，把包分门别类的放到一起，实现了方便检索的目的。</li>
@@ -167,7 +167,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="maven-1">三、Maven：包的冲突与解决</h2>
+<h3 id="maven-1">三、Maven：包的冲突与解决</h3>
 <h4 id="1--1">1. 包的冲突</h4>
 <ul>
 <li>当项目的不同位置调用了 <code>不同版本</code> 的某个类库时，就可能会发生包的冲突。因为 JVM 会自动调用在 <code>Classpath</code> 中出现的早的那个版本类库，导致运行时调用了错误版本的类库产生错误，同时我们也不能很好的去管理调用类库的版本。</li>
@@ -221,7 +221,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="heading-1">四、推荐阅读</h2>
+<h3 id="heading-1">四、推荐阅读</h3>
 <ul>
 <li>书籍 《Maven 实战》
 <ul>
@@ -280,8 +280,6 @@
         
         <a href="http://chenghao.monster/2019/git-%E4%B8%8E-github-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/" class="prev" rel="prev" title="Git 与 Github 使用指北"><i class="iconfont icon-left"></i>&nbsp;Git 与 Github 使用指北</a>
          
-        
-        <a href="http://chenghao.monster/2019/javacollectionsarrays%E5%B7%A5%E5%85%B7%E7%B1%BB%E5%8F%8A%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95/" class="next" rel="next" title="Java：Collections、Arrays工具类及常见方法">Java：Collections、Arrays工具类及常见方法&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
