@@ -6,10 +6,27 @@
     <description>Recent content in Study notes on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 02 Jan 2020 16:11:47 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 12 Jan 2020 14:49:47 +0100</lastBuildDate>
     
 	<atom:link href="http://chenghao.monster/categories/study-notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Java：初识多线程、原理及实现</title>
+      <link>http://chenghao.monster/2020/java%E5%88%9D%E8%AF%86%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Sun, 12 Jan 2020 14:49:47 +0100</pubDate>
+      
+      <guid>http://chenghao.monster/2020/java%E5%88%9D%E8%AF%86%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/</guid>
+      <description>多线程原理 1. 为什么需要多线程 1.1 Java 代码的执行是同步阻塞模型 Java 代码在执行的时候，是从 main 代码块开始逐行执行，但当当前代码耗时过长时，下一行的代码就必须等待当前任务执行完毕，代码才能继续往下执行。
+1.2 CPU的运算实在太快了 取主频为 3GHz CPU 为例，CPU 执行单个指令所需的时间约为 0.3ns；与之相对的，在内存中进行读取1MB大小文件所需时间大概为 250us，SSD随机读取耗时约为 1ms，HDD约为 20ms。（推荐阅读：我是一个CPU：这个世界慢！死！了！）
+相比与内存，硬盘，网络传输，CPU 的运算实在是太快了，但是由于阻塞模型，如若当前代码执行的是较为耗时的 IO 操作，线程中的下一个任务就必须等待当前任务结束才能继续执行。使得单线程的代码执行非常没有效率，另外也浪费了 CPU 的运算性能。
+2. Java 线程简介 2.1 多线程的方法栈 一般的 Java 程序都是从启动类的 main 函数入口开始执行，随着 main 函数的结束而停止. 这条执行路径就是 Java 程序的主线程。Java 虚拟机允许拥有同时运行多个线程，当新线程运行时，就会在栈中生成一个新的方法栈，新线程独享单独的执行流和局部变量，而静态变量则是被所有线程共享的。
+2.2 多线程的性能 使用多线程就只有好处没有坏处吗？并不是，使用多线程是要付出代价的，如果没有耗时的任务，使用多线程，效率反而更低，因为CPU 在线程间的切换也需要耗费时间。引用知乎上看到的一句话：
+ 多线程在 CPU 密集型的作业下的确不能提高性能甚至更浪费时间，但是在 IO 密集型的作业下则可以提升性能（或者更准确点说叫平均响应时间）。
+ 由上得出的结论是，正确的使用多线程可以提高程序的运行效率。
+3. 多线程问题的来源 3.1 多线程下的数据安全问题 多线程同时对一个共享的全局变量进行非原子操作将会引发严重的数据安全问题。
+  原子操作可理解为不可分隔的操作，而非原子操作例如 i++ 则可以分解为 temp = i; temp = temp + 1; i = temp; 这样的取值、运算、赋值三个独立的操作。</description>
+    </item>
     
     <item>
       <title>Java：Collection、Map 工具类及常见方法</title>
