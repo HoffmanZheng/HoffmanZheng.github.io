@@ -57,7 +57,7 @@
     "datePublished": "2020-01-12 14:49:47 \x2b0100 CET",
     "dateModified" : "2020-01-12 14:49:47 \x2b0100 CET",
     "url" : "http:\/\/chenghao.monster\/2020\/java%E5%88%9D%E8%AF%86%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0\/",
-    "wordCount" : "838",
+    "wordCount" : "1142",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -181,11 +181,12 @@
 <ul>
 <li>这是我们非常不愿意看到的一种现象，我们要尽可能避免死锁的情况发生！</li>
 </ul>
+<p><img src="/images/deadLock.png" alt="死锁"></p>
 <p>造成死锁的原因可以概括成三句话：</p>
 <ul>
 <li>当前线程拥有其他线程需要的资源</li>
 <li>当前线程等待其他线程已拥有的资源</li>
-<li>都不放弃自己拥有的资源</li>
+<li>双方都不放弃自己拥有的资源</li>
 </ul>
 <p>示例代码如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestDeadLock</span> <span style="color:#f92672">{</span>
@@ -227,6 +228,11 @@
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>进程 <code>Thread1</code> 拥有锁 <code>Lock1</code>，并请求锁 <code>Lock2</code>，而进程 <code>Thread2</code> 拥有锁 <code>Lock2</code> 并请求锁 <code>Lock1</code>，双方都不释放自己拥有的锁，此时就满足了产生死锁的四个条件 <code>互斥、不剥夺、请求和保持、循环等待</code>， 使两个线程都没办法继续执行下去，形成死锁。</p>
+<h4 id="33-">3.3 死锁的排查</h4>
+<p>通过 Java 自带的 <code>jps</code> 命令确定当前执行任务的进程号</p>
+<ul>
+<li><code>jstack 26497 &gt; output.txt</code>  执行 jstack 命令查看当前进程堆栈信息，可以看到当前所有线程的状态以及是否在等待哪个锁。</li>
+</ul>
 <h1 id="heading-1">多线程实现</h1>
 <h3 id="1-volatile-">1. volatile 关键字与内存可见性</h3>
 <h4 id="11----">1.1 共有变量 - 线程间互不可见</h4>
@@ -324,10 +330,12 @@
 </li>
 <li>
 <p><code>ConcurrentHashMap</code> 采用了 “锁分段” 机制（JDK 5），它有一个并发级别 concurrentLevel 默认为 16 段 Segments，每个段拥有独立的锁守护哈希表的若干个桶 HashBucket &mdash;&mdash;&gt; 每个桶是键值对连接起来的链表结构，从而实现高效率的并行，并保证了安全性。
-<img src="/images/ConcurrentHashMap.webp" alt="ConcurrentHashMap 的分段锁"></p>
+<img src="/images/ConcurrentHashMap.png" alt="ConcurrentHashMap 的分段锁"></p>
+</li>
+<li>
+<p>JDK 8 抛弃了 Segment 分段锁机制，采用 CAS（不会阻塞，更加高效） + Synchronized 来保证并发更新的安全，底层采用数组+链表+红黑树的存储结构。</p>
 <ul>
-<li>JDK 8 抛弃了 Segment 分段锁机制，采用 CAS（不会阻塞，更加高效） + Synchronized 来保证并发更新的安全，底层采用数组+链表+红黑树的存储结构。</li>
-<li>除此，想用线程安全的 Map ：<code>Collections.SynchronizedMap</code> &ndash;&gt; 把每个方法都加了 synchronized 关键字。</li>
+<li>除此，想用线程安全的 Map ：<code>Collections.SynchronizedMap</code> &mdash;&mdash;&gt; 把集合类中的每个方法都加了 synchronized 关键字，在调用单个方法时是线程安全的，但是在复合操作时（如迭代时修改）仍是不安全的，需要额外的同步。</li>
 </ul>
 </li>
 <li>
@@ -372,7 +380,7 @@
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="4-">4. 创建执行线程的三种方式</h3>
+</code></pre></div><h3 id="4-callable">4. 创建执行线程的第三种方式：Callable</h3>
 <p>创建执行线程的方式有四种：继承Thread ，Runnable，Callable，线程池。</p>
 <ul>
 <li>
@@ -490,15 +498,15 @@
 </code></pre></div><h3 id="6-">6. 同步锁</h3>
 <p>用于解决多线程安全问题的方式：</p>
 <ul>
-<li>
-<p>同步代码块（synchronized隐式锁）</p>
-</li>
-<li>
-<p>同步方法</p>
-</li>
-<li>
-<p>JDK 5 之后，同步锁（显式锁）需要通过 lock() 上锁，unlock() 释放锁 （finally）更加灵活</p>
-</li>
+<li>同步代码块（synchronized隐式锁）</li>
+<li>同步方法</li>
+<li>JDK 5 之后，同步锁（显式锁）需要通过 <code>lock()</code> 上锁，<code>unlock()</code> 释放锁 （放到 finally 中以免忘记）</li>
+</ul>
+<p>特点：</p>
+<ul>
+<li>使用可重入锁 <code>ReentrantLock</code> 实现手动上锁及释放锁的步骤。</li>
+<li>灵活：比如它可以在一个方法内加锁，到另一个方法再解锁释放。</li>
+<li>风险：必须要释放锁，不然存在极大的风险。</li>
 </ul>
 <p>示例代码：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Ticket</span> <span style="color:#66d9ef">implements</span> Runnable<span style="color:#f92672">{</span>
@@ -526,7 +534,109 @@
      <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="7-">7. 生产者消费者案例及虚假唤醒</h3>
-<h3 id="8-condition-">8. Condition 线程通信</h3>
+<h4 id="71-">7.1 生产者消费者案例可能产生什么问题？</h4>
+<p>添加和创建数据的线程就是生产者，删除和销毁数据的线程就是消费者，如果生产者线程过快，就会导致消费者来不及接收，产生数据丢失问题；如果消费者线程过快，就可能产生重复 / 错误的数据等。</p>
+<ul>
+<li>需要等待唤醒机制</li>
+</ul>
+<p>注意：</p>
+<ul>
+<li><code>wait()</code> 所在的条件判据应该总在循环 <code>while</code> 中，避免虚假唤醒的发生。</li>
+<li>wait、notify 机制需要和 <code>synchronized</code> 搭配使用，来保证 while 条件检查与 wait，以及 while 条件更新与notify 是互斥的。</li>
+</ul>
+<p>示例代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ProducerConsumer</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+        Container container <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Container<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        Object lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Object<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        Producer producer <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Producer<span style="color:#f92672">(</span>container<span style="color:#f92672">,</span> lock<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        Consumer consumer <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Consumer<span style="color:#f92672">(</span>container<span style="color:#f92672">,</span> lock<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+        producer<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        consumer<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+        producer<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        producer<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Producer</span> <span style="color:#66d9ef">extends</span> Thread <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">private</span> Container container<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">private</span> Object lock<span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Producer</span><span style="color:#f92672">(</span>Container container<span style="color:#f92672">,</span> Object lock<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">container</span> <span style="color:#f92672">=</span> container<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span> <span style="color:#f92672">=</span> lock<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#a6e22e">@Override</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>lock<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 10<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>container<span style="color:#f92672">.</span><span style="color:#a6e22e">getProductNum</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                                lock<span style="color:#f92672">.</span><span style="color:#a6e22e">wait</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                                e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                            <span style="color:#f92672">}</span>
+                        <span style="color:#f92672">}</span>
+                        container<span style="color:#f92672">.</span><span style="color:#a6e22e">produceANewProduct</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Producing one product: current product number is &#34;</span> <span style="color:#f92672">+</span> container<span style="color:#f92672">.</span><span style="color:#a6e22e">getProductNum</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                        lock<span style="color:#f92672">.</span><span style="color:#a6e22e">notifyAll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Consumer</span> <span style="color:#66d9ef">extends</span> Thread <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">private</span> Container container<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">private</span> Object lock<span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Consumer</span><span style="color:#f92672">(</span>Container container<span style="color:#f92672">,</span> Object lock<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">container</span> <span style="color:#f92672">=</span> container<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span> <span style="color:#f92672">=</span> lock<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#a6e22e">@Override</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>lock<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 10<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>container<span style="color:#f92672">.</span><span style="color:#a6e22e">getProductNum</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                                lock<span style="color:#f92672">.</span><span style="color:#a6e22e">wait</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                                e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                            <span style="color:#f92672">}</span>
+                        <span style="color:#f92672">}</span>
+                        container<span style="color:#f92672">.</span><span style="color:#a6e22e">consumeAProduct</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Consuming one product : current product number is &#34;</span> <span style="color:#f92672">+</span> container<span style="color:#f92672">.</span><span style="color:#a6e22e">getProductNum</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                        lock<span style="color:#f92672">.</span><span style="color:#a6e22e">notifyAll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Container</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> productNum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getProductNum</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> productNum<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">produceANewProduct</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">productNum</span> <span style="color:#f92672">+</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">consumeAProduct</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">productNum</span> <span style="color:#f92672">-</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="8-condition-">8. Condition 线程通信</h3>
+<ul>
+<li>Condition 接口描述了可能会与锁有关联的条件变量。这些变量在用法上与使用 Object.wait 访问的隐式监视器类似，但提供了更强大的功能。需要指出的是，单个 Lock 可能与多个 Condition 对象关联。为了避免兼容性问题，Condition 方法的名称与对应的 Object 版本中的不同。</li>
+<li>Condition 实例实质上被绑定到一个锁上。要为特定 Lock 实例获得 Condition 实例，请使用其 new Condition() 方法。在 Condition 对象中，与 wait、notify、notifyAll 方法对应的分别是 await、signal 和 signalAll。</li>
+<li>Condition 需要和 同步锁 一起搭配使用，不可与同步代码块 / 同步方法 一起使用。</li>
+</ul>
 <h3 id="9-">9. 线程按序交替</h3>
 <h3 id="10-readwritelock-">10. ReadWriteLock 读写锁</h3>
 <h3 id="11-">11. 线程八锁</h3>
