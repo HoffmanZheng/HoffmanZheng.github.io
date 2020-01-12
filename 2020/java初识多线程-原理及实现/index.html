@@ -381,7 +381,7 @@
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="4-callable">4. 创建执行线程的第三种方式：Callable</h3>
-<p>创建执行线程的方式有四种：继承Thread ，Runnable，Callable，线程池。</p>
+<p>创建执行线程的方式有四种：继承 Thread，Runnable，Callable，线程池。</p>
 <ul>
 <li>
 <p>相比 Runnable，Callable 可以返回值，抛出异常。</p>
@@ -541,7 +541,7 @@
 </ul>
 <p>注意：</p>
 <ul>
-<li><code>wait()</code> 所在的条件判据应该总在循环 <code>while</code> 中，避免虚假唤醒的发生。</li>
+<li><code>wait()</code> 所在的条件判据应该总在循环 <code>while</code> 中，避免虚假唤醒的发生。（常发生于多个生产者消费者的场景）</li>
 <li>wait、notify 机制需要和 <code>synchronized</code> 搭配使用，来保证 while 条件检查与 wait，以及 while 条件更新与notify 是互斥的。</li>
 </ul>
 <p>示例代码：</p>
