@@ -28,9 +28,9 @@
       
       <guid>http://chenghao.monster/2019/git-%E4%B8%8E-github-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/</guid>
       <description>本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。
-一、Git 本地仓库（版本管理）  应用场景一：  甲方：我这个背景颜色要五彩斑斓的黑 甲方：我还是想要土耳其沙滩上空蓝天的那种蓝色，你再改下 甲方：我还是觉得原先设计的那种颜色比较好看，改回去把 我：好的（MMP，不早说，我现在已经没法撤销了！）  应用场景二：  老板：给我做一个页面 我：花了几天，做出来了，请过目 老板：不够醒目，再改改 老板娘：我觉得挺好，要是背景能做成五彩斑斓的黑就好了 我：好嘞，我做两份你们对比一下（MMP，你们俩就不能统一意见吗！）  应用场景三：  老板：昨天夜里我和老板娘达成一致了，两个版本都要，我的放在上面，老板娘的在下面 我：好的，我合并一下 (￣▽￣)&amp;#34;  Git 工作流程：
-  0. 安装 Git 参考伯克利课程 CS61b 中的教程安装 Git
-1. 配置 Git git config --global user.name + 你的英文名 git config --global user.email + 你的邮箱 git config --global push.default simple git config --global core.quotepath false // 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.</description>
+一、Git 本地仓库 Git 工作流程：
+0. 应用场景  代码版本管理 / 多版本代码开发 / 多版本代码合并  1. 安装 Git 参考伯克利课程 CS61b 中的教程安装 Git
+2. 配置 Git git config --global user.name + 你的英文名 git config --global user.email + 你的邮箱 git config --global push.default simple git config --global core.quotepath false // 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor &amp;#34;code --wait&amp;#34; git config --global core.autocrlf input git config --global --list // 查看当前配置列表 vi ~/.</description>
     </item>
     
   </channel>
