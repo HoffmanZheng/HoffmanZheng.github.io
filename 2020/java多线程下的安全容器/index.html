@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="http://chenghao.monster/2020/java%E5%88%9D%E8%AF%86%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/" />
+  
+  <link rel="canonical" href="http://chenghao.monster/2020/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E5%AE%B9%E5%99%A8/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Java：多线程下的安全容器 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Java：多线程下的安全容器 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/chenghao.monster"
+    },
+    "articleSection" : "posts",
+    "name" : "Java：多线程下的安全容器",
+    "headline" : "Java：多线程下的安全容器",
+    "description" : "在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。\nList 类的安全容器  Map 类的安全容器 ConcurrentHashMap 和 Hashtable 的区别\nHashtable ：将 get \/ put 所有相关操作都 synchronized 化，这相当于给整个哈希表加了一把大锁，多线程访问时候，只要有一个线程访问或操作该对象，那其他线程只能阻塞，相当于将所有的操作串行化，在竞争激烈的并发场景中性能就会非常差。\nConcurrentHashMap：对整个桶数组进行了分割分段 Segment，每一把锁只锁容器其中一部分数据，多线程访问容器里不同数据段的数据，就不会存在锁竞争，提高并发访问率。\n一个 ConcurrentHashMap 里包含一个 Segment 数组。Segment 的结构和 HashMap 类似，是一种数组和链表结构，一个 Segment 包含一个 HashEntry 数组，每个 HashEntry 是一个链表结构的元素，每个 Segment 守护着一个HashEntry 数组里的元素，当对 HashEntry 数组的数据进行修改时，必须首先获得对应的 Segment的锁。\n到了 JDK 1.8 的时候已经摒弃了分段锁，而是直接用 Node 数组 \x2b 链表 \x2b 红黑树的数据结构来实现，并发控制使用 synchronized 和 CAS 来操作。（ JDK 1.6 以后 对 synchronized 锁做了很多优化， 整个看起来就像是优化过且线程安全的 HashMap，虽然在 JDK 1.",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-01-16 13:19:47 \x2b0100 CET",
+    "dateModified" : "2020-01-16 13:19:47 \x2b0100 CET",
+    "url" : "http:\/\/chenghao.monster\/2020\/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E5%AE%B9%E5%99%A8\/",
+    "wordCount" : "79",
+    "keywords" : [ "Java", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Java：多线程下的安全容器</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-01-16 itemprop="datePublished">January 16, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
+                        
+                </span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>在我之前的博客 <code>Java：初识多线程、原理及实现</code> 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。</p>
+<h1 id="list-">List 类的安全容器</h1>
+<h3 id="heading"></h3>
+<h1 id="map-">Map 类的安全容器</h1>
+<p><strong>ConcurrentHashMap 和 Hashtable 的区别</strong></p>
+<p><code>Hashtable</code> ：将 get / put 所有相关操作都 synchronized 化，这相当于给整个哈希表加了一把<strong>大锁</strong>，多线程访问时候，只要有一个线程访问或操作该对象，那其他线程只能阻塞，相当于将所有的操作<strong>串行化</strong>，在竞争激烈的并发场景中性能就会非常差。</p>
+<p><img src="/images/HashTableLock.png" alt="HashTable 的全表锁"></p>
+<p><code>ConcurrentHashMap</code>：对整个桶数组进行了分割分段 Segment，每一把锁只锁容器其中一部分数据，多线程访问容器里不同数据段的数据，就不会存在锁竞争，提高并发访问率。</p>
+<p>一个 ConcurrentHashMap 里包含一个 Segment 数组。Segment 的结构和 HashMap 类似，是一种数组和链表结构，一个 Segment 包含一个 HashEntry 数组，每个 HashEntry 是一个链表结构的元素，每个 Segment 守护着一个HashEntry 数组里的元素，当对 HashEntry 数组的数据进行修改时，必须首先获得对应的 Segment的锁。</p>
+<p><img src="/images/HashMapSegmentsLock.png" alt="JDK 1.8 之前 ConrrentHashMap 的分段锁"></p>
+<p>到了 JDK 1.8 的时候已经摒弃了分段锁，而是直接用 Node 数组 + 链表 + 红黑树的数据结构来实现，并发控制使用 synchronized 和 CAS 来操作。（ JDK 1.6 以后 对 synchronized 锁做了很多优化， 整个看起来就像是优化过且线程安全的 HashMap，虽然在 JDK 1.8 中还能看到 Segment 的数据结构，但是已经简化了属性，只是为了兼容旧版本）</p>
+<p><img src="/images/HashMapLock.jpeg" alt="JDK 1.8 后的并发哈希表的锁"></p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://chenghao.monster/2020/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E5%AE%B9%E5%99%A8/>http://chenghao.monster/2020/java%E5%A4%9A%E7%BA%BF%E7%A8%8B%E4%B8%8B%E7%9A%84%E5%AE%89%E5%85%A8%E5%AE%B9%E5%99%A8/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://chenghao.monster/tags/java/">
+                    #Java</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://chenghao.monster">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://chenghao.monster/2020/java%E5%88%9D%E8%AF%86%E5%A4%9A%E7%BA%BF%E7%A8%8B-%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/" class="prev" rel="prev" title="Java：初识多线程、原理及实现"><i class="iconfont icon-left"></i>&nbsp;Java：初识多线程、原理及实现</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://chenghao.monster">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

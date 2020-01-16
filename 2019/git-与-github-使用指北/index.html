@@ -10,7 +10,7 @@
   
   
   
-  <link rel="next" href="http://chenghao.monster/2019/maven%E5%8C%85%E7%AE%A1%E7%90%86%E4%B8%8E%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/" />
+  <link rel="next" href="http://chenghao.monster/2019/maven%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%8F%92%E4%BB%B6%E5%8F%8A%E5%8C%85%E7%AE%A1%E7%90%86/" />
   <link rel="canonical" href="http://chenghao.monster/2019/git-%E4%B8%8E-github-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Git 与 Github 使用指北",
     "headline" : "Git 与 Github 使用指北",
-    "description" : "本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。\n一、Git 本地仓库 Git 工作流程：\n0. 应用场景  代码版本管理 \/ 多版本代码开发 \/ 多版本代码合并  1. 安装 Git 参考伯克利课程 CS61b 中的教程安装 Git\n2. 配置 Git git config --global user.name \x2b 你的英文名 git config --global user.email \x2b 你的邮箱 git config --global push.default simple git config --global core.quotepath false \/\/ 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor \x26#34;code --wait\x26#34; git config --global core.autocrlf input git config --global --list \/\/ 查看当前配置列表 vi ~\/.",
+    "description" : "本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。\nGit 本地仓库 Git 工作流程：\n0. 应用场景  代码版本管理 \/ 多版本代码开发 \/ 多版本代码合并  1. 安装 Git 参考伯克利课程 CS61b 中的教程安装 Git\n2. 配置 Git git config --global user.name \x2b 你的英文名 git config --global user.email \x2b 你的邮箱 git config --global push.default simple git config --global core.quotepath false \/\/ 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor \x26#34;code --wait\x26#34; git config --global core.autocrlf input git config --global --list \/\/ 查看当前配置列表 vi ~\/.",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2019-12-26 21:49:47 \x2b0100 CET",
     "dateModified" : "2019-12-26 21:49:47 \x2b0100 CET",
     "url" : "http:\/\/chenghao.monster\/2019\/git-%E4%B8%8E-github-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97\/",
-    "wordCount" : "452",
+    "wordCount" : "573",
     "keywords" : [ "Tools", "人间一场大梦"]
 }
 </script>
@@ -149,7 +149,7 @@
           
 
           <p>本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。</p>
-<h1 id="git-">一、Git 本地仓库</h1>
+<h1 id="git-">Git 本地仓库</h1>
 <p>Git 工作流程：</p>
 <p><img src="/images/work_process_git.png" alt="git工作流程"></p>
 <h3 id="0-">0. 应用场景</h3>
@@ -179,7 +179,7 @@ git reset --hard XXXXXX               // 版本回溯 写commit号前6位
 git reset --hard HEAD^                // 回到上一个版本，可以多加^回到之前的版本。
 </code></pre></div><p>注：</p>
 <ul>
-<li>可以在目录下新建个 <code>.gitignore</code> 文件，把不需要 <code>git</code> 管理的文件/文件夹路径写进去。常见的有<code>.idea</code> <code>.vscode</code> 等。</li>
+<li>可以在目录下新建个 <code>.gitignore</code> 文件，把不需要 <code>git</code> 管理的文件/文件夹路径写进去。常见的有<code>.idea</code> <code>.vscode</code> <code>out</code> <code>*.iml</code> <code>target/</code> <code>build/</code> <code>.gradle/</code>  等。</li>
 <li>在使用 <code>git reset</code> 回溯版本之前，一定要确保当前代码已经 <code>commit</code> 过了，因为这个操作会使当前没有 <code>commit</code> 的变动消失。</li>
 </ul>
 <h3 id="4-git-">4. Git 分支管理</h3>
@@ -202,7 +202,7 @@ subl <span style="color:#f92672">(</span>文件 / 文件夹<span style="color:#f
 git rm -r --cached + filename         // 删除add的路径
 git add fileName --&gt; git stash        // 暂时不像提交代码（通灵术）
 git stash pop
-</code></pre></div><h1 id="github-">二、Github 远程仓库</h1>
+</code></pre></div><h1 id="github-">Github 远程仓库</h1>
 <h3 id="0--1">0. 应用场景</h3>
 <ul>
 <li>代码云端备份 / 代码多地共享 / 团队协作</li>
@@ -244,19 +244,32 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 </ul>
 </li>
 </ul>
-<h1 id="github--1">三、Github 团队协作</h1>
-<h3 id="1-----">1. 在拥有对方仓库 <code>读 / 写</code> 权限的情况下</h3>
+<h1 id="github--1">Github 团队协作</h1>
+<h3 id="1---">1. 在拥有对方仓库 读/写 权限的情况下</h3>
+<p>将对方仓库 <code>clone</code> 到本地进行修改，在对方仓库在新建 <code>branch</code> 进行<code>commit、push</code> 操作，随后提交 <code>pull request</code> ，备注修改内容及意见。</p>
+<h3 id="2---">2. 在没有拥有对方仓库 读/写 权限的情况下</h3>
+<p>将对方仓库 <code>fork</code> 到自己仓库，再 <code>clone</code> 到本地进行修改，<code>commit、push</code> 之后到对方仓库提交 <code>pull request</code> ，备注修改内容及意见。</p>
+<h3 id="3-">3. 项目提交的原则</h3>
+<p>规范化的项目提交流程：</p>
 <ul>
-<li>将对方仓库 <code>clone</code> 到本地进行修改，在对方仓库在新建 <code>branch</code> 进行<code>commit、push</code> 操作，随后提交 <code>pull request</code> ，备注修改内容及意见。</li>
+<li>
+<p>使用 Github + 主干 / 分支模型进行开发，禁止直接 push 到 master 分支造成主分支损坏。</p>
+</li>
+<li>
+<p>一次提交不宜提交过多的内容，方便集中精力和 Code Review，同时也便于测试。</p>
+</li>
+<li>
+<p>遵循一切工作自动化原则：包括数据库建表、创造测试数据，几乎没有本地依赖，方便在其他人的机器上重现过程。</p>
+</li>
+<li>
+<p>使用自动化代码质量测试：checkstyle + spotbugs</p>
+</li>
+<li>
+<p><code>commit message</code> 应在第一行指出主要的修改内容，以动词开头不超过50字符，之后分条列举具体的修改过程，每行不超过72字符。</p>
+</li>
 </ul>
-<h3 id="2-----">2. 在没有拥有对方仓库 <code>读 / 写</code> 权限的情况下</h3>
-<ul>
-<li>将对方仓库 <code>fork</code> 到自己仓库，再 <code>clone</code> 到本地进行修改，<code>commit、push</code> 之后到对方仓库提交 <code>pull request</code> ，备注修改内容及意见。</li>
-</ul>
-<h1 id="-git-">四、实用 Git 技巧</h1>
-<ul>
-<li>快捷键设置</li>
-</ul>
+<h1 id="-git-">实用 Git 技巧</h1>
+<h3 id="1-">1. 快捷键设置</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">vi ~/.bash_profile
 alias ga<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git add&#34;</span>
 alias gc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git commit -v&#34;</span>
@@ -265,11 +278,34 @@ alias gst<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;gi
 alias gco<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git checkout&#34;</span>
 alias glog<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s%Cgreen(%cr) (bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit -- | less&#34;</span>  // 美化git log输出
 source ~/.bash_profile                                    // 让它生效
-</code></pre></div><p>注：</p>
+</code></pre></div><h3 id="2--merge-pull-request-">2. 三种不同的 merge pull request 操作</h3>
+<p>在提交的 pull request 通过测试后，会进入选择 Merge pull request 的界面选择具体的合并方式：</p>
+<p><img src="/images/%E4%B8%89%E7%A7%8Dmerge2.png" alt="三种不同的 merge pull request"></p>
 <ul>
-<li><code>git rebase</code> 可以美化提交历史，现阶段用不到，略。</li>
+<li><code>Create a merge commit</code>：会保留该 pull request 中的所有 commit 合并至主干，之后在 git 的提交历史中可以看到所有的 commit 历史记录。</li>
 </ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git checkout master
+git merge dev                                // dev 为当前工作分支
+</code></pre></div><ul>
+<li>
+<p><code>Squash and merge</code>：有一些很小的提交，或者是纠正前面的错误的提交，对于这类提交对整个工程来说不需要单独显示出来一次提交，不然导致项目的提交历史过于复杂；所以基于这种原因，我们可以把 dev 上的所有提交都合并成一个提交；然后提交到主干。</p>
+<p>需要注意的是，squash merge并不会替你产生提交，需要你再次手动执行 git commit 操作；这个 commit 可能会变更提交者作者信息，可能提交者并不是有原来 dev 分支上的开发人员，这将对代码实际贡献者的追溯产生困难。</p>
+</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git checkout master
+git merge --squash dev
+</code></pre></div><ul>
+<li><code>Rebase and merge</code>：可手动选择需要 合并 / 保留 的 commit，并保留提交者的作者信息。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git checkout dev
+git rebase -i master
+git checkout master
+git merge dev
 
+pick &lt;D1&gt; Message <span style="color:#66d9ef">for</span> commit <span style="color:#75715e">#1</span>
+fixup &lt;D2&gt; Message <span style="color:#66d9ef">for</span> commit <span style="color:#75715e">#2                // 隐藏 commit #2</span>
+pick &lt;D3&gt; Message <span style="color:#66d9ef">for</span> commit <span style="color:#75715e">#3</span>
+</code></pre></div>
     </div>
 
     <div class="post-copyright">
@@ -313,7 +349,7 @@ source ~/.bash_profile                                    // 让它生效
     <div class="post-nav">
          
         
-        <a href="http://chenghao.monster/2019/maven%E5%8C%85%E7%AE%A1%E7%90%86%E4%B8%8E%E5%86%B2%E7%AA%81%E8%A7%A3%E5%86%B3/" class="next" rel="next" title="Maven：包管理与冲突解决">Maven：包管理与冲突解决&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="http://chenghao.monster/2019/maven%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%8F%92%E4%BB%B6%E5%8F%8A%E5%8C%85%E7%AE%A1%E7%90%86/" class="next" rel="next" title="Maven：生命周期、插件及包管理">Maven：生命周期、插件及包管理&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
