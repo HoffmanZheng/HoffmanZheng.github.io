@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Git 与 Github 使用指北",
     "headline" : "Git 与 Github 使用指北",
-    "description" : "本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。\nGit 本地仓库 Git 工作流程：\n0. 应用场景  代码版本管理 \/ 多版本代码开发 \/ 多版本代码合并  1. 安装 Git 参考伯克利课程 CS61b 中的教程安装 Git\n2. 配置 Git git config --global user.name \x2b 你的英文名 git config --global user.email \x2b 你的邮箱 git config --global push.default simple git config --global core.quotepath false \/\/ 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor \x26#34;code --wait\x26#34; git config --global core.autocrlf input git config --global --list \/\/ 查看当前配置列表 vi ~\/.",
+    "description" : "本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。\nGit 本地仓库 Git 工作流程：\n0. 应用场景  代码版本管理 \/ 多版本代码开发 \/ 多版本代码合并  1. 安装 Git 参考伯克利课程 CS61b 中的教程安装 Git\n2. 配置 Git git config --global user.name \x2b 你的英文名 git config --global user.email \x2b 你的邮箱 git config --global push.default simple git config --global core.quotepath false \/\/ 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor \x26#34;vim\x26#34; git config --global core.autocrlf input git config --global --list \/\/ 查看当前配置列表 vi ~\/.gitconfig \/\/ 编辑配置文件 3.",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2019-12-26 21:49:47 \x2b0100 CET",
     "dateModified" : "2019-12-26 21:49:47 \x2b0100 CET",
     "url" : "http:\/\/chenghao.monster\/2019\/git-%E4%B8%8E-github-%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8C%97\/",
-    "wordCount" : "573",
+    "wordCount" : "610",
     "keywords" : [ "Tools", "人间一场大梦"]
 }
 </script>
@@ -163,7 +163,7 @@
 git config --global user.email + 你的邮箱
 git config --global push.default simple
 git config --global core.quotepath false   // 不会对0×80以上的字符进行quote，中文显示正常。
-git config --global core.editor <span style="color:#e6db74">&#34;code --wait&#34;</span>
+git config --global core.editor <span style="color:#e6db74">&#34;vim&#34;</span>
 git config --global core.autocrlf input
 git config --global --list                 // 查看当前配置列表
 vi ~/.gitconfig                            // 编辑配置文件
@@ -172,6 +172,7 @@ vi ~/.gitconfig                            // 编辑配置文件
 git init                              // 初始化，当前目录创建 .git 文件夹
 git add + 文件 / 文件夹 / .            // 选择要提交的内容
 git commit -m <span style="color:#e6db74">&#34;版本信息 / 更新日志&#34;</span>     // 写更新日志，提交代码快照
+git commit                            // 进入默认编辑器vim更新日志
 git log 
 git reflog                            // 查看所有备份记录
 git status
@@ -179,8 +180,8 @@ git reset --hard XXXXXX               // 版本回溯 写commit号前6位
 git reset --hard HEAD^                // 回到上一个版本，可以多加^回到之前的版本。
 </code></pre></div><p>注：</p>
 <ul>
-<li>可以在目录下新建个 <code>.gitignore</code> 文件，把不需要 <code>git</code> 管理的文件/文件夹路径写进去。常见的有<code>.idea</code> <code>.vscode</code> <code>out</code> <code>*.iml</code> <code>target/</code> <code>build/</code> <code>.gradle/</code>  等。</li>
-<li>在使用 <code>git reset</code> 回溯版本之前，一定要确保当前代码已经 <code>commit</code> 过了，因为这个操作会使当前没有 <code>commit</code> 的变动消失。</li>
+<li>可以在目录下新建个 <code>.gitignore</code> 文件，把不需要 Ｇit 管理的文件/文件夹路径写进去。常见的有<code>.idea</code> <code>.vscode</code> <code>out</code> <code>*.iml</code> <code>target/</code> <code>build/</code> <code>.gradle/</code>  等。</li>
+<li>在使用 <code>git reset</code> 回溯版本之前，一定要确保当前代码已经 <code>commit</code> 过了，因为这个操作会使当前没有 commit 的变动消失。</li>
 </ul>
 <h3 id="4-git-">4. Git 分支管理</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git branch                               // 查看现在存在的分支
@@ -244,13 +245,17 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 </ul>
 </li>
 </ul>
-<h1 id="github--1">Github 团队协作</h1>
-<h3 id="1---">1. 在拥有对方仓库 读/写 权限的情况下</h3>
-<p>将对方仓库 <code>clone</code> 到本地进行修改，在对方仓库在新建 <code>branch</code> 进行<code>commit、push</code> 操作，随后提交 <code>pull request</code> ，备注修改内容及意见。</p>
-<h3 id="2---">2. 在没有拥有对方仓库 读/写 权限的情况下</h3>
-<p>将对方仓库 <code>fork</code> 到自己仓库，再 <code>clone</code> 到本地进行修改，<code>commit、push</code> 之后到对方仓库提交 <code>pull request</code> ，备注修改内容及意见。</p>
-<h3 id="3-">3. 项目提交的原则</h3>
-<p>规范化的项目提交流程：</p>
+<h3 id="3-github-">3. Github 团队协作</h3>
+<ul>
+<li>在拥有对方仓库 读/写 权限的情况下</li>
+</ul>
+<p>将对方仓库 <code>clone</code> 到本地进行修改，在对方仓库在新建 branch 进行 commit、push 操作，随后提交 <code>pull request</code> ，备注修改内容及意见。</p>
+<ul>
+<li>在没有拥有对方仓库 读/写 权限的情况下</li>
+</ul>
+<p>将对方仓库 <code>fork</code> 到自己仓库，再 clone 到本地进行修改，commit、push 之后到对方仓库提交 <code>pull request</code> ，备注修改内容及意见。</p>
+<ul>
+<li>项目提交的原则，规范化的项目提交流程：
 <ul>
 <li>
 <p>使用 Github + 主干 / 分支模型进行开发，禁止直接 push 到 master 分支造成主分支损坏。</p>
@@ -268,6 +273,8 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 <p><code>commit message</code> 应在第一行指出主要的修改内容，以动词开头不超过50字符，之后分条列举具体的修改过程，每行不超过72字符。</p>
 </li>
 </ul>
+</li>
+</ul>
 <h1 id="-git-">实用 Git 技巧</h1>
 <h3 id="1-">1. 快捷键设置</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">vi ~/.bash_profile
@@ -276,36 +283,48 @@ alias gc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git
 alias gp<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git push&#34;</span>
 alias gst<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git status&#34;</span>
 alias gco<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git checkout&#34;</span>
-alias glog<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s%Cgreen(%cr) (bold blue)&lt;%an&gt;%Creset&#39; --abbrev-commit -- | less&#34;</span>  // 美化git log输出
+alias glog<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset&#39; --abbrev-commit --date=relative&#34;</span>                                    // 美化git log输出
+alias glo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git log --oneline&#34;</span>
 source ~/.bash_profile                                    // 让它生效
-</code></pre></div><h3 id="2--merge-pull-request-">2. 三种不同的 merge pull request 操作</h3>
+</code></pre></div><p><code>git log</code> 美化前：</p>
+<p><img src="/images/gitlog%E7%BE%8E%E5%8C%96%E5%89%8D.png" alt=""></p>
+<p>美化后：</p>
+<p><img src="/images/log%E7%BE%8E%E5%8C%96%E5%90%8E.png" alt=""></p>
+<h3 id="2--commit-">2. 简化 commit 提交历史</h3>
+<p>在使用 Git 备份的时候，常常会遇到本次的修改对上一次的改动并不大，如果按照正常的 commit 流程的话，就会造成 commit 提交历史过多，扰乱思路难以选择的情况。因此，对于改动不大的提交，可以使用 ——amend 命令</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git commit --amend
+</code></pre></div><p>这将对上一次的 commit 做出修改并合并，是用新的 commit 替换掉原来的 commit，commit ID 会发生变化，有助于简化 commit 提交历史。</p>
+<p>注意：不要修改已经 push 的 commit，除非是在自己的分支。</p>
+<h3 id="3--rebase--commit-">3. 使用 rebase 优化 commit 提交历史</h3>
+<p>对于已经提交的，杂乱无章的 commit，可以使用 rebase 来进行整理及优化。优于rebase操作较为危险，推荐先将主分支内容复制到新的分支进行操作。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git rebase -i HEAD~11        // interactive，修改当前commit前11个提交
+</code></pre></div><p>commit 提交历史优化前：</p>
+<p><img src="/images/rebase%E4%BC%98%E5%8C%96%E5%89%8D.png" alt=""></p>
+<p>进入 rebase 交互界面后，提交历史的顺序会倒置，最新的提交在最下面，个人常用的优化选项为 fixup 和 edit，将左侧 pick 更改为相应的优化选项，保存退出后就进入优化流程。</p>
+<p><img src="/images/rebase%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C.png" alt=""></p>
+<p>进入优化流程后，分条修改 commit 内容，之后 continue 继续，直到走完全部的 rebase 流程。</p>
+<p><img src="/images/rebase%E6%B5%81%E7%A8%8B.png" alt=""></p>
+<p>commit 提交历史优化后：</p>
+<p><img src="/images/rebase%E4%B9%8B%E5%90%8E.png" alt=""></p>
+<p>将优化后的 commit push 到 Github：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git push -f rebaseOptimizeCommit:master
+</code></pre></div><p><img src="/images/rebase%E5%90%8E%E5%90%8C%E6%AD%A5%E5%88%B0github.png" alt=""></p>
+<h3 id="4--merge-pull-request-">4. 三种不同的 merge pull request 操作</h3>
 <p>在提交的 pull request 通过测试后，会进入选择 Merge pull request 的界面选择具体的合并方式：</p>
 <p><img src="/images/%E4%B8%89%E7%A7%8Dmerge2.png" alt="三种不同的 merge pull request"></p>
 <ul>
-<li><code>Create a merge commit</code>：会保留该 pull request 中的所有 commit 合并至主干，之后在 git 的提交历史中可以看到所有的 commit 历史记录。</li>
-</ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git checkout master
-git merge dev                                // dev 为当前工作分支
-</code></pre></div><ul>
+<li>
+<p><code>Create a merge commit</code>：会保留该 pull request 中的所有 commit 合并至主干，并额外产生一个 merge commit，之后在 git 的提交历史中可以看到所有的 commit 历史记录。</p>
+</li>
 <li>
 <p><code>Squash and merge</code>：有一些很小的提交，或者是纠正前面的错误的提交，对于这类提交对整个工程来说不需要单独显示出来一次提交，不然导致项目的提交历史过于复杂；所以基于这种原因，我们可以把 dev 上的所有提交都合并成一个提交；然后提交到主干。</p>
-<p>需要注意的是，squash merge并不会替你产生提交，需要你再次手动执行 git commit 操作；这个 commit 可能会变更提交者作者信息，可能提交者并不是有原来 dev 分支上的开发人员，这将对代码实际贡献者的追溯产生困难。</p>
+<p>需要注意的是，squash merge 并不会替你产生提交，而是产生一个新的 commit，需要你重新输出 commit 日志，再手动执行 git commit 操作；这个 commit <strong>可能会变更提交者作者信息</strong>，可能提交者并不是有原来 dev 分支上的开发人员，这将对代码实际贡献者的追溯产生困难。</p>
+</li>
+<li>
+<p><code>Rebase and merge</code>：可手动选择需要 合并 / 保留 的 commit，并保留提交者的作者信息。直接把提交的几个 commit 平移到主分支上来。</p>
 </li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git checkout master
-git merge --squash dev
-</code></pre></div><ul>
-<li><code>Rebase and merge</code>：可手动选择需要 合并 / 保留 的 commit，并保留提交者的作者信息。</li>
-</ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git checkout dev
-git rebase -i master
-git checkout master
-git merge dev
 
-pick &lt;D1&gt; Message <span style="color:#66d9ef">for</span> commit <span style="color:#75715e">#1</span>
-fixup &lt;D2&gt; Message <span style="color:#66d9ef">for</span> commit <span style="color:#75715e">#2                // 隐藏 commit #2</span>
-pick &lt;D3&gt; Message <span style="color:#66d9ef">for</span> commit <span style="color:#75715e">#3</span>
-</code></pre></div>
     </div>
 
     <div class="post-copyright">
