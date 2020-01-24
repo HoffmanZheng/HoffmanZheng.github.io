@@ -70,6 +70,9 @@
   <body class="">
     <div class="wrapper">
         <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
     <div class="container">
         <div class="navbar-header header-logo">
         	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a>
@@ -89,6 +92,9 @@
     </div>
 </nav>
 <nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
      <div class="container">
         <div class="navbar-header">
             <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a></div>
@@ -128,6 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
+                 <span class="post-word-count">,610 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -149,25 +156,25 @@
           
 
           <p>本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。</p>
-<h1 id="git-">Git 本地仓库</h1>
+<h1 id="git-本地仓库">Git 本地仓库</h1>
 <p>Git 工作流程：</p>
 <p><img src="/images/work_process_git.png" alt="git工作流程"></p>
-<h3 id="0-">0. 应用场景</h3>
+<h3 id="0-应用场景">0. 应用场景</h3>
 <ul>
 <li>代码版本管理 / 多版本代码开发 / 多版本代码合并</li>
 </ul>
-<h3 id="1--git">1. 安装 Git</h3>
+<h3 id="1-安装-git">1. 安装 Git</h3>
 <p><a href="https://sp18.datastructur.es/materials/lab/lab1setup/windows.html">参考伯克利课程 CS61b 中的教程安装 Git</a></p>
-<h3 id="2--git">2. 配置 Git</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git config --global user.name + 你的英文名
+<h3 id="2-配置-git">2. 配置 Git</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">git config --global user.name + 你的英文名
 git config --global user.email + 你的邮箱
-git config --global push.default simple
-git config --global core.quotepath false   // 不会对0×80以上的字符进行quote，中文显示正常。
-git config --global core.editor <span style="color:#e6db74">&#34;vim&#34;</span>
+git config --global push.<span style="color:#66d9ef">default</span> simple
+git config --global core.quotepath false   // 不会对0<span style="color:#960050;background-color:#1e0010">×</span>80以上的字符进行quote<span style="color:#960050;background-color:#1e0010">，</span>中文显示正常<span style="color:#960050;background-color:#1e0010">。</span>
+git config --global core.editor <span style="color:#e6db74">&#34;</span><span style="color:#e6db74">vim</span><span style="color:#e6db74">&#34;</span>
 git config --global core.autocrlf input
 git config --global --list                 // 查看当前配置列表
 vi ~/.gitconfig                            // 编辑配置文件
-</code></pre></div><h3 id="3-git-">3. Git 本地仓库</h3>
+</code></pre></div><h3 id="3-git-本地仓库">3. Git 本地仓库</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">cd + 目标路径
 git init                              // 初始化，当前目录创建 .git 文件夹
 git add + 文件 / 文件夹 / .            // 选择要提交的内容
@@ -183,12 +190,12 @@ git reset --hard HEAD^                // 回到上一个版本，可以多加^�
 <li>可以在目录下新建个 <code>.gitignore</code> 文件，把不需要 Ｇit 管理的文件/文件夹路径写进去。常见的有<code>.idea</code> <code>.vscode</code> <code>out</code> <code>*.iml</code> <code>target/</code> <code>build/</code> <code>.gradle/</code>  等。</li>
 <li>在使用 <code>git reset</code> 回溯版本之前，一定要确保当前代码已经 <code>commit</code> 过了，因为这个操作会使当前没有 commit 的变动消失。</li>
 </ul>
-<h3 id="4-git-">4. Git 分支管理</h3>
+<h3 id="4-git-分支管理">4. Git 分支管理</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git branch                               // 查看现在存在的分支
 git branch + newBranchName               // 新建分支，把当前代码快照复制到该分支
 git checkout branchName / master         // 切换分支
 history                                  // 查看所有操作记录
-</code></pre></div><h3 id="5-git-">5. Git 合并分支</h3>
+</code></pre></div><h3 id="5-git-合并分支">5. Git 合并分支</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git checkout branchName / master        // 进入要保留的分支
 git merge brachName                     // 将brach合并至当前分支
 git add --&gt; git commit
@@ -197,18 +204,18 @@ git branch -d branchName                // 删除分支
 <ul>
 <li>合并分支时会检查代码是否有冲突，有冲突的话需要解决冲突，搜索 <code>====</code> 选择要保留的代码，再次合并。</li>
 </ul>
-<h3 id="6-">6. 其他操作</h3>
+<h3 id="6-其他操作">6. 其他操作</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">start .                               // 在资源管理器打开当前文件夹
 subl <span style="color:#f92672">(</span>文件 / 文件夹<span style="color:#f92672">)</span>                   // 快速打开sublime
 git rm -r --cached + filename         // 删除add的路径
 git add fileName --&gt; git stash        // 暂时不像提交代码（通灵术）
 git stash pop
-</code></pre></div><h1 id="github-">Github 远程仓库</h1>
-<h3 id="0--1">0. 应用场景</h3>
+</code></pre></div><h1 id="github-远程仓库">Github 远程仓库</h1>
+<h3 id="0-应用场景-1">0. 应用场景</h3>
 <ul>
 <li>代码云端备份 / 代码多地共享 / 团队协作</li>
 </ul>
-<h3 id="1-ssh-key-github">1. SSH key 验证身份（关联Github账号）</h3>
+<h3 id="1-ssh-key-验证身份关联github账号">1. SSH key 验证身份（关联Github账号）</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C + 你的邮箱           // 生成公钥文件
 cat ~/.ssh/id_rsa.pub                          // 打开生成的公钥文件，复制公钥到网页
 ssh -T git@github.com                          // 测试配对成功
@@ -218,7 +225,7 @@ ssh -T git@github.com                          // 测试配对成功
 <li>存在远程仓库，如何与本地建立连接：克隆该仓库的 ssh 地址。</li>
 <li>存在本地项目，如何与远程仓库建立连接：初始化本地仓库 &mdash;&gt; <code>git remote add + 远程仓库ssh地址</code></li>
 </ul>
-<h3 id="2-">2. 远程仓库操作</h3>
+<h3 id="2-远程仓库操作">2. 远程仓库操作</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git remote add origin git@xxxxxxx（ssh）       
 git push -u origin master                      // 推送本地master分支到远程master分支
 git pull                                       // 从远程同步到本地
@@ -245,7 +252,7 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 </ul>
 </li>
 </ul>
-<h3 id="3-github-">3. Github 团队协作</h3>
+<h3 id="3-github-团队协作">3. Github 团队协作</h3>
 <ul>
 <li>在拥有对方仓库 读/写 权限的情况下</li>
 </ul>
@@ -275,8 +282,8 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 </ul>
 </li>
 </ul>
-<h1 id="-git-">实用 Git 技巧</h1>
-<h3 id="1-">1. 快捷键设置</h3>
+<h1 id="实用-git-技巧">实用 Git 技巧</h1>
+<h3 id="1-快捷键设置">1. 快捷键设置</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">vi ~/.bash_profile
 alias ga<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git add&#34;</span>
 alias gc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git commit -v&#34;</span>
@@ -290,12 +297,12 @@ source ~/.bash_profile                                    // 让它生效
 <p><img src="/images/gitlog%E7%BE%8E%E5%8C%96%E5%89%8D.png" alt=""></p>
 <p>美化后：</p>
 <p><img src="/images/log%E7%BE%8E%E5%8C%96%E5%90%8E.png" alt=""></p>
-<h3 id="2--commit-">2. 简化 commit 提交历史</h3>
+<h3 id="2-简化-commit-提交历史">2. 简化 commit 提交历史</h3>
 <p>在使用 Git 备份的时候，常常会遇到本次的修改对上一次的改动并不大，如果按照正常的 commit 流程的话，就会造成 commit 提交历史过多，扰乱思路难以选择的情况。因此，对于改动不大的提交，可以使用 ——amend 命令</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git commit --amend
 </code></pre></div><p>这将对上一次的 commit 做出修改并合并，是用新的 commit 替换掉原来的 commit，commit ID 会发生变化，有助于简化 commit 提交历史。</p>
 <p>注意：不要修改已经 push 的 commit，除非是在自己的分支。</p>
-<h3 id="3--rebase--commit-">3. 使用 rebase 优化 commit 提交历史</h3>
+<h3 id="3-使用-rebase-优化-commit-提交历史">3. 使用 rebase 优化 commit 提交历史</h3>
 <p>对于已经提交的，杂乱无章的 commit，可以使用 rebase 来进行整理及优化。优于rebase操作较为危险，推荐先将主分支内容复制到新的分支进行操作。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git rebase -i HEAD~11        // interactive，修改当前commit前11个提交
 </code></pre></div><p>commit 提交历史优化前：</p>
@@ -309,7 +316,7 @@ source ~/.bash_profile                                    // 让它生效
 <p>将优化后的 commit push 到 Github：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git push -f rebaseOptimizeCommit:master
 </code></pre></div><p><img src="/images/rebase%E5%90%8E%E5%90%8C%E6%AD%A5%E5%88%B0github.png" alt=""></p>
-<h3 id="4--merge-pull-request-">4. 三种不同的 merge pull request 操作</h3>
+<h3 id="4-三种不同的-merge-pull-request-操作">4. 三种不同的 merge pull request 操作</h3>
 <p>在提交的 pull request 通过测试后，会进入选择 Merge pull request 的界面选择具体的合并方式：</p>
 <p><img src="/images/%E4%B8%89%E7%A7%8Dmerge2.png" alt="三种不同的 merge pull request"></p>
 <ul>
@@ -397,6 +404,7 @@ source ~/.bash_profile                                    // 让它生效
 		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
     </div>
 </footer>
+
 
 
 

@@ -17,7 +17,7 @@
       <pubDate>Sun, 29 Dec 2019 23:37:47 +0100</pubDate>
       
       <guid>http://chenghao.monster/2019/maven%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%8F%92%E4%BB%B6%E5%8F%8A%E5%8C%85%E7%AE%A1%E7%90%86/</guid>
-      <description>Maven 作为一个强大的项目管理工具，可以自动管理 Java 包的传递性依赖，解决包的依赖冲突并对依赖的 scope 进行控制。 本篇对其功能和用法做简单的介绍。
+      <description>Maven 作为一个强大的项目管理工具，在项目清理、开发、部署时有着强大的功能。此外，Maven 还可以自动管理 Java 包的传递性依赖，解决包的依赖冲突并对依赖的 scope 进行控制。 本篇对其功能和用法做简单的介绍。
 Maven 的生命周期 1. Maven 简介 Maven 是一个项目管理工具，它包含了一个项目对象模型（Project Object Model），反映在配置中，就是一个 pom.xml 文件。是一组标准集合，一个项目的生命周期、一个包依赖管理系统。
 当我们使用 Maven 的时候，通过一个自定义的项目对象模型，pom.xml 来详细描述我们自己的项目。
 2. Maven 的生命周期 Maven 有三个内置的构建生命周期：default生命周期处理你的项目开发，clean 生命周期负责清理，而 site  生命周期处理项目站点文档的创建。

@@ -70,6 +70,9 @@
   <body class="">
     <div class="wrapper">
         <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
     <div class="container">
         <div class="navbar-header header-logo">
         	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a>
@@ -89,6 +92,9 @@
     </div>
 </nav>
 <nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
      <div class="container">
         <div class="navbar-header">
             <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a></div>
@@ -128,6 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
+                 <span class="post-word-count">,79 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -149,9 +156,9 @@
           
 
           <p>在我之前的博客 <code>Java：初识多线程、原理及实现</code> 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。</p>
-<h1 id="list-">List 类的安全容器</h1>
+<h1 id="list-类的安全容器">List 类的安全容器</h1>
 <h3 id="heading"></h3>
-<h1 id="map-">Map 类的安全容器</h1>
+<h1 id="map-类的安全容器">Map 类的安全容器</h1>
 <p><strong>ConcurrentHashMap 和 Hashtable 的区别</strong></p>
 <p><code>Hashtable</code> ：将 get / put 所有相关操作都 synchronized 化，这相当于给整个哈希表加了一把<strong>大锁</strong>，多线程访问时候，只要有一个线程访问或操作该对象，那其他线程只能阻塞，相当于将所有的操作<strong>串行化</strong>，在竞争激烈的并发场景中性能就会非常差。</p>
 <p><img src="/images/HashTableLock.png" alt="HashTable 的全表锁"></p>
@@ -233,6 +240,7 @@
 		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
     </div>
 </footer>
+
 
 
 
