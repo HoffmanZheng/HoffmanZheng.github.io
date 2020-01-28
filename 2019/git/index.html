@@ -57,7 +57,7 @@
     "datePublished": "2019-12-26 21:49:47 \x2b0100 CET",
     "dateModified" : "2019-12-26 21:49:47 \x2b0100 CET",
     "url" : "http:\/\/chenghao.monster\/2019\/git\/",
-    "wordCount" : "610",
+    "wordCount" : "618",
     "keywords" : [ "Tools", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,610 words</span>
+                 <span class="post-word-count">,618 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -188,7 +188,7 @@ git reset --hard HEAD^                // 回到上一个版本，可以多加^�
 </code></pre></div><p>注：</p>
 <ul>
 <li>可以在目录下新建个 <code>.gitignore</code> 文件，把不需要 Ｇit 管理的文件/文件夹路径写进去。常见的有<code>.idea</code> <code>.vscode</code> <code>out</code> <code>*.iml</code> <code>target/</code> <code>build/</code> <code>.gradle/</code>  等。</li>
-<li>在使用 <code>git reset</code> 回溯版本之前，一定要确保当前代码已经 <code>commit</code> 过了，因为这个操作会使当前没有 commit 的变动消失。</li>
+<li>在使用 <code>git reset</code> 回溯版本之前，一定要 <strong>确保当前代码已经 commit 过了</strong>，因为这个操作会使当前没有 commit 的变动消失。</li>
 </ul>
 <h3 id="4-git-分支管理">4. Git 分支管理</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git branch                               // 查看现在存在的分支
@@ -243,7 +243,7 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 </code></pre></div><p>注：</p>
 <ul>
 <li>origin为远程仓库的名字，可以更改但不推荐。</li>
-<li><a href="https://jscode.me/t/topic/789/2">clone下载速度很慢怎么办？</a></li>
+<li><a href="https://github.com/sun-shadow/Surf_the_Internet/blob/master/%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%AF%87.md">clone下载速度很慢怎么办？</a></li>
 <li>Github国内的替代品有：
 <ul>
 <li><a href="https://dev.tencent.com/">腾讯云开发者平台</a></li>
@@ -265,7 +265,7 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 <li>项目提交的原则，规范化的项目提交流程：
 <ul>
 <li>
-<p>使用 Github + 主干 / 分支模型进行开发，禁止直接 push 到 master 分支造成主分支损坏。</p>
+<p>使用 Github + 主干 / 分支模型进行开发，禁止直接 push 到 master 分支造成 <strong>主分支损坏</strong>。</p>
 </li>
 <li>
 <p>一次提交不宜提交过多的内容，方便集中精力和 Code Review，同时也便于测试。</p>
@@ -303,7 +303,7 @@ source ~/.bash_profile                                    // 让它生效
 </code></pre></div><p>这将对上一次的 commit 做出修改并合并，是用新的 commit 替换掉原来的 commit，commit ID 会发生变化，有助于简化 commit 提交历史。</p>
 <p>注意：不要修改已经 push 的 commit，除非是在自己的分支。</p>
 <h3 id="3-使用-rebase-优化-commit-提交历史">3. 使用 rebase 优化 commit 提交历史</h3>
-<p>对于已经提交的，杂乱无章的 commit，可以使用 rebase 来进行整理及优化。优于rebase操作较为危险，推荐先将主分支内容复制到新的分支进行操作。</p>
+<p>对于已经提交的，杂乱无章的 commit，可以使用 rebase 来进行整理及优化。由于 rebase 操作较为危险，推荐先将主分支内容复制到新的分支进行操作。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git rebase -i HEAD~11        // interactive，修改当前commit前11个提交
 </code></pre></div><p>commit 提交历史优化前：</p>
 <p><img src="/images/rebase%E4%BC%98%E5%8C%96%E5%89%8D.png" alt=""></p>
@@ -331,6 +331,8 @@ source ~/.bash_profile                                    // 让它生效
 <p><code>Rebase and merge</code>：可手动选择需要 合并 / 保留 的 commit，并保留提交者的作者信息。直接把提交的几个 commit 平移到主分支上来。</p>
 </li>
 </ul>
+<h3 id="5-推荐阅读">5. 推荐阅读</h3>
+<p><a href="https://mp.weixin.qq.com/s/XGwAZ-o4WT5FxN_PYXFEXw">Git 如何优雅地回退代码</a></p>
 
     </div>
 

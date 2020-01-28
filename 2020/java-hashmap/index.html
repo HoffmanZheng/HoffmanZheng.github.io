@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="http://chenghao.monster/2020/java-thread-safe-collection/" />
+  
+  <link rel="canonical" href="http://chenghao.monster/2020/java-hashmap/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Java：HashMap 源码解读 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Java：HashMap 源码解读 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/chenghao.monster"
+    },
+    "articleSection" : "posts",
+    "name" : "Java：HashMap 源码解读",
+    "headline" : "Java：HashMap 源码解读",
+    "description" : "HashMap 源码解读 1. 概述  哈希表是基于 Map 接口的实现。它提供了所有可选的 Map 操作并且允许 null 作为 key 和 value。HashMap大体上与 HashTable 相同，只是 没有同步 和允许了 null 作为键值。这个类 不保证数据的有序性，特别是，不保证数据的顺序随着时间不会改变。\n  假设哈希方程把数据均匀的分散在哈希桶中，这个实现可以提供 O(1) 的基础操作（get \/ put）性能。哈希表中的迭代所需要的时间和表的容量\x2b键值对的数量成正比。因此，当迭代效率很重要时，不把初始容量设置的过高是非常重要的。\n 2. 初始容量及装载因子  影响一个哈希表实例性能的两个参数：初始容量和装载因子。哈希表的容量是表中哈希桶的数量，初始容量 initial capacity 则是哈希表被创建时的容量。装载因子 load factor 是用来描述哈希桶自动扩容前所允许的数据最大填充程度的一个衡量。当哈希表中键值对的数量超过装载因子和当前容量的乘积后，哈希表会执行 rehash 操作， 即内部的数据结构会进行重构，哈希桶的数量会变成现在的两倍。\n  作为一条基本规则，默认的装载因子 0.75 提供了一个较好的时间和空间的权衡。高的装载因子会降低空间开销但提高了查询成本（反应在哈希表的大多数操作上，包括 get \/ put）。在设置哈希表初始容量时需要考虑表中预期存储的键值对的数量以及装载因子，来尽可能的降低 rehash 发生的次数。如果初始容量大于键值对最大数 \/ 装载因子，rehash 将永远不会发生。\n HashMap 的实现原理 1. 哈希表底层实现原理 2. 为什么采用数组\x2b链表的数据结构 3. 哈希冲突还有哪些解决办法 4. 为什么不用 LinkedList \/ ArrayList 代替数组结构 HashMap 扩容 1.",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-01-28 14:11:47 \x2b0100 CET",
+    "dateModified" : "2020-01-28 14:11:47 \x2b0100 CET",
+    "url" : "http:\/\/chenghao.monster\/2020\/java-hashmap\/",
+    "wordCount" : "421",
+    "keywords" : [ "Java", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Java：HashMap 源码解读</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-01-28 itemprop="datePublished">January 28, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,421 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <h1 id="hashmap-源码解读">HashMap 源码解读</h1>
+<h3 id="1-概述">1. 概述</h3>
+<blockquote>
+<p>哈希表是基于 Map 接口的实现。它提供了所有可选的 Map 操作并且允许 null 作为 key 和 value。HashMap大体上与 <code>HashTable</code> 相同，只是 <strong>没有同步</strong> 和允许了 null 作为键值。这个类 <strong>不保证数据的有序性</strong>，特别是，不保证数据的顺序随着时间不会改变。</p>
+</blockquote>
+<blockquote>
+<p>假设哈希方程把数据均匀的分散在哈希桶中，这个实现可以提供 O(1) 的基础操作（get / put）性能。哈希表中的迭代所需要的时间和表的容量+键值对的数量成正比。因此，当迭代效率很重要时，不把初始容量设置的过高是非常重要的。</p>
+</blockquote>
+<h3 id="2-初始容量及装载因子">2. 初始容量及装载因子</h3>
+<blockquote>
+<p>影响一个哈希表实例性能的两个参数：初始容量和装载因子。哈希表的容量是表中哈希桶的数量，初始容量    <code>initial capacity</code> 则是哈希表被创建时的容量。装载因子 <code>load factor</code> 是用来描述哈希桶自动扩容前所允许的数据最大填充程度的一个衡量。当哈希表中键值对的数量超过装载因子和当前容量的乘积后，哈希表会执行 <code>rehash</code> 操作， 即内部的数据结构会进行重构，哈希桶的数量会变成现在的两倍。</p>
+</blockquote>
+<blockquote>
+<p>作为一条基本规则，默认的装载因子 0.75 提供了一个较好的时间和空间的权衡。高的装载因子会降低空间开销但提高了查询成本（反应在哈希表的大多数操作上，包括 get / put）。在设置哈希表初始容量时需要考虑表中预期存储的键值对的数量以及装载因子，来尽可能的降低 <code>rehash</code> 发生的次数。如果初始容量大于键值对最大数 / 装载因子，rehash 将永远不会发生。</p>
+</blockquote>
+<h1 id="hashmap-的实现原理">HashMap 的实现原理</h1>
+<h3 id="1-哈希表底层实现原理">1. 哈希表底层实现原理</h3>
+<h3 id="2-为什么采用数组链表的数据结构">2. 为什么采用数组+链表的数据结构</h3>
+<h3 id="3-哈希冲突还有哪些解决办法">3. 哈希冲突还有哪些解决办法</h3>
+<h3 id="4-为什么不用-linkedlist--arraylist-代替数组结构">4. 为什么不用 LinkedList / ArrayList 代替数组结构</h3>
+<h1 id="hashmap-扩容">HashMap 扩容</h1>
+<h3 id="1-hashmap-在什么条件下扩容">1. HashMap 在什么条件下扩容</h3>
+<h3 id="2-为什么扩容是2的n次幂">2. 为什么扩容是2的n次幂</h3>
+<p>相比于 % 取模，哈希表选择 <code>(n - 1) &amp; hash</code> 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.. 而这样哈希桶的最大 index = 2^n -1，二进制就成了 01111.. 再与对象的哈希值做按位与运算，就能快速的计算出对应哈希桶 index 值，并且是分布均匀的。</p>
+<p>若在创建哈希表时给定初始容量，哈希表也会用 <code>roundUpToPowerOf2</code> / <code>tableSizeFor</code> 将其扩充为2的幂次方大小。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// Returns a power of two size for the given target capacity. 
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">tableSizeFor</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> cap<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+	<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> cap <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+    n <span style="color:#f92672">|</span><span style="color:#f92672">=</span> n <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">;</span>
+    n <span style="color:#f92672">|</span><span style="color:#f92672">=</span> n <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 2<span style="color:#f92672">;</span>
+    n <span style="color:#f92672">|</span><span style="color:#f92672">=</span> n <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 4<span style="color:#f92672">;</span>
+    n <span style="color:#f92672">|</span><span style="color:#f92672">=</span> n <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 8<span style="color:#f92672">;</span>
+    n <span style="color:#f92672">|</span><span style="color:#f92672">=</span> n <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 16<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> MAXIMUM_CAPACITY<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> MAXIMUM_CAPACITY <span style="color:#f92672">:</span> n <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="3-为什么要先高16位异或低16位再取模运算">3. 为什么要先高16位异或低16位再取模运算</h3>
+<h1 id="hashmap-的-get--put-过程">HashMap 的 get / put 过程</h1>
+<h3 id="1-哈希表的-put-过程">1. 哈希表的 put 过程</h3>
+<h3 id="2-哈希表的-get-过程">2. 哈希表的 get 过程</h3>
+<h3 id="3-还有哪些哈希算法">3. 还有哪些哈希算法</h3>
+<h3 id="4-字符串中-hashcode-的实现">4. 字符串中 hashCode 的实现</h3>
+<h1 id="jdk-18-对-hashmap-的改进">JDK 1.8 对 HashMap 的改进</h1>
+<h3 id="1-jdk-17-的-hashmap-存在的问题">1. JDK 1.7 的 HashMap 存在的问题</h3>
+<h4 id="11-hashmap-cve-安全隐患">1.1 HashMap CVE 安全隐患</h4>
+<p><code>Tomcat</code> 在2011年邮件中报道了哈希表可以通过精心构造的恶意 http 请求造成链表性能退化，并引发网站 DoS 拒绝服务攻击的现象。这个问题在之后的 JDK 7 中得到了解决：对传进来的字符串进行特殊的哈希运算 <code>stringHash32</code> ，来避免恶意的字符串传值造成的哈希表链表性能退化的情况。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+	<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>0 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> h <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> k <span style="color:#66d9ef">instanceof</span> String<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+		<span style="color:#66d9ef">return</span> sun<span style="color:#f92672">.</span><span style="color:#a6e22e">misc</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Hashing</span><span style="color:#f92672">.</span><span style="color:#a6e22e">stringHash32</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span>String<span style="color:#f92672">)</span> k<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+	<span style="color:#f92672">}</span>
+    <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h4 id="12-hashmap-多线程操作导致死循环问题">1.2 HashMap 多线程操作导致死循环问题</h4>
+<p>主要原因在于并发下 HashMap 扩容时，往新的 HashMap 转移数据可能产生循环链表（此处链表插入是往前插入的，导致和原哈希桶中的位置相反，产生环形链表），导致之后在该哈希桶中搜索键值时可能会发生的死锁现象。<a href="https://coolshell.cn/articles/9606.html">详情查看酷壳：Java HashMap 的死循环</a></p>
+<p>不过，JDK 1.8 后解决了这个问题（使用了保持顺序的扩容 transfer 操作），但是还是不建议在多线程下使用 HashMap，因为多线程下使用 HashMap 还是会存在其他问题比如数据丢失。并发环境下推荐使用 ConcurrentHashMap 。</p>
+<h3 id="2-jdk-18-之前的-hashmap-源码实现">2. JDK 1.8 之前的 HashMap 源码实现</h3>
+<p>JDK 1.8 之前 <code>HashMap</code> 底层是 <strong>数组和链表</strong> 结合在一起使用也就是 链表散列。HashMap 通过 key 的 hashCode 经过 <strong>扰动函数处</strong> 理过后得到 hash 值，然后通过 <code>(n - 1) &amp; hash</code> 判断当前元素存放的位置（这里的 n 指的是数组的长度），如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。</p>
+<ul>
+<li>扰动函数（减少哈希碰撞）</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/* 源码注释：对原有对象的哈希值进行一次补充的哈希运算得到结果值，
+</span><span style="color:#75715e">来防止低质量的哈希方程。这是非常重要的，
+</span><span style="color:#75715e">因为哈希表用2的幂用为哈希表的长度，在低位bits相同时就会发生哈希碰撞。*/</span>
+
+<span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+	h <span style="color:#f92672">^</span><span style="color:#f92672">=</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 20<span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 12<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+	<span style="color:#66d9ef">return</span> h <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 7<span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 4<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><ul>
+<li>链地址法解决哈希碰撞</li>
+</ul>
+<p>思想：为每个哈希值建立一个单链表，当发生哈希碰撞时，将记录插入到链表中。</p>
+<p><img src="/images/HashBucketLinked.png" alt="链地址法解决哈希碰撞"></p>
+<h3 id="3-jdk-18-之后的-hashmap-底层实现">3. JDK 1.8 之后的 HashMap 底层实现</h3>
+<p>相比于之前的版本， JDK 1.8 之后在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为8）时，将链表转化为红黑树，以减少搜索时间。（TreeMap、TreeSet 以及 JDK 1.8 之后的 HashMap 底层都用到了红黑树。）</p>
+<p><strong>为什么选择 8 作为阈值</strong></p>
+<p>因为理想情况下，随机哈希值遵循参数为 0.5 的泊松分布，如此在同一个哈希桶中出现 8 个以上数据的概率是极低的。</p>
+<p><img src="/images/HashMapTreeSet.jpeg" alt="JDK 1.8 之后的哈希表结构"></p>
+<h3 id="4-新的哈希算法">4. 新的哈希算法</h3>
+<p>JDK 1.8 的 hash 方法相比于 JDK 1.7 hash 方法原理不变，但是减少了扰动次数，更加简化，并提高了运算性能。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/* 源码注释：将哈希值的较高位对低位进行异或运算，来避免低位相同、只有高位不同的哈希值发生的碰撞。
+</span><span style="color:#75715e">这是一种在速度、实用性和位扩展之间的权衡。因此我们用最便宜的方式，减少系统损失，以及合并高位哈希值
+</span><span style="color:#75715e">的影响，否则这些高位哈希值将由于哈希表长度范围的限制永远不会在索引计算中使用*/</span>
+
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> h<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 16<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="5-为什么不直接用红黑树而选择先用链表再转红黑树">5. 为什么不直接用红黑树，而选择先用链表再转红黑树</h3>
+<h3 id="6-能否用二叉查找树代替红黑树">6. 能否用二叉查找树代替红黑树</h3>
+<h3 id="7-为什么阈值是-8-呢">7. 为什么阈值是 8 呢</h3>
+<h3 id="8-当链表转为红黑树后什么时候退化为链表">8. 当链表转为红黑树后，什么时候退化为链表</h3>
+<h1 id="hashmap-的并发问题">HashMap 的并发问题</h1>
+<h3 id="1-hashmap在并发编程环境下有什么问题啊">1. HashMap在并发编程环境下有什么问题啊</h3>
+<h3 id="2-在jdk18中还有这些问题么">2. 在jdk1.8中还有这些问题么</h3>
+<h3 id="3-你一般怎么解决这些问题的">3. 你一般怎么解决这些问题的</h3>
+<h1 id="hashmap-key-问题">HashMap key 问题</h1>
+<h3 id="1-键可以为-null-值么">1. 键可以为 Null 值么</h3>
+<h3 id="2-你一般用什么作为-hashmap-的-key">2. 你一般用什么作为 HashMap 的 key</h3>
+<h3 id="3-我用可变类当-hashmap-的-key-有什么问题">3. 我用可变类当 HashMap 的 key 有什么问题</h3>
+<h3 id="4-如果实现让一个自定义的-class-作为-hashmap-的-key">4. 如果实现让一个自定义的 class 作为 HashMap 的 key</h3>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://chenghao.monster/2020/java-hashmap/>http://chenghao.monster/2020/java-hashmap/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://chenghao.monster/tags/java/">
+                    #Java</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://chenghao.monster">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://chenghao.monster/2020/java-thread-safe-collection/" class="prev" rel="prev" title="Java：多线程下的安全容器"><i class="iconfont icon-left"></i>&nbsp;Java：多线程下的安全容器</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://chenghao.monster">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
