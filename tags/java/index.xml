@@ -17,10 +17,11 @@
       <pubDate>Tue, 28 Jan 2020 14:11:47 +0100</pubDate>
       
       <guid>http://chenghao.monster/2020/java-hashmap/</guid>
-      <description>HashMap 的实现原理 1. 哈希表底层实现原理 　哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry&amp;lt;K, V&amp;gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。
-transient Node&amp;lt;K,V&amp;gt;[] table;static class Node&amp;lt;K,V&amp;gt; implements Map.Entry&amp;lt;K,V&amp;gt; {final int hash;final K key;V value;Node&amp;lt;K,V&amp;gt; next;｝2. 为什么采用数组+链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。
+      <description>本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。
+HashMap 的实现原理 1. 哈希表底层实现原理 哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry&amp;lt;K, V&amp;gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。
+transient Node&amp;lt;K,V&amp;gt;[] table;static class Node&amp;lt;K,V&amp;gt; implements Map.Entry&amp;lt;K,V&amp;gt; {final int hash;final K key;V value;Node&amp;lt;K,V&amp;gt; next;｝2. 为什么采用数组+链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。
 为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。
-3. 哈希冲突还有哪些解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 2. 为什么扩容是2的n次幂 相比于 % 取模，哈希表选择 (n - 1) &amp;amp; hash 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.</description>
+3. 哈希冲突的解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量*装载因子，则会触发 resize() 方法，初始化 table 或是使哈希表容量翻倍。</description>
     </item>
     
     <item>

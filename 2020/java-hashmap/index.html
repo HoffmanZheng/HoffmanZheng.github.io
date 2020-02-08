@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Java：HashMap 源码解读",
     "headline" : "Java：HashMap 源码解读",
-    "description" : "HashMap 的实现原理 1. 哈希表底层实现原理 　哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry\x26lt;K, V\x26gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。\ntransient Node\x26lt;K,V\x26gt;[] table;\rstatic class Node\x26lt;K,V\x26gt; implements Map.Entry\x26lt;K,V\x26gt; {\rfinal int hash;\rfinal K key;\rV value;\rNode\x26lt;K,V\x26gt; next;\r｝\r2. 为什么采用数组\x2b链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get \/ put）操作提供了保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。\n为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。\n3. 哈希冲突还有哪些解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 2. 为什么扩容是2的n次幂 相比于 % 取模，哈希表选择 (n - 1) \x26amp; hash 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.",
+    "description" : "本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get \/ put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。\nHashMap 的实现原理 1. 哈希表底层实现原理 哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry\x26lt;K, V\x26gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。\ntransient Node\x26lt;K,V\x26gt;[] table;\rstatic class Node\x26lt;K,V\x26gt; implements Map.Entry\x26lt;K,V\x26gt; {\rfinal int hash;\rfinal K key;\rV value;\rNode\x26lt;K,V\x26gt; next;\r｝\r2. 为什么采用数组\x2b链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get \/ put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。\n为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。\n3. 哈希冲突的解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量*装载因子，则会触发 resize() 方法，初始化 table 或是使哈希表容量翻倍。",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-01-28 14:11:47 \x2b0100 CET",
     "dateModified" : "2020-01-28 14:11:47 \x2b0100 CET",
     "url" : "http:\/\/chenghao.monster\/2020\/java-hashmap\/",
-    "wordCount" : "916",
+    "wordCount" : "987",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,916 words</span>
+                 <span class="post-word-count">,987 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -155,10 +155,10 @@
           
           
 
-          <h1 id="hashmap-的实现原理">HashMap 的实现原理</h1>
+          <p>本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。</p>
+<h1 id="hashmap-的实现原理">HashMap 的实现原理</h1>
 <h3 id="1-哈希表底层实现原理">1. 哈希表底层实现原理</h3>
 <p><img src="/images/hashmap%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84.png" alt=""></p>
-<p>　</p>
 <p>哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 <code>Entry&lt;K, V&gt;</code> 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">transient</span> Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> table<span style="color:#f92672">;</span>
 <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span><span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
@@ -168,9 +168,9 @@
         Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> next<span style="color:#f92672">;</span>
 <span style="color:#960050;background-color:#1e0010">｝</span>
 </code></pre></div><h3 id="2-为什么采用数组链表的数据结构">2. 为什么采用数组+链表的数据结构</h3>
-<p>数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。</p>
+<p>数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。</p>
 <p>为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。</p>
-<h3 id="3-哈希冲突还有哪些解决办法">3. 哈希冲突还有哪些解决办法</h3>
+<h3 id="3-哈希冲突的解决办法">3. 哈希冲突的解决办法</h3>
 <ol>
 <li>开放地址法：</li>
 <li>链地址法：</li>
@@ -179,6 +179,7 @@
 </ol>
 <h1 id="hashmap-扩容">HashMap 扩容</h1>
 <h3 id="1-hashmap-在什么条件下扩容">1. HashMap 在什么条件下扩容</h3>
+<p>若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量*装载因子，则会触发 <code>resize()</code> 方法，初始化 table 或是使哈希表容量翻倍。</p>
 <h3 id="2-为什么扩容是2的n次幂">2. 为什么扩容是2的n次幂</h3>
 <p>相比于 % 取模，哈希表选择 <code>(n - 1) &amp; hash</code> 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.. 而这样哈希桶的最大 index = 2^n -1，二进制就成了 01111.. 再与对象的哈希值做按位与运算，就能快速的计算出对应哈希桶 index 值，并且是分布均匀的。</p>
 <p>若在创建哈希表时给定初始容量，哈希表也会用 <code>roundUpToPowerOf2</code> / <code>tableSizeFor</code> 将其扩充为2的幂次方大小。</p>
@@ -193,7 +194,15 @@
     <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> MAXIMUM_CAPACITY<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> MAXIMUM_CAPACITY <span style="color:#f92672">:</span> n <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="3-为什么要先高16位异或低16位再取模运算">3. 为什么要先高16位异或低16位再取模运算</h3>
-<h1 id="hashmap-的-get--put-过程">HashMap 的 get / put 过程</h1>
+<p>文档里解释的很清楚了：</p>
+<ul>
+<li>只有高位不同的哈希值将会一直在哈希桶索引的运算中发生碰撞，比如连续整数的 float 键集。所以应用了一种变换来向下扩散高位哈希值在索引运算中的影响。这是一个在速度、实用性和位分散质量之间的权衡。因为大多数哈希集已经合理分布（无法从扩散中受益），并且由于我们使用树来处理容器中的大量冲突，我们以最廉价的移位 XOR 异或方式合并高位哈希值在索引运算中的影响，并减少系统损失，否则这些高位值会由于有限的哈希表容量而永远不会在索引运算中被使用。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> h<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 16<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="hashmap-的-get--put-过程">HashMap 的 get / put 过程</h1>
 <h3 id="1-哈希表的-put-过程">1. 哈希表的 put 过程</h3>
 <p><img src="/images/%E5%93%88%E5%B8%8C%E8%A1%A8put.png" alt=""></p>
 <p>需要注意的是，put 方法的 <strong>返回值是 oldValue</strong>。</p>
@@ -254,17 +263,27 @@
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="2-哈希表的-get-过程">2. 哈希表的 get 过程</h3>
-<p>对key的hashCode()做hash运算，计算index;</p>
-<p>如果在bucket里的第一个节点里直接命中，则直接返回；</p>
-<p>如果有冲突，则通过key.equals(k)去查找对应的Entry;</p>
+<p>对 key 做哈希运算，重新计算哈希值：</p>
 <ul>
-<li>若为树，则在树中通过key.equals(k)查找，O(logn)；</li>
-<li>若为链表，则在链表中通过key.equals(k)查找，O(n)。</li>
+<li>哈希表为 null，或哈希桶长度不大于0，返回 null。</li>
+<li>计算对应哈希桶索引，判断桶内第一个元素是否为所需键值对，命中则直接返回。</li>
+<li>遍历哈希桶内其他键值对：
+<ul>
+<li>若为树，则在树中查找，O(logn)；</li>
+<li>若为链表，则在链表中查找，O(n)。</li>
+</ul>
+</li>
+</ul>
+<p>key 如何判断是否已存在：</p>
+<ul>
+<li>哈希值相等</li>
+<li>key 实例 == 或者 equals</li>
 </ul>
 <h3 id="3-还有哪些哈希算法">3. 还有哪些哈希算法</h3>
-<p>先说一下hash算法干嘛的，Hash函数是指把一个大范围映射到一个小范围。把大范围映射到一个小范围的目的往往是为了节省空间，使得数据容易保存。</p>
+<p>Hash函数是指把一个大范围映射到一个小范围，往往是为了节省空间，使得数据容易保存。</p>
 <p>比较出名的有MurmurHash、MD4、MD5等等</p>
 <h3 id="4-字符串中-hashcode-的实现">4. 字符串中 hashCode 的实现</h3>
+<p><code>31 * i = 32 * i - i = (i &lt;&lt; 5) - i</code>，这种位移与减法结合的计算相比一般的运算快很多。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hashCode</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> hash<span style="color:#f92672">;</span>
     <span style="color:#75715e">// 若当前字符串已经计算过哈希值，则直接返回
@@ -281,7 +300,7 @@
 </code></pre></div><h1 id="jdk-18-对-hashmap-的改进">JDK 1.8 对 HashMap 的改进</h1>
 <h3 id="1-jdk-17-的-hashmap-存在的问题">1. JDK 1.7 的 HashMap 存在的问题</h3>
 <h4 id="11-hashmap-cve-安全隐患">1.1 HashMap CVE 安全隐患</h4>
-<p><code>Tomcat</code> 在2011年邮件中报道了哈希表可以通过精心构造的恶意 http 请求造成链表性能退化，并引发网站 DoS 拒绝服务攻击的现象。这个问题在之后的 JDK 7 中得到了解决：对传进来的字符串进行特殊的哈希运算 <code>stringHash32</code> ，来避免恶意的字符串传值造成的哈希表链表性能退化的情况。</p>
+<p><code>Tomcat</code> 在 2011 年邮件中报道了哈希表可以通过精心构造的恶意 http 请求造成链表性能退化，并引发网站 DoS 拒绝服务攻击的现象。这个问题在之后的 JDK 7 中得到了解决：对传进来的字符串进行特殊的哈希运算 <code>stringHash32</code> ，来避免恶意的字符串传值造成的哈希表链表性能退化的情况。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 	<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>0 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> h <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> k <span style="color:#66d9ef">instanceof</span> String<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 		<span style="color:#66d9ef">return</span> sun<span style="color:#f92672">.</span><span style="color:#a6e22e">misc</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Hashing</span><span style="color:#f92672">.</span><span style="color:#a6e22e">stringHash32</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span>String<span style="color:#f92672">)</span> k<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
@@ -292,7 +311,7 @@
 <p>主要原因在于并发下 HashMap 扩容时，往新的 HashMap 转移数据可能产生循环链表（此处链表插入是往前插入的，导致和原哈希桶中的位置相反，产生环形链表），导致之后在该哈希桶中搜索键值时可能会发生的死锁现象。<a href="https://coolshell.cn/articles/9606.html">详情查看酷壳：Java HashMap 的死循环</a></p>
 <p>不过，JDK 1.8 后解决了这个问题（使用了保持顺序的扩容 transfer 操作），但是还是不建议在多线程下使用 HashMap，因为多线程下使用 HashMap 还是会存在其他问题比如数据丢失。并发环境下推荐使用 ConcurrentHashMap 。</p>
 <h3 id="2-jdk-18-之前的-hashmap-源码实现">2. JDK 1.8 之前的 HashMap 源码实现</h3>
-<p>JDK 1.8 之前 <code>HashMap</code> 底层是 <strong>数组和链表</strong> 结合在一起使用也就是 链表散列。HashMap 通过 key 的 hashCode 经过 <strong>扰动函数处</strong> 理过后得到 hash 值，然后通过 <code>(n - 1) &amp; hash</code> 判断当前元素存放的位置（这里的 n 指的是数组的长度），如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。</p>
+<p>JDK 1.8 之前 <code>HashMap</code> 底层是 <strong>数组和链表</strong> 结合在一起使用也就是链表散列。HashMap 通过 key 的 哈希值经过 <strong>扰动函数</strong> 处理过后得到新的 hash 值，然后通过 <code>(n - 1) &amp; hash</code> 判断当前元素存放的位置（这里的 n 指的是数组的长度），如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。</p>
 <ul>
 <li>扰动函数（减少哈希碰撞）</li>
 </ul>
@@ -309,12 +328,15 @@
 </ul>
 <p>思想：为每个哈希值建立一个单链表，当发生哈希碰撞时，将记录插入到链表中。</p>
 <p><img src="/images/HashBucketLinked.png" alt="链地址法解决哈希碰撞"></p>
+<ul>
+<li>扩容复制数据时，<strong>会改变数据在链表结构中的顺序</strong>。</li>
+</ul>
 <h3 id="3-jdk-18-之后的-hashmap-底层实现">3. JDK 1.8 之后的 HashMap 底层实现</h3>
-<p>相比于之前的版本， JDK 1.8 之后在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为8）时，将链表转化为红黑树，以减少搜索时间。（TreeMap、TreeSet 以及 JDK 1.8 之后的 HashMap 底层都用到了红黑树。）</p>
-<p><strong>为什么选择 8 作为阈值</strong></p>
-<p>因为理想情况下，随机哈希值遵循参数为 0.5 的泊松分布，如此在同一个哈希桶中出现 8 个以上数据的概率是极低的。</p>
+<p>相比于之前的版本， JDK 1.8 之后在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为8）时，将链表转化为红黑树，以减少搜索时间。（TreeMap、TreeSet 以及 JDK 1.8 之后的 HashMap 底层都用到了红黑树。）（树节点为 6 时会退化 split 为链表，中间有个差值 7 可以防止链表和树之间频繁的转换）</p>
 <p><img src="/images/HashMapTreeSet.jpeg" alt="JDK 1.8 之后的哈希表结构"></p>
-<h3 id="4-新的哈希算法">4. 新的哈希算法</h3>
+<ul>
+<li>新的哈希算法</li>
+</ul>
 <p>JDK 1.8 的 hash 方法相比于 JDK 1.7 hash 方法原理不变，但是减少了扰动次数，更加简化，并提高了运算性能。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/* 源码注释：将哈希值的较高位对低位进行异或运算，来避免低位相同、只有高位不同的哈希值发生的碰撞。
 </span><span style="color:#75715e">这是一种在速度、实用性和位扩展之间的权衡。因此我们用最便宜的方式，减少系统损失，以及合并高位哈希值
@@ -324,10 +346,11 @@
         <span style="color:#66d9ef">int</span> h<span style="color:#f92672">;</span>
         <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 16<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="5-为什么不直接用红黑树而选择先用链表再转红黑树">5. 为什么不直接用红黑树，而选择先用链表再转红黑树</h3>
-<h3 id="6-能否用二叉查找树代替红黑树">6. 能否用二叉查找树代替红黑树</h3>
-<h3 id="7-为什么阈值是-8-呢">7. 为什么阈值是 8 呢</h3>
-<h3 id="8-当链表转为红黑树后什么时候退化为链表">8. 当链表转为红黑树后，什么时候退化为链表</h3>
+</code></pre></div><ul>
+<li>扩容 transfer 后元素在链表中的顺序不变，这样就避免了在并发扩容时的死循环问题。</li>
+</ul>
+<h3 id="4-为什么不直接用红黑树而选择先用链表再转红黑树">4. 为什么不直接用红黑树，而选择先用链表再转红黑树</h3>
+<h3 id="5-能否用二叉查找树代替红黑树">5. 能否用二叉查找树代替红黑树</h3>
 <h1 id="hashmap-的并发问题">HashMap 的并发问题</h1>
 <h3 id="1-hashmap在并发编程环境下有什么问题啊">1. HashMap在并发编程环境下有什么问题啊</h3>
 <h3 id="2-在jdk18中还有这些问题么">2. 在jdk1.8中还有这些问题么</h3>
