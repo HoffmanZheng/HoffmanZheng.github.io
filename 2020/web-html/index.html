@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="http://chenghao.monster/2020/java-hashmap/" />
+  
+  <link rel="canonical" href="http://chenghao.monster/2020/web-html/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Web：HTML 常用标签 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Web：HTML 常用标签 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/chenghao.monster"
+    },
+    "articleSection" : "posts",
+    "name" : "Web：HTML 常用标签",
+    "headline" : "Web：HTML 常用标签",
+    "description" : "HTML（Hyper Text Markup Language）超文本标记语言，是构建网站的基石。游览器通过解析 HTML 来将互联网中传输的 字节流 渲染成丰富多彩的可视化网页。\n由于我不是写前端的，就用在线 Web 调试工具 饥人谷 JsBin 和 代码沙盒 来进行 HTML 的编辑。\nHTML 章节与内容标签 1. HTML 起手式 HTML 代码由许许多多不同的标签（tag）构成。下图为 HTML 的一个常规模版：\n \x26lt;head\x26gt; 里面一般放一些看不见的元素，如编码方式、全文样式 \x26lt;style\x26gt; 、标题、JS等 \x26lt;body\x26gt; 里面写网页的具体内容 模版中的内容只需要改 title 和语言，其他暂时都不变。 有个输入标签的快捷键，打出标签单词后按键盘上的 Tab 键就可以快速补全代码了。  2. HTML 章节标签 章节标签用于划分网页 \/ 文章的层级，使页面结构清晰，也便于添加 CSS 样式\n 标题：\x26lt;h1~h6\x26gt; 字体从大到小，h1 一个页面最多一个，不能为了调整字体大小而使用 章节：\x26lt;section\x26gt; 开始了一个新的章节，里面一般用 h2，h3；章节里面可以再套章节 文章：\x26lt;article\x26gt; 段落：\x26lt;p\x26gt; 头部：\x26lt;header\x26gt; 放置顶的广告 脚部：\x26lt;footer\x26gt; 最下面的版权声明等，\x26amp;copy;打出版权的符号 主要内容：\x26lt;main\x26gt; 里面是标题\x2b章节 旁支内容：\x26lt;aside\x26gt; 可以写导航，或在 main 的下面写个参考资料 划分：\x26lt;div\x26gt; 用于划分页面结构，使结构更加清晰  3.",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-02-08 13:19:47 \x2b0100 CET",
+    "dateModified" : "2020-02-08 13:19:47 \x2b0100 CET",
+    "url" : "http:\/\/chenghao.monster\/2020\/web-html\/",
+    "wordCount" : "592",
+    "keywords" : [ "Web", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Web：HTML 常用标签</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-02-08 itemprop="datePublished">February 8, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,592 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>HTML（Hyper Text Markup Language）超文本标记语言，是构建网站的基石。游览器通过解析 HTML 来将互联网中传输的 <code>字节流</code> 渲染成丰富多彩的可视化网页。</p>
+<p>由于我不是写前端的，就用在线 Web 调试工具 <a href="http://js.jirengu.com/?html,output">饥人谷 JsBin</a> 和 <a href="https://codesandbox.io">代码沙盒</a> 来进行 HTML 的编辑。</p>
+<h1 id="html-章节与内容标签">HTML 章节与内容标签</h1>
+<h3 id="1-html-起手式">1. HTML 起手式</h3>
+<p>HTML 代码由许许多多不同的标签（tag）构成。下图为 HTML 的一个常规模版：</p>
+<p><img src="/images/HTML%E8%B5%B7%E6%89%8B%E5%BC%8F.png" alt=""></p>
+<ul>
+<li><code>&lt;head&gt;</code> 里面一般放一些看不见的元素，如编码方式、全文样式 <code>&lt;style&gt;</code> 、标题、JS等</li>
+<li><code>&lt;body&gt;</code> 里面写网页的具体内容</li>
+<li>模版中的内容只需要改 title 和语言，其他暂时都不变。</li>
+<li>有个输入标签的快捷键，打出标签单词后按键盘上的 <code>Tab</code> 键就可以快速补全代码了。</li>
+</ul>
+<h3 id="2-html-章节标签">2. HTML 章节标签</h3>
+<p>章节标签用于划分网页 / 文章的层级，使页面结构清晰，也便于添加 CSS 样式</p>
+<ol>
+<li>标题：<code>&lt;h1~h6&gt;</code> 字体从大到小，h1 一个页面最多一个，不能为了调整字体大小而使用</li>
+<li>章节：<code>&lt;section&gt;</code> 开始了一个新的章节，里面一般用 h2，h3；章节里面可以再套章节</li>
+<li>文章：<code>&lt;article&gt;</code></li>
+<li>段落：<code>&lt;p&gt;</code></li>
+<li>头部：<code>&lt;header&gt;</code> 放置顶的广告</li>
+<li>脚部：<code>&lt;footer&gt;</code> 最下面的版权声明等，<code>&amp;copy;</code>打出版权的符号</li>
+<li>主要内容：<code>&lt;main&gt;</code> 里面是标题+章节</li>
+<li>旁支内容：<code>&lt;aside&gt;</code> 可以写导航，或在 main 的下面写个参考资料</li>
+<li>划分：<code>&lt;div&gt;</code> 用于划分页面结构，使结构更加清晰</li>
+</ol>
+<p><img src="/images/%E7%AB%A0%E8%8A%82%E6%A0%87%E7%AD%BE.png" alt=""></p>
+<h3 id="3-全局属性">3. 全局属性</h3>
+<p>全局属性一般写在章节标签中，为一个块添加功能或者更改样式：</p>
+<ol>
+<li><code>class</code>  给标签分类，只是个标记，可以写多个 class 名称，方便之后设置样式</li>
+<li><code>contenteditable</code>  使元素可以被用户编辑，可以做一个自己的编辑器</li>
+<li><code>hidden</code>  写在标签字的后面，将对应的整个块 block 隐藏起来</li>
+<li><code>id</code>
+<ol>
+<li>用 id 还是用 class，如果当前标签内容是全页面唯一的，用 id；不然用 class</li>
+<li>不到万不得已，千万不要用 id，因为 id 不报错&hellip;</li>
+<li><code>#xxx{}</code> / <code>[id=xxx]{}</code> 写 id 相关的样式</li>
+<li>id 可以直接在 JS 中调用，<code>xxx.style.border = '1px solid green'</code> 当有重复 id 时不生效</li>
+<li>id 名字不可与 windows 自带的全局属性重复。</li>
+</ol>
+</li>
+<li><code>&lt;style&gt;</code>  写在head里面，
+<ol>
+<li><code>[class=middle bordered]</code> 等号判断需要 class 名完全相等，不推荐使用</li>
+<li><code>.middle</code> 可以匹配 class 名中用空格分配的一部分</li>
+<li>style 可以放 body 然后改 display: block; 显示出来 &mdash;&gt; 加 contenteditable，就可以让用户自己改自己的样式</li>
+<li>style 也可以直接写在章节标签后面 <code>style=&quot;border: 5px solid green;&quot;</code>，这里的优先级比写在 head 中的要高 （JS 的优先级高于章节标签，JS 会覆盖它们其他两个）</li>
+</ol>
+</li>
+<li><code>tabindex</code>
+<ol>
+<li>让没有鼠标的用户用键盘上的 tab 也可以实现网页的游览</li>
+<li>加在章节标签后面  tabindex=1 2 3 &hellip; ，来控制 tab的顺序的；0 是最后一个，-1 不要到这里</li>
+</ol>
+</li>
+<li><code>title</code>
+<ol>
+<li>标题内容太多，一行放不下，然后不换行，最后&hellip;.</li>
+<li>用户鼠标放上到&hellip;后，显示 title 的值，可以显示完整的内容。</li>
+</ol>
+</li>
+</ol>
+<p><img src="/images/%E5%85%A8%E5%B1%80%E5%B1%9E%E6%80%A7.png" alt=""></p>
+<h3 id="4-内容标签">4. 内容标签</h3>
+<ol>
+<li>ol + li：ordered list；list item</li>
+<li>ul + li：unordered list</li>
+<li>dl + dt + dd：description list；description term；description data</li>
+<li>pre
+<ol>
+<li>html  默认多个空格 / 换行会缩成一个空格 &mdash;&gt; 因为写代码有时候要换行缩进</li>
+<li>用 pre 标签包住想要保留空格 / 回车的内容就可以了，一般用在 code 中。</li>
+<li>一般会在 style 中声明 pre 的字体：<code>font: inherit;</code></li>
+</ol>
+</li>
+<li>hr：水平分割线</li>
+<li>br：换行，直接写在要换行的地方就可以了</li>
+<li>a ：超链接，href=&quot;qq.com&rdquo; -  target=&rdquo;_blank&rdquo; 打开一个新的窗口 可以安装个插件 Death To _blank 来实现自己控制是否打开新的标签</li>
+<li>em：emphasis 强调 - 默认斜体，可以自定义样式，指语气很重要</li>
+<li>strong：重要 - 默认加粗，可以自定义样式，指内容很重要</li>
+<li>code
+<ol>
+<li>code 里面的字是等宽的，方便对齐</li>
+<li>默认为内联 inline，外面套 pre 就可以换行了</li>
+</ol>
+</li>
+<li>quote：内联的引用</li>
+<li>blockquote：块级的引用</li>
+<li>iframe：内嵌窗口（套娃），已经很少使用了，还有些老系统在用</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">前端的日常工作有：
+&lt;<span style="color:#f92672">ol</span>&gt;
+    &lt;<span style="color:#f92672">li</span>&gt;写页面&lt;/<span style="color:#f92672">li</span>&gt;
+    &lt;<span style="color:#f92672">li</span>&gt;发邮件&lt;/<span style="color:#f92672">li</span>&gt;
+    &lt;<span style="color:#f92672">li</span>&gt;和产品经理探讨人生&lt;/<span style="color:#f92672">li</span>&gt;
+&lt;/<span style="color:#f92672">ol</span>&gt;
+老王的兴趣爱好有：
+&lt;<span style="color:#f92672">ul</span>&gt;
+    &lt;<span style="color:#f92672">li</span>&gt;唱&lt;/<span style="color:#f92672">li</span>&gt;
+    &lt;<span style="color:#f92672">li</span>&gt;跳&lt;/<span style="color:#f92672">li</span>&gt;
+    &lt;<span style="color:#f92672">li</span>&gt;篮球&lt;/<span style="color:#f92672">li</span>&gt;
+&lt;/<span style="color:#f92672">ul</span>&gt;
+</code></pre></div><h3 id="5-文本样式">5. 文本样式</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">斜体：&lt;<span style="color:#f92672">i</span>&gt;&lt;/<span style="color:#f92672">i</span>&gt;
+粗体：&lt;<span style="color:#f92672">b</span>&gt;&lt;/<span style="color:#f92672">b</span>&gt;
+删除线：&lt;<span style="color:#f92672">s</span>&gt;&lt;/<span style="color:#f92672">s</span>&gt;
+下划线：&lt;<span style="color:#f92672">u</span>&gt;&lt;/<span style="color:#f92672">u</span>&gt;
+上标：&lt;<span style="color:#f92672">sup</span>&gt;&lt;/<span style="color:#f92672">sup</span>&gt;
+下标：&lt;<span style="color:#f92672">sub</span>&gt;&lt;/<span style="color:#f92672">sub</span>&gt;
+</code></pre></div><h1 id="html-常用重点标签">HTML 常用重点标签</h1>
+<p>重点介绍 a、table、img、form 这几个标签。</p>
+<h3 id="1-a-标签">1. a 标签</h3>
+<p>a 标签的作用：</p>
+<ul>
+<li>跳转外部页面</li>
+<li>跳转内部锚点</li>
+<li>跳转到邮箱或电话等</li>
+</ul>
+<h4 id="11-href-属性">1.1 href 属性</h4>
+<ol>
+<li>href (hyper ref)  超链接
+<ol>
+<li><code>&lt;a href=&quot;https://google.com&quot;&gt;超链接&lt;/a&gt;</code></li>
+<li>像用户一样打开网页：使用 <code>http-server -c-1</code>（不要缓存），在结尾加上路径</li>
+<li>方法二：yarn global add parcel  &ndash;&gt; parcel a-href.html （直接接 html 文件名）</li>
+</ol>
+</li>
+<li>网址
+<ol>
+<li><code>//google.com</code>  无协议地址，它会继承当前的 http &mdash;&gt; 跳转到 google 真正的地址</li>
+<li>// 最高级，它会自动选择合适的 http / https，以后写网址都写这个</li>
+<li>检查 - Network - Preserve.log 勾选 - 点击超链接 - 查看网页跳转记录</li>
+</ol>
+</li>
+<li>路径
+<ol>
+<li>/a/b/c.html    http 的相对路径是相对于 http 服务的根目录</li>
+<li>index.html  等价于 ./index.html 在当前目录下寻找</li>
+</ol>
+</li>
+<li>伪协议
+<ol>
+<li><code>&lt;a href=&quot;javascript:alert(1);&quot;</code> 点击这个标签就会执行 JS 代码 - 弹窗，显示 1 （早期的用法，现在不怎么用了）</li>
+<li>href=&quot;javascript:;&rdquo;  链接点击之后，什么都不做</li>
+<li>href=&rdquo;&rdquo; 留空 &mdash;&gt; 点击链接页面会刷新</li>
+<li>href=&rdquo;#&rdquo; &mdash;&gt; 页面自动滚到顶部</li>
+<li>href=&rdquo;#xxx&rdquo; 自动跳转到 [id=xxx] 的标签，做锚点。</li>
+<li>href=&quot;mailto:zch693922442@outlook.com&rdquo;    发邮件</li>
+<li>href=&quot;tel:1234&rdquo;  直接打电话。</li>
+</ol>
+</li>
+</ol>
+<h4 id="12-target-属性">1.2 target 属性</h4>
+<ol>
+<li>target=_blank  指定在哪个窗口打开链接</li>
+<li>取值
+<ol>
+<li>_blank：新窗口打开</li>
+<li>_top：在最顶层打开链接，从 iframe 跳至外面</li>
+<li>_parent：父级窗口打开</li>
+<li>_self：是默认值，在当前页面打开（google 不允许别人用 iframe 打开它）</li>
+<li>target=&quot;xxx&rdquo; 如果有个 xxx 的窗口就用它打开链接，没有就创建一个</li>
+<li>target=iframeName  网页内套娃</li>
+</ol>
+</li>
+</ol>
+<h4 id="13-其他属性">1.3 其他属性</h4>
+<ol>
+<li>download
+<ol>
+<li>download 下载这个网页，很多游览器不支持这个</li>
+</ol>
+</li>
+<li>rel=noopener
+<ol>
+<li>防止一个 bug，学了 JS 之后再讲</li>
+</ol>
+</li>
+</ol>
+<h3 id="2-table-标签">2. table 标签</h3>
+<p>table 标签里面只能有三个标签 thead、tfoot、tbody  （相互顺序无影响）</p>
+<p><img src="/images/%E8%A1%A8%E6%A0%BC%E6%A0%87%E7%AD%BE.png" alt=""></p>
+<ul>
+<li>tr=table row；th=table head；td=table data；（没写默认为 td）</li>
+<li>如果忘记写 thead tfoot 会在网页内自动设置被 tbody</li>
+<li>如果想给表该样式：需要使用 CSS</li>
+<li>相关的样式
+<ol>
+<li>table-layout：fixed 等宽；auto 表格宽度随着内容改变</li>
+<li>border-collapse：collapse 表格中间没有空隙</li>
+<li>border-spacing：5px 控制表格 border 之间的距离</li>
+</ol>
+</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">style</span>&gt;
+	<span style="color:#f92672">table</span> {
+		<span style="color:#66d9ef">width</span>: <span style="color:#ae81ff">600</span><span style="color:#66d9ef">px</span>;
+		<span style="color:#66d9ef">table-layout</span>:<span style="color:#66d9ef">auto</span>;
+		<span style="color:#66d9ef">border-spacing</span>: <span style="color:#ae81ff">20</span><span style="color:#66d9ef">px</span>;
+		<span style="color:#66d9ef">border-collapse</span>: <span style="color:#66d9ef">collapse</span>;
+	}
+	<span style="color:#f92672">td</span><span style="color:#f92672">,</span> 
+	<span style="color:#f92672">th</span> {
+		<span style="color:#66d9ef">border</span>: <span style="color:#ae81ff">1</span><span style="color:#66d9ef">px</span> <span style="color:#66d9ef">solid</span> <span style="color:#66d9ef">blue</span>;
+	}
+&lt;/<span style="color:#f92672">style</span>&gt;
+</code></pre></div><h3 id="3-img-标签">3. img 标签</h3>
+<ol>
+<li>
+<p>作用</p>
+<ol>
+<li>发出 get 请求，展示一张图片</li>
+</ol>
+</li>
+<li>
+<p>属性</p>
+<ol>
+<li>alt / height / width / src</li>
+<li>src=&quot;dog.png&rdquo;</li>
+<li>alt 图片显示错误时代替的文字  alternative</li>
+<li>width=&quot;400&rdquo; 只写宽度，高度会自适应</li>
+<li>高度宽度都写，图片可能会变形，<strong>永远不要让一张图片变形</strong></li>
+</ol>
+</li>
+<li>
+<p>事件</p>
+<ol>
+<li>
+<p>onload / onerror 监听图片是否加载成功</p>
+</li>
+<li>
+<p>可以在图片加载失败的时候，进行一个挽救，显示一个 404 图片。</p>
+</li>
+</ol>
+</li>
+<li>
+<p>响应式</p>
+<ol>
+<li>max-wirdth: 100%：为了能在手机上看</li>
+</ol>
+</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">head</span>&gt;
+    &lt;<span style="color:#f92672">style</span>&gt;
+        <span style="color:#f92672">*</span> {
+            <span style="color:#66d9ef">margin</span>: <span style="color:#ae81ff">0</span>;
+            <span style="color:#66d9ef">padding</span>: <span style="color:#ae81ff">0</span>;
+            <span style="color:#66d9ef">box-sizing</span>: <span style="color:#66d9ef">border-box</span>;
+        }
+        <span style="color:#f92672">img</span> {
+            <span style="color:#66d9ef">max-width</span>: <span style="color:#ae81ff">100</span><span style="color:#66d9ef">%</span>;
+        }
+    &lt;/<span style="color:#f92672">style</span>&gt;
+&lt;/<span style="color:#f92672">head</span>&gt;
+
+&lt;<span style="color:#f92672">body</span>&gt;
+&lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">id</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;xxx&#34;</span> <span style="color:#a6e22e">width</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;400&#34;</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;dog.png&#34;</span> <span style="color:#a6e22e">alt</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;一只狗子&#34;</span> /&gt;
+&lt;<span style="color:#f92672">script</span>&gt;
+    <span style="color:#a6e22e">xxx</span>.<span style="color:#a6e22e">onload</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;图片加载成功&#34;</span>)
+    }
+    <span style="color:#a6e22e">xxx</span>.<span style="color:#a6e22e">onerror</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">function</span>() {
+        <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;图片加载失败&#34;</span>)
+        <span style="color:#a6e22e">xxx</span>.<span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;/404.png&#39;</span>;
+    }
+&lt;/<span style="color:#f92672">script</span>&gt;
+&lt;/<span style="color:#f92672">body</span>&gt;
+</code></pre></div><h3 id="4-form-标签">4. form 标签</h3>
+<ol>
+<li>input 标签
+<ol>
+<li>作用：发 get / post 请求，然后刷新页面</li>
+<li>input 和 button 的区别：input 里面不能再有内容（只能有纯文本），botton 可以还有标签的，也可以加个图片什么的</li>
+<li>type：要设置为 submit 才能提交，不写默认为 submit，写错就不能提交。</li>
+<li>type=radio 选项，设置相同的 name 属性课设置为单选。</li>
+<li>type=checkbox 多选，设置相同的 name 声明多个选项是一组的。</li>
+</ol>
+</li>
+<li>属性
+<ol>
+<li>action / autocomplete / method / target</li>
+<li>action：就是你要请求的那个页面的地址</li>
+<li>action：相当于 src，但这个路径是后台给的，so 不知道，它是点击提交按钮后的执行路径</li>
+<li>method：默认为 get  也可以改为 post</li>
+<li>autocomplete：自动填充用户信息，给出建议</li>
+<li>target=_blank 新开一个页面 和 a 标签里的类似 = 我要提交到哪个页面（会被刷新）</li>
+</ol>
+</li>
+<li>事件
+<ol>
+<li>onsubmit：当用户提交的时候触发的事件</li>
+<li>type 不是 submit 的话，就不能提交表单  （不写的话 默认也是 submit） 写了别的就会点不动</li>
+</ol>
+</li>
+<li>input 的事件
+<ol>
+<li>onchange  当用户输入改变的时候触发</li>
+<li>onfocus  鼠标移至当前模块时触发</li>
+<li>onblur 用户鼠标移开 block</li>
+<li>验证器 required 设置当前 input 为必选项</li>
+</ol>
+</li>
+<li>注意事项
+<ol>
+<li>一般不监听 input 的 click 事件</li>
+<li>form 里面的 input 要有 name</li>
+<li>form 里要放一个 type=submit 才能触发 submit 事件</li>
+</ol>
+</li>
+</ol>
+<p><img src="/images/%E8%A1%A8%E5%8D%95%E6%A0%87%E7%AD%BE.png" alt=""></p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://chenghao.monster/2020/web-html/>http://chenghao.monster/2020/web-html/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://chenghao.monster/tags/web/">
+                    #Web</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://chenghao.monster">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://chenghao.monster/2020/java-hashmap/" class="prev" rel="prev" title="Java：HashMap 源码解读"><i class="iconfont icon-left"></i>&nbsp;Java：HashMap 源码解读</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://chenghao.monster">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

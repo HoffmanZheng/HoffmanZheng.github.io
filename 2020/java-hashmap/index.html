@@ -10,7 +10,7 @@
   
   
   <link rel="prev" href="http://chenghao.monster/2020/java-thread-safe-collection/" />
-  
+  <link rel="next" href="http://chenghao.monster/2020/web-html/" />
   <link rel="canonical" href="http://chenghao.monster/2020/java-hashmap/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Java：HashMap 源码解读",
     "headline" : "Java：HashMap 源码解读",
-    "description" : "HashMap 的实现原理 1. 哈希表底层实现原理 　哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry\x26lt;K, V\x26gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。\ntransient Node\x26lt;K,V\x26gt;[] table;\rstatic class Node\x26lt;K,V\x26gt; implements Map.Entry\x26lt;K,V\x26gt; {\rfinal int hash;\rfinal K key;\rV value;\rNode\x26lt;K,V\x26gt; next;\r｝\r2. 为什么采用数组\x2b链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get \/ put）操作提供了保障，链表用于解决哈希冲突，用于存放具有哈希冲突的元素，为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。\n3. 哈希冲突还有哪些解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 2. 为什么扩容是2的n次幂 相比于 % 取模，哈希表选择 (n - 1) \x26amp; hash 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.",
+    "description" : "HashMap 的实现原理 1. 哈希表底层实现原理 　哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry\x26lt;K, V\x26gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。\ntransient Node\x26lt;K,V\x26gt;[] table;\rstatic class Node\x26lt;K,V\x26gt; implements Map.Entry\x26lt;K,V\x26gt; {\rfinal int hash;\rfinal K key;\rV value;\rNode\x26lt;K,V\x26gt; next;\r｝\r2. 为什么采用数组\x2b链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get \/ put）操作提供了保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。\n为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。\n3. 哈希冲突还有哪些解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 2. 为什么扩容是2的n次幂 相比于 % 取模，哈希表选择 (n - 1) \x26amp; hash 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-01-28 14:11:47 \x2b0100 CET",
     "dateModified" : "2020-01-28 14:11:47 \x2b0100 CET",
     "url" : "http:\/\/chenghao.monster\/2020\/java-hashmap\/",
-    "wordCount" : "909",
+    "wordCount" : "916",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,909 words</span>
+                 <span class="post-word-count">,916 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -168,7 +168,8 @@
         Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> next<span style="color:#f92672">;</span>
 <span style="color:#960050;background-color:#1e0010">｝</span>
 </code></pre></div><h3 id="2-为什么采用数组链表的数据结构">2. 为什么采用数组+链表的数据结构</h3>
-<p>数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了保障，链表用于解决哈希冲突，用于存放具有哈希冲突的元素，为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。</p>
+<p>数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。</p>
+<p>为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。</p>
 <h3 id="3-哈希冲突还有哪些解决办法">3. 哈希冲突还有哪些解决办法</h3>
 <ol>
 <li>开放地址法：</li>
@@ -195,6 +196,7 @@
 <h1 id="hashmap-的-get--put-过程">HashMap 的 get / put 过程</h1>
 <h3 id="1-哈希表的-put-过程">1. 哈希表的 put 过程</h3>
 <p><img src="/images/%E5%93%88%E5%B8%8C%E8%A1%A8put.png" alt=""></p>
+<p>需要注意的是，put 方法的 <strong>返回值是 oldValue</strong>。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> V <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>K key<span style="color:#f92672">,</span> V value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">return</span> putVal<span style="color:#f92672">(</span>hash<span style="color:#f92672">(</span>key<span style="color:#f92672">)</span><span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> value<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
     	<span style="color:#75715e">// 对key的hashCode()做hash
@@ -438,6 +440,8 @@
         
         <a href="http://chenghao.monster/2020/java-thread-safe-collection/" class="prev" rel="prev" title="Java：多线程下的安全容器"><i class="iconfont icon-left"></i>&nbsp;Java：多线程下的安全容器</a>
          
+        
+        <a href="http://chenghao.monster/2020/web-html/" class="next" rel="next" title="Web：HTML 常用标签">Web：HTML 常用标签&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 

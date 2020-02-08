@@ -6,10 +6,23 @@
     <description>Recent content in Study notes on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 28 Jan 2020 14:11:47 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 08 Feb 2020 13:19:47 +0100</lastBuildDate>
     
 	<atom:link href="http://chenghao.monster/categories/study-notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Web：HTML 常用标签</title>
+      <link>http://chenghao.monster/2020/web-html/</link>
+      <pubDate>Sat, 08 Feb 2020 13:19:47 +0100</pubDate>
+      
+      <guid>http://chenghao.monster/2020/web-html/</guid>
+      <description>HTML（Hyper Text Markup Language）超文本标记语言，是构建网站的基石。游览器通过解析 HTML 来将互联网中传输的 字节流 渲染成丰富多彩的可视化网页。
+由于我不是写前端的，就用在线 Web 调试工具 饥人谷 JsBin 和 代码沙盒 来进行 HTML 的编辑。
+HTML 章节与内容标签 1. HTML 起手式 HTML 代码由许许多多不同的标签（tag）构成。下图为 HTML 的一个常规模版：
+ &amp;lt;head&amp;gt; 里面一般放一些看不见的元素，如编码方式、全文样式 &amp;lt;style&amp;gt; 、标题、JS等 &amp;lt;body&amp;gt; 里面写网页的具体内容 模版中的内容只需要改 title 和语言，其他暂时都不变。 有个输入标签的快捷键，打出标签单词后按键盘上的 Tab 键就可以快速补全代码了。  2. HTML 章节标签 章节标签用于划分网页 / 文章的层级，使页面结构清晰，也便于添加 CSS 样式
+ 标题：&amp;lt;h1~h6&amp;gt; 字体从大到小，h1 一个页面最多一个，不能为了调整字体大小而使用 章节：&amp;lt;section&amp;gt; 开始了一个新的章节，里面一般用 h2，h3；章节里面可以再套章节 文章：&amp;lt;article&amp;gt; 段落：&amp;lt;p&amp;gt; 头部：&amp;lt;header&amp;gt; 放置顶的广告 脚部：&amp;lt;footer&amp;gt; 最下面的版权声明等，&amp;amp;copy;打出版权的符号 主要内容：&amp;lt;main&amp;gt; 里面是标题+章节 旁支内容：&amp;lt;aside&amp;gt; 可以写导航，或在 main 的下面写个参考资料 划分：&amp;lt;div&amp;gt; 用于划分页面结构，使结构更加清晰  3.</description>
+    </item>
     
     <item>
       <title>Java：HashMap 源码解读</title>
@@ -18,7 +31,8 @@
       
       <guid>http://chenghao.monster/2020/java-hashmap/</guid>
       <description>HashMap 的实现原理 1. 哈希表底层实现原理 　哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry&amp;lt;K, V&amp;gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。
-transient Node&amp;lt;K,V&amp;gt;[] table;static class Node&amp;lt;K,V&amp;gt; implements Map.Entry&amp;lt;K,V&amp;gt; {final int hash;final K key;V value;Node&amp;lt;K,V&amp;gt; next;｝2. 为什么采用数组+链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了保障，链表用于解决哈希冲突，用于存放具有哈希冲突的元素，为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。
+transient Node&amp;lt;K,V&amp;gt;[] table;static class Node&amp;lt;K,V&amp;gt; implements Map.Entry&amp;lt;K,V&amp;gt; {final int hash;final K key;V value;Node&amp;lt;K,V&amp;gt; next;｝2. 为什么采用数组+链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。
+为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。
 3. 哈希冲突还有哪些解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 2. 为什么扩容是2的n次幂 相比于 % 取模，哈希表选择 (n - 1) &amp;amp; hash 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.</description>
     </item>
     
@@ -65,10 +79,10 @@ Collection 继承体系 1. 集合 Collection 介绍  为什么需要集合？  �
     
     <item>
       <title>Maven：生命周期、插件及包管理</title>
-      <link>http://chenghao.monster/2019/maven-plugin-package-management/</link>
+      <link>http://chenghao.monster/2019/maven/</link>
       <pubDate>Sun, 29 Dec 2019 23:37:47 +0100</pubDate>
       
-      <guid>http://chenghao.monster/2019/maven-plugin-package-management/</guid>
+      <guid>http://chenghao.monster/2019/maven/</guid>
       <description>Maven 作为一个强大的项目管理工具，在项目清理、开发、部署时有着强大的功能。此外，Maven 还可以自动管理 Java 包的传递性依赖，解决包的依赖冲突并对依赖的 scope 进行控制。 本篇对其功能和用法做简单的介绍。
 Maven 的生命周期 1. Maven 简介 Maven 是一个项目管理工具，它包含了一个项目对象模型（Project Object Model），反映在配置中，就是一个 pom.xml 文件。是一组标准集合，一个项目的生命周期、一个包依赖管理系统。
 当我们使用 Maven 的时候，通过一个自定义的项目对象模型，pom.xml 来详细描述我们自己的项目。

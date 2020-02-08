@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Web on 人间一场大梦</title>
+    <link>http://chenghao.monster/tags/web/</link>
+    <description>Recent content in Web on 人间一场大梦</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 08 Feb 2020 13:19:47 +0100</lastBuildDate>
+    
+	<atom:link href="http://chenghao.monster/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Web：HTML 常用标签</title>
+      <link>http://chenghao.monster/2020/web-html/</link>
+      <pubDate>Sat, 08 Feb 2020 13:19:47 +0100</pubDate>
+      
+      <guid>http://chenghao.monster/2020/web-html/</guid>
+      <description>HTML（Hyper Text Markup Language）超文本标记语言，是构建网站的基石。游览器通过解析 HTML 来将互联网中传输的 字节流 渲染成丰富多彩的可视化网页。
+由于我不是写前端的，就用在线 Web 调试工具 饥人谷 JsBin 和 代码沙盒 来进行 HTML 的编辑。
+HTML 章节与内容标签 1. HTML 起手式 HTML 代码由许许多多不同的标签（tag）构成。下图为 HTML 的一个常规模版：
+ &amp;lt;head&amp;gt; 里面一般放一些看不见的元素，如编码方式、全文样式 &amp;lt;style&amp;gt; 、标题、JS等 &amp;lt;body&amp;gt; 里面写网页的具体内容 模版中的内容只需要改 title 和语言，其他暂时都不变。 有个输入标签的快捷键，打出标签单词后按键盘上的 Tab 键就可以快速补全代码了。  2. HTML 章节标签 章节标签用于划分网页 / 文章的层级，使页面结构清晰，也便于添加 CSS 样式
+ 标题：&amp;lt;h1~h6&amp;gt; 字体从大到小，h1 一个页面最多一个，不能为了调整字体大小而使用 章节：&amp;lt;section&amp;gt; 开始了一个新的章节，里面一般用 h2，h3；章节里面可以再套章节 文章：&amp;lt;article&amp;gt; 段落：&amp;lt;p&amp;gt; 头部：&amp;lt;header&amp;gt; 放置顶的广告 脚部：&amp;lt;footer&amp;gt; 最下面的版权声明等，&amp;amp;copy;打出版权的符号 主要内容：&amp;lt;main&amp;gt; 里面是标题+章节 旁支内容：&amp;lt;aside&amp;gt; 可以写导航，或在 main 的下面写个参考资料 划分：&amp;lt;div&amp;gt; 用于划分页面结构，使结构更加清晰  3.</description>
+    </item>
+    
+  </channel>
+</rss>
