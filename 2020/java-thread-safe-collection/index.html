@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Java：多线程下的安全容器",
     "headline" : "Java：多线程下的安全容器",
-    "description" : "在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。\nList 类的安全容器  Map 类的安全容器 ConcurrentHashMap 和 Hashtable 的区别\nHashtable ：将 get \/ put 所有相关操作都 synchronized 化，这相当于给整个哈希表加了一把大锁，多线程访问时候，只要有一个线程访问或操作该对象，那其他线程只能阻塞，相当于将所有的操作串行化，在竞争激烈的并发场景中性能就会非常差。\nConcurrentHashMap：对整个桶数组进行了分割分段 Segment，每一把锁只锁容器其中一部分数据，多线程访问容器里不同数据段的数据，就不会存在锁竞争，提高并发访问率。\n一个 ConcurrentHashMap 里包含一个 Segment 数组。Segment 的结构和 HashMap 类似，是一种数组和链表结构，一个 Segment 包含一个 HashEntry 数组，每个 HashEntry 是一个链表结构的元素，每个 Segment 守护着一个HashEntry 数组里的元素，当对 HashEntry 数组的数据进行修改时，必须首先获得对应的 Segment的锁。\n到了 JDK 1.8 的时候已经摒弃了分段锁，而是直接用 Node 数组 \x2b 链表 \x2b 红黑树的数据结构来实现，并发控制使用 synchronized 和 CAS 来操作。（ JDK 1.6 以后 对 synchronized 锁做了很多优化， 整个看起来就像是优化过且线程安全的 HashMap，虽然在 JDK 1.",
+    "description" : "在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。\nList 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 verctor 的复合操作（如遍历\x2b修改）仍会导致 并发修改异常。\npublic synchronized boolean add(E e);\rpublic synchronized boolean isEmpty();\rpublic synchronized E get(int index);\rpublic synchronized void sort(Comparator\x26lt;? super E\x26gt; c);\r1.2 SynchronizedList SynchronizedList 类和 vector 类似，只不过是在方法内进行同步锁：\npublic E get(int index) {\rsynchronized (mutex) {return list.get(index);}}\rpublic E set(int index, E element) {\rsynchronized (mutex) {return list.",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-01-16 13:19:47 \x2b0100 CET",
     "dateModified" : "2020-01-16 13:19:47 \x2b0100 CET",
     "url" : "http:\/\/chenghao.monster\/2020\/java-thread-safe-collection\/",
-    "wordCount" : "79",
+    "wordCount" : "467",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,79 words</span>
+                 <span class="post-word-count">,467 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -157,16 +157,131 @@
 
           <p>在我之前的博客 <a href="http://chenghao.monster/2020/java-multi-thread/">Java：初识多线程、原理及实现</a> 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。</p>
 <h1 id="list-类的安全容器">List 类的安全容器</h1>
-<h3 id="heading"></h3>
+<h3 id="1-vector-与-synchronizedlist">1. Vector 与 SynchronizedList</h3>
+<h4 id="11-vector">1.1 Vector</h4>
+<p><code>Vector</code> 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 verctor 的复合操作（如遍历+修改）仍会导致 <strong>并发修改异常</strong>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>E e<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> E <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>Comparator<span style="color:#f92672">&lt;</span><span style="color:#f92672">?</span> <span style="color:#66d9ef">super</span> E<span style="color:#f92672">&gt;</span> c<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+</code></pre></div><h4 id="12-synchronizedlist">1.2 SynchronizedList</h4>
+<p><code>SynchronizedList</code> 类和 vector 类似，只不过是在方法内进行同步锁：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> E <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>mutex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">;</span><span style="color:#f92672">}</span><span style="color:#f92672">}</span>
+<span style="color:#66d9ef">public</span> E <span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> E element<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>mutex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>index<span style="color:#f92672">,</span> element<span style="color:#f92672">)</span><span style="color:#f92672">;</span><span style="color:#f92672">}</span><span style="color:#f92672">}</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> E element<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>mutex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>index<span style="color:#f92672">,</span> element<span style="color:#f92672">)</span><span style="color:#f92672">;</span><span style="color:#f92672">}</span><span style="color:#f92672">}</span>
+<span style="color:#66d9ef">public</span> E <span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>mutex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">;</span><span style="color:#f92672">}</span><span style="color:#f92672">}</span>
+</code></pre></div><h4 id="13-vector-和-synchronizedlist-可能会出现的问题">1.3 Vector 和 SynchronizedList 可能会出现的问题</h4>
+<p>虽然 Vector 和 SynchronizedList 的单个方法都是线程安全的，但是对其的复合操作仍然需要用户手动地同步。SynchronizedList 在使用迭代器遍历的时候也会有同样的问题，源码已经提醒我们要 <strong>手动加锁</strong> 了。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> ListIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">listIterator</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">listIterator</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> <span style="color:#75715e">// Must be manually synched by user
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">public</span> ListIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">listIterator</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">listIterator</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">;</span> <span style="color:#75715e">// Must be manually synched by user
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</code></pre></div><h3 id="2-copyonwritearraylist">2. CopyOnWriteArrayList</h3>
+<p>总的来说，JUC 下支持并发的容器与老一代的线程安全类相比，总结起来就是加锁粒度的问题。</p>
+<h4 id="21-copyonwritearraylist-实现原理">2.1 CopyOnWriteArrayList 实现原理</h4>
+<p>首先引用维基上对 Copy-on-Write 机制的解释：</p>
+<blockquote>
+<p>Copy-on-Write 机制：如果有多个调用者（callers）同时请求相同资源（如内存或磁盘上的数据存储），他们会共同获取相同的指针指向相同的资源，直到某个调用者试图修改资源的内容时，系统才会真正 <strong>复制一份专用副本（private copy）给该调用者</strong>，而其他调用者所见到的最初的资源仍然保持不变。优点是如果调用者没有修改该资源，就不会有副本（private copy）被建立，因此多个调用者只是读取操作时可以共享同一份资源。</p>
+</blockquote>
+<p>再看下源码文档的解释：</p>
+<blockquote>
+<p>CopyOnWriteArrayList 是 ArrayList 线程安全的一种变体，底层的所有修改操作通过复制数组的方式来实现。这通常会过于昂贵，但在遍历操作远大于修改操作时更加高效；并且无需在并发遍历时进行同步。Iterator 通过引用在迭代器被创建时的“快照”形式的列表，保证列表在迭代周期不发生改变来排除干扰，保证不抛出并发修改异常。在迭代器上的修改操作将不被支持，它们会抛出 UnsupportedOperationException。</p>
+</blockquote>
+<h4 id="22-copyonwritearraylist-的结构与方法">2.2 CopyOnWriteArrayList 的结构与方法</h4>
+<p>看源码可知 CopyOnWriteArrayList 底层是数据，加锁通过 <code>ReentrantLock</code> 来实现。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CopyOnWriteArrayList</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span>
+    <span style="color:#66d9ef">implements</span> List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span><span style="color:#f92672">,</span> RandomAccess<span style="color:#f92672">,</span> Cloneable<span style="color:#f92672">,</span> java<span style="color:#f92672">.</span><span style="color:#a6e22e">io</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Serializable</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/** The lock protecting all mutators */</span>
+    <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">transient</span> ReentrantLock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReentrantLock<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">/** The array, accessed only via getArray/setArray. */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">transient</span> <span style="color:#66d9ef">volatile</span> Object<span style="color:#f92672">[</span><span style="color:#f92672">]</span> array<span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Gets the array.  Non-private so as to also be accessible
+</span><span style="color:#75715e">     * from CopyOnWriteArraySet class.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">final</span> Object<span style="color:#f92672">[</span><span style="color:#f92672">]</span> <span style="color:#a6e22e">getArray</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> array<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>相比 Vector / SynchronizedList 需要在遍历时手动加锁的情况，CopyOnWriteArrayList 在使用迭代器时不需要显式加锁，可以看下它的 mutation 方法如 add：</p>
+<p>可以看到在进行 add 时就上锁，复制一个新数组，增加操作在新数组上完成，将 array 指向到新数组中，最后解锁。这种同步形式对于其他的修改操作 remove、clear、set 等也是类似的。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>E e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">final</span> ReentrantLock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">;</span>
+        lock<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            Object<span style="color:#f92672">[</span><span style="color:#f92672">]</span> elements <span style="color:#f92672">=</span> getArray<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> elements<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+            <span style="color:#75715e">// 复制新数组，并在长度上加一
+</span><span style="color:#75715e"></span>            Object<span style="color:#f92672">[</span><span style="color:#f92672">]</span> newElements <span style="color:#f92672">=</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">copyOf</span><span style="color:#f92672">(</span>elements<span style="color:#f92672">,</span> len <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            newElements<span style="color:#f92672">[</span>len<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
+            <span style="color:#75715e">// 将实例指向新数组
+</span><span style="color:#75715e"></span>            setArray<span style="color:#f92672">(</span>newElements<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+            lock<span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>至此，CopyOnWriteArrayList 线程安全的策略就很明显了：</p>
+<ul>
+<li>所有的非修改操作不加锁，修改操作加锁。</li>
+<li>在修改时，先复制出一个新数组，修改的操作在新数组中完成，最后将新数组交由 array 变量指向。</li>
+</ul>
+<h4 id="23-为什么-copyonwritearraylist-迭代时不需要显式加锁">2.3 为什么 CopyOnWriteArrayList 迭代时不需要显式加锁</h4>
+<p>通过观察 CopyOnWriteArrayList 的迭代器不难发现，它在迭代器内使用了 final 修饰的引用类型数组 snapshot，这就使所有的修改操作中将实例指向新数组的 <code>setArray(newElements)</code> 这个操作在迭代器的生命周期内无法执行，以此保证在迭代过程中不会抛出并发修改异常。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Iterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">iterator</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> COWIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>getArray<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">COWIterator</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> ListIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">/** Snapshot of the array */</span>
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Object<span style="color:#f92672">[</span><span style="color:#f92672">]</span> snapshot<span style="color:#f92672">;</span>
+        <span style="color:#75715e">/** Index of element to be returned by subsequent call to next.  */</span>
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> cursor<span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">COWIterator</span><span style="color:#f92672">(</span>Object<span style="color:#f92672">[</span><span style="color:#f92672">]</span> elements<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> initialCursor<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            cursor <span style="color:#f92672">=</span> initialCursor<span style="color:#f92672">;</span>
+            snapshot <span style="color:#f92672">=</span> elements<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><h4 id="24-copyonwritearraylist-的缺点">2.4 CopyOnWriteArrayList 的缺点</h4>
+<ul>
+<li><strong>内存占用</strong>：如果 CopyOnWriteArrayList 经常要增删改里面的数据，经常要执行 <code>add()、set()、remove()</code> 的话，那是比较耗费内存的。
+<ul>
+<li>因为这些修改操作都要 <strong>复制一个数组</strong> 出来。</li>
+</ul>
+</li>
+<li><strong>数据一致性</strong>：CopyOnWrite 容器 <strong>只能保证数据的最终一致性，不能保证数据的实时一致性</strong>。
+<ul>
+<li>从上面的例子也可以看出来，比如线程 A 在迭代 CopyOnWriteArrayList 容器的数据。线程B在线程A迭代的间隙中将 CopyOnWriteArrayList 部分的数据修改了（已经调用<code>setArray()</code>了）。但是线程 A 迭代出来的是原有的数据。</li>
+</ul>
+</li>
+</ul>
 <h1 id="map-类的安全容器">Map 类的安全容器</h1>
-<p><strong>ConcurrentHashMap 和 Hashtable 的区别</strong></p>
+<h3 id="1-hashtable">1. HashTable</h3>
 <p><code>Hashtable</code> ：将 get / put 所有相关操作都 synchronized 化，这相当于给整个哈希表加了一把<strong>大锁</strong>，多线程访问时候，只要有一个线程访问或操作该对象，那其他线程只能阻塞，相当于将所有的操作<strong>串行化</strong>，在竞争激烈的并发场景中性能就会非常差。</p>
 <p><img src="/images/HashTableLock.png" alt="HashTable 的全表锁"></p>
+<h3 id="2-jdk-17-的-concurrenthashmap">2. JDK 1.7 的 ConcurrentHashMap</h3>
 <p><code>ConcurrentHashMap</code>：对整个桶数组进行了分割分段 Segment，每一把锁只锁容器其中一部分数据，多线程访问容器里不同数据段的数据，就不会存在锁竞争，提高并发访问率。</p>
 <p>一个 ConcurrentHashMap 里包含一个 Segment 数组。Segment 的结构和 HashMap 类似，是一种数组和链表结构，一个 Segment 包含一个 HashEntry 数组，每个 HashEntry 是一个链表结构的元素，每个 Segment 守护着一个HashEntry 数组里的元素，当对 HashEntry 数组的数据进行修改时，必须首先获得对应的 Segment的锁。</p>
 <p><img src="/images/HashMapSegmentsLock.png" alt="JDK 1.8 之前 ConrrentHashMap 的分段锁"></p>
+<h3 id="3-jdk-18-的-concurrenthashmap">3. JDK 1.8 的 ConcurrentHashMap</h3>
 <p>到了 JDK 1.8 的时候已经摒弃了分段锁，而是直接用 Node 数组 + 链表 + 红黑树的数据结构来实现，并发控制使用 synchronized 和 CAS 来操作。（ JDK 1.6 以后 对 synchronized 锁做了很多优化， 整个看起来就像是优化过且线程安全的 HashMap，虽然在 JDK 1.8 中还能看到 Segment 的数据结构，但是已经简化了属性，只是为了兼容旧版本）</p>
 <p><img src="/images/HashMapLock.jpeg" alt="JDK 1.8 后的并发哈希表的锁"></p>
+<h4 id="31-concurrenthashmap-源码文档解读">3.1 ConcurrentHashMap 源码文档解读</h4>
+<p>源码的注释文档主要说了这么几点：</p>
+<ol>
+<li>支持高并发的检索和更新，所有的操作都是线程安全，并且在检索时是不加锁的。</li>
+<li>未完待续</li>
+</ol>
+<h4 id="32-concurrenthashmap-线程安全实现原理">3.2 ConcurrentHashMap 线程安全实现原理</h4>
 
     </div>
 

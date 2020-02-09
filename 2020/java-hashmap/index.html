@@ -57,7 +57,7 @@
     "datePublished": "2020-01-28 14:11:47 \x2b0100 CET",
     "dateModified" : "2020-01-28 14:11:47 \x2b0100 CET",
     "url" : "http:\/\/chenghao.monster\/2020\/java-hashmap\/",
-    "wordCount" : "987",
+    "wordCount" : "1059",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,987 words</span>
+                 <span class="post-word-count">,1059 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -329,10 +329,10 @@
 <p>思想：为每个哈希值建立一个单链表，当发生哈希碰撞时，将记录插入到链表中。</p>
 <p><img src="/images/HashBucketLinked.png" alt="链地址法解决哈希碰撞"></p>
 <ul>
-<li>扩容复制数据时，<strong>会改变数据在链表结构中的顺序</strong>。</li>
+<li>扩容复制数据时，<strong>会改变数据在链表结构中的顺序</strong>，导致并发下的死循环。</li>
 </ul>
 <h3 id="3-jdk-18-之后的-hashmap-底层实现">3. JDK 1.8 之后的 HashMap 底层实现</h3>
-<p>相比于之前的版本， JDK 1.8 之后在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为8）时，将链表转化为红黑树，以减少搜索时间。（TreeMap、TreeSet 以及 JDK 1.8 之后的 HashMap 底层都用到了红黑树。）（树节点为 6 时会退化 split 为链表，中间有个差值 7 可以防止链表和树之间频繁的转换）</p>
+<p>相比于之前的版本， JDK 1.8 之后在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为8）并且哈希桶数量不小于 64 时，将链表转化为红黑树，以减少搜索时间。（TreeMap、TreeSet 以及 JDK 1.8 之后的 HashMap 底层都用到了红黑树。）（树节点为 6 时会退化 split 为链表，中间有个差值 7 可以防止链表和树之间频繁的转换）</p>
 <p><img src="/images/HashMapTreeSet.jpeg" alt="JDK 1.8 之后的哈希表结构"></p>
 <ul>
 <li>新的哈希算法</li>
@@ -350,16 +350,46 @@
 <li>扩容 transfer 后元素在链表中的顺序不变，这样就避免了在并发扩容时的死循环问题。</li>
 </ul>
 <h3 id="4-为什么不直接用红黑树而选择先用链表再转红黑树">4. 为什么不直接用红黑树，而选择先用链表再转红黑树</h3>
+<p>因为红黑树需要进行左旋，右旋，变色这些操作来保持平衡，而单链表不需要。</p>
+<p>当元素小于8个当时候，此时做查询操作，链表结构已经能保证查询性能。当元素大于8个的时候，此时需要红黑树来加快查询速度，但是新增节点的效率变慢了。</p>
+<p>因此，如果一开始就用红黑树结构，元素太少，新增效率又比较慢，无疑这是浪费性能的。</p>
 <h3 id="5-能否用二叉查找树代替红黑树">5. 能否用二叉查找树代替红黑树</h3>
+<p>可以。但是二叉查找树在特殊情况下会变成一条线性结构（这就跟原来使用链表结构一样了，造成很深的问题），遍历查找会非常慢。</p>
 <h1 id="hashmap-的并发问题">HashMap 的并发问题</h1>
-<h3 id="1-hashmap在并发编程环境下有什么问题啊">1. HashMap在并发编程环境下有什么问题啊</h3>
+<h3 id="1-hashmap在并发编程环境下有什么问题">1. HashMap在并发编程环境下有什么问题</h3>
+<ul>
+<li>多线程扩容，引起的死循环问题</li>
+<li>多线程 put 的时候可能导致元素丢失</li>
+<li>put 非 null 元素后 get 出来的却是 null</li>
+</ul>
 <h3 id="2-在jdk18中还有这些问题么">2. 在jdk1.8中还有这些问题么</h3>
+<p>在jdk1.8中，死循环问题已经解决。其他两个问题还是存在。</p>
 <h3 id="3-你一般怎么解决这些问题的">3. 你一般怎么解决这些问题的</h3>
+<p>使用 ConcurrentHashmap</p>
 <h1 id="hashmap-key-问题">HashMap key 问题</h1>
 <h3 id="1-键可以为-null-值么">1. 键可以为 Null 值么</h3>
+<p>可以，key 为 null 时，hash() 方法返回 0，会被放到第一个哈希桶中。</p>
 <h3 id="2-你一般用什么作为-hashmap-的-key">2. 你一般用什么作为 HashMap 的 key</h3>
+<p>一般用Integer、String 这种不可变类当 HashMap 当 key，而且 String 最为常用。</p>
+<ul>
+<li>因为字符串是不可变的，所以在它创建的时候 hashcode 就被缓存了，不需要重新计算。这就使得字符串很适合作为 Map 中的键，字符串的处理速度要快过其它的键对象。这就是 HashMap 中的键往往都使用字符串。</li>
+<li>因为获取对象的时候要用到 equals() 和 hashCode() 方法，那么键对象正确的重写这两个方法是非常重要的，这些类已经很规范的覆写了 hashCode() 以及 equals() 方法。</li>
+</ul>
 <h3 id="3-我用可变类当-hashmap-的-key-有什么问题">3. 我用可变类当 HashMap 的 key 有什么问题</h3>
+<p>可变类实例对象的哈希值可能发生改变，导致无法通过 get 方法得到之前 put 进哈希表的值。</p>
 <h3 id="4-如果实现让一个自定义的-class-作为-hashmap-的-key">4. 如果实现让一个自定义的 class 作为 HashMap 的 key</h3>
+<ol>
+<li>重写 equals 和 hashCode 方法，并遵守其约定</li>
+<li>保证该类不可变
+<ul>
+<li>对类添加 final 修饰符，保证类不被继承：继承类可以重写方法并改变成员变量</li>
+<li>保证成员变量私有，且加上 final 修饰符来保证成员变量不可改变。</li>
+<li>不提供改变成员变量的方法，包括 setter</li>
+<li>通过构造器初始化所有成员变量，进行深拷贝</li>
+<li>在 getter 方法中，不要直接返回对象本身，而是克隆对象，并返回对象的拷贝</li>
+</ul>
+</li>
+</ol>
 <h1 id="hashmap-javadoc">HashMap Javadoc</h1>
 <h3 id="1-概述">1. 概述</h3>
 <blockquote>

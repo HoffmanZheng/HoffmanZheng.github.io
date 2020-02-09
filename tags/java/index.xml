@@ -31,11 +31,9 @@ transient Node&amp;lt;K,V&amp;gt;[] table;static class Node&amp;lt;K,V&amp;gt; 
       
       <guid>http://chenghao.monster/2020/java-thread-safe-collection/</guid>
       <description>在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。
-List 类的安全容器  Map 类的安全容器 ConcurrentHashMap 和 Hashtable 的区别
-Hashtable ：将 get / put 所有相关操作都 synchronized 化，这相当于给整个哈希表加了一把大锁，多线程访问时候，只要有一个线程访问或操作该对象，那其他线程只能阻塞，相当于将所有的操作串行化，在竞争激烈的并发场景中性能就会非常差。
-ConcurrentHashMap：对整个桶数组进行了分割分段 Segment，每一把锁只锁容器其中一部分数据，多线程访问容器里不同数据段的数据，就不会存在锁竞争，提高并发访问率。
-一个 ConcurrentHashMap 里包含一个 Segment 数组。Segment 的结构和 HashMap 类似，是一种数组和链表结构，一个 Segment 包含一个 HashEntry 数组，每个 HashEntry 是一个链表结构的元素，每个 Segment 守护着一个HashEntry 数组里的元素，当对 HashEntry 数组的数据进行修改时，必须首先获得对应的 Segment的锁。
-到了 JDK 1.8 的时候已经摒弃了分段锁，而是直接用 Node 数组 + 链表 + 红黑树的数据结构来实现，并发控制使用 synchronized 和 CAS 来操作。（ JDK 1.6 以后 对 synchronized 锁做了很多优化， 整个看起来就像是优化过且线程安全的 HashMap，虽然在 JDK 1.</description>
+List 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 verctor 的复合操作（如遍历+修改）仍会导致 并发修改异常。
+public synchronized boolean add(E e);public synchronized boolean isEmpty();public synchronized E get(int index);public synchronized void sort(Comparator&amp;lt;? super E&amp;gt; c);1.2 SynchronizedList SynchronizedList 类和 vector 类似，只不过是在方法内进行同步锁：
+public E get(int index) {synchronized (mutex) {return list.get(index);}}public E set(int index, E element) {synchronized (mutex) {return list.</description>
     </item>
     
     <item>
