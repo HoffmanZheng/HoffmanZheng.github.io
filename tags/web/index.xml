@@ -6,10 +6,29 @@
     <description>Recent content in Web on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 08 Feb 2020 13:19:47 +0100</lastBuildDate>
+    <lastBuildDate>Sun, 09 Feb 2020 09:19:47 +0100</lastBuildDate>
     
 	<atom:link href="http://chenghao.monster/tags/web/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Web：浅析 URL</title>
+      <link>http://chenghao.monster/2020/web-url/</link>
+      <pubDate>Sun, 09 Feb 2020 09:19:47 +0100</pubDate>
+      
+      <guid>http://chenghao.monster/2020/web-url/</guid>
+      <description>1990 年英国计算机科学家蒂姆·伯纳斯-李（Tim Berners-Lee）发明了万维网，并解决了其中三项关键技术： URL + HTML + HTTP。本篇讲述其中的一项，全球网络资源唯一认证的系统：URL 的基本知识。
+IP 与端口 1. IP 和端口的作用  IP（Internet Protocal）是定位互联网中一台设备的协议，它规定了如何封装数据报文，以跟互联网中的其他设备交流。只要你在互联网中，你就至少有一个独特的 IP。 端口（Port）是用来定位互联网中一台设备的不同服务的。  2. 内网与外网 形象点描述，外网就好比我家的地址，内网就类似我在我家的位置。外网是实现互联网中设备间互相通信的基础，内网和外网之间使用路由器进行中转。
+2.1 外网 IP 当我们租用电信宽带，安装猫和路由器后，便拥有了自己的外网 IP（由运营商分配）。需要注意的是，你的所有设备都共享一个外网 IP；如果重启路由器，外网 IP 将会被重新分配。
+可以通过 ipconfig 或访问 IP 138.com 来查看自己的外网 IP。
+2.2 内网 IP 内网 IP 一般以 192.168.x.x 形式出现，内网中的设备可以互相访问，但想访问外网需要通过路由器中转；同样地，外网设备要把数据内容送到内网也必须通过路由器。
+路由器可以说是内网和外网这两个隔绝空间之间的唯一连通点，故也被称为网关。
+2.3 几个特殊的 IP localhost 表示本地
+127.0.0.1 表示自己
+0.0.0.0 不表示任何设备
+3. 端口的约定 当数据内容通过外网及内网 IP 唯一定位到用户设备后，需要通过端口传输给指定的服务。常用的服务有：端口列表
+ HTTP 服务：80 端口 HTTPS 服务：443 端口 FTP 服务：21 端口  关于端口有几个约定：</description>
+    </item>
     
     <item>
       <title>Web：HTML 常用标签</title>
@@ -17,7 +36,7 @@
       <pubDate>Sat, 08 Feb 2020 13:19:47 +0100</pubDate>
       
       <guid>http://chenghao.monster/2020/web-html/</guid>
-      <description>HTML（Hyper Text Markup Language）超文本标记语言，是构建网站的基石。游览器通过解析 HTML 来将互联网中传输的 字节流 渲染成丰富多彩的可视化网页。
+      <description>HTML（Hyper Text Markup Language）超文本标记语言，是构建网站的基石。游览器通过解析 HTML 来将万维网中传输的 字节流 渲染成丰富多彩的可视化网页。
 由于我不是写前端的，就用在线 Web 调试工具 饥人谷 JsBin 和 代码沙盒 来进行 HTML 的编辑。更多参考资料：MDN HTML 文档。
 HTML 章节与内容标签 1. HTML 起手式 HTML 代码由许许多多不同的标签（tag）构成。下图为 HTML 的一个常规模版：
  &amp;lt;head&amp;gt; 里面一般放一些看不见的元素，如编码方式、全文样式 &amp;lt;style&amp;gt; 、标题、JS等 &amp;lt;body&amp;gt; 里面写网页的具体内容 模版中的内容只需要改 title 和语言，其他暂时都不变。 有个输入标签的快捷键，打出标签单词后按键盘上的 Tab 键就可以快速补全代码了。  2. HTML 章节标签 章节标签用于划分网页 / 文章的层级，使页面结构清晰，也便于添加 CSS 样式
