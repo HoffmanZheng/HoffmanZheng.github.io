@@ -57,7 +57,7 @@
     "datePublished": "2020-01-28 14:11:47 \x2b0100 CET",
     "dateModified" : "2020-01-28 14:11:47 \x2b0100 CET",
     "url" : "http:\/\/chenghao.monster\/2020\/java-hashmap\/",
-    "wordCount" : "1059",
+    "wordCount" : "1066",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,1059 words</span>
+                 <span class="post-word-count">,1066 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -356,14 +356,14 @@
 <h3 id="5-能否用二叉查找树代替红黑树">5. 能否用二叉查找树代替红黑树</h3>
 <p>可以。但是二叉查找树在特殊情况下会变成一条线性结构（这就跟原来使用链表结构一样了，造成很深的问题），遍历查找会非常慢。</p>
 <h1 id="hashmap-的并发问题">HashMap 的并发问题</h1>
-<h3 id="1-hashmap在并发编程环境下有什么问题">1. HashMap在并发编程环境下有什么问题</h3>
+<h3 id="1-hashmap-在并发编程环境下有什么问题">1. HashMap 在并发编程环境下有什么问题</h3>
 <ul>
 <li>多线程扩容，引起的死循环问题</li>
 <li>多线程 put 的时候可能导致元素丢失</li>
 <li>put 非 null 元素后 get 出来的却是 null</li>
 </ul>
-<h3 id="2-在jdk18中还有这些问题么">2. 在jdk1.8中还有这些问题么</h3>
-<p>在jdk1.8中，死循环问题已经解决。其他两个问题还是存在。</p>
+<h3 id="2-在-jdk-18-中还有这些问题么">2. 在 JDK 1.8 中还有这些问题么</h3>
+<p>在 JDK 1.8 中，死循环问题已经解决。其他两个问题还是存在。</p>
 <h3 id="3-你一般怎么解决这些问题的">3. 你一般怎么解决这些问题的</h3>
 <p>使用 ConcurrentHashmap</p>
 <h1 id="hashmap-key-问题">HashMap key 问题</h1>
