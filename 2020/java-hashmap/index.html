@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Java：HashMap 源码解读",
     "headline" : "Java：HashMap 源码解读",
-    "description" : "本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get \/ put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。\nHashMap 的实现原理 1. 哈希表底层实现原理 哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry\x26lt;K, V\x26gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。\ntransient Node\x26lt;K,V\x26gt;[] table;\rstatic class Node\x26lt;K,V\x26gt; implements Map.Entry\x26lt;K,V\x26gt; {\rfinal int hash;\rfinal K key;\rV value;\rNode\x26lt;K,V\x26gt; next;\r｝\r2. 为什么采用数组\x2b链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get \/ put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。\n为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。\n3. 哈希冲突的解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量*装载因子，则会触发 resize() 方法，初始化 table 或是使哈希表容量翻倍。",
+    "description" : "本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get \/ put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。\nHashMap 的实现原理 1. 哈希表底层实现原理 哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry\x26lt;K, V\x26gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。\ntransient Node\x26lt;K,V\x26gt;[] table;\rstatic class Node\x26lt;K,V\x26gt; implements Map.Entry\x26lt;K,V\x26gt; {\rfinal int hash;\rfinal K key;\rV value;\rNode\x26lt;K,V\x26gt; next;\r}\r2. 为什么采用数组\x2b链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get \/ put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。\n为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。\n3. 哈希冲突的解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量 * 装载因子，则会触发 resize() 方法，初始化 table 或是使哈希表容量翻倍。",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-01-28 14:11:47 \x2b0100 CET",
     "dateModified" : "2020-01-28 14:11:47 \x2b0100 CET",
     "url" : "http:\/\/chenghao.monster\/2020\/java-hashmap\/",
-    "wordCount" : "1066",
+    "wordCount" : "1088",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,1066 words</span>
+                 <span class="post-word-count">,1088 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -166,7 +166,7 @@
         <span style="color:#66d9ef">final</span> K key<span style="color:#f92672">;</span>
         V value<span style="color:#f92672">;</span>
         Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> next<span style="color:#f92672">;</span>
-<span style="color:#960050;background-color:#1e0010">｝</span>
+<span style="color:#f92672">}</span>
 </code></pre></div><h3 id="2-为什么采用数组链表的数据结构">2. 为什么采用数组+链表的数据结构</h3>
 <p>数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。</p>
 <p>为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。</p>
@@ -179,8 +179,8 @@
 </ol>
 <h1 id="hashmap-扩容">HashMap 扩容</h1>
 <h3 id="1-hashmap-在什么条件下扩容">1. HashMap 在什么条件下扩容</h3>
-<p>若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量*装载因子，则会触发 <code>resize()</code> 方法，初始化 table 或是使哈希表容量翻倍。</p>
-<h3 id="2-为什么扩容是2的n次幂">2. 为什么扩容是2的n次幂</h3>
+<p>若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量 * 装载因子，则会触发 <code>resize()</code> 方法，初始化 table 或是使哈希表容量翻倍。</p>
+<h3 id="2-为什么扩容是-2-的-n-次幂">2. 为什么扩容是 2 的 n 次幂</h3>
 <p>相比于 % 取模，哈希表选择 <code>(n - 1) &amp; hash</code> 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.. 而这样哈希桶的最大 index = 2^n -1，二进制就成了 01111.. 再与对象的哈希值做按位与运算，就能快速的计算出对应哈希桶 index 值，并且是分布均匀的。</p>
 <p>若在创建哈希表时给定初始容量，哈希表也会用 <code>roundUpToPowerOf2</code> / <code>tableSizeFor</code> 将其扩充为2的幂次方大小。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// Returns a power of two size for the given target capacity. 
@@ -193,10 +193,10 @@
     n <span style="color:#f92672">|</span><span style="color:#f92672">=</span> n <span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> 16<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> MAXIMUM_CAPACITY<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> MAXIMUM_CAPACITY <span style="color:#f92672">:</span> n <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="3-为什么要先高16位异或低16位再取模运算">3. 为什么要先高16位异或低16位再取模运算</h3>
+</code></pre></div><h3 id="3-为什么要先高-16-位异或低-16-位再取模运算">3. 为什么要先高 16 位异或低 16 位再取模运算</h3>
 <p>文档里解释的很清楚了：</p>
 <ul>
-<li>只有高位不同的哈希值将会一直在哈希桶索引的运算中发生碰撞，比如连续整数的 float 键集。所以应用了一种变换来向下扩散高位哈希值在索引运算中的影响。这是一个在速度、实用性和位分散质量之间的权衡。因为大多数哈希集已经合理分布（无法从扩散中受益），并且由于我们使用树来处理容器中的大量冲突，我们以最廉价的移位 XOR 异或方式合并高位哈希值在索引运算中的影响，并减少系统损失，否则这些高位值会由于有限的哈希表容量而永远不会在索引运算中被使用。</li>
+<li>只有高位不同的哈希值将会一直在哈希桶索引的运算中发生碰撞，比如连续整数的 float 键集。所以应用了一种变换来向下扩散高位哈希值在索引运算中的影响。这是一个在速度、实用性和位分散质量之间的权衡。因为大多数哈希集已经合理分布（无法从扩散中受益），并且由于我们使用树来处理容器中的大量冲突，我们以最廉价的移位 XOR 异或方式合并高位哈希值在索引运算中的影响，并减少系统损失，否则这些高位值会由于有限的哈希表容量而永远不会在索引运算中被使用。即：<strong>为了提高数据散裂性</strong>。</li>
 </ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">int</span> h<span style="color:#f92672">;</span>
@@ -205,7 +205,11 @@
 </code></pre></div><h1 id="hashmap-的-get--put-过程">HashMap 的 get / put 过程</h1>
 <h3 id="1-哈希表的-put-过程">1. 哈希表的 put 过程</h3>
 <p><img src="/images/%E5%93%88%E5%B8%8C%E8%A1%A8put.png" alt=""></p>
-<p>需要注意的是，put 方法的 <strong>返回值是 oldValue</strong>。</p>
+<p>需要注意的几点：</p>
+<ul>
+<li>put 方法的 <strong>返回值是 oldValue</strong>。</li>
+<li>Java 1.8 的哈希表在 put 插入新节点时是 <strong>将新节点直接插入在链表尾部</strong>（1.7 为插入链表头部），并用 binCount 计数当前链表长度 - 1，当超过树化阈值时执行链表树化操作。</li>
+</ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> V <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>K key<span style="color:#f92672">,</span> V value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">return</span> putVal<span style="color:#f92672">(</span>hash<span style="color:#f92672">(</span>key<span style="color:#f92672">)</span><span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> value<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
     	<span style="color:#75715e">// 对key的hashCode()做hash
@@ -434,7 +438,7 @@
 <p>因为 TreeNode 的 <strong>大小大约是常规节点的两倍</strong>，所以我们仅在 bin 包含足够节点时才保证使用它们（请参阅 <code>TREEIFY_THRESHOLD</code>）。当它们变得太小（由于移除或调整大小）时，它们会转换回普通 bin。 在使用分布良好的 hashCode 的情况下，tree bins 几乎很少被使用。 理想情况下，在随机 hashCodes 下，bin 中节点的频率遵循 Poisson 分布，默认调整大小阈值 0.75 的在此处的参数平均约为 0.5，尽管由于调整大小粒度而差异很大。 忽略方差，列表大小 k 的预期出现次数是（exp（-0.5）* pow（0.5，k）/ factorial（k））。</p>
 </blockquote>
 <p>随机哈希值条件下，元素在哈希桶中遵循泊松分布，如此，同一个哈希桶中出现 8 个以上元素的概率是相当相当小的，因此选择 8 作为链表结构红黑树化的阈值。</p>
-<h3 id="6-其他实现一堆废话">6. 其他实现（一堆废话）</h3>
+<h3 id="6-其他实现">6. 其他实现</h3>
 <blockquote>
 <p>Tree bin 的根通常是它的第一个节点。但是，有时（当前仅在 Iterator.remove 上），根目录可能在其他位置，但可以通过父链接（方法TreeNode.root())）进行恢复。</p>
 </blockquote>

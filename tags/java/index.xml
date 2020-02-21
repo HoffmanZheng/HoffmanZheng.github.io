@@ -19,9 +19,9 @@
       <guid>http://chenghao.monster/2020/java-hashmap/</guid>
       <description>本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。
 HashMap 的实现原理 1. 哈希表底层实现原理 哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry&amp;lt;K, V&amp;gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。
-transient Node&amp;lt;K,V&amp;gt;[] table;static class Node&amp;lt;K,V&amp;gt; implements Map.Entry&amp;lt;K,V&amp;gt; {final int hash;final K key;V value;Node&amp;lt;K,V&amp;gt; next;｝2. 为什么采用数组+链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。
+transient Node&amp;lt;K,V&amp;gt;[] table;static class Node&amp;lt;K,V&amp;gt; implements Map.Entry&amp;lt;K,V&amp;gt; {final int hash;final K key;V value;Node&amp;lt;K,V&amp;gt; next;}2. 为什么采用数组+链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。
 为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。
-3. 哈希冲突的解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量*装载因子，则会触发 resize() 方法，初始化 table 或是使哈希表容量翻倍。</description>
+3. 哈希冲突的解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量 * 装载因子，则会触发 resize() 方法，初始化 table 或是使哈希表容量翻倍。</description>
     </item>
     
     <item>
@@ -31,7 +31,7 @@ transient Node&amp;lt;K,V&amp;gt;[] table;static class Node&amp;lt;K,V&amp;gt; 
       
       <guid>http://chenghao.monster/2020/java-thread-safe-collection/</guid>
       <description>在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。
-List 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 verctor 的复合操作（如遍历+修改）仍会导致 并发修改异常。
+List 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 Verctor 的复合操作（如遍历+修改）仍会导致 并发修改异常。
 public synchronized boolean add(E e);public synchronized boolean isEmpty();public synchronized E get(int index);public synchronized void sort(Comparator&amp;lt;? super E&amp;gt; c);1.2 SynchronizedList SynchronizedList 类和 vector 类似，只不过是在方法内进行同步锁：
 public E get(int index) {synchronized (mutex) {return list.get(index);}}public E set(int index, E element) {synchronized (mutex) {return list.</description>
     </item>
