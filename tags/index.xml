@@ -6,10 +6,19 @@
     <description>Recent content in Tags on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Feb 2020 13:19:47 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 04 Mar 2020 13:19:47 +0100</lastBuildDate>
     
 	<atom:link href="http://chenghao.monster/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Database</title>
+      <link>http://chenghao.monster/tags/database/</link>
+      <pubDate>Wed, 04 Mar 2020 13:19:47 +0100</pubDate>
+      
+      <guid>http://chenghao.monster/tags/database/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Net</title>

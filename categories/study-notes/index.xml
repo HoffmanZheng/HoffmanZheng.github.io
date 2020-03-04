@@ -6,10 +6,24 @@
     <description>Recent content in Study notes on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Feb 2020 13:19:47 +0100</lastBuildDate>
+    <lastBuildDate>Wed, 04 Mar 2020 13:19:47 +0100</lastBuildDate>
     
 	<atom:link href="http://chenghao.monster/categories/study-notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Database：MySQL 数据库</title>
+      <link>http://chenghao.monster/2020/database-mysql/</link>
+      <pubDate>Wed, 04 Mar 2020 13:19:47 +0100</pubDate>
+      
+      <guid>http://chenghao.monster/2020/database-mysql/</guid>
+      <description>本篇介绍 MySQL 数据库，主要内容有：MySQL 常见的两种存储引擎（InnoDB 与 MyISAM）、数据库索引和数据库事务隔离级别与锁。
+存储引擎 MyISAM 与 InnoDB 区别：   InnoDB 支持事务，MyISAM 不支持事务。这是 MySQL 将默认存储引擎从 MyISAM 变成 InnoDB 的重要原因之一；
+  InnoDB 支持外键，而 MyISAM 不支持。对一个包含外键的 InnoDB 表转为 MYISAM 会失败；（主键是能确定一条记录的唯一标识，外键用于与另一张表的关联）
+  InnoDB 是聚集索引，MyISAM 是 非聚集索引（堆表）。
+ 聚集索引的文件存放在主键索引的叶子节点上，因此 InnoDB 必须要有主键，通过主键索引效率很高。但是辅助索引需要两次查询（回表），先查询到主键，然后再通过主键查询到数据。因此，主键不应该过大，因为主键太大，其他索引也都会很大。 聚集索引的顺序就是数据的物理存储顺序，所以 insert 和 update 操作可能会导致数据重排，而导致性能下降。 而 MyISAM 是非聚集索引，数据文件是分离的，索引保存的是数据文件的指针。主键索引和辅助索引是独立的。    InnoDB 不保存表的具体行数，执行 select count(*) from table 时需要全表扫描。而MyISAM 用一个变量保存了整个表的行数，执行上述语句时只需要读出该变量即可，速度很快；（MyISAM 查询效率更高，且支持全文索引）
+  InnoDB 最小的锁粒度是 行锁，MyISAM 最小的锁粒度是表锁。一个更新语句会锁住整张表，导致其他查询和更新都会被阻塞，因此并发访问受限。这也是 MySQL 将默认存储引擎从 MyISAM 变成 InnoDB 的重要原因之一；</description>
+    </item>
     
     <item>
       <title>Net：概述与应用层</title>

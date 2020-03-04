@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="http://chenghao.monster/2020/net-http/" />
+  
+  <link rel="canonical" href="http://chenghao.monster/2020/database-mysql/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Database：MySQL 数据库 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Database：MySQL 数据库 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/chenghao.monster"
+    },
+    "articleSection" : "posts",
+    "name" : "Database：MySQL 数据库",
+    "headline" : "Database：MySQL 数据库",
+    "description" : "本篇介绍 MySQL 数据库，主要内容有：MySQL 常见的两种存储引擎（InnoDB 与 MyISAM）、数据库索引和数据库事务隔离级别与锁。\n存储引擎 MyISAM 与 InnoDB 区别：   InnoDB 支持事务，MyISAM 不支持事务。这是 MySQL 将默认存储引擎从 MyISAM 变成 InnoDB 的重要原因之一；\n  InnoDB 支持外键，而 MyISAM 不支持。对一个包含外键的 InnoDB 表转为 MYISAM 会失败；（主键是能确定一条记录的唯一标识，外键用于与另一张表的关联）\n  InnoDB 是聚集索引，MyISAM 是 非聚集索引（堆表）。\n 聚集索引的文件存放在主键索引的叶子节点上，因此 InnoDB 必须要有主键，通过主键索引效率很高。但是辅助索引需要两次查询（回表），先查询到主键，然后再通过主键查询到数据。因此，主键不应该过大，因为主键太大，其他索引也都会很大。 聚集索引的顺序就是数据的物理存储顺序，所以 insert 和 update 操作可能会导致数据重排，而导致性能下降。 而 MyISAM 是非聚集索引，数据文件是分离的，索引保存的是数据文件的指针。主键索引和辅助索引是独立的。    InnoDB 不保存表的具体行数，执行 select count(*) from table 时需要全表扫描。而MyISAM 用一个变量保存了整个表的行数，执行上述语句时只需要读出该变量即可，速度很快；（MyISAM 查询效率更高，且支持全文索引）\n  InnoDB 最小的锁粒度是 行锁，MyISAM 最小的锁粒度是表锁。一个更新语句会锁住整张表，导致其他查询和更新都会被阻塞，因此并发访问受限。这也是 MySQL 将默认存储引擎从 MyISAM 变成 InnoDB 的重要原因之一；",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-03-04 13:19:47 \x2b0100 CET",
+    "dateModified" : "2020-03-04 13:19:47 \x2b0100 CET",
+    "url" : "http:\/\/chenghao.monster\/2020\/database-mysql\/",
+    "wordCount" : "106",
+    "keywords" : [ "Database", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Database：MySQL 数据库</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-03-04 itemprop="datePublished">March 4, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,106 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>本篇介绍 MySQL 数据库，主要内容有：MySQL 常见的两种存储引擎（InnoDB 与 MyISAM）、数据库索引和数据库事务隔离级别与锁。</p>
+<h1 id="存储引擎">存储引擎</h1>
+<h3 id="myisam-与-innodb">MyISAM 与 InnoDB</h3>
+<h4 id="区别">区别：</h4>
+<ol>
+<li>
+<p>InnoDB 支持事务，MyISAM <strong>不支持事务</strong>。这是 MySQL 将默认存储引擎从 MyISAM 变成 InnoDB 的重要原因之一；</p>
+</li>
+<li>
+<p>InnoDB 支持外键，而 MyISAM 不支持。对一个包含外键的 InnoDB 表转为 MYISAM 会失败；（主键是能确定一条记录的唯一标识，外键用于与另一张表的关联）</p>
+</li>
+<li>
+<p>InnoDB 是聚集索引，MyISAM 是 <strong>非聚集索引</strong>（堆表）。</p>
+<ul>
+<li>聚集索引的文件存放在主键索引的叶子节点上，因此 InnoDB 必须要有主键，通过主键索引效率很高。但是辅助索引需要两次查询（回表），先查询到主键，然后再通过主键查询到数据。因此，主键不应该过大，因为主键太大，其他索引也都会很大。</li>
+<li>聚集索引的顺序就是数据的物理存储顺序，所以 insert 和 update 操作可能会导致数据重排，而导致性能下降。</li>
+<li>而 MyISAM 是非聚集索引，数据文件是分离的，索引保存的是数据文件的指针。主键索引和辅助索引是独立的。</li>
+</ul>
+</li>
+<li>
+<p>InnoDB 不保存表的具体行数，执行 <code>select count(*) from table</code> 时需要全表扫描。而MyISAM 用一个变量保存了整个表的行数，执行上述语句时只需要读出该变量即可，速度很快；（MyISAM 查询效率更高，且支持全文索引）</p>
+</li>
+<li>
+<p>InnoDB 最小的锁粒度是 <strong>行锁</strong>，MyISAM 最小的锁粒度是表锁。一个更新语句会锁住整张表，导致其他查询和更新都会被阻塞，因此并发访问受限。这也是 MySQL 将默认存储引擎从 MyISAM 变成 InnoDB 的重要原因之一；</p>
+</li>
+</ol>
+<p><img src="/images/InnoDB.png" alt=""></p>
+<h4 id="如何选择">如何选择：</h4>
+<ol>
+<li>
+<p>是否要支持事务，如果要请选择 InnoDB，如果不需要可以考虑 MyISAM；</p>
+</li>
+<li>
+<p>如果表中绝大多数都只是读查询，可以考虑 MyISAM，如果既有读写也挺频繁，请使用InnoDB。</p>
+</li>
+<li>
+<p>系统奔溃后，MyISAM 恢复起来更困难，能否接受，不能接受就选 InnoDB；</p>
+</li>
+<li>
+<p>MySQL 5.5 版本开始 InnoDB 已经成为 MySQL 的默认引擎（之前是 MyISAM ），说明其优势是有目共睹的。如果你不知道用什么存储引擎，那就用 InnoDB，至少不会差。</p>
+</li>
+<li>
+<p>MyISAM 更适合 <strong>读密集</strong> 的表，而 InnoDB 更适合写密集的的表。 在数据库做主从分离的情况下，经常选择 MyISAM 作为主库的存储引擎。 一般来说，如果需要事务支持，并且有较高的并发读取频率（MyISAM的表锁的粒度太大，所以当该表写并发量较高时，要等待的查询就会很多了），InnoDB 是不错的选择。如果你的数据量很大（MyISAM 支持压缩特性可以减少磁盘的空间占用），而且不需要支持事务时，MyISAM 是最好的选择。</p>
+</li>
+</ol>
+<h1 id="索引原理">索引原理</h1>
+<h3 id="行格式与数据页">行格式与数据页</h3>
+<h3 id="最左前缀匹配原则">最左前缀匹配原则</h3>
+<h3 id="单表记录数过大时的优化措施">单表记录数过大时的优化措施</h3>
+<h1 id="事务与锁">事务与锁</h1>
+<p>事务(commit)、回滚(rollback)和崩溃修复能力(crash recovery capabilities)的事务安全(transaction-safe (ACID compliant))型表。</p>
+<h3 id="事务特性与并发事务带来的问题">事务特性与并发事务带来的问题</h3>
+<h3 id="事务隔离级别与读写锁">事务隔离级别与读写锁</h3>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://chenghao.monster/2020/database-mysql/>http://chenghao.monster/2020/database-mysql/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://chenghao.monster/tags/database/">
+                    #Database</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://chenghao.monster">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://chenghao.monster/2020/net-http/" class="prev" rel="prev" title="Net：概述与应用层"><i class="iconfont icon-left"></i>&nbsp;Net：概述与应用层</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://chenghao.monster">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
