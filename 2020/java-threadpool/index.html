@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="http://chenghao.monster/2020/net-tcp/" />
+  
+  <link rel="canonical" href="http://chenghao.monster/2020/java-threadpool/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Java：线程池原理 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Java：线程池原理 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/chenghao.monster"
+    },
+    "articleSection" : "posts",
+    "name" : "Java：线程池原理",
+    "headline" : "Java：线程池原理",
+    "description" : "本篇为 Java：初识多线程、原理及实现 的续篇，介绍 Java 中的线程池。\n为什么需要线程池 进程与线程 起源 进程 是在批处理操作系统的基础上，为进一步提高计算机效率，改善操作系统串行的运行方式的产物。进程的出现改变了内存中始终只有一个程序运行的事实，进程是在内存中独享一片内存空间的程序，各个进程之间互不干扰。\nCPU 采用 时间片轮转 的方式运行进程，使用上下文切换的方式让操作系统的并发成为可能。虽然并发从宏观上看有多个任务在执行，但对于单核 CPU 来说，任意时刻都只有一个任务在占用 CPU 资源。\n 上下文指某一时刻 CPU 寄存器和程序计数器的内容，通过在内存中保存 \/ 读取来完成其切换。上下⽂切换通常是计算密集型的，意味着此操作会消耗⼤量的 CPU 时间，故线程也不是越多越好。如何减少系统中上下⽂切换次数，是提升多线程性能的⼀个重点课题。\n 如果说进程让操作系统的并发性成为了可能，那么 线程 就让进程的内部并发成为了可能。每个线程执行进程中的一个子任务，使得杀毒软件一遍检测用户电脑一遍清理垃圾成为可能。\n进程和线程的区别  进程间的通信比较复杂，而线程间的通信比较简单。线程相比进程更为轻量级，多线程并发相比多进程开销更小。 进程和线程本质的区别是 是否单独占有内存地址空间及其他的系统资源（比如 I\/O）：进程间存在内存隔离，而线程共享所属进程占有的内存地址空间和隔离，数据共享简单，但是同步复杂。 进程是操作系统进行资源分配的基本单位，而线程是操作系统进行调度的基本单位。一个进程出现问题不会影响其他进程；而一个线程崩溃可能影响整个程序的稳定性。  Java 线程与操作系统内核线程 用户级线程与内核级线程 推荐阅读：用户级线程和内核级线程，你分清楚了吗？\n 用户级线程 ULT：由应用程序实现和管理（创建、同步、调度等），线程阻塞则整个进程阻塞。对操作系统来说，用户级线程具有不可见性、透明性，ULT 下 CPU 的调度还是以进程为单位。 内核级线程 KLT：需通过 系统调用 创建，由系统内核管理，可实现多核 CPU 并行处理。线程阻塞不会影响同进程内其他线程的运行。  线程池的意义  JVM 运行在用户态，通过调用系统库来创建内核线程，由 CPU 来完成线程的调度；但是从用户态到内核态的权限提升和状态切换需要相当的 系统开销，频繁的创建和销毁线程将不利于程序性能的提升。 为此，将线程池化管理，对线程进行统一分配、调优和监控，避免频繁的线程创建，减少状态切换带来的资源消耗，重用线程 就是使用线程池的意义。 线程池比较适合处理数量庞大，但是处理时间较短的任务。如果某个任务耗时过长，会导致池内任务堆积。  线程池原理 ThreadPoolExecutor 的构造器参数 public ThreadPoolExecutor(int corePoolSize,\rint maximumPoolSize,\rlong keepAliveTime,\rTimeUnit unit,\rBlockingQueue\x26lt;Runnable\x26gt; workQueue,\rThreadFactory threadFactory,\rRejectedExecutionHandler handler)  corePoolSize：核⼼线程数 maximumPoolSize：池内最大线程数   最大线程数 = 核心线程 \x2b 非核心线程。非核心线程如果长时间闲置，就会被销毁。",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-03-27 10:19:47 \x2b0100 \x2b0100",
+    "dateModified" : "2020-03-27 10:19:47 \x2b0100 \x2b0100",
+    "url" : "http:\/\/chenghao.monster\/2020\/java-threadpool\/",
+    "wordCount" : "102",
+    "keywords" : [ "Java", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Java：线程池原理</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-03-27 itemprop="datePublished">March 27, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,102 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>本篇为 <a href="https://chenghao.monster/2020/java-multi-thread/">Java：初识多线程、原理及实现</a> 的续篇，介绍 Java 中的线程池。</p>
+<h1 id="为什么需要线程池">为什么需要线程池</h1>
+<h3 id="进程与线程">进程与线程</h3>
+<h4 id="起源">起源</h4>
+<p><strong>进程</strong> 是在批处理操作系统的基础上，为进一步提高计算机效率，改善操作系统串行的运行方式的产物。进程的出现改变了内存中始终只有一个程序运行的事实，进程是在内存中独享一片内存空间的程序，各个进程之间互不干扰。</p>
+<p>CPU 采用 <strong>时间片轮转</strong> 的方式运行进程，使用上下文切换的方式让操作系统的并发成为可能。虽然并发从宏观上看有多个任务在执行，但对于单核 CPU 来说，任意时刻都只有一个任务在占用 CPU 资源。</p>
+<blockquote>
+<p>上下文指某一时刻 CPU 寄存器和程序计数器的内容，通过在内存中保存 / 读取来完成其切换。上下⽂切换通常是计算密集型的，意味着此操作会消耗⼤量的 CPU 时间，故线程也不是越多越好。如何减少系统中上下⽂切换次数，是提升多线程性能的⼀个重点课题。</p>
+</blockquote>
+<p>如果说进程让操作系统的并发性成为了可能，那么 <strong>线程</strong> 就让进程的内部并发成为了可能。每个线程执行进程中的一个子任务，使得杀毒软件一遍检测用户电脑一遍清理垃圾成为可能。</p>
+<h4 id="进程和线程的区别">进程和线程的区别</h4>
+<ol>
+<li>进程间的通信比较复杂，而线程间的通信比较简单。线程相比进程更为轻量级，多线程并发相比多进程开销更小。</li>
+<li>进程和线程本质的区别是 <strong>是否单独占有内存地址空间及其他的系统资源（比如 I/O）</strong>：进程间存在内存隔离，而线程共享所属进程占有的内存地址空间和隔离，数据共享简单，但是同步复杂。</li>
+<li>进程是操作系统进行资源分配的基本单位，而线程是操作系统进行调度的基本单位。一个进程出现问题不会影响其他进程；而一个线程崩溃可能影响整个程序的稳定性。</li>
+</ol>
+<h3 id="java-线程与操作系统内核线程">Java 线程与操作系统内核线程</h3>
+<h4 id="用户级线程与内核级线程">用户级线程与内核级线程</h4>
+<p>推荐阅读：<a href="https://cloud.tencent.com/developer/article/1541432">用户级线程和内核级线程，你分清楚了吗？</a></p>
+<ol>
+<li>用户级线程 ULT：由应用程序实现和管理（创建、同步、调度等），线程阻塞则整个进程阻塞。对操作系统来说，用户级线程具有不可见性、透明性，ULT 下 CPU 的调度还是以进程为单位。</li>
+<li>内核级线程 KLT：需通过 <strong>系统调用</strong> 创建，由系统内核管理，可实现多核 CPU 并行处理。线程阻塞不会影响同进程内其他线程的运行。</li>
+</ol>
+<p><img src="/images/system-memory.png" alt=""></p>
+<h4 id="线程池的意义">线程池的意义</h4>
+<ul>
+<li>JVM 运行在用户态，通过调用系统库来创建内核线程，由 CPU 来完成线程的调度；但是从用户态到内核态的权限提升和状态切换需要相当的 <strong>系统开销</strong>，频繁的创建和销毁线程将不利于程序性能的提升。</li>
+<li>为此，将线程池化管理，对线程进行统一分配、调优和监控，避免频繁的线程创建，减少状态切换带来的资源消耗，<strong>重用线程</strong> 就是使用线程池的意义。</li>
+<li>线程池比较适合处理数量庞大，但是处理时间较短的任务。如果某个任务耗时过长，会导致池内任务堆积。</li>
+</ul>
+<h1 id="线程池原理">线程池原理</h1>
+<h3 id="threadpoolexecutor-的构造器参数">ThreadPoolExecutor 的构造器参数</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ThreadPoolExecutor</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> corePoolSize<span style="color:#f92672">,</span>
+                          <span style="color:#66d9ef">int</span> maximumPoolSize<span style="color:#f92672">,</span>
+                          <span style="color:#66d9ef">long</span> keepAliveTime<span style="color:#f92672">,</span>
+                          TimeUnit unit<span style="color:#f92672">,</span>
+                          BlockingQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span> workQueue<span style="color:#f92672">,</span>
+                          ThreadFactory threadFactory<span style="color:#f92672">,</span>
+                          RejectedExecutionHandler handler<span style="color:#f92672">)</span> 
+</code></pre></div><ul>
+<li>corePoolSize：核⼼线程数</li>
+<li>maximumPoolSize：池内最大线程数</li>
+</ul>
+<blockquote>
+<p>最大线程数 = 核心线程 + 非核心线程。非核心线程如果长时间闲置，就会被销毁。</p>
+</blockquote>
+<ul>
+<li>keepAliveTime / unit：非核心线程闲置超时时长 / 时间单位</li>
+<li>workQueue ==订单队列，保存哪些即将被执行的任务==，它是一个==阻塞队列==：在任意时刻，不管并发有多高，永远只有一个线程能够进行队列的入队或者出队操作！无界|有界；队列满，只能进行出队操作，所有入队的操作必须等待，也就是被阻塞；队列空，只能进行入队操作，所有出队的操作必须等待，也就是被阻塞；</li>
+<li>workQueue：阻塞的任务队列</li>
+<li>threadFactory：创建线程的工厂</li>
+<li>rejectedExecutionHandler：当任务队列满且无法再创建非核心线程时会执行拒绝处理策略
+<ul>
+<li>AbortPolicy 默认拒绝处理策略，丢弃任务并抛出RejectedExecutionException异常。</li>
+<li>CallerRunsPolicy：由调⽤线程处理该任务</li>
+<li>DiscardOldestPolicy：丢弃队列头部（最旧的）的任务，然后重新尝试执⾏程序</li>
+<li>DiscardPolicy：丢弃新来的任务</li>
+</ul>
+</li>
+</ul>
+<h3 id="线程池的状态">线程池的状态</h3>
+<p><img src="/images/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%8A%B6%E6%80%81.png" alt=""></p>
+<h3 id="线程池主要的任务处理流程">线程池主要的任务处理流程</h3>
+<h3 id="四种常见的线程池">四种常见的线程池</h3>
+<h3 id="如何做到线程复用">如何做到线程复用</h3>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://chenghao.monster/2020/java-threadpool/>http://chenghao.monster/2020/java-threadpool/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://chenghao.monster/tags/java/">
+                    #Java</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://chenghao.monster">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://chenghao.monster/2020/net-tcp/" class="prev" rel="prev" title="Net：运输层"><i class="iconfont icon-left"></i>&nbsp;Net：运输层</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://chenghao.monster">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
