@@ -22,10 +22,10 @@
   <title>
        
        
-           Java：线程池原理 | 人间一场大梦
+           Java：线程池原理、源码分析 | 人间一场大梦
        
   </title>
-  <meta name="title" content="Java：线程池原理 | 人间一场大梦">
+  <meta name="title" content="Java：线程池原理、源码分析 | 人间一场大梦">
     
   
   <link rel="stylesheet" href="/font/iconfont.css">
@@ -44,8 +44,8 @@
          "@id": "http:\/\/chenghao.monster"
     },
     "articleSection" : "posts",
-    "name" : "Java：线程池原理",
-    "headline" : "Java：线程池原理",
+    "name" : "Java：线程池原理、源码分析",
+    "headline" : "Java：线程池原理、源码分析",
     "description" : "本篇为 Java：初识多线程、原理及实现 的续篇，介绍 Java 中的线程池。\n为什么需要线程池 进程与线程 起源 进程 是在批处理操作系统的基础上，为进一步提高计算机效率，改善操作系统串行的运行方式的产物。进程的出现改变了内存中始终只有一个程序运行的事实，进程是在内存中独享一片内存空间的程序，各个进程之间互不干扰。\nCPU 采用 时间片轮转 的方式运行进程，使用上下文切换的方式让操作系统的并发成为可能。虽然并发从宏观上看有多个任务在执行，但对于单核 CPU 来说，任意时刻都只有一个任务在占用 CPU 资源。\n 上下文指某一时刻 CPU 寄存器和程序计数器的内容，通过在内存中保存 \/ 读取来完成其切换。上下⽂切换通常是计算密集型的，意味着此操作会消耗⼤量的 CPU 时间，故线程也不是越多越好。如何减少系统中上下⽂切换次数，是提升多线程性能的⼀个重点课题。\n 如果说进程让操作系统的并发性成为了可能，那么 线程 就让进程的内部并发成为了可能。每个线程执行进程中的一个子任务，使得杀毒软件一遍检测用户电脑一遍清理垃圾成为可能。\n进程和线程的区别  进程间的通信比较复杂，而线程间的通信比较简单。线程相比进程更为轻量级，多线程并发相比多进程开销更小。 进程和线程本质的区别是 是否单独占有内存地址空间及其他的系统资源（比如 I\/O）：进程间存在内存隔离，而线程共享所属进程占有的内存地址空间和隔离，数据共享简单，但是同步复杂。 进程是操作系统进行资源分配的基本单位，而线程是操作系统进行调度的基本单位。一个进程出现问题不会影响其他进程；而一个线程崩溃可能影响整个程序的稳定性。  Java 线程与操作系统内核线程 用户级线程与内核级线程 推荐阅读：用户级线程和内核级线程，你分清楚了吗？\n 用户级线程 ULT：由应用程序实现和管理（创建、同步、调度等），线程阻塞则整个进程阻塞。对操作系统来说，用户级线程具有不可见性、透明性，ULT 下 CPU 的调度还是以进程为单位。 内核级线程 KLT：需通过 系统调用 创建，由系统内核管理，可实现多核 CPU 并行处理。线程阻塞不会影响同进程内其他线程的运行。  线程池的意义  JVM 运行在用户态，通过调用系统库来创建内核线程，由 CPU 来完成线程的调度；但是从用户态到内核态的权限提升和状态切换需要相当的 系统开销，频繁的创建和销毁线程将不利于程序性能的提升。 为此，将线程池化管理，对线程进行统一分配、调优和监控，避免频繁的线程创建，减少状态切换带来的资源消耗，重用线程 就是使用线程池的意义。 线程池比较适合处理数量庞大，但是处理时间较短的任务。如果某个任务耗时过长，会导致池内任务堆积。  线程池原理 ThreadPoolExecutor 的构造器参数 public ThreadPoolExecutor(int corePoolSize,\rint maximumPoolSize,\rlong keepAliveTime,\rTimeUnit unit,\rBlockingQueue\x26lt;Runnable\x26gt; workQueue,\rThreadFactory threadFactory,\rRejectedExecutionHandler handler)  corePoolSize：核⼼线程数 maximumPoolSize：池内最大线程数   最大线程数 = 核心线程 \x2b 非核心线程。非核心线程如果长时间闲置，就会被销毁。",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-03-27 10:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-03-27 10:19:47 \x2b0100 \x2b0100",
     "url" : "http:\/\/chenghao.monster\/2020\/java-threadpool\/",
-    "wordCount" : "1004",
+    "wordCount" : "1145",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -122,7 +122,7 @@
       		
 <article class="post-warp" itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Java：线程池原理</h1>
+        <h1 class="post-title" itemprop="name headline">Java：线程池原理、源码分析</h1>
         <div class="post-meta">
                 Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
                 <span class="post-time">
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,1004 words</span>
+                 <span class="post-word-count">,1145 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -291,10 +291,41 @@
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">runStateOf</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span>     <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> c <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>CAPACITY<span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">workerCountOf</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span>  <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> c <span style="color:#f92672">&amp;</span> CAPACITY<span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="四种常见的线程池">四种常见的线程池</h3>
+<p>Executors 工具类中提供的⼏个静态⽅法来创建线程池。⼤家到了这⼀步，如果看懂了前⾯讲的 ThreadPoolExecutor 构造⽅法中各种参数的意义，那么⼀看到 Executors 类中提供的线程池的源码就应该知道这个线程池是⼲嘛的。</p>
 <h4 id="newcachedthreadpool">newCachedThreadPool</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ExecutorService <span style="color:#a6e22e">newCachedThreadPool</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span>
+                                      60L<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">SECONDS</span><span style="color:#f92672">,</span>
+                                      <span style="color:#66d9ef">new</span> SynchronousQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>当需要执⾏很多 <strong>短时间</strong> 的任务时，CacheThreadPool 的线程复⽤率⽐较⾼， 会显著的提⾼性能。⽽且线程 60s 后会回收，意味着即使没有任务进来，CacheThreadPool 并不会占⽤很多资源 。</p>
 <h4 id="newfixedthreadpool">newFixedThreadPool</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ExecutorService <span style="color:#a6e22e">newFixedThreadPool</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> nThreads<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor<span style="color:#f92672">(</span>nThreads<span style="color:#f92672">,</span> nThreads<span style="color:#f92672">,</span>
+                                      0L<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">MILLISECONDS</span><span style="color:#f92672">,</span>
+                                      <span style="color:#66d9ef">new</span> LinkedBlockingQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>可以看到 newFixedThreadPool 创建的都是核心线程，如果任务队列中没有任务可取，线程会一直阻塞在 getTask() 方法，而 newCachedThreadPool 会在等待 60s 后收回非核心线程。所以在没有任务的情况下 FixedThreadPool 会 <strong>占用更多的资源</strong>。</p>
+<p>两种线程池都⼏乎不会触发拒绝策略，但是原理不同。FixedThreadPool 是因为阻塞队列可以很⼤（最⼤为Integer最⼤值），故⼏乎不会触发拒绝策略；CachedThreadPool 是因为线程池很⼤（最⼤为Integer最⼤值），⼏乎不会导致线程数量⼤于最⼤线程数，故⼏乎不会触发拒绝策略 。</p>
 <h4 id="newsinglethreadexecutor">newSingleThreadExecutor</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ExecutorService <span style="color:#a6e22e">newSingleThreadExecutor</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> FinalizableDelegatedExecutorService
+            <span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ThreadPoolExecutor<span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span>
+                                    0L<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">MILLISECONDS</span><span style="color:#f92672">,</span>
+                                    <span style="color:#66d9ef">new</span> LinkedBlockingQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>有且仅有⼀个核⼼线程，使⽤了 LinkedBlockingQueue（容量很⼤），所以，不会创建⾮核⼼线程。所有任务按照先来先执⾏的顺序执⾏。如果这个唯⼀的线程不空闲，那么新来的任务会存储在任务队列⾥等待执⾏。</p>
 <h4 id="newscheduledthreadpool">newScheduledThreadPool</h4>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ScheduledExecutorService <span style="color:#a6e22e">newScheduledThreadPool</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> corePoolSize<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ScheduledThreadPoolExecutor<span style="color:#f92672">(</span>corePoolSize<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ScheduledThreadPoolExecutor</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> corePoolSize<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>corePoolSize<span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> NANOSECONDS<span style="color:#f92672">,</span>
+              <span style="color:#66d9ef">new</span> DelayedWorkQueue<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>⼀个定⻓线程池，⽀持定时及周期性任务执⾏。</p>
+<p>四种常⻅的线程池基本够我们使⽤了，但是《阿⾥把把开发⼿册》<strong>不建议</strong> 我们直接使⽤ Executors 类中的线程池，⽽是通过 ThreadPoolExecutor 的⽅式，这样的处理⽅式让写的同学需要更加明确线程池的运⾏规则，规避资源耗尽的⻛险。</p>
 <h3 id="线程池主要的任务处理流程">线程池主要的任务处理流程</h3>
 <p>ThreadPoolExecutor 的 <code>execute(Runnable command)</code> 处理用户新提交的任务：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// JDK 1.8
@@ -449,7 +480,7 @@
                     <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
                         afterExecute<span style="color:#f92672">(</span>task<span style="color:#f92672">,</span> thrown<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// 执行 afterExecute
 </span><span style="color:#75715e"></span>                    <span style="color:#f92672">}</span>
-                <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+                <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span> n
                     task <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
                     w<span style="color:#f92672">.</span><span style="color:#a6e22e">completedTasks</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
                     w<span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>   <span style="color:#75715e">// 解锁 Worker
@@ -506,7 +537,9 @@
             <span style="color:#f92672">}</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
-</code></pre></div>
+</code></pre></div><p>核⼼线程的会 <strong>⼀直</strong> 卡在 workQueue.take() ⽅法，被阻塞并挂起，不会占⽤ CPU 资源，直到拿到 Runnable 然后返回（当然如果 allowCoreThreadTimeOut 设置为 true，那么核⼼线程就会去调⽤ poll ⽅法，因为 poll 可能会返回 null，所以这时候核⼼线程满⾜超时条件也会被销毁）。</p>
+<p>⾮核⼼线程会 workQueue.poll(keepAliveTime, TimeUnit.NANOSECONDS) ，如果超时还没有拿到，下⼀次循环判断 compareAndDecrementWorkerCount 就会返回 true，导致 getTask() 返回 null，Worker 对象的 run() ⽅法循环体的判断为 null，就会执行 <code>processWorkerExit(w, completedAbruptly)</code> 线程被系统回收。</p>
+
     </div>
 
     <div class="post-copyright">
