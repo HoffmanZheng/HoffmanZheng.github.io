@@ -6,10 +6,21 @@
     <description>Recent content in Java on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 27 Mar 2020 10:19:47 +0100</lastBuildDate>
+    <lastBuildDate>Tue, 21 Apr 2020 11:30:47 +0100</lastBuildDate>
     
 	<atom:link href="http://chenghao.monster/tags/java/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Java：程序的部署和 Nginx 负载均衡</title>
+      <link>http://chenghao.monster/2020/deploy/</link>
+      <pubDate>Tue, 21 Apr 2020 11:30:47 +0100</pubDate>
+      
+      <guid>http://chenghao.monster/2020/deploy/</guid>
+      <description>本篇介绍 Java 程序部署的几种方式：exec 插件、jar 包、Docker 方式，以及使用 Nginx 实现负载均衡。
+Java 程序的部署 Maven exec 插件部署  导入 Maven 的 exec 插件：Maven Repository: org.codehaus.mojo » exec-maven-plugin  &amp;lt;plugin&amp;gt;&amp;lt;groupId&amp;gt;org.codehaus.mojo&amp;lt;/groupId&amp;gt;&amp;lt;artifactId&amp;gt;exec-maven-plugin&amp;lt;/artifactId&amp;gt;&amp;lt;version&amp;gt;1.6.0&amp;lt;/version&amp;gt;&amp;lt;executions&amp;gt;&amp;lt;execution&amp;gt;&amp;lt;id&amp;gt;run&amp;lt;/id&amp;gt;&amp;lt;goals&amp;gt;&amp;lt;goal&amp;gt;exec&amp;lt;/goal&amp;gt;&amp;lt;/goals&amp;gt;&amp;lt;configuration&amp;gt;&amp;lt;executable&amp;gt;java&amp;lt;/executable&amp;gt;&amp;lt;arguments&amp;gt;&amp;lt;argument&amp;gt;-classpath&amp;lt;/argument&amp;gt;&amp;lt;!--automatically creates the classpath using all project dependencies,also adding the project build directory --&amp;gt;&amp;lt;classpath/&amp;gt;&amp;lt;argument&amp;gt;com.github.NervousOrange.springboot.Application&amp;lt;/argument&amp;gt;&amp;lt;/arguments&amp;gt;&amp;lt;/configuration&amp;gt;&amp;lt;/execution&amp;gt;&amp;lt;/executions&amp;gt;&amp;lt;/plugin&amp;gt; mvn exec:exec 即可完成程序的部署；-X 参数可以用于排查部署时出现的问题，-DskipTests 可以跳过测试。
+  windosw下（需要使用系统 cmd） netstat -ano | findstr &amp;quot;8080&amp;quot; 可以查看当前端口被占用的情况，tasklist |findstr &amp;quot;进程id号&amp;quot; 查找对应的进程名称，然后 taskkill /f /t /im &amp;quot;进程id或者进程名称&amp;quot; 杀掉进程</description>
+    </item>
     
     <item>
       <title>Java：线程池原理、源码分析</title>
@@ -17,7 +28,7 @@
       <pubDate>Fri, 27 Mar 2020 10:19:47 +0100</pubDate>
       
       <guid>http://chenghao.monster/2020/java-threadpool/</guid>
-      <description>本篇为 Java：初识多线程、原理及实现 的续篇，介绍 Java 中的线程池。
+      <description>本篇为 Java：初识多线程、原理及实现 的续篇，介绍 Java 中的线程池，主要内容有：进程与线程、线程池化的意义、Executors 工具类、线程池工作流程、线程复用原理等。
 为什么需要线程池 进程与线程 起源 进程 是在批处理操作系统的基础上，为进一步提高计算机效率，改善操作系统串行的运行方式的产物。进程的出现改变了内存中始终只有一个程序运行的事实，进程是在内存中独享一片内存空间的程序，各个进程之间互不干扰。
 CPU 采用 时间片轮转 的方式运行进程，使用上下文切换的方式让操作系统的并发成为可能。虽然并发从宏观上看有多个任务在执行，但对于单核 CPU 来说，任意时刻都只有一个任务在占用 CPU 资源。
  上下文指某一时刻 CPU 寄存器和程序计数器的内容，通过在内存中保存 / 读取来完成其切换。上下⽂切换通常是计算密集型的，意味着此操作会消耗⼤量的 CPU 时间，故线程也不是越多越好。如何减少系统中上下⽂切换次数，是提升多线程性能的⼀个重点课题。

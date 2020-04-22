@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="http://chenghao.monster/2020/java-threadpool/" />
+  
+  <link rel="canonical" href="http://chenghao.monster/2020/deploy/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Java：程序的部署和 Nginx 负载均衡 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Java：程序的部署和 Nginx 负载均衡 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/chenghao.monster"
+    },
+    "articleSection" : "posts",
+    "name" : "Java：程序的部署和 Nginx 负载均衡",
+    "headline" : "Java：程序的部署和 Nginx 负载均衡",
+    "description" : "本篇介绍 Java 程序部署的几种方式：exec 插件、jar 包、Docker 方式，以及使用 Nginx 实现负载均衡。\nJava 程序的部署 Maven exec 插件部署  导入 Maven 的 exec 插件：Maven Repository: org.codehaus.mojo » exec-maven-plugin  \x26lt;plugin\x26gt;\r\x26lt;groupId\x26gt;org.codehaus.mojo\x26lt;\/groupId\x26gt;\r\x26lt;artifactId\x26gt;exec-maven-plugin\x26lt;\/artifactId\x26gt;\r\x26lt;version\x26gt;1.6.0\x26lt;\/version\x26gt;\r\x26lt;executions\x26gt;\r\x26lt;execution\x26gt;\r\x26lt;id\x26gt;run\x26lt;\/id\x26gt;\r\x26lt;goals\x26gt;\r\x26lt;goal\x26gt;exec\x26lt;\/goal\x26gt;\r\x26lt;\/goals\x26gt;\r\x26lt;configuration\x26gt;\r\x26lt;executable\x26gt;java\x26lt;\/executable\x26gt;\r\x26lt;arguments\x26gt;\r\x26lt;argument\x26gt;-classpath\x26lt;\/argument\x26gt;\r\x26lt;!--automatically creates the classpath using all project dependencies,\ralso adding the project build directory --\x26gt;\r\x26lt;classpath\/\x26gt;\r\x26lt;argument\x26gt;com.github.NervousOrange.springboot.Application\x26lt;\/argument\x26gt;\r\x26lt;\/arguments\x26gt;\r\x26lt;\/configuration\x26gt;\r\x26lt;\/execution\x26gt;\r\x26lt;\/executions\x26gt;\r\x26lt;\/plugin\x26gt;\r mvn exec:exec 即可完成程序的部署；-X 参数可以用于排查部署时出现的问题，-DskipTests 可以跳过测试。\n  windosw下（需要使用系统 cmd） netstat -ano | findstr \x26quot;8080\x26quot; 可以查看当前端口被占用的情况，tasklist |findstr \x26quot;进程id号\x26quot; 查找对应的进程名称，然后 taskkill \/f \/t \/im \x26quot;进程id或者进程名称\x26quot; 杀掉进程",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-04-21 11:30:47 \x2b0100 \x2b0100",
+    "dateModified" : "2020-04-21 11:30:47 \x2b0100 \x2b0100",
+    "url" : "http:\/\/chenghao.monster\/2020\/deploy\/",
+    "wordCount" : "260",
+    "keywords" : [ "Java", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Java：程序的部署和 Nginx 负载均衡</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-04-21 itemprop="datePublished">April 21, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,260 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>本篇介绍 Java 程序部署的几种方式：exec 插件、jar 包、Docker 方式，以及使用 Nginx 实现负载均衡。</p>
+<h1 id="java-程序的部署">Java 程序的部署</h1>
+<h3 id="maven-exec-插件部署">Maven exec 插件部署</h3>
+<ol>
+<li>导入 Maven 的 exec 插件：<a href="https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin">Maven Repository: org.codehaus.mojo » exec-maven-plugin</a></li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">plugin</span>&gt;
+&lt;<span style="color:#f92672">groupId</span>&gt;org.codehaus.mojo&lt;/<span style="color:#f92672">groupId</span>&gt;
+&lt;<span style="color:#f92672">artifactId</span>&gt;exec-maven-plugin&lt;/<span style="color:#f92672">artifactId</span>&gt;
+&lt;<span style="color:#f92672">version</span>&gt;1.6.0&lt;/<span style="color:#f92672">version</span>&gt;
+&lt;<span style="color:#f92672">executions</span>&gt;
+	&lt;<span style="color:#f92672">execution</span>&gt;
+		&lt;<span style="color:#f92672">id</span>&gt;run&lt;/<span style="color:#f92672">id</span>&gt;
+		&lt;<span style="color:#f92672">goals</span>&gt;
+			&lt;<span style="color:#f92672">goal</span>&gt;exec&lt;/<span style="color:#f92672">goal</span>&gt;
+		&lt;/<span style="color:#f92672">goals</span>&gt;
+		&lt;<span style="color:#f92672">configuration</span>&gt;
+			&lt;<span style="color:#f92672">executable</span>&gt;java&lt;/<span style="color:#f92672">executable</span>&gt;
+			&lt;<span style="color:#f92672">arguments</span>&gt;
+				&lt;<span style="color:#f92672">argument</span>&gt;-classpath&lt;/<span style="color:#f92672">argument</span>&gt;
+	<span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> automatically creates the classpath using all project dependencies,
+</span><span style="color:#75715e">          also adding the project build directory </span><span style="color:#75715e">--&gt;</span>
+				&lt;<span style="color:#f92672">classpath</span>/&gt;
+				&lt;<span style="color:#f92672">argument</span>&gt;com.github.NervousOrange.springboot.Application&lt;/<span style="color:#f92672">argument</span>&gt;
+			&lt;/<span style="color:#f92672">arguments</span>&gt;
+		&lt;/<span style="color:#f92672">configuration</span>&gt;
+	&lt;/<span style="color:#f92672">execution</span>&gt;
+&lt;/<span style="color:#f92672">executions</span>&gt;
+&lt;/<span style="color:#f92672">plugin</span>&gt;
+</code></pre></div><ol start="2">
+<li>
+<p><code>mvn exec:exec</code> 即可完成程序的部署；<code>-X</code> 参数可以用于排查部署时出现的问题，<code>-DskipTests</code>  可以跳过测试。</p>
+</li>
+<li>
+<p>windosw下（需要使用系统 cmd） <code>netstat -ano | findstr &quot;8080&quot;</code> 可以查看当前端口被占用的情况，<code>tasklist |findstr &quot;进程id号&quot;</code>  查找对应的进程名称，然后 <code>taskkill /f /t /im &quot;进程id或者进程名称&quot;</code> 杀掉进程</p>
+</li>
+</ol>
+<p><img src="/images/exec%E9%83%A8%E7%BD%B2.png" alt=""></p>
+<h3 id="jar-包形式部署">Jar 包形式部署</h3>
+<ol>
+<li>首先用 <code>mvn package -DskipTests</code> 把项目打包</li>
+<li>用命令行参数改变默认的 Spring 端口：<code>java -jar ./target/Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar --server.port=8081</code></li>
+<li>war 包与 jar 包的区别是没有内嵌 Tomcat 容器，无法直接运行，需要将 war 包放置在 Servlet 容器中才能运行。</li>
+</ol>
+<h3 id="用-docker-部署">用 Docker 部署</h3>
+<ol>
+<li>编写 Dockerfile 将之前打的 jar 包放进去，对外暴露 8080 端口。</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> java:openjdk-8u111-alpine</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mkdir /app<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /app</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> target/Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar /app<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">EXPOSE</span><span style="color:#e6db74"> 8080</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;java&#34;</span>,<span style="color:#e6db74">&#34;-jar&#34;</span>,<span style="color:#e6db74">&#34;Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><ol start="2">
+<li>构建一个 Docker 镜像：<code>docker build .</code></li>
+<li><code>docker run -p 8082:8080 ID</code></li>
+<li>由于 Docker 容器内外环境完全隔离，这就导致容器内的 Java 程序无法正常连接数据库，需要通过 -v 参数将外部的  application.properties（数据库连接的 URL 中的 localhost 改为当前局域网的 IP） 映射到容器内的 /config 目录下。</li>
+</ol>
+<h1 id="nginx-实现负载均衡">Nginx 实现负载均衡</h1>
+<h3 id="负载均衡简介">负载均衡简介</h3>
+<p>负载均衡 Load balancing 是一种水平扩展的分布式解决方案，它可以将高并发的用户请求均摊到多个服务器上，并且可以有效避免单点故障和容灾。</p>
+<blockquote>
+<p>round-robin — requests to the application servers are distributed in a round-robin fashion,</p>
+<p>least-connected — next request is assigned to the server with the least number of active connections,</p>
+<p>ip-hash — a hash-function is used to determine what server should be selected for the next request (based on the client’s IP address).</p>
+</blockquote>
+<h3 id="负载均衡配置">负载均衡配置</h3>
+<p>从 Docker 启动 Nginx：<code>docker run -d --name blog-nginx --restart=always -v d://nginx/nginx.conf:/etc/nginx/nginx.conf -p 80:80 nginx:1.17.10</code></p>
+<p>出问题后，可以进到 Nginx 里面进行排查：<code>docker exec -it ID bash</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">events <span style="color:#f92672">{</span> <span style="color:#f92672">}</span>
+http <span style="color:#f92672">{</span>
+    upstream myapp1 <span style="color:#f92672">{</span>
+        server 192.168.217.65:8080;   // 本地局域网
+        server 192.168.217.65:8081;
+        server 192.168.217.65:8082;
+    <span style="color:#f92672">}</span>
+
+    server <span style="color:#f92672">{</span>
+        listen 80;
+
+        location / <span style="color:#f92672">{</span>
+            proxy_pass http://myapp1;
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://chenghao.monster/2020/deploy/>http://chenghao.monster/2020/deploy/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://chenghao.monster/tags/java/">
+                    #Java</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://chenghao.monster">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://chenghao.monster/2020/java-threadpool/" class="prev" rel="prev" title="Java：线程池原理、源码分析"><i class="iconfont icon-left"></i>&nbsp;Java：线程池原理、源码分析</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://chenghao.monster">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
