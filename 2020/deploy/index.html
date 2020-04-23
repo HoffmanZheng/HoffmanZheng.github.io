@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Java：程序的部署和 Nginx 负载均衡",
     "headline" : "Java：程序的部署和 Nginx 负载均衡",
-    "description" : "本篇介绍 Java 程序部署的几种方式：exec 插件、jar 包、Docker 方式，以及使用 Nginx 实现负载均衡。\nJava 程序的部署 Maven exec 插件部署  导入 Maven 的 exec 插件：Maven Repository: org.codehaus.mojo » exec-maven-plugin  \x26lt;plugin\x26gt;\r\x26lt;groupId\x26gt;org.codehaus.mojo\x26lt;\/groupId\x26gt;\r\x26lt;artifactId\x26gt;exec-maven-plugin\x26lt;\/artifactId\x26gt;\r\x26lt;version\x26gt;1.6.0\x26lt;\/version\x26gt;\r\x26lt;executions\x26gt;\r\x26lt;execution\x26gt;\r\x26lt;id\x26gt;run\x26lt;\/id\x26gt;\r\x26lt;goals\x26gt;\r\x26lt;goal\x26gt;exec\x26lt;\/goal\x26gt;\r\x26lt;\/goals\x26gt;\r\x26lt;configuration\x26gt;\r\x26lt;executable\x26gt;java\x26lt;\/executable\x26gt;\r\x26lt;arguments\x26gt;\r\x26lt;argument\x26gt;-classpath\x26lt;\/argument\x26gt;\r\x26lt;!--automatically creates the classpath using all project dependencies,\ralso adding the project build directory --\x26gt;\r\x26lt;classpath\/\x26gt;\r\x26lt;argument\x26gt;com.github.NervousOrange.springboot.Application\x26lt;\/argument\x26gt;\r\x26lt;\/arguments\x26gt;\r\x26lt;\/configuration\x26gt;\r\x26lt;\/execution\x26gt;\r\x26lt;\/executions\x26gt;\r\x26lt;\/plugin\x26gt;\r mvn exec:exec 即可完成程序的部署；-X 参数可以用于排查部署时出现的问题，-DskipTests 可以跳过测试。\n  windosw下（需要使用系统 cmd） netstat -ano | findstr \x26quot;8080\x26quot; 可以查看当前端口被占用的情况，tasklist |findstr \x26quot;进程id号\x26quot; 查找对应的进程名称，然后 taskkill \/f \/t \/im \x26quot;进程id或者进程名称\x26quot; 杀掉进程",
+    "description" : "本篇介绍 Java 程序部署的三种方式：exec 插件、jar 包、Docker 方式部署，以及使用 Nginx 实现简单的负载均衡。\nJava 程序的部署 Maven exec 插件部署  导入 Maven 的 exec 插件：Maven Repository：exec-maven-plugin，然后在 pom.xml 中进行配置，使之可以调用外部命令执行 Java 程序并自动加载依赖的 classpath 路径：  \x26lt;plugin\x26gt;\r\x26lt;groupId\x26gt;org.codehaus.mojo\x26lt;\/groupId\x26gt;\r\x26lt;artifactId\x26gt;exec-maven-plugin\x26lt;\/artifactId\x26gt;\r\x26lt;version\x26gt;1.6.0\x26lt;\/version\x26gt;\r\x26lt;executions\x26gt;\r\x26lt;execution\x26gt;\r\x26lt;id\x26gt;run\x26lt;\/id\x26gt;\r\x26lt;goals\x26gt;\r\x26lt;goal\x26gt;exec\x26lt;\/goal\x26gt;\r\x26lt;\/goals\x26gt;\r\x26lt;configuration\x26gt;\r\x26lt;executable\x26gt;java\x26lt;\/executable\x26gt;\r\x26lt;arguments\x26gt;\r\x26lt;argument\x26gt;-classpath\x26lt;\/argument\x26gt;\r\x26lt;!--automatically creates the classpath using all project dependencies,\ralso adding the project build directory --\x26gt;\r\x26lt;classpath\/\x26gt;\r\x26lt;argument\x26gt;com.github.NervousOrange.springboot.Application\x26lt;\/argument\x26gt;\r\x26lt;\/arguments\x26gt;\r\x26lt;\/configuration\x26gt;\r\x26lt;\/execution\x26gt;\r\x26lt;\/executions\x26gt;\r\x26lt;\/plugin\x26gt;\rmvn exec:exec@[executionID] 即可完成程序的部署；-X 参数可以用于排查部署时出现的问题，-DskipTests 可以跳过测试。 windosw下（需使用系统 cmd） netstat -ano | findstr \x26quot;8080\x26quot; 可以查看当前端口被占用的情况，tasklist |findstr \x26quot;进程id号\x26quot; 查找对应的进程名称，然后 taskkill \/f \/t \/im \x26quot;进程id或者进程名称\x26quot; 杀掉当前占用端口的进程  部署效果图：",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-04-21 11:30:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-04-21 11:30:47 \x2b0100 \x2b0100",
     "url" : "http:\/\/chenghao.monster\/2020\/deploy\/",
-    "wordCount" : "260",
+    "wordCount" : "298",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,260 words</span>
+                 <span class="post-word-count">,298 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -155,11 +155,11 @@
           
           
 
-          <p>本篇介绍 Java 程序部署的几种方式：exec 插件、jar 包、Docker 方式，以及使用 Nginx 实现负载均衡。</p>
+          <p>本篇介绍 Java 程序部署的三种方式：exec 插件、jar 包、Docker 方式部署，以及使用 Nginx 实现简单的负载均衡。</p>
 <h1 id="java-程序的部署">Java 程序的部署</h1>
 <h3 id="maven-exec-插件部署">Maven exec 插件部署</h3>
 <ol>
-<li>导入 Maven 的 exec 插件：<a href="https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin">Maven Repository: org.codehaus.mojo » exec-maven-plugin</a></li>
+<li>导入 Maven 的 exec 插件：<a href="https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin">Maven Repository：exec-maven-plugin</a>，然后在 pom.xml 中进行配置，使之可以调用外部命令执行 Java 程序并自动加载依赖的 classpath 路径：</li>
 </ol>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">plugin</span>&gt;
 &lt;<span style="color:#f92672">groupId</span>&gt;org.codehaus.mojo&lt;/<span style="color:#f92672">groupId</span>&gt;
@@ -185,17 +185,14 @@
 &lt;/<span style="color:#f92672">executions</span>&gt;
 &lt;/<span style="color:#f92672">plugin</span>&gt;
 </code></pre></div><ol start="2">
-<li>
-<p><code>mvn exec:exec</code> 即可完成程序的部署；<code>-X</code> 参数可以用于排查部署时出现的问题，<code>-DskipTests</code>  可以跳过测试。</p>
-</li>
-<li>
-<p>windosw下（需要使用系统 cmd） <code>netstat -ano | findstr &quot;8080&quot;</code> 可以查看当前端口被占用的情况，<code>tasklist |findstr &quot;进程id号&quot;</code>  查找对应的进程名称，然后 <code>taskkill /f /t /im &quot;进程id或者进程名称&quot;</code> 杀掉进程</p>
-</li>
+<li><code>mvn exec:exec@[executionID]</code> 即可完成程序的部署；<code>-X</code> 参数可以用于排查部署时出现的问题，<code>-DskipTests</code>  可以跳过测试。</li>
+<li>windosw下（需使用系统 cmd） <code>netstat -ano | findstr &quot;8080&quot;</code> 可以查看当前端口被占用的情况，<code>tasklist |findstr &quot;进程id号&quot;</code>  查找对应的进程名称，然后 <code>taskkill /f /t /im &quot;进程id或者进程名称&quot;</code> 杀掉当前占用端口的进程</li>
 </ol>
+<p>部署效果图：</p>
 <p><img src="/images/exec%E9%83%A8%E7%BD%B2.png" alt=""></p>
 <h3 id="jar-包形式部署">Jar 包形式部署</h3>
 <ol>
-<li>首先用 <code>mvn package -DskipTests</code> 把项目打包</li>
+<li>使用 <code>mvn package -DskipTests</code> 把项目打包</li>
 <li>用命令行参数改变默认的 Spring 端口：<code>java -jar ./target/Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar --server.port=8081</code></li>
 <li>war 包与 jar 包的区别是没有内嵌 Tomcat 容器，无法直接运行，需要将 war 包放置在 Servlet 容器中才能运行。</li>
 </ol>
@@ -205,26 +202,49 @@
 </ol>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> java:openjdk-8u111-alpine</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mkdir /app<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /app</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /app       //工作目录</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> target/Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar /app<span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">EXPOSE</span><span style="color:#e6db74"> 8080</span><span style="color:#960050;background-color:#1e0010">
 </span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;java&#34;</span>,<span style="color:#e6db74">&#34;-jar&#34;</span>,<span style="color:#e6db74">&#34;Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar&#34;</span>]<span style="color:#960050;background-color:#1e0010">
 </span></code></pre></div><ol start="2">
-<li>构建一个 Docker 镜像：<code>docker build .</code></li>
-<li><code>docker run -p 8082:8080 ID</code></li>
-<li>由于 Docker 容器内外环境完全隔离，这就导致容器内的 Java 程序无法正常连接数据库，需要通过 -v 参数将外部的  application.properties（数据库连接的 URL 中的 localhost 改为当前局域网的 IP） 映射到容器内的 /config 目录下。</li>
+<li>
+<p>构建一个 Docker 镜像：<code>docker build .</code> 随后可以用 <code>docker tag [imageID] [imageName]:tag</code> 来修改生成镜像的名字和版本</p>
+</li>
+<li>
+<p>启动容器：<code>docker run --name blog-launch8082 -p 8082:8080 -v d://application.properties:/app/config/application.properties blog-launch:1.1</code></p>
+</li>
+<li>
+<p>由于 Docker 容器内外环境完全隔离，这就导致容器内的 Java 程序无法正常连接数据库，需要通过 -v 参数将外部的  application.properties（数据库连接的 URL 中的 localhost 改为当前局域网的 IP） 映射到容器内工作目录的 /config 下。</p>
+<p>参考：<a href="https://docs.spring.io/spring-boot/docs/1.2.2.RELEASE/reference/html/boot-features-external-config.html">Spring Boot features：Externalized Configuration</a></p>
+</li>
+<li>
+<p><code>docker exec -it [containerID] bash</code> 可以进到容器内部排查问题</p>
+</li>
 </ol>
 <h1 id="nginx-实现负载均衡">Nginx 实现负载均衡</h1>
 <h3 id="负载均衡简介">负载均衡简介</h3>
-<p>负载均衡 Load balancing 是一种水平扩展的分布式解决方案，它可以将高并发的用户请求均摊到多个服务器上，并且可以有效避免单点故障和容灾。</p>
+<ul>
+<li>
+<p>负载均衡 Load balancing 是一种水平扩展的分布式解决方案，它可以将高并发的用户流量分摊到多个应用程序服务器上，以缓解单个服务器的流量压力，改善 Web 应用程序的性能，并且可以有效避免单点故障和容灾事故。</p>
+</li>
+<li>
+<p>Nginx 文档中提及的三种负载均衡机制：</p>
+</li>
+</ul>
 <blockquote>
 <p>round-robin — requests to the application servers are distributed in a round-robin fashion,</p>
 <p>least-connected — next request is assigned to the server with the least number of active connections,</p>
 <p>ip-hash — a hash-function is used to determine what server should be selected for the next request (based on the client’s IP address).</p>
 </blockquote>
 <h3 id="负载均衡配置">负载均衡配置</h3>
+<ul>
+<li>
 <p>从 Docker 启动 Nginx：<code>docker run -d --name blog-nginx --restart=always -v d://nginx/nginx.conf:/etc/nginx/nginx.conf -p 80:80 nginx:1.17.10</code></p>
-<p>出问题后，可以进到 Nginx 里面进行排查：<code>docker exec -it ID bash</code></p>
+</li>
+<li>
+<p>在宿主机上配置好 nginx.conf 然后映射到 Docker 容器内部：</p>
+</li>
+</ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">events <span style="color:#f92672">{</span> <span style="color:#f92672">}</span>
 http <span style="color:#f92672">{</span>
     upstream myapp1 <span style="color:#f92672">{</span>
@@ -241,7 +261,16 @@ http <span style="color:#f92672">{</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div>
+</code></pre></div><ul>
+<li>
+<p>出问题后，可以打印日志 <code>docker logs [containerID]</code>，也可以进到 Nginx 容器内部进行排查：<code>docker exec -it ID bash</code>，测试下网络连通性等。</p>
+</li>
+<li>
+<p>最后的效果图：</p>
+</li>
+</ul>
+<p><img src="/images/%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1.png" alt=""></p>
+
     </div>
 
     <div class="post-copyright">
