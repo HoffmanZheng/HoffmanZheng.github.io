@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Reading notes on 人间一场大梦</title>
+    <link>http://chenghao.monster/categories/reading-notes/</link>
+    <description>Recent content in Reading notes on 人间一场大梦</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 26 Jul 2020 09:19:47 +0100</lastBuildDate>
+    
+	<atom:link href="http://chenghao.monster/categories/reading-notes/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>游览器缓存、DNS 域名解析与 CDN 工作机制</title>
+      <link>http://chenghao.monster/2020/dns-cdn/</link>
+      <pubDate>Sun, 26 Jul 2020 09:19:47 +0100</pubDate>
+      
+      <guid>http://chenghao.monster/2020/dns-cdn/</guid>
+      <description>由于之前找工作，刚来上海挺多事，些久没写博客；至此打算新开一个 “学习录” 系列（以读书笔记和实战心得为主），记录自己 Java 学习路上的收获，共勉。
+以 《深入分析 Java Web 技术内幕》 为参考，此篇讲解游览器缓存、DNS 域名解析的过程和 CDN 工作机制。
+游览器缓存 DNS 域名解析 CDN 工作机制 </description>
+    </item>
+    
+  </channel>
+</rss>
