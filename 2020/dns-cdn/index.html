@@ -10,7 +10,7 @@
   
   
   <link rel="prev" href="http://chenghao.monster/2020/deploy/" />
-  
+  <link rel="next" href="http://chenghao.monster/2020/java-io/" />
   <link rel="canonical" href="http://chenghao.monster/2020/dns-cdn/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -57,7 +57,7 @@
     "datePublished": "2020-07-26 09:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-07-26 09:19:47 \x2b0100 \x2b0100",
     "url" : "http:\/\/chenghao.monster\/2020\/dns-cdn\/",
-    "wordCount" : "253",
+    "wordCount" : "272",
     "keywords" : [ "Net", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,253 words</span>
+                 <span class="post-word-count">,272 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -232,10 +232,13 @@
 <h4 id="跟踪域名解析过程">跟踪域名解析过程</h4>
 <p>Windows 和 Linux 下都可以使用 <code>nslookup</code> 来查询域名的解析结果，Linux 下可用 <code>dig</code> 查询 DNS 的解析过程。</p>
 <p><img src="/images/digDNS.png" alt=""></p>
-<p>CNAME 为 Canonical Name（别名解析），可以为一个域名设置一个或者多个别名（方便 CDN 配置）。A 为 Address 为域名对应的 IP 地址。</p>
+<p><code>CNAME</code> 为 Canonical Name（别名解析），可以为一个域名设置一个或者多个别名（方便 CDN 配置）。A 为 Address 为域名对应的 IP 地址。</p>
 <h1 id="cdn-工作机制">CDN 工作机制</h1>
 <p>CDN 全称 Content Delivery Network，它将网站的内容发布到最接近用户的网络“边缘”，使用户可以 <strong>就近</strong> 取得所需的内容，提高用户访问网站的响应速度。</p>
 <p>CDN 主要缓存网站中的静态数据，如 CSS、JS、图片和静态页面等数据，</p>
+<p><img src="/images/CDN.jpg" alt=""></p>
+<p>CDN 架构下，当用户发起请求，经迭代解析后 LDNS 将收到域名的注册服务器地址，而公司的 DNS 解析服务器会把它重新 CNAME 到 CDN 全局中的 DNS 负载均衡服务器，再由 GTM 根据是哪个地方的访问用户来分配离这个用户最近的 CDN 节点。</p>
+<p>如果 CDN 节点中的请求数据不存在，则会回到源站去获取这个文件，然后再返回给用户。</p>
 
     </div>
 
@@ -281,6 +284,8 @@
         
         <a href="http://chenghao.monster/2020/deploy/" class="prev" rel="prev" title="Java：程序的部署和 Nginx 负载均衡"><i class="iconfont icon-left"></i>&nbsp;Java：程序的部署和 Nginx 负载均衡</a>
          
+        
+        <a href="http://chenghao.monster/2020/java-io/" class="next" rel="next" title="二：深入分析 Java I/O 的工作机制">二：深入分析 Java I/O 的工作机制&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
