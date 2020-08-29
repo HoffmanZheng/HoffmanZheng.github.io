@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "二：深入分析 Java I\/O 的工作机制",
     "headline" : "二：深入分析 Java I\/O 的工作机制",
-    "description" : "I\/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I\/O 瓶颈。\n本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I\/O 的工作机制 的内容为参考，此篇讲解 Java I\/O 类库、磁盘 I\/O、网络 I\/O、NIO 等。\nJava I\/O 类库的基本架构 基于字节的 I\/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I\/O 操作的都是字节而不是字符，Java 中基于字节的 I\/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。\n需要明确的是，字节流从哪里读或是写入到哪里，操作数据的方式是可以组合使用的，如：\nOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(\x26#34;pathName\x26#34;)));\r基于字符的 I\/O 操作接口 虽然 I\/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I\/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。\n例如写字符的操作接口为 void write(char[] cbuf, int off, int len)\n字节与字符的转化接口 字符在写入文件持久化或者网络传输之前，都需要先经过编码转换，下图中 InputStreamReader 就是从字节到字符的转化桥梁，在初始化时需要指定编码字符集，否则会采用操作系统默认的字符集，很可能出现乱码问题。",
+    "description" : "I\/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I\/O 瓶颈。\n本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I\/O 的工作机制 的内容为参考，此篇讲解 Java I\/O 类库、磁盘 I\/O、网络 I\/O、NIO 工作机制等。\nJava I\/O 类库的基本架构 基于字节的 I\/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I\/O 操作的都是字节而不是字符，Java 中基于字节的 I\/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。\n需要明确的是，字节流从哪里读或是写入到哪里，操作数据的方式是可以组合使用的，如：\nOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(\x26#34;pathName\x26#34;)));\r基于字符的 I\/O 操作接口 虽然 I\/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I\/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。\n例如写字符的操作接口为 void write(char[] cbuf, int off, int len)\n字节与字符的转化接口 字符在写入文件持久化或者网络传输之前，都需要先经过编码转换，下图中 InputStreamReader 就是从字节到字符的转化桥梁，在初始化时需要指定编码字符集，否则会采用操作系统默认的字符集，很可能出现乱码问题。",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-08-17 09:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-08-17 09:19:47 \x2b0100 \x2b0100",
     "url" : "http:\/\/chenghao.monster\/2020\/java-io\/",
-    "wordCount" : "377",
+    "wordCount" : "778",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="http://chenghao.monster/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,377 words</span>
+                 <span class="post-word-count">,778 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -156,7 +156,7 @@
           
 
           <p>I/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I/O 瓶颈。</p>
-<p>本篇以 <a href="https://book.douban.com/subject/25953851/">《深入分析 Java Web 技术内幕》</a> 第二章 深入分析 Java I/O 的工作机制 的内容为参考，此篇讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 等。</p>
+<p>本篇以 <a href="https://book.douban.com/subject/25953851/">《深入分析 Java Web 技术内幕》</a> 第二章 深入分析 Java I/O 的工作机制 的内容为参考，此篇讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。</p>
 <h3 id="java-io-类库的基本架构">Java I/O 类库的基本架构</h3>
 <h4 id="基于字节的-io-操作接口">基于字节的 I/O 操作接口</h4>
 <p>无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。</p>
@@ -259,8 +259,7 @@
 <h3 id="nio-的工作方式">NIO 的工作方式</h3>
 <p>采用 BIO（Blocking IO）线程在数据写入 OutputStream 或者从 InputStream 读取时都有可能会阻塞，一旦阻塞线程将会 <strong>失去 CPU 的使用权</strong>，这在大规模访问和高性能要求下是不能被接收的。</p>
 <p>虽然我们可以采用一个客户端对应一个处理线程的方式，让出现阻塞的线程不影响其他线程的工作，加以使用线程池来减少线程创建和回收的成本，但仍有一些使用场景无法适用，比如服务器需要同时保持大量的 HTTP 长连接，或是想给某些客户端更高的优先级。为此我们需要一种新的 I/O 操作方式。</p>
-<h4 id="nio-的工作机制">NIO 的工作机制</h4>
-<p>JDK 1.4 引入的 <code>java.nio</code> 包便采用了新的非阻塞的 I/O 操作方式，实际上 <code>java.io</code> 也已经被 NIO 重新实现过，即使我们不显式地使用 NIO 编程，也能从中受益。</p>
+<p>JDK 1.4 引入的 <code>java.nio</code> 包采用了新的非阻塞的 I/O 操作方式，实际上 <code>java.io</code> 也已经被 NIO 重新实现过，即使我们不显式地使用 NIO 编程，也能从中受益。</p>
 <table>
 <thead>
 <tr>
@@ -284,7 +283,141 @@
 </tbody>
 </table>
 <p>BIO 是面向流，一次一个字节地处理数据；而 NIO 则面向块（缓冲区），以块的形式处理数据。NIO 主要由三个核心部分组成：Buffer 缓冲区、Channel 管道、Selector 选择器。</p>
-<h3 id="适配器模式与装饰器模式">适配器模式与装饰器模式</h3>
+<h4 id="buffer-的工作方式">Buffer 的工作方式</h4>
+<p>Buffer 缓冲区作为 NIO 中直接与数据交互的部分，底层是一个数组结构，它通过几个成员变量来记录当前缓存的数据状态：</p>
+<table>
+<thead>
+<tr>
+<th>索引</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>capacity</td>
+<td>缓冲区数组总长度</td>
+</tr>
+<tr>
+<td>position</td>
+<td>下一个要操作的数据元素的位置</td>
+</tr>
+<tr>
+<td>limit</td>
+<td>缓冲区数组不可操作的下一个元素的位置</td>
+</tr>
+<tr>
+<td>mark</td>
+<td>备忘位置，与 reset() 联合使用</td>
+</tr>
+</tbody>
+</table>
+<p>ByteBuffer 常用 API 如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ByteBuffer byteBuffer <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>10<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;初始化一个长度为 10 的 Buffer: &#34;</span> <span style="color:#f92672">+</span> byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>2<span style="color:#f92672">,</span> 3<span style="color:#f92672">,</span> 3<span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;往缓冲区写入三个字节: &#34;</span> <span style="color:#f92672">+</span> byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">flip</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;切换到读模式: &#34;</span> <span style="color:#f92672">+</span> byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> bytes <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>3<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;读取前结果集数据: &#34;</span> <span style="color:#f92672">+</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>bytes<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 3<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#75715e">// 读取的时候，length 最大可为 limit，不然会抛出 java.nio.BufferUnderflowException
+</span><span style="color:#75715e"></span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;读取后结果集数据: &#34;</span> <span style="color:#f92672">+</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span>bytes<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+</code></pre></div><p>输出结果如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">初始化一个长度为 <span style="color:#ae81ff">10</span> 的 Buffer: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
+往缓冲区写入三个字节: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
+切换到读模式: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
+读取前结果集数据: <span style="color:#f92672">[</span>0, 0, 0<span style="color:#f92672">]</span>
+java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
+读取后结果集数据: <span style="color:#f92672">[</span>2, 3, 3<span style="color:#f92672">]</span>
+</code></pre></div><p>在写模式下 limit 等于 capacity，表示最后能够写多少个字节的数据，使用 <code>flip()</code> 切换到读模式后， limit 代表最多能够读到多少数据，所以 flip 之后 limit 会被设置成写模式下的 position 值。如果读取超出 limit 的数据则会抛出 <code>java.nio.BufferUnderflowException</code>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">flip</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        limit <span style="color:#f92672">=</span> position<span style="color:#f92672">;</span>
+        position <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        mark <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>当想进行下一次写入时，调用 <code>clear()</code> 再次切换成写模式，然后重置 position、limit、mark 值，这样不会擦除缓冲数组中的数据，而是将数据 “遗忘”，准备好再次写入。</p>
+<p>如果 Buffer 中仍有未读的数据，且后续还需要这些数据，但是此时想要先先写些数据，那么使用 <code>compact()</code> 方法，compact 将所有 <strong>未读的数据拷贝到 Buffer 起始处</strong>，然后将 position设置到最后一个未读元素后面，limit 设置为 capacity，之后就可以写数据了，不会覆盖未读的数据。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">clear</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        position <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        limit <span style="color:#f92672">=</span> capacity<span style="color:#f92672">;</span>
+        mark <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">public</span> ByteBuffer <span style="color:#a6e22e">compact</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">arraycopy</span><span style="color:#f92672">(</span>hb<span style="color:#f92672">,</span> ix<span style="color:#f92672">(</span>position<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> hb<span style="color:#f92672">,</span> ix<span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">,</span> remaining<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        position<span style="color:#f92672">(</span>remaining<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        limit<span style="color:#f92672">(</span>capacity<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        discardMark<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>mark() 与 reset() 组合使用，mark 用来标记当前下次操作的 position 位置，reset 会将 mark 值重新赋给 position。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">mark</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        mark <span style="color:#f92672">=</span> position<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// Resets this buffer&#39;s position to the previously-marked position.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">reset</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> mark<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> InvalidMarkException<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        position <span style="color:#f92672">=</span> m<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>从操作系统缓冲区复制数据到用户缓冲区比较耗性能，Buffer 提供了以 <strong>内存映射</strong> 的访问方式，即 <code>ByteBuffer.allocateDirect(int capacity)</code>，这个方法返回的 DirectByteBuffer 就是与底层空间关联的缓冲区，通过 Native 代码操作非 JVM 堆的内存空间。每次创建和回收的内存开销都比较大，适合数据量比较大、生命周期比较长的情况。</p>
+<h4 id="nio-的工作机制">NIO 的工作机制</h4>
+<p>NIO 作为非阻塞的 I/O 方式其实是在网络层次中理解的，对于 FileChannel 来说一样是阻塞的。NIO 采用了 <strong>多路复用的 I/O 模型</strong>，一个进程可以同时等待多个文件描述符，而这些文件描述符其中的任意一个进入读就绪状态，select 函数就可以返回。</p>
+<p><img src="/images/nio.png" alt=""></p>
+<p>Selector 就是一个 I/O 调度系统，它负责监控每个 Channel 的当前运行状态（需提前注册），当 Channel 中有数据时，就把数据分配到对应的 Buffer 中，我们可以控制 Buffer 的容量及扩容机制，典型的 NIO 代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">select</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+    ByteBuffer buffer <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>1024<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    Selector selector <span style="color:#f92672">=</span> Selector<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    ServerSocketChannel serverSocketChannel <span style="color:#f92672">=</span> ServerSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    serverSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">configureBlocking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 非阻塞模式
+</span><span style="color:#75715e"></span>    serverSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">socket</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">bind</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> InetSocketAddress<span style="color:#f92672">(</span>8080<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#75715e">// 把通信信道注册到选择器上
+</span><span style="color:#75715e"></span>    serverSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">register</span><span style="color:#f92672">(</span>selector<span style="color:#f92672">,</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_ACCEPT</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 检查注册在这个选择器上的所有通信信道是否有事件发生
+</span><span style="color:#75715e"></span>        Set selectedKeys <span style="color:#f92672">=</span> selector<span style="color:#f92672">.</span><span style="color:#a6e22e">selectedKeys</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 获取所有的 key
+</span><span style="color:#75715e"></span>        Iterator iterator <span style="color:#f92672">=</span> selectedKeys<span style="color:#f92672">.</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>iterator<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNext</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            SelectionKey selectionKey <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>SelectionKey<span style="color:#f92672">)</span> iterator<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#75715e">// 监听客户端的连接请求
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">readyOps</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_ACCEPT</span><span style="color:#f92672">)</span> 
+                <span style="color:#f92672">=</span><span style="color:#f92672">=</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_ACCEPT</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">// 获取通信通道对象
+</span><span style="color:#75715e"></span>                ServerSocketChannel ssc <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>ServerSocketChannel<span style="color:#f92672">)</span> selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">channel</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>  
+                SocketChannel sc <span style="color:#f92672">=</span> ssc<span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 接收请求
+</span><span style="color:#75715e"></span>                sc<span style="color:#f92672">.</span><span style="color:#a6e22e">configureBlocking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                <span style="color:#75715e">// 设置该 channel 为读就绪状态
+</span><span style="color:#75715e"></span>                sc<span style="color:#f92672">.</span><span style="color:#a6e22e">register</span><span style="color:#f92672">(</span>selector<span style="color:#f92672">,</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_READ</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                iterator<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                <span style="color:#75715e">// 处理请求：从读就绪状态的 channel 中读取数据写入 buffer
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">readyOps</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_READ</span><span style="color:#f92672">)</span> 
+                       <span style="color:#f92672">=</span><span style="color:#f92672">=</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_READ</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                SocketChannel sc <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>SocketChannel<span style="color:#f92672">)</span> selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">channel</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> sc<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>buffer<span style="color:#f92672">)</span><span style="color:#f92672">;</span> 
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+                    <span style="color:#f92672">}</span>
+                    buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">flip</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+                iterator<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>虽然上述代码把监听请求和处理请求的事件放在同一个线程中，但通常 Web 服务器像 Tomcat 和 Jetty 都是它们放在 <strong>两个线程</strong> 中，一个线程专门以阻塞的方式监听客户端的连接请求，另一个线程真正采用 NIO 的方式负责处理请求，因此每个连接的数据交互都不是阻塞方式。</p>
 
     </div>
 

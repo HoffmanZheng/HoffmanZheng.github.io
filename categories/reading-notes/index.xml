@@ -18,7 +18,7 @@
       
       <guid>http://chenghao.monster/2020/java-io/</guid>
       <description>I/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I/O 瓶颈。
-本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I/O 的工作机制 的内容为参考，此篇讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 等。
+本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I/O 的工作机制 的内容为参考，此篇讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。
 Java I/O 类库的基本架构 基于字节的 I/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。
 需要明确的是，字节流从哪里读或是写入到哪里，操作数据的方式是可以组合使用的，如：
 OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(&amp;#34;pathName&amp;#34;)));基于字符的 I/O 操作接口 虽然 I/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。
