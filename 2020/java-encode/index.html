@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="http://chenghao.monster/2020/java-io/" />
+  
+  <link rel="canonical" href="http://chenghao.monster/2020/java-encode/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           三：深入分析 Java Web 中的中文编码问题 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="三：深入分析 Java Web 中的中文编码问题 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/chenghao.monster"
+    },
+    "articleSection" : "posts",
+    "name" : "三：深入分析 Java Web 中的中文编码问题",
+    "headline" : "三：深入分析 Java Web 中的中文编码问题",
+    "description" : "作为非英语国家程序员，编码问题是我们一直都绕不过去的一道坎。\n本篇以 《深入分析 Java Web 技术内幕》 第三章 深入分析 Java Web 中的中文编码问题 的内容为参考，讲解常见的编码格式、Java 中的编解码、Java Web 中的编解码，及常见乱码问题分析等。\n计算机中存储信息的最小单元是 1 个字节，即 8 bits，所以能表示的字符范围是 0~255 个，而我们人类的语言太多，表示这些语言的符号太多，因而必须要经过一些翻译工作，才能让计算机理解我们的语言。这个翻译工作就是从 char 到 byte 的编码过程。\n常见的编码格式 ASCⅡ 码 使用一个字节的低 7 位表示，范围为 0~127 共 128 个，包括了英文大小写字母，数字及常用的数学符号。0~31 是控制字符如换行、回车、空字符等，32~126 是打印字符，127 为删除。\nIOS-8859-1 ASCⅡ 码的 128 个字符显然是不够用的，ISO 组织在 ASCⅡ 码基础上扩展出 ISO-8859-1 至 ISO-8859-15，其中 ISO-8859-1 涵盖了大多数西欧语言字符，应用最广泛。ISO-8859-1 仍然是 单字节编码，总共能表示 256 个字符。\nGB 2312 《信息交换用汉字编码字符集》，双字节编码，范围为 A1~F7，包含 682 个符号和 6763 个汉字。\nGBK 《汉字内码扩展规范》扩展了 GB2312，加入更多的汉字，编码范围是 8140~FEFE，能表示 21003 个汉字，兼容 GB 2312。也就是说用 GB 2312 编码的汉字可以用 GBK 来解码且不会用乱码。",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-08-29 09:19:47 \x2b0100 \x2b0100",
+    "dateModified" : "2020-08-29 09:19:47 \x2b0100 \x2b0100",
+    "url" : "http:\/\/chenghao.monster\/2020\/java-encode\/",
+    "wordCount" : "147",
+    "keywords" : [ "Java", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">三：深入分析 Java Web 中的中文编码问题</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-08-29 itemprop="datePublished">August 29, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://chenghao.monster/categories/reading-notes/"> Reading notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,147 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>作为非英语国家程序员，编码问题是我们一直都绕不过去的一道坎。</p>
+<p>本篇以 <a href="https://book.douban.com/subject/25953851/">《深入分析 Java Web 技术内幕》</a> 第三章 深入分析 Java Web 中的中文编码问题 的内容为参考，讲解常见的编码格式、Java 中的编解码、Java Web 中的编解码，及常见乱码问题分析等。</p>
+<p>计算机中存储信息的最小单元是 1 个字节，即 8 bits，所以能表示的字符范围是 0~255 个，而我们人类的语言太多，表示这些语言的符号太多，因而必须要经过一些翻译工作，才能让计算机理解我们的语言。这个翻译工作就是从 char 到 byte 的编码过程。</p>
+<h3 id="常见的编码格式">常见的编码格式</h3>
+<h4 id="asc-码">ASCⅡ 码</h4>
+<p>使用一个字节的低 7 位表示，范围为 0~127 共 128 个，包括了英文大小写字母，数字及常用的数学符号。0~31 是控制字符如换行、回车、空字符等，32~126 是打印字符，127 为删除。</p>
+<h4 id="ios-8859-1">IOS-8859-1</h4>
+<p>ASCⅡ 码的 128 个字符显然是不够用的，ISO 组织在 ASCⅡ 码基础上扩展出 ISO-8859-1 至 ISO-8859-15，其中 ISO-8859-1 涵盖了大多数西欧语言字符，应用最广泛。ISO-8859-1 仍然是 <strong>单字节编码</strong>，总共能表示 256 个字符。</p>
+<h4 id="gb-2312">GB 2312</h4>
+<p>《信息交换用汉字编码字符集》，双字节编码，范围为 A1~F7，包含 682 个符号和 6763 个汉字。</p>
+<h4 id="gbk">GBK</h4>
+<p>《汉字内码扩展规范》扩展了 GB2312，加入更多的汉字，编码范围是 8140~FEFE，能表示 21003 个汉字，<strong>兼容 GB 2312</strong>。也就是说用 GB 2312 编码的汉字可以用 GBK 来解码且不会用乱码。</p>
+<h4 id="gb-18030">GB 18030</h4>
+<p>《信息技术 中文编码字符集》，它可能是单字节、双字节或四字节编码，与 GB 2312 兼容，虽然是我国的国家标准，但在实际应用系统中使用得并不广泛。</p>
+<h4 id="utf-16">UTF-16</h4>
+<p>双字节定长的 UniCode 统一码，世界上所有的语言都可以通过 UniCode 来编码。UTF-16 表示字符非常方便，每两个字节表示一个字符，<strong>大大简化了字符串操作</strong>，所以 Java 采用 UTF-16 作为内存的字符存储格式。</p>
+<h4 id="utf-8">UTF-8</h4>
+<p>UTF-16 统一采用两个字节来表示一个字符，虽然简单方便，但很大一部分字符一个字节就足够表示了现在却要用两个字节表示，对 <strong>存储空间和网络带宽</strong> 都不是很友好；而 UTF-8 采用 <strong>变长技术</strong>，每个编码区域有不同的字码长度（1~6 个字节）。</p>
+<h3 id="java-中的编解码">Java 中的编解码</h3>
+<p>通过 <a href="https://chenghao.monster/2020/java-IO/">二：深入分析 Java I/O 的工作机制</a> 我们知道 Java 中 InputStream 可以读取输入的字节流，而 <code>InputStreamReader</code> 则在 I/O 读取字节流的过程中完成了字节到字符的转换，这个解码过程它又委托 <code>StreamDecoder</code> 去做，这个过程中需要用户指定 Charset 编码格式。</p>
+<p><img src="/images/Charset.png" alt=""></p>
+<p>如果用户没有指定，将会使用本地环境中的默认字符集，如在中文环境中使用 GBK 编码。如果编解码都在中文环境中，通常也没有问题，但还是强烈建议不要使用操作系统的默认编码，因为这样会使应用程序的编码格式和运行环境绑定起来，在跨环境时很可能出现 <strong>乱码问题</strong>。</p>
+<p>除了 I/O 过程涉及编码外，Java 也提供了在内存中字符和字节之间的相互转换接口，如 <code>string.getBytes(charset)</code> 和 <code>charset.encode(string);charset.decode(byteBuffer)</code>，可以通过 <code>Charset.forName(&quot;UTF-8&quot;)</code> 来获取指定的编码字符集，只要我们设置的编码格式统一，一般都不会出现问题。</p>
+<h4 id="java-中的编解码流程">Java 中的编解码流程</h4>
+<p>以 <code>string.getBytes()</code> 为例</p>
+<h3 id="在-java-web-中涉及的编解码">在 Java Web 中涉及的编解码</h3>
+<h3 id="常见问题分析">常见问题分析</h3>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://chenghao.monster/2020/java-encode/>http://chenghao.monster/2020/java-encode/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://chenghao.monster/tags/java/">
+                    #Java</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://chenghao.monster">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://chenghao.monster/2020/java-io/" class="prev" rel="prev" title="二：深入分析 Java I/O 的工作机制"><i class="iconfont icon-left"></i>&nbsp;二：深入分析 Java I/O 的工作机制</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://chenghao.monster">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
