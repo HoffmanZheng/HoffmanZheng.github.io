@@ -6,10 +6,22 @@
     <description>Recent content in Posts on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 29 Aug 2020 09:19:47 +0100</lastBuildDate>
+    <lastBuildDate>Sat, 05 Sep 2020 09:19:47 +0100</lastBuildDate>
     
 	<atom:link href="http://chenghao.monster/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>四：Javac 编译原理与 class 文件结构</title>
+      <link>http://chenghao.monster/2020/java-compile/</link>
+      <pubDate>Sat, 05 Sep 2020 09:19:47 +0100</pubDate>
+      
+      <guid>http://chenghao.monster/2020/java-compile/</guid>
+      <description>JVM 让 Java 成为了一次编译，到处运行，具有平台无关性的高级语言。要让 Java 代码跑在 JVM 中少不了 Javac 编译器，它把人类能理解的 Java 源代码语言翻译成 JVM 容易理解的字节码（将 .java 文件转换成 .class 文件）。某种意义上来说，Javac 编译器的存在使 Java 语言向开发者屏蔽了很多与机器相关的细节，JVM 使 Java 语言的执行和平台无关，这才成就了 Java 的繁荣。
+本篇以 《深入分析 Java Web 技术内幕》 第四章 Javac 编译原理 及第五章 深入 class 文件结构 的内容为参考，讲解 Javac 编译器的基本结构，Javac 的工作原理，class 文件结构等。
+Javac 编译器的基本结构 Javac 编译器的作用就是将符合 Java 语言规范的源代码转化成符合 Java 虚拟机规范的 Java 字节码，是从一个语言规范到另一个语言规范的转化，这大概需要以下几个步骤：
+   编译过程 步骤     词法分析过程 识别源代码中的语法关键词，形成 Token 流   语法分析过程 检查关键词组合是否符合 Java 语言规范，形成一个抽象语法树   语义分析过程 把一些难懂的、复杂的语法转化成更加简单的语法，形成一个注解过后的抽象语法树   字节码生成 根据注解过后的抽象语法树生成字节码    词法分析器 在 Javac 编译一个类之前，会先一个字节一个字节地读取源代码，找出其中的语法关键词，如 if、else、for、while 等，最后形成一些规范化的 Token 流，就像在人类语言中，分辨一句话中的动词、名词、标点符号等。</description>
+    </item>
     
     <item>
       <title>三：深入分析 Java Web 中的中文编码问题</title>
