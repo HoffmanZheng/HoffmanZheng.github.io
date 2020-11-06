@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>jvm on 人间一场大梦</title>
+    <link>http://chenghao.monster/tags/jvm/</link>
+    <description>Recent content in jvm on 人间一场大梦</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 06 Nov 2020 13:37:47 +0100</lastBuildDate>
+    
+	<atom:link href="http://chenghao.monster/tags/jvm/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>JVM：体系结构与内存管理</title>
+      <link>http://chenghao.monster/2020/jvm-architecture-memory/</link>
+      <pubDate>Fri, 06 Nov 2020 13:37:47 +0100</pubDate>
+      
+      <guid>http://chenghao.monster/2020/jvm-architecture-memory/</guid>
+      <description>在之前的博客 Javac 编译原理与 class 文件结构 中，我有提及 Javac 编译器将 Java 源码编译成了机器可以接受的指令，解决了高级语言与底层硬件架构的耦合（现在的操作系统几乎完全向用户屏蔽了硬件，也就可以说编译器解决了高级语言与不同操作系统之间的耦合）。
+JVM 屏蔽了各个计算机平台相关的软件或者硬件之间的差异，使 Java 代码可以全平台运行。本篇以 《深入分析 Java Web 技术内幕》 第七章 JVM 体系结构与工作方式 及第八章 JVM 内存管理 的内容为参考，讲解 JVM 的基本结构、工作方式、内存分配策略及垃圾回收策略等。
+JVM 体系结构 计算机与 Java 虚拟机 在了解 JVM 这台虚拟计算机之前，我们先看看一台真实的计算机的体系结构：
+   计算机组成部分 功能     指令集 计算机所能识别的机器语言的命令集合   计算单元 能识别并控制指令执行的功能模块   寄存器 操作数寄存器、控制寄存器、变址寄存器等   存储单元 存储操作数和保存操作结构的单元，内存和磁盘等   寻址方式 地址位数、最小最大地址范围、地址的运行规则等    指令集 是在 CPU 中用来计算和控制计算机系统的一套指令的集合，在 CPU 设计时规定的一系列与硬件电路相配合的指令系统。可以说指令集是可以直接被机器识别的机器码，必须以二进制格式存在于计算机中，而 汇编语言 是为了让人能够更容易地记住机器指令而使用的助记符，每一条汇编指令都可以直接翻译成一个机器指令。</description>
+    </item>
+    
+  </channel>
+</rss>

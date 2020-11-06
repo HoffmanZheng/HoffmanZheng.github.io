@@ -22,10 +22,10 @@
   <title>
        
        
-           三：深入分析 Java Web 中的中文编码问题 | 人间一场大梦
+           深入分析 Java Web 中的中文编码问题 | 人间一场大梦
        
   </title>
-  <meta name="title" content="三：深入分析 Java Web 中的中文编码问题 | 人间一场大梦">
+  <meta name="title" content="深入分析 Java Web 中的中文编码问题 | 人间一场大梦">
     
   
   <link rel="stylesheet" href="/font/iconfont.css">
@@ -44,8 +44,8 @@
          "@id": "http:\/\/chenghao.monster"
     },
     "articleSection" : "posts",
-    "name" : "三：深入分析 Java Web 中的中文编码问题",
-    "headline" : "三：深入分析 Java Web 中的中文编码问题",
+    "name" : "深入分析 Java Web 中的中文编码问题",
+    "headline" : "深入分析 Java Web 中的中文编码问题",
     "description" : "作为非英语国家程序员，编码问题是我们一直都绕不过去的一道坎。\n本篇以 《深入分析 Java Web 技术内幕》 第三章 深入分析 Java Web 中的中文编码问题 的内容为参考，讲解常见的编码格式、Java 中的编解码、Java Web 中的编解码，及常见乱码问题分析等。\n计算机中存储信息的最小单元是 1 个字节，即 8 bits，所以能表示的字符范围是 0~255 个，而我们人类的语言太多，表示这些语言的符号太多，因而必须要经过一些翻译工作，才能让计算机理解我们的语言。这个翻译工作就是从 char 到 byte 的编码过程。\n常见的编码格式 ASCⅡ 码 使用一个字节的低 7 位表示，范围为 0~127 共 128 个，包括了英文大小写字母，数字及常用的数学符号。0~31 是控制字符如换行、回车、空字符等，32~126 是打印字符，127 为删除。\nIOS-8859-1 ASCⅡ 码的 128 个字符显然是不够用的，ISO 组织在 ASCⅡ 码基础上扩展出 ISO-8859-1 至 ISO-8859-15，其中 ISO-8859-1 涵盖了大多数西欧语言字符，应用最广泛。ISO-8859-1 仍然是 单字节编码，总共能表示 256 个字符。\nGB 2312 《信息交换用汉字编码字符集》，双字节编码，范围为 A1~F7，包含 682 个符号和 6763 个汉字。\nGBK 《汉字内码扩展规范》扩展了 GB2312，加入更多的汉字，编码范围是 8140~FEFE，能表示 21003 个汉字，兼容 GB 2312。也就是说用 GB 2312 编码的汉字可以用 GBK 来解码且不会用乱码。",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
@@ -122,7 +122,7 @@
       		
 <article class="post-warp" itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">三：深入分析 Java Web 中的中文编码问题</h1>
+        <h1 class="post-title" itemprop="name headline">深入分析 Java Web 中的中文编码问题</h1>
         <div class="post-meta">
                 Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
                 <span class="post-time">
@@ -174,7 +174,7 @@
 <h4 id="utf-8">UTF-8</h4>
 <p>UTF-16 统一采用两个字节来表示一个字符，虽然简单方便，但很大一部分字符一个字节就足够表示了现在却要用两个字节表示，对 <strong>存储空间和网络带宽</strong> 都不是很友好；而 UTF-8 采用 <strong>变长技术</strong>，每个编码区域有不同的字码长度（1~6 个字节），相比 UTF-8 更适合网络传输，单个字节损坏也不会影响后面的其他字符，在编码效率上介于 GBK 和 UTF-8 之间。</p>
 <h3 id="java-中的编解码">Java 中的编解码</h3>
-<p>通过 <a href="https://chenghao.monster/2020/java-IO/">二：深入分析 Java I/O 的工作机制</a> 我们知道 Java 中 InputStream 可以读取输入的字节流，而 <code>InputStreamReader</code> 则在 I/O 读取字节流的过程中完成了字节到字符的转换，这个解码过程它又委托 <code>StreamDecoder</code> 去做，这个过程中需要用户指定 Charset 编码格式。</p>
+<p>通过 <a href="https://chenghao.monster/2020/java-IO/">深入分析 Java I/O 的工作机制</a> 我们知道 Java 中 InputStream 可以读取输入的字节流，而 <code>InputStreamReader</code> 则在 I/O 读取字节流的过程中完成了字节到字符的转换，这个解码过程它又委托 <code>StreamDecoder</code> 去做，这个过程中需要用户指定 Charset 编码格式。</p>
 <p><img src="/images/Charset.png" alt=""></p>
 <p>如果用户没有指定，将会使用本地环境中的默认字符集，如在中文环境中使用 GBK 编码。如果编解码都在中文环境中，通常也没有问题，但还是强烈建议不要使用操作系统的默认编码，因为这样会使应用程序的编码格式和运行环境绑定起来，在跨环境时很可能出现 <strong>乱码问题</strong>。</p>
 <p>除了 I/O 过程涉及编码外，Java 也提供了在内存中字符和字节之间的相互转换接口，如 <code>string.getBytes(charset)</code> 和 <code>charset.encode(string);charset.decode(byteBuffer)</code>，可以通过 <code>Charset.forName(&quot;UTF-8&quot;)</code> 来获取指定的编码字符集，只要我们设置的编码格式统一，一般都不会出现问题。</p>
@@ -283,10 +283,10 @@ System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span>
 
     <div class="post-nav">
         
-        <a href="http://chenghao.monster/2020/java-io/" class="prev" rel="prev" title="二：深入分析 Java I/O 的工作机制"><i class="iconfont icon-left"></i>&nbsp;二：深入分析 Java I/O 的工作机制</a>
+        <a href="http://chenghao.monster/2020/java-io/" class="prev" rel="prev" title="深入分析 Java I/O 的工作机制"><i class="iconfont icon-left"></i>&nbsp;深入分析 Java I/O 的工作机制</a>
          
         
-        <a href="http://chenghao.monster/2020/java-compile/" class="next" rel="next" title="四：Javac 编译原理与 class 文件结构">四：Javac 编译原理与 class 文件结构&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="http://chenghao.monster/2020/java-compile/" class="next" rel="next" title="Javac 编译原理与 class 文件结构">Javac 编译原理与 class 文件结构&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
