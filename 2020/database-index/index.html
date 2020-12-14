@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="http://chenghao.monster/2020/jvm-architecture-memory/" />
+  
+  <link rel="canonical" href="http://chenghao.monster/2020/database-index/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Database：高性能 MySQL - 索引 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Database：高性能 MySQL - 索引 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "http:\/\/chenghao.monster"
+    },
+    "articleSection" : "posts",
+    "name" : "Database：高性能 MySQL - 索引",
+    "headline" : "Database：高性能 MySQL - 索引",
+    "description" : "在之前的博客 Database：MySQL 数据库 我已经介绍了自己对 MySQL 的一些基本认识，包括它的存储引擎、数据存储结构、索引及事务等，本篇及之后的一篇将着眼于 MySQL 的性能深入探究。\n索引是存储引擎用于快速找到记录的一种数据结构，它对良好的性能非常关键，它能让 MySQL 以最高效、扫描行数最少的方式找到需要的记录。本篇将结合 《高性能 MySQL》 第五章 创建高性能的索引 的内容深入分析，如何使用索引来提高 MySQL 数据库的查询性能。\n本篇使用和书本相同的 MySQL 5.5 版本，使用 官方提供的测试数据库，通过 MySQL Workbench 导入 dump 数据。\n索引的类型 B-Tree 索引 在 Database：MySQL 数据库 我已经介绍过 B-Tree 索引了，这里谈下一个面试常问的问题：为什么 MySQL 的索引要使用 B\x2b 树而不是其他的树形结构，比如 B 树？\n B 树是一颗多叉树，相比于二叉树在相等数据量的情况下，树的高度更低，可以减少查询时的 I\/O 次数。 B\x2b 树相比 B 树，只有叶子节点存放数据，非叶子节点只存储索引，这样就能在一张 16kb 的非叶子节点数据页中 存储更多的指针，降低树的高度，减少查询 I\/O 次数，提高查询性能。 计算机层面，一次 I\/O 就是磁盘的 寻道、寻点、拷贝到内存 三步操作。寻道是磁臂移动到指定磁道所需要的时间，一般在 5ms 以下；寻点是从磁道中找到数据存在的那个点，平均为半圈时间，在一个 7200 转\/min 的磁盘，大概是 60,000 \/ 7200 \/ 2 = 4.",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2020",
+    "datePublished": "2020-12-10 13:19:47 \x2b0100 \x2b0100",
+    "dateModified" : "2020-12-10 13:19:47 \x2b0100 \x2b0100",
+    "url" : "http:\/\/chenghao.monster\/2020\/database-index\/",
+    "wordCount" : "226",
+    "keywords" : [ "Database", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="http://chenghao.monster">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Database：高性能 MySQL - 索引</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="http://chenghao.monster" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2020-12-10 itemprop="datePublished">December 10, 2020</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="http://chenghao.monster/categories/reading-notes/"> Reading notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,226 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>在之前的博客 <a href="https://chenghao.monster/2020/database-mysql/">Database：MySQL 数据库</a> 我已经介绍了自己对 MySQL 的一些基本认识，包括它的存储引擎、数据存储结构、索引及事务等，本篇及之后的一篇将着眼于 MySQL 的性能深入探究。</p>
+<p>索引是存储引擎用于快速找到记录的一种数据结构，它对良好的性能非常关键，它能让 MySQL 以最高效、扫描行数最少的方式找到需要的记录。本篇将结合 <a href="https://book.douban.com/subject/23008813/">《高性能 MySQL》</a> 第五章 创建高性能的索引 的内容深入分析，如何使用索引来提高 MySQL 数据库的查询性能。</p>
+<p>本篇使用和书本相同的 MySQL 5.5 版本，使用 <a href="https://github.com/datacharmer/test_db">官方提供的测试数据库</a>，通过 <a href="https://dev.mysql.com/downloads/workbench/">MySQL Workbench</a> 导入 dump 数据。</p>
+<h1 id="索引的类型">索引的类型</h1>
+<h3 id="b-tree-索引">B-Tree 索引</h3>
+<p>在 <a href="https://chenghao.monster/2020/database-mysql/">Database：MySQL 数据库</a> 我已经介绍过 B-Tree 索引了，这里谈下一个面试常问的问题：为什么 MySQL 的索引要使用 B+ 树而不是其他的树形结构，比如 B 树？</p>
+<ul>
+<li>B 树是一颗多叉树，相比于二叉树在相等数据量的情况下，树的高度更低，可以减少查询时的 I/O 次数。</li>
+<li>B+ 树相比 B 树，只有叶子节点存放数据，非叶子节点只存储索引，这样就能在一张 16kb 的非叶子节点数据页中 <strong>存储更多的指针</strong>，降低树的高度，减少查询 I/O 次数，提高查询性能。</li>
+<li>计算机层面，一次 I/O 就是磁盘的 <strong>寻道、寻点、拷贝到内存</strong> 三步操作。寻道是磁臂移动到指定磁道所需要的时间，一般在 5ms 以下；寻点是从磁道中找到数据存在的那个点，平均为半圈时间，在一个 7200 转/min 的磁盘，大概是 60,000 / 7200 / 2 = 4.17 ms；拷贝到内存很快，相比前面两步可以忽略不计，所以一次 I/O 的时间平均是在 9ms 左右。</li>
+</ul>
+<h4 id="优缺点">优缺点</h4>
+<ul>
+<li>索引列是顺序组织存储的，适合范围查询，还可用于 <code>order by</code> 和 <code>group by</code></li>
+<li><strong>最左前缀匹配原则</strong> 给 B-Tree 索引的使用带来一些限制，比如一定要按索引的最左列开始查找、无法使用左侧通配符、范围查询会导致右侧索引列失效，不能跳过索引中的列等。</li>
+</ul>
+<h3 id="哈希索引">哈希索引</h3>
+<p>哈希索引基于哈希表实现，将对索引列计算得到的 <strong>哈希码</strong> 作为键值存储于索引中，如果多个列的哈希值相同，将以 <strong>链表</strong> 的方式存储于同一个哈希条目中。因为哈希索引只存储哈希值，所以索引结构十分紧凑，这使哈希索引查找的速度非常快，然而哈希索引也有许多限制：</p>
+<ol>
+<li>哈希索引并不是按照索引值顺序存储的，无法用于排序</li>
+<li>由于对比的是由全部索引列的全部内容计算得到的哈希值，所以哈希索引 <strong>只支持等值比较查询</strong>，不支持部分索引列，同时也不支持范围查询</li>
+<li>当出现 <strong>哈希冲突</strong> 时，存储引擎必须遍历表中所有的行指针，逐行比较直到找到所有符合条件的行。</li>
+</ol>
+<p>虽然有这些限制，但哈希索引带来的性能上的显著提升，使它仍适用于某些特定的场合，比如：</p>
+<ul>
+<li>数据仓库应用中的 “星型” schema，通过哈希索引查找很多的关联表</li>
+<li>自适应哈希索引</li>
+<li>对长字段比如 URL 创建的伪哈希索引</li>
+</ul>
+<h1 id="高性能的索引策略">高性能的索引策略</h1>
+<h3 id="独立的列">独立的列</h3>
+<p>如果查询中的列不是独立的，则 MySQL 就不会使用索引。“独立的列” 指索引列不能是表达式的一部分，也不能是函数的参数。例如下面的查询：</p>
+<pre><code class="language-mysq" data-lang="mysq">explain(select emp_no, birth_date, first_name, last_name, gender, hire_date
+FROM employees.employees where emp_no + 1 = 10003)
+
+id|select_type|table    |type|possible_keys|key|key_len|ref|rows  |Extra      |
+--|-----------|---------|----|-------------|---|-------|---|------|-----------|
+ 1|SIMPLE     |employees|ALL |             |   |       |   |300030|Using where|
+
+</code></pre><p>业务中我们常常对日期列做一些函数运算再比较，但这样就无法使对应的索引列生效，如下面的查询。我们应该养成简化 <code>where</code> 条件的习惯，始终 <strong>将索引列单独放在比较符号的一侧</strong>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">explain</span>(<span style="color:#66d9ef">select</span> emp_no, salary, from_date, to_date <span style="color:#66d9ef">from</span> salaries
+<span style="color:#66d9ef">where</span> emp_no <span style="color:#f92672">=</span> <span style="color:#ae81ff">10001</span> <span style="color:#66d9ef">and</span> <span style="color:#a6e22e">TO_DAYS</span>(<span style="color:#66d9ef">CURRENT_DATE</span>) <span style="color:#f92672">-</span> <span style="color:#a6e22e">TO_DAYS</span>(from_date) <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">365</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">20</span>)
+
+id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</span><span style="color:#66d9ef">table</span>   <span style="color:#f92672">|</span>type<span style="color:#f92672">|</span>possible_keys<span style="color:#f92672">|</span><span style="color:#66d9ef">key</span>    <span style="color:#f92672">|</span>key_len<span style="color:#f92672">|</span>ref  <span style="color:#f92672">|</span>rows<span style="color:#f92672">|</span>Extra      <span style="color:#f92672">|</span>
+<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span>
+ <span style="color:#ae81ff">1</span><span style="color:#f92672">|</span>SIMPLE     <span style="color:#f92672">|</span>salaries<span style="color:#f92672">|</span>ref <span style="color:#f92672">|</span><span style="color:#66d9ef">PRIMARY</span>      <span style="color:#f92672">|</span><span style="color:#66d9ef">PRIMARY</span><span style="color:#f92672">|</span><span style="color:#ae81ff">4</span>      <span style="color:#f92672">|</span>const<span style="color:#f92672">|</span>  <span style="color:#ae81ff">17</span><span style="color:#f92672">|</span><span style="color:#66d9ef">Using</span> <span style="color:#66d9ef">where</span><span style="color:#f92672">|</span>
+
+<span style="color:#75715e">/*</span><span style="color:#75715e">*</span><span style="color:#75715e"> 可以看到使用独立的列的查询，使用到了 PRIMARY 的两个索引列，扫描了更少的行 </span><span style="color:#75715e">*/</span>
+<span style="color:#66d9ef">explain</span>(<span style="color:#66d9ef">select</span> emp_no, salary, from_date, to_date <span style="color:#66d9ef">from</span> salaries
+<span style="color:#66d9ef">where</span> emp_no <span style="color:#f92672">=</span> <span style="color:#ae81ff">10001</span> <span style="color:#66d9ef">and</span> from_date <span style="color:#f92672">&gt;</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">2000-01-01</span><span style="color:#e6db74">&#39;</span>)
+
+id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</span><span style="color:#66d9ef">table</span>   <span style="color:#f92672">|</span>type <span style="color:#f92672">|</span>possible_keys<span style="color:#f92672">|</span><span style="color:#66d9ef">key</span>    <span style="color:#f92672">|</span>key_len<span style="color:#f92672">|</span>ref<span style="color:#f92672">|</span>rows<span style="color:#f92672">|</span>Extra      <span style="color:#f92672">|</span>
+<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span>
+ <span style="color:#ae81ff">1</span><span style="color:#f92672">|</span>SIMPLE     <span style="color:#f92672">|</span>salaries<span style="color:#f92672">|</span>range<span style="color:#f92672">|</span><span style="color:#66d9ef">PRIMARY</span>      <span style="color:#f92672">|</span><span style="color:#66d9ef">PRIMARY</span><span style="color:#f92672">|</span><span style="color:#ae81ff">7</span>      <span style="color:#f92672">|</span>   <span style="color:#f92672">|</span>   <span style="color:#ae81ff">3</span><span style="color:#f92672">|</span><span style="color:#66d9ef">Using</span> <span style="color:#66d9ef">where</span><span style="color:#f92672">|</span>
+</code></pre></div><h3 id="前缀索引和索引选择性">前缀索引和索引选择性</h3>
+<h3 id="多列索引">多列索引</h3>
+<h3 id="选择合适的索引列顺序">选择合适的索引列顺序</h3>
+<h3 id="聚簇索引">聚簇索引</h3>
+<h3 id="覆盖索引">覆盖索引</h3>
+<h3 id="使用索引扫描来做排序">使用索引扫描来做排序</h3>
+<h3 id="压缩索引myisam">压缩索引（MyISAM）</h3>
+<h3 id="松散索引">松散索引</h3>
+<h3 id="冗余和重复索引">冗余和重复索引</h3>
+<h3 id="未使用的索引">未使用的索引</h3>
+<h3 id="索引和锁">索引和锁</h3>
+<h1 id="索引案例学习">索引案例学习</h1>
+<h3 id="支持多种过滤条件">支持多种过滤条件</h3>
+<h3 id="避免多个范围条件">避免多个范围条件</h3>
+<h3 id="优化排序">优化排序</h3>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=http://chenghao.monster/2020/database-index/>http://chenghao.monster/2020/database-index/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="http://chenghao.monster/tags/database/">
+                    #Database</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="http://chenghao.monster">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="http://chenghao.monster/2020/jvm-architecture-memory/" class="prev" rel="prev" title="JVM：体系结构与内存管理"><i class="iconfont icon-left"></i>&nbsp;JVM：体系结构与内存管理</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2020</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="http://chenghao.monster">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>
