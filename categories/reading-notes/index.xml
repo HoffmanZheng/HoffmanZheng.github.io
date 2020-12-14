@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Reading notes on 人间一场大梦</title>
-    <link>http://chenghao.monster/categories/reading-notes/</link>
+    <link>https://nervousorange.github.io/categories/reading-notes/</link>
     <description>Recent content in Reading notes on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 10 Dec 2020 13:19:47 +0100</lastBuildDate>
     
-	<atom:link href="http://chenghao.monster/categories/reading-notes/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://nervousorange.github.io/categories/reading-notes/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Database：高性能 MySQL - 索引</title>
-      <link>http://chenghao.monster/2020/database-index/</link>
+      <link>https://nervousorange.github.io/2020/database-index/</link>
       <pubDate>Thu, 10 Dec 2020 13:19:47 +0100</pubDate>
       
-      <guid>http://chenghao.monster/2020/database-index/</guid>
+      <guid>https://nervousorange.github.io/2020/database-index/</guid>
       <description>在之前的博客 Database：MySQL 数据库 我已经介绍了自己对 MySQL 的一些基本认识，包括它的存储引擎、数据存储结构、索引及事务等，本篇及之后的一篇将着眼于 MySQL 的性能深入探究。
 索引是存储引擎用于快速找到记录的一种数据结构，它对良好的性能非常关键，它能让 MySQL 以最高效、扫描行数最少的方式找到需要的记录。本篇将结合 《高性能 MySQL》 第五章 创建高性能的索引 的内容深入分析，如何使用索引来提高 MySQL 数据库的查询性能。
 本篇使用和书本相同的 MySQL 5.5 版本，使用 官方提供的测试数据库，通过 MySQL Workbench 导入 dump 数据。
@@ -26,10 +26,10 @@
     
     <item>
       <title>JVM：体系结构与内存管理</title>
-      <link>http://chenghao.monster/2020/jvm-architecture-memory/</link>
+      <link>https://nervousorange.github.io/2020/jvm-architecture-memory/</link>
       <pubDate>Fri, 06 Nov 2020 13:37:47 +0100</pubDate>
       
-      <guid>http://chenghao.monster/2020/jvm-architecture-memory/</guid>
+      <guid>https://nervousorange.github.io/2020/jvm-architecture-memory/</guid>
       <description>在之前的博客 Javac 编译原理与 class 文件结构 中，我有提及 Javac 编译器将 Java 源码编译成了机器可以接受的指令，解决了高级语言与底层硬件架构的耦合（现在的操作系统几乎完全向用户屏蔽了硬件，也就可以说编译器解决了高级语言与不同操作系统之间的耦合）。
 JVM 屏蔽了各个计算机平台相关的软件或者硬件之间的差异，使 Java 代码可以 全平台运行。本篇以 《深入分析 Java Web 技术内幕》 第七章 JVM 体系结构与工作方式 及第八章 JVM 内存管理 的内容为参考，讲解 JVM 的基本结构、工作方式、内存分配策略及垃圾回收策略等。
 JVM 体系结构 计算机与 Java 虚拟机 在了解 JVM 这台虚拟计算机之前，我们先看看一台真实的计算机的体系结构：
@@ -38,10 +38,10 @@ JVM 体系结构 计算机与 Java 虚拟机 在了解 JVM 这台虚拟计算机
     
     <item>
       <title>深入分析 ClassLoader 工作机制</title>
-      <link>http://chenghao.monster/2020/java-classloader/</link>
+      <link>https://nervousorange.github.io/2020/java-classloader/</link>
       <pubDate>Tue, 22 Sep 2020 09:19:47 +0100</pubDate>
       
-      <guid>http://chenghao.monster/2020/java-classloader/</guid>
+      <guid>https://nervousorange.github.io/2020/java-classloader/</guid>
       <description>Java 是个强类型的编程语言，一个变量的类型在编译时就已经决定了，就是最初声明它的类型， 如果想把它当成另一个类型来使用，需要先经过显式的类型转换，转换时可能会因为类型不符而抛出 ClassCastException。
 本篇以 《深入分析 Java Web 技术内幕》 第六章 深入分析 ClassLoader 工作机制 的内容为参考，讲解 Java 中的类型，类加载机制，类加载错误分析 等。
 Java 中的类型 如开篇所说，一个 Java 对象的类型在声明的时候就被确定了，但 Java 是面对对象的语言，有丰富的接口和抽象类，一个对象被传来传去的时候，可能就丢失了它的一些类型信息，但 Java 也像 C++ 那样是拥有 RTTI (Run-Time Type Identification) 运行时类型识别 特性的语言。在任何时刻，任何一个对象都清楚地知道自己的具体类型（可以通过反射获取）。
@@ -53,10 +53,10 @@ Java 中的类型 如开篇所说，一个 Java 对象的类型在声明的时�
     
     <item>
       <title>Javac 编译原理与 class 文件结构</title>
-      <link>http://chenghao.monster/2020/java-compile/</link>
+      <link>https://nervousorange.github.io/2020/java-compile/</link>
       <pubDate>Sat, 05 Sep 2020 09:19:47 +0100</pubDate>
       
-      <guid>http://chenghao.monster/2020/java-compile/</guid>
+      <guid>https://nervousorange.github.io/2020/java-compile/</guid>
       <description>JVM 让 Java 成为了一次编译，到处运行，具有平台无关性的高级语言。要让 Java 代码跑在 JVM 中少不了 Javac 编译器，它把人类能理解的 Java 源代码语言翻译成 JVM 容易理解的字节码（将 .java 文件转换成 .class 文件）。某种意义上来说，Javac 编译器的存在使 Java 语言向开发者屏蔽了很多与机器相关的细节，JVM 使 Java 语言的执行和平台无关，这才成就了 Java 的繁荣。
 本篇以 《深入分析 Java Web 技术内幕》 第四章 Javac 编译原理 及第五章 深入 class 文件结构 的内容为参考，讲解 Javac 编译器的基本结构，Javac 的工作原理，class 文件结构等。
 Javac 编译器的基本结构 Javac 编译器的作用就是将符合 Java 语言规范的源代码转化成符合 Java 虚拟机规范的 Java 字节码，是从一个语言规范到另一个语言规范的转化，这大概需要以下几个步骤：
@@ -65,10 +65,10 @@ Javac 编译器的基本结构 Javac 编译器的作用就是将符合 Java 语�
     
     <item>
       <title>深入分析 Java Web 中的中文编码问题</title>
-      <link>http://chenghao.monster/2020/java-encode/</link>
+      <link>https://nervousorange.github.io/2020/java-encode/</link>
       <pubDate>Sat, 29 Aug 2020 09:19:47 +0100</pubDate>
       
-      <guid>http://chenghao.monster/2020/java-encode/</guid>
+      <guid>https://nervousorange.github.io/2020/java-encode/</guid>
       <description>作为非英语国家程序员，编码问题是我们一直都绕不过去的一道坎。
 本篇以 《深入分析 Java Web 技术内幕》 第三章 深入分析 Java Web 中的中文编码问题 的内容为参考，讲解常见的编码格式、Java 中的编解码、Java Web 中的编解码，及常见乱码问题分析等。
 计算机中存储信息的最小单元是 1 个字节，即 8 bits，所以能表示的字符范围是 0~255 个，而我们人类的语言太多，表示这些语言的符号太多，因而必须要经过一些翻译工作，才能让计算机理解我们的语言。这个翻译工作就是从 char 到 byte 的编码过程。
@@ -80,25 +80,25 @@ GBK 《汉字内码扩展规范》扩展了 GB2312，加入更多的汉字，编
     
     <item>
       <title>深入分析 Java I/O 的工作机制</title>
-      <link>http://chenghao.monster/2020/java-io/</link>
+      <link>https://nervousorange.github.io/2020/java-io/</link>
       <pubDate>Mon, 17 Aug 2020 09:19:47 +0100</pubDate>
       
-      <guid>http://chenghao.monster/2020/java-io/</guid>
+      <guid>https://nervousorange.github.io/2020/java-io/</guid>
       <description>I/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I/O 瓶颈。
 本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I/O 的工作机制 的内容为参考，讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。
 Java I/O 类库的基本架构 基于字节的 I/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。
 需要明确的是，字节流从哪里读或是写入到哪里，操作数据的方式是可以组合使用的，如：
 OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(&amp;#34;pathName&amp;#34;)));基于字符的 I/O 操作接口 虽然 I/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。
 例如写字符的操作接口为 void write(char[] cbuf, int off, int len)
-字节与字符的转化接口 字符在写入文件持久化或者网络传输之前，都需要先经过编码转换，下图中 InputStreamReader 就是从字节到字符的转化桥梁，在初始化时需要指定编码字符集，否则会采用操作系统默认的字符集，很可能出现乱码问题。具体的编码解码过程可以查看：三：深入分析 Java Web 中的中文编码问题</description>
+字节与字符的转化接口 字符在写入文件持久化或者网络传输之前，都需要先经过编码转换，下图中 InputStreamReader 就是从字节到字符的转化桥梁，在初始化时需要指定编码字符集，否则会采用操作系统默认的字符集，很可能出现乱码问题。具体的编码解码过程可以查看：深入分析 Java Web 中的中文编码问题</description>
     </item>
     
     <item>
       <title>深入 Web 请求过程</title>
-      <link>http://chenghao.monster/2020/dns-cdn/</link>
+      <link>https://nervousorange.github.io/2020/dns-cdn/</link>
       <pubDate>Sun, 26 Jul 2020 09:19:47 +0100</pubDate>
       
-      <guid>http://chenghao.monster/2020/dns-cdn/</guid>
+      <guid>https://nervousorange.github.io/2020/dns-cdn/</guid>
       <description>由于之前找工作，刚来上海挺多事，些久没写博客；至此打算新开一个 “学习录” 系列（以读书笔记和实战心得为主），记录自己 Java 学习路上的收获，共勉。
 以 《深入分析 Java Web 技术内幕》 第一章 深入 Web 请求过程的内容为参考，此篇讲解游览器缓存、DNS 域名解析的过程和 CDN 工作机制。
 游览器缓存 缓存可以减少游览器向服务器请求资源的次数，减少网络延时，加快页面响应速度，减少服务器压力。下图中 size 不为 0 的请求就是没有使用缓存。
