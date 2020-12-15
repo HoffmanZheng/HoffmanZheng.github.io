@@ -57,7 +57,7 @@
     "datePublished": "2020-12-10 13:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-12-10 13:19:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/database-index\/",
-    "wordCount" : "226",
+    "wordCount" : "231",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,226 words</span>
+                 <span class="post-word-count">,231 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -184,7 +184,7 @@
 </ul>
 <h1 id="高性能的索引策略">高性能的索引策略</h1>
 <h3 id="独立的列">独立的列</h3>
-<p>如果查询中的列不是独立的，则 MySQL 就不会使用索引。“独立的列” 指索引列不能是表达式的一部分，也不能是函数的参数。例如下面的查询：</p>
+<p>如果查询中的列不是独立的，MySQL 就不会使用索引。“独立的列” 指索引列不能是表达式的一部分，也不能是函数的参数。例如下面的查询，因为 <code>emp_no + 1</code> 表达式不是独立的列，使查询无法使用主键 <code>emp_no</code> 索引，只能使用效率低下的全表扫描。</p>
 <pre><code class="language-mysq" data-lang="mysq">explain(select emp_no, birth_date, first_name, last_name, gender, hire_date
 FROM employees.employees where emp_no + 1 = 10003)
 
@@ -241,7 +241,7 @@ id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</
             
              
             <p class="copyright-item lincese">
-                本文采用知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可
+                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
             </p>
             
     </div>
