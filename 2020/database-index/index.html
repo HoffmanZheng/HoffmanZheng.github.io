@@ -57,7 +57,7 @@
     "datePublished": "2020-12-10 13:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-12-10 13:19:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/database-index\/",
-    "wordCount" : "231",
+    "wordCount" : "344",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,12 +134,14 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,231 words</span>
+                 <span class="post-word-count">,344 words</span>
         </div>
     </header>
     <div class="post-content">
         
 
+        
+            
         
 
         
@@ -208,9 +210,51 @@ id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</
 <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span>
  <span style="color:#ae81ff">1</span><span style="color:#f92672">|</span>SIMPLE     <span style="color:#f92672">|</span>salaries<span style="color:#f92672">|</span>range<span style="color:#f92672">|</span><span style="color:#66d9ef">PRIMARY</span>      <span style="color:#f92672">|</span><span style="color:#66d9ef">PRIMARY</span><span style="color:#f92672">|</span><span style="color:#ae81ff">7</span>      <span style="color:#f92672">|</span>   <span style="color:#f92672">|</span>   <span style="color:#ae81ff">3</span><span style="color:#f92672">|</span><span style="color:#66d9ef">Using</span> <span style="color:#66d9ef">where</span><span style="color:#f92672">|</span>
 </code></pre></div><h3 id="前缀索引和索引选择性">前缀索引和索引选择性</h3>
+<p>很长的字符串列，会让索引变得大且慢，除了对其使用伪哈希索引，通常还可以索引开始的部分字符，这样可以大大节约索引空间，提高索引效率，但这样也会降低索引的选择性。</p>
+<p><code>索引的选择性 = 不重复的索引值 / 数据表的记录总数 (#T)</code>，选择性高的索引可以在查找时过滤掉更多的行，查询效率较高，唯一索引的选择性最高 为 1。</p>
+<p>可以创建一个合适长度的 <strong>前缀索引</strong> <code>alter table &lt;tableName&gt; add key (&lt;columnName&gt;(&lt;length&gt;))</code> ，保证前缀索引的选择性接近于完整列的选择性，可以使索引更小、更快，但它也有缺点，比如无法使用前缀索引做 <code>order by</code> 和 <code>group by</code> ，也无法用前缀索引做覆盖扫描。</p>
 <h3 id="多列索引">多列索引</h3>
+<p>很多人对多列索引的理解都不够，一个常见的误区就是为多个列创建独立的索引。多个单列索引大部分情况下 <strong>并不能</strong> 提高 MySQL 的查询性能，MySQL 5.0 引入了 “<strong>索引合并</strong>”，一定程度上可以使用表上的多个单列索引来定位指定的行。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">SELECT</span> emp_no, dept_no <span style="color:#66d9ef">FROM</span> employees.dept_emp 
+<span style="color:#66d9ef">where</span> dept_no <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">d005</span><span style="color:#e6db74">&#39;</span> <span style="color:#66d9ef">or</span> emp_no  <span style="color:#f92672">=</span> <span style="color:#ae81ff">10002</span>
+
+<span style="color:#75715e">/*</span><span style="color:#75715e">*</span><span style="color:#75715e"> 在 MySQL 5.0 之前的版本中，将查询改成 UNION 方式能更好的使用索引 </span><span style="color:#75715e">*/</span>
+<span style="color:#66d9ef">select</span> emp_no, dept_no <span style="color:#66d9ef">from</span> dept_emp <span style="color:#66d9ef">where</span> dept_no <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">d005</span><span style="color:#e6db74">&#39;</span> <span style="color:#66d9ef">union</span> <span style="color:#66d9ef">ALL</span> 
+<span style="color:#66d9ef">select</span> emp_no, dept_no <span style="color:#66d9ef">from</span> dept_emp <span style="color:#66d9ef">where</span>  emp_no  <span style="color:#f92672">=</span> <span style="color:#ae81ff">10002</span> <span style="color:#66d9ef">and</span> dept_no <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">d005</span><span style="color:#e6db74">&#39;</span>
+</code></pre></div><p>索引合并虽然能够用到多个单列索引进行嵌套查询操作，但需要 <strong>耗费大量 CPU 和内存资源</strong> 在算法的缓存、排序、合并操作上。更为重要的是，优化器只关心随机页面读取，不会把这些计算到 “查询成本” 中，使得查询的成本被低估，导致该执行计划还不如直接走全表扫描。</p>
+<p>通常来说，与其让优化器选择使用索引合并，还不如像 MySQL 5.0 之前的版本那样，将查询改为 UNION 的方式往往更好（可以通过参数 <code>optimizer_switch</code> 来关闭索引合并功能）。</p>
 <h3 id="选择合适的索引列顺序">选择合适的索引列顺序</h3>
+<p>B-Tree 索引首先按照最左列排序，其次是第二列，等等。由于最左前缀匹配原则的存在，查询使用索引需要从索引最左列开始，如此多列索引的顺序就显得至关重要。</p>
+<p>经验法则：将 <strong>选择性最高的列</strong> 放索引最前列，这在某些场景是有帮助的（比如不考虑排序、分组和范围条件时），但考虑问题需要更加全面，往往需要根据 <strong>运行频率的高低</strong> 来调整索引列的顺序。</p>
 <h3 id="聚簇索引">聚簇索引</h3>
+<p>聚簇索引是一种数据存储方式，或者说是索引组织表 index-organized table，</p>
+<table>
+<thead>
+<tr>
+<th>索引</th>
+<th>非叶子节点</th>
+<th>叶子节点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>聚簇-主键</td>
+<td>索引列</td>
+<td>数据</td>
+</tr>
+<tr>
+<td>聚簇-二级</td>
+<td>索引列</td>
+<td>索引列+主键值</td>
+</tr>
+<tr>
+<td>非聚簇索引</td>
+<td>索引列</td>
+<td>数据所在行号</td>
+</tr>
+</tbody>
+</table>
+<p><img src="/images/cluster-index.jpg" alt=""></p>
 <h3 id="覆盖索引">覆盖索引</h3>
 <h3 id="使用索引扫描来做排序">使用索引扫描来做排序</h3>
 <h3 id="压缩索引myisam">压缩索引（MyISAM）</h3>
@@ -309,8 +353,9 @@ id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</
 
 
     
-    
-    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
     
   
 
