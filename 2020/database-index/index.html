@@ -57,7 +57,7 @@
     "datePublished": "2020-12-10 13:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-12-10 13:19:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/database-index\/",
-    "wordCount" : "344",
+    "wordCount" : "439",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,344 words</span>
+                 <span class="post-word-count">,439 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -227,7 +227,7 @@ id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</
 <p>B-Tree 索引首先按照最左列排序，其次是第二列，等等。由于最左前缀匹配原则的存在，查询使用索引需要从索引最左列开始，如此多列索引的顺序就显得至关重要。</p>
 <p>经验法则：将 <strong>选择性最高的列</strong> 放索引最前列，这在某些场景是有帮助的（比如不考虑排序、分组和范围条件时），但考虑问题需要更加全面，往往需要根据 <strong>运行频率的高低</strong> 来调整索引列的顺序。</p>
 <h3 id="聚簇索引">聚簇索引</h3>
-<p>聚簇索引是一种数据存储方式，或者说是索引组织表 index-organized table，</p>
+<p>聚簇索引是一种数据存储方式，或者说是索引组织表 index-organized table，其与非聚簇索引（如 MyISAM）在数据存储上的差异如下所示：</p>
 <table>
 <thead>
 <tr>
@@ -239,25 +239,55 @@ id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</
 <tbody>
 <tr>
 <td>聚簇-主键</td>
-<td>索引列</td>
-<td>数据</td>
+<td>索引列 + 指针</td>
+<td>行数据</td>
 </tr>
 <tr>
 <td>聚簇-二级</td>
-<td>索引列</td>
-<td>索引列+主键值</td>
+<td>索引列 + 指针</td>
+<td>索引列 + 主键值</td>
 </tr>
 <tr>
 <td>非聚簇索引</td>
-<td>索引列</td>
+<td>索引列 + 指针</td>
 <td>数据所在行号</td>
 </tr>
 </tbody>
 </table>
 <p><img src="/images/cluster-index.jpg" alt=""></p>
+<h4 id="优缺点-1">优缺点</h4>
+<ol>
+<li>将索引和数据保存在同一个 B-Tree 中，数据访问更快</li>
+<li>可将相关的数据根据主键保存在一起，可以减少查询的时候需要访问的数据页数量</li>
+<li>更新聚簇索引列的代价很高，行移动可能会产生 “<strong>页分裂</strong>”，导致表占用更多的磁盘空间</li>
+<li>二级索引的叶子节点保存了引用行的主键列，可能比非聚簇的要大（这样的策略减少了当出现行移动或者数据页分裂时二级索引是维护工作）</li>
+<li>使用二级索引访问时需要回表操作，进行两次索引查找（通过自适应哈希索引能够减少这样的重复工作）</li>
+<li>并发插入时，顺序的主键会导致 <strong>间隙锁竞争</strong></li>
+</ol>
+<h4 id="注意点">注意点</h4>
+<ul>
+<li>最好避免随机的（不连续且值的分布范围非常大）聚簇索引，避免使用 UUID 作为聚簇索引，它会使索引的插入变成完全随机，页分裂和碎片会导致插入花费更长的时间</li>
+<li>随机插入 &mdash;&gt; 先读取写入的目标页到内存中 &mdash;&gt;  页分裂导致需要移动大量的数据 &mdash;&gt; 频繁的页分裂使页变得稀疏并被不规则地填充，最终数据会有碎片</li>
+<li>随机值被载入到聚簇索引后，也需要做一次 <code>OPTIMIZE TABLE</code> 来重建表并优化页的填充，所以尽可能地使用单调增加的聚簇键值来插入新行。</li>
+</ul>
 <h3 id="覆盖索引">覆盖索引</h3>
+<p>如果索引的叶子节点中已经包含要查询的数据，MySQL 也可以 <strong>使用索引直接获取列的数据</strong>，这样就不需要再读取数据行，如果一个索引包含所有需要查询的字段的值，我们就称之为 “覆盖索引”。</p>
+<h4 id="优缺点-2">优缺点</h4>
+<ol>
+<li>如果只需读取索引，就能极大地减少数据访问量，减轻缓存的负载；因为索引比数据更小，更容易全部放入内存中（尤其 MyISAM 还能压缩索引）</li>
+<li>因为索引是按照列值顺序存储的，所以范围查询的 I/O 会比随机读取少得多</li>
+<li>对是聚簇索引的 InnoDB 引擎，二次索引如果能够覆盖查询，就可以避免对主键索引的二次查询</li>
+<li>覆盖索引必须要存储索引列的值，MySQL 只能使用 B-Tree 索引做覆盖索引，哈希索引、空间索引、全文索引等都不适用。</li>
+</ol>
+<p>当查询使用覆盖索引的时候，在 explain 的 Extra 列可以看到 <code>Using index</code> 的信息，这与 type 列的 index 很容易搞混淆，type 列表示的是查询访问数据的方式，type 列的 index 表示的是以遍历索引树的方式进行全表扫描。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">explain</span>(<span style="color:#66d9ef">select</span> emp_no <span style="color:#66d9ef">from</span> dept_emp <span style="color:#66d9ef">where</span> dept_no  <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">d005</span><span style="color:#e6db74">&#39;</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">10</span>)
+
+id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</span><span style="color:#66d9ef">table</span>   <span style="color:#f92672">|</span>type<span style="color:#f92672">|</span>possible_keys<span style="color:#f92672">|</span><span style="color:#66d9ef">key</span>    <span style="color:#f92672">|</span>key_len<span style="color:#f92672">|</span>ref  <span style="color:#f92672">|</span>rows  <span style="color:#f92672">|</span>Extra                   <span style="color:#f92672">|</span>
+<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span>
+ <span style="color:#ae81ff">1</span><span style="color:#f92672">|</span>SIMPLE     <span style="color:#f92672">|</span>dept_emp<span style="color:#f92672">|</span>ref <span style="color:#f92672">|</span>dept_no      <span style="color:#f92672">|</span>dept_no<span style="color:#f92672">|</span><span style="color:#ae81ff">4</span>      <span style="color:#f92672">|</span>const<span style="color:#f92672">|</span><span style="color:#ae81ff">145708</span><span style="color:#f92672">|</span><span style="color:#66d9ef">Using</span> <span style="color:#66d9ef">where</span>; <span style="color:#66d9ef">Using</span> <span style="color:#66d9ef">index</span><span style="color:#f92672">|</span>
+</code></pre></div><h4 id="延迟关联">延迟关联</h4>
+<p>很多时候没有任何索引能够覆盖查询所需的列，可以使用延迟关联来延迟对列的访问。使查询的第一阶段使用覆盖索引。</p>
 <h3 id="使用索引扫描来做排序">使用索引扫描来做排序</h3>
-<h3 id="压缩索引myisam">压缩索引（MyISAM）</h3>
 <h3 id="松散索引">松散索引</h3>
 <h3 id="冗余和重复索引">冗余和重复索引</h3>
 <h3 id="未使用的索引">未使用的索引</h3>
