@@ -5,6 +5,7 @@
 #### 工具
 * [Git 与 Github 使用指北](https://nervousorange.github.io/2019/git/)
 * [Maven：生命周期、插件及包管理](https://nervousorange.github.io/2019/maven/)
+* [Git 进阶与 GitHub 协作详解](https://nervousorange.github.io/2020/advanced-git/)
 #### Java
 * [Java：Collection、Map 集合工具类](https://nervousorange.github.io/2020/java-collection/)
 * [Java：初识多线程、原理及实现](https://nervousorange.github.io/2020/java-multi-thread/)
