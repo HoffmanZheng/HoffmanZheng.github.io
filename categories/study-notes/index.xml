@@ -6,10 +6,24 @@
     <description>Recent content in Study notes on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 21 Apr 2020 11:30:47 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 28 Dec 2020 13:19:47 +0100</lastBuildDate>
     
 	<atom:link href="https://nervousorange.github.io/categories/study-notes/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Git 进阶与 GitHub 协作详解</title>
+      <link>https://nervousorange.github.io/2020/advanced-git/</link>
+      <pubDate>Mon, 28 Dec 2020 13:19:47 +0100</pubDate>
+      
+      <guid>https://nervousorange.github.io/2020/advanced-git/</guid>
+      <description>在 Git 与 GitHub 使用指北 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 Git Reference Manual 介绍一些 Git 底层原理和高阶操作，以及 GitHub 的协作流程。
+Git 进阶 仓库、提交、分支的本质 Repository Git 仓库的本质其实就是一个可以 追溯所有历史 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 commitID， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 / 副本 / 代码快照，所以仓库的本质即是所有这些快照的集合。
+可以通过 git log 来查看仓库历史上的状态，然后使用 git checkout &amp;lt;commitID&amp;gt; 来使仓库恢复到某个状态。在 GitHub 网站上可以使用 https://github.com/&amp;lt;userName&amp;gt;/&amp;lt;repositoryName&amp;gt;/tree/&amp;lt;commitID/tag/branch&amp;gt; 看到这个仓库在某个时刻的状态。
+以下几种方式都可以标识仓库的状态：
+ 提交的 commitID，是一个十六进制字符串的 SHA-1 分支名 branch，指向分支最新一次的提交 HEAD，指向当前分支的头 标签 tag，是针对某个仓库状态打的标签，git tag v1.0   相关阅读：GeeksforGeeks：What is a GIT Repository?
+ Commit commit 提交是指将仓库从一个状态转移到另外一个状态时发生的变化，它产生的 commit 对象包括：</description>
+    </item>
     
     <item>
       <title>Java：程序的部署和 Nginx 负载均衡</title>
@@ -168,12 +182,12 @@ Maven 下的 Java 包管理 1.</description>
     </item>
     
     <item>
-      <title>Git 与 Github 使用指北</title>
+      <title>Git 与 GitHub 使用指北</title>
       <link>https://nervousorange.github.io/2019/git/</link>
       <pubDate>Thu, 26 Dec 2019 21:49:47 +0100</pubDate>
       
       <guid>https://nervousorange.github.io/2019/git/</guid>
-      <description>本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。
+      <description>本篇介绍实用的工具 Git 及 GitHub 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。
 Git 本地仓库 Git 工作流程：
 0. 应用场景  代码版本管理 / 多版本代码开发 / 多版本代码合并  1. 安装 Git 参考伯克利课程 CS61b 中的教程安装 Git
 2. 配置 Git git config --global user.name + 你的英文名 git config --global user.email + 你的邮箱 git config --global push.default simple git config --global core.quotepath false // 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor &amp;#34;vim&amp;#34; git config --global core.autocrlf input git config --global --list // 查看当前配置列表 vi ~/.gitconfig // 编辑配置文件 3.</description>

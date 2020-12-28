@@ -22,10 +22,10 @@
   <title>
        
        
-           Git 与 Github 使用指北 | 人间一场大梦
+           Git 与 GitHub 使用指北 | 人间一场大梦
        
   </title>
-  <meta name="title" content="Git 与 Github 使用指北 | 人间一场大梦">
+  <meta name="title" content="Git 与 GitHub 使用指北 | 人间一场大梦">
     
   
   <link rel="stylesheet" href="/font/iconfont.css">
@@ -44,9 +44,9 @@
          "@id": "https:\/\/nervousorange.github.io\/"
     },
     "articleSection" : "posts",
-    "name" : "Git 与 Github 使用指北",
-    "headline" : "Git 与 Github 使用指北",
-    "description" : "本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。\nGit 本地仓库 Git 工作流程：\n0. 应用场景  代码版本管理 \/ 多版本代码开发 \/ 多版本代码合并  1. 安装 Git 参考伯克利课程 CS61b 中的教程安装 Git\n2. 配置 Git git config --global user.name \x2b 你的英文名 git config --global user.email \x2b 你的邮箱 git config --global push.default simple git config --global core.quotepath false \/\/ 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor \x26#34;vim\x26#34; git config --global core.autocrlf input git config --global --list \/\/ 查看当前配置列表 vi ~\/.gitconfig \/\/ 编辑配置文件 3.",
+    "name" : "Git 与 GitHub 使用指北",
+    "headline" : "Git 与 GitHub 使用指北",
+    "description" : "本篇介绍实用的工具 Git 及 GitHub 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。\nGit 本地仓库 Git 工作流程：\n0. 应用场景  代码版本管理 \/ 多版本代码开发 \/ 多版本代码合并  1. 安装 Git 参考伯克利课程 CS61b 中的教程安装 Git\n2. 配置 Git git config --global user.name \x2b 你的英文名 git config --global user.email \x2b 你的邮箱 git config --global push.default simple git config --global core.quotepath false \/\/ 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor \x26#34;vim\x26#34; git config --global core.autocrlf input git config --global --list \/\/ 查看当前配置列表 vi ~\/.gitconfig \/\/ 编辑配置文件 3.",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -122,7 +122,7 @@
       		
 <article class="post-warp" itemscope itemtype="http://schema.org/Article">
     <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Git 与 Github 使用指北</h1>
+        <h1 class="post-title" itemprop="name headline">Git 与 GitHub 使用指北</h1>
         <div class="post-meta">
                 Written by <a itemprop="name" href="https://nervousorange.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
                 <span class="post-time">
@@ -155,7 +155,7 @@
           
           
 
-          <p>本篇介绍实用的工具 Git 及 Github 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。</p>
+          <p>本篇介绍实用的工具 Git 及 GitHub 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。</p>
 <h1 id="git-本地仓库">Git 本地仓库</h1>
 <p>Git 工作流程：</p>
 <p><img src="/images/work_process_git.png" alt="git工作流程"></p>
@@ -210,18 +210,18 @@ subl <span style="color:#f92672">(</span>文件 / 文件夹<span style="color:#f
 git rm -r --cached + filename         // 删除add的路径
 git add fileName --&gt; git stash        // 暂时不像提交代码（通灵术）
 git stash pop
-</code></pre></div><h1 id="github-远程仓库">Github 远程仓库</h1>
+</code></pre></div><h1 id="github-远程仓库">GitHub 远程仓库</h1>
 <h3 id="0-应用场景-1">0. 应用场景</h3>
 <ul>
 <li>代码云端备份 / 代码多地共享 / 团队协作</li>
 </ul>
-<h3 id="1-ssh-key-验证身份关联github账号">1. SSH key 验证身份（关联Github账号）</h3>
+<h3 id="1-ssh-key-验证身份关联github账号">1. SSH key 验证身份（关联GitHub账号）</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C + 你的邮箱           // 生成公钥文件
 cat ~/.ssh/id_rsa.pub                          // 打开生成的公钥文件，复制公钥到网页
 ssh -T git@github.com                          // 测试配对成功
 </code></pre></div><p>注：</p>
 <ul>
-<li>此操作旨在将本地 Git 与 Github 账号建立连接，在本地创建 <code>ssh key</code> 来创建连接，生成公钥、私钥，复制粘贴公钥到 Github上，<code>$cat id_rsa.pub</code> 显示出公钥复制粘贴到 Github 上，<code>头像-&gt; setting-&gt; SSH and GPG keys-&gt; new ssh key</code>，这样就建立好了远程仓库和本地仓库的连接。</li>
+<li>此操作旨在将本地 Git 与 GitHub 账号建立连接，在本地创建 <code>ssh key</code> 来创建连接，生成公钥、私钥，复制粘贴公钥到 GitHub上，<code>$cat id_rsa.pub</code> 显示出公钥复制粘贴到 GitHub 上，<code>头像-&gt; setting-&gt; SSH and GPG keys-&gt; new ssh key</code>，这样就建立好了远程仓库和本地仓库的连接。</li>
 <li>存在远程仓库，如何与本地建立连接：克隆该仓库的 ssh 地址。</li>
 <li>存在本地项目，如何与远程仓库建立连接：初始化本地仓库 &mdash;&gt; <code>git remote add + 远程仓库ssh地址</code></li>
 </ul>
@@ -244,7 +244,7 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 <ul>
 <li>origin为远程仓库的名字，可以更改但不推荐。</li>
 <li><a href="https://github.com/sun-shadow/Surf_the_Internet/blob/master/%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%AF%87.md">clone下载速度很慢怎么办？</a></li>
-<li>Github国内的替代品有：
+<li>GitHub国内的替代品有：
 <ul>
 <li><a href="https://dev.tencent.com/">腾讯云开发者平台</a></li>
 <li><a href="https://gitee.com/">码云Gitee</a></li>
@@ -252,7 +252,7 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 </ul>
 </li>
 </ul>
-<h3 id="3-github-团队协作">3. Github 团队协作</h3>
+<h3 id="3-github-团队协作">3. GitHub 团队协作</h3>
 <ul>
 <li>在拥有对方仓库 读/写 权限的情况下</li>
 </ul>
@@ -265,7 +265,7 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 <li>项目提交的原则，规范化的项目提交流程：
 <ul>
 <li>
-<p>使用 Github + 主干 / 分支模型进行开发，禁止直接 push 到 master 分支造成 <strong>主分支损坏</strong>。</p>
+<p>使用 GitHub + 主干 / 分支模型进行开发，禁止直接 push 到 master 分支造成 <strong>主分支损坏</strong>。</p>
 </li>
 <li>
 <p>一次提交不宜提交过多的内容，方便集中精力和 Code Review，同时也便于测试。</p>
@@ -306,7 +306,7 @@ source ~/.bash_profile                                    // 让它生效
 <p><img src="/images/rebase%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C.png" alt=""></p>
 <p>进入优化流程后，分条修改 commit 内容，之后 continue 继续，直到走完全部的 rebase 流程。</p>
 <p><img src="/images/rebase%E6%B5%81%E7%A8%8B.png" alt=""></p>
-<p>将优化后的 commit push 到 Github：</p>
+<p>将优化后的 commit push 到 GitHub：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git push -f rebaseOptimizeCommit:master
 </code></pre></div><h3 id="4-三种不同的-merge-pull-request-操作">4. 三种不同的 merge pull request 操作</h3>
 <p>在提交的 pull request 通过测试后，会进入选择 Merge pull request 的界面选择具体的合并方式：</p>

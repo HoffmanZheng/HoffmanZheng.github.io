@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Database：高性能 MySQL - 索引",
     "headline" : "Database：高性能 MySQL - 索引",
-    "description" : "在之前的博客 Database：MySQL 数据库 我已经介绍了自己对 MySQL 的一些基本认识，包括它的存储引擎、数据存储结构、索引及事务等，本篇及之后的一篇将着眼于 MySQL 的性能深入探究。\n索引是存储引擎用于快速找到记录的一种数据结构，它对良好的性能非常关键，它能让 MySQL 以最高效、扫描行数最少的方式找到需要的记录。本篇将结合 《高性能 MySQL》 第五章 创建高性能的索引 的内容深入分析，如何使用索引来提高 MySQL 数据库的查询性能。\n本篇使用和书本相同的 MySQL 5.5 版本，使用 官方提供的测试数据库，通过 MySQL Workbench 导入 dump 数据。\n索引的类型 B-Tree 索引 在 Database：MySQL 数据库 我已经介绍过 B-Tree 索引了，这里谈下一个面试常问的问题：为什么 MySQL 的索引要使用 B\x2b 树而不是其他的树形结构，比如 B 树？\n B 树是一颗多叉树，相比于二叉树在相等数据量的情况下，树的高度更低，可以减少查询时的 I\/O 次数。 B\x2b 树相比 B 树，只有叶子节点存放数据，非叶子节点只存储索引，这样就能在一张 16kb 的非叶子节点数据页中 存储更多的指针，降低树的高度，减少查询 I\/O 次数，提高查询性能。 计算机层面，一次 I\/O 就是磁盘的 寻道、寻点、拷贝到内存 三步操作。寻道是磁臂移动到指定磁道所需要的时间，一般在 5ms 以下；寻点是从磁道中找到数据存在的那个点，平均为半圈时间，在一个 7200 转\/min 的磁盘，大概是 60,000 \/ 7200 \/ 2 = 4.",
+    "description" : "在之前的博客 Database：MySQL 数据库 我已经介绍了自己对 MySQL 的一些基本认识，包括它的存储引擎、数据存储结构、索引及事务等，本篇及之后的一篇将着眼于 MySQL 的性能深入探究。\n索引是存储引擎用于快速找到记录的一种数据结构，它对良好的性能非常关键，它能让 MySQL 以最高效、扫描行数最少的方式找到需要的记录。本篇将结合 《高性能 MySQL》 第五章 创建高性能的索引 的内容深入分析，如何使用索引来提高 MySQL 数据库的查询性能。\n本篇使用和书本相同的 MySQL 5.5 版本，使用 官方提供的测试数据库 作为示例，通过 MySQL Workbench 导入 dump 数据。\n索引的类型 B-Tree 索引 在 Database：MySQL 数据库 我已经介绍过 B-Tree 索引了，这里谈下一个面试常问的问题：为什么 MySQL 的索引要使用 B\x2b 树而不是其他的树形结构，比如 B 树？\n B 树是一颗多叉树，相比于二叉树在相等数据量的情况下，树的高度更低，可以减少查询时的 I\/O 次数。 B\x2b 树相比 B 树，只有叶子节点存放数据，非叶子节点只存储索引，这样就能在一张 16kb 的非叶子节点数据页中 存储更多的指针，降低树的高度，减少查询 I\/O 次数，提高查询性能。 计算机层面，一次 I\/O 就是磁盘的 寻道、寻点、拷贝到内存 三步操作。寻道是磁臂移动到指定磁道所需要的时间，一般在 5ms 以下；寻点是从磁道中找到数据存在的那个点，平均为半圈时间，在一个 7200 转\/min 的磁盘，大概是 60,000 \/ 7200 \/ 2 = 4.",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-12-10 13:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-12-10 13:19:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/database-index\/",
-    "wordCount" : "1118",
+    "wordCount" : "1119",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,1118 words</span>
+                 <span class="post-word-count">,1119 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -157,7 +157,7 @@
 
           <p>在之前的博客 <a href="https://nervousorange.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 我已经介绍了自己对 MySQL 的一些基本认识，包括它的存储引擎、数据存储结构、索引及事务等，本篇及之后的一篇将着眼于 MySQL 的性能深入探究。</p>
 <p>索引是存储引擎用于快速找到记录的一种数据结构，它对良好的性能非常关键，它能让 MySQL 以最高效、扫描行数最少的方式找到需要的记录。本篇将结合 <a href="https://book.douban.com/subject/23008813/">《高性能 MySQL》</a> 第五章 创建高性能的索引 的内容深入分析，如何使用索引来提高 MySQL 数据库的查询性能。</p>
-<p>本篇使用和书本相同的 MySQL 5.5 版本，使用 <a href="https://github.com/datacharmer/test_db">官方提供的测试数据库</a>，通过 <a href="https://dev.mysql.com/downloads/workbench/">MySQL Workbench</a> 导入 dump 数据。</p>
+<p>本篇使用和书本相同的 MySQL 5.5 版本，使用 <a href="https://github.com/datacharmer/test_db">官方提供的测试数据库</a> 作为示例，通过 <a href="https://dev.mysql.com/downloads/workbench/">MySQL Workbench</a> 导入 dump 数据。</p>
 <h1 id="索引的类型">索引的类型</h1>
 <h3 id="b-tree-索引">B-Tree 索引</h3>
 <p>在 <a href="https://nervousorange.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 我已经介绍过 B-Tree 索引了，这里谈下一个面试常问的问题：为什么 MySQL 的索引要使用 B+ 树而不是其他的树形结构，比如 B 树？</p>
