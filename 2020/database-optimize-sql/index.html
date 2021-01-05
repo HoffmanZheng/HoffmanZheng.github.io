@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Database：高性能 MySQL - 优化查询",
     "headline" : "Database：高性能 MySQL - 优化查询",
-    "description" : "一个 MySQL 的查询任务，可以看作是一系列子任务，每个子任务都会消耗一定的时间，包括：网络、CPU 计算、生成统计信息和执行计划、锁等待等。如果要优化查询，实际上要优化其子任务，消除其中的一些子任务，减少子任务的执行次数，让子任务运行得更快。因此，了解 查询的生命周期、清楚查询的时间消耗情况对于优化查询有很大的意义。\n在 Database：高性能 MySQL - 索引 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇将结合 《高性能 MySQL》 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何合理的设计查询。\n本篇依然基于和书本相同的 MySQL 5.5 版本，本文所提及的一些 优化器的限制 在 MySQL 后续版本或是在 MariaDB 中得到了优化。\n查询执行的基础 MySQL 客户端\/服务器通信协议 一般来说不需要去理解 MySQL 通信协议的内部实现细节，只需要大致理解通信协议是如何工作的。MySQL 客户端和服务器之间的通信协议是 \x26ldquo;半双工\x26rdquo; 的，这意味着在任何一个时刻，要么是由服务器向客户端发送数据，要么是由客户端向服务器发送数据，这两个动作不能同时发生，无法也无须将一个消息切成小块独立来发送。\n这种协议让 MySQL 通信简单快速，但也给了 MySQL 一些限制，比如：\n  无法进行 流量控制，服务器必须接收客户端传来的完整查询消息才能响应，当查询语句过长超过 max_allowed_packet 时，服务器会拒绝接收并抛出错误。\n  客户端必须完整地接收整个返回结果，而不能简单地只取前面几条结果，然后让服务器停止发送数据。这也是在必要的时候一定要在查询中加上 limit 限制的原因。\n  MySQL 通常需要等所有数据都发送给客户端后才能 释放这条查询所占用的资源，如果查询返回了一个很大的结果集，库函数会花很多时间和内存来存储所有的结果集，给服务器造成一定的压力。\n  查询执行流程 MySQL 执行一个查询的过程，大体上可分为服务器层和存储引擎层两部分：\nServer 层    阶段 职责     连接器 TCP 握手后服务器端验证登录用户身份   查询缓存 先检查查询缓存，如果命中则立刻返回存储在缓存中的结果   分析器 根据语法规则判断输入的 SQL 语句是否满足语法规范   优化器 选择并生成最优的执行计划   执行器 调用存储引擎的 API 执行查询    存储引擎层 负责数据的存储和提取，MySQL 插件式的存储引擎架构支持 InnoDB、MyISAM、Memory 等多个存储引擎。现在最常用的存储引擎是 InnoDB，它从 MySQL 5.",
+    "description" : "一个 MySQL 的查询任务，可以看作是一系列子任务，每个子任务都会消耗一定的时间，包括：网络、CPU 计算、生成统计信息和执行计划、锁等待等。如果要优化查询，实际上要优化其子任务，消除其中的一些子任务，减少子任务的执行次数，让子任务运行得更快。因此，了解 查询的生命周期、清楚查询的时间消耗情况对于优化查询有很大的意义。\n在 Database：高性能 MySQL - 索引 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇基于 MySQL 5.5 版本，结合 《高性能 MySQL》 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何合理的对各种类型的查询进行设计。\n查询执行的基础 MySQL 客户端\/服务器通信协议 一般来说不需要去理解 MySQL 通信协议的内部实现细节，只需要大致理解通信协议是如何工作的。MySQL 客户端和服务器之间的通信协议是 \x26ldquo;半双工\x26rdquo; 的，这意味着在任何一个时刻，要么是由服务器向客户端发送数据，要么是由客户端向服务器发送数据，这两个动作不能同时发生，无法也无须将一个消息切成小块独立来发送。\n这种协议让 MySQL 通信简单快速，但也给了 MySQL 一些限制，比如：\n  无法进行 流量控制，服务器必须接收客户端传来的完整查询消息才能响应，当查询语句过长超过 max_allowed_packet 时，服务器会拒绝接收并抛出错误。\n  客户端必须完整地接收整个返回结果，而不能简单地只取前面几条结果，然后让服务器停止发送数据。这也是在必要的时候一定要在查询中加上 limit 限制的原因。\n  MySQL 通常需要等所有数据都发送给客户端后才能 释放这条查询所占用的资源，如果查询返回了一个很大的结果集，库函数会花很多时间和内存来存储所有的结果集，给服务器造成一定的压力。\n  查询执行流程 MySQL 执行一个查询的过程，大体上可分为服务器层和存储引擎层两部分：\nServer 层    阶段 职责     连接器 TCP 握手后服务器端验证登录用户身份   查询缓存 先检查查询缓存，如果命中则立刻返回存储在缓存中的结果   分析器 根据语法规则判断输入的 SQL 语句是否满足语法规范   优化器 选择并生成最优的执行计划   执行器 调用存储引擎的 API 执行查询    存储引擎层 负责数据的存储和提取，MySQL 插件式的存储引擎架构支持 InnoDB、MyISAM、Memory 等多个存储引擎。现在最常用的存储引擎是 InnoDB，它从 MySQL 5.",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-12-22 13:29:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-12-22 13:29:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/database-optimize-sql\/",
-    "wordCount" : "815",
+    "wordCount" : "947",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,815 words</span>
+                 <span class="post-word-count">,947 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -156,8 +156,7 @@
           
 
           <p>一个 MySQL 的查询任务，可以看作是一系列子任务，每个子任务都会消耗一定的时间，包括：网络、CPU 计算、生成统计信息和执行计划、锁等待等。如果要优化查询，实际上要优化其子任务，消除其中的一些子任务，减少子任务的执行次数，让子任务运行得更快。因此，了解 <strong>查询的生命周期</strong>、清楚查询的时间消耗情况对于优化查询有很大的意义。</p>
-<p>在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇将结合 <a href="https://book.douban.com/subject/23008813/">《高性能 MySQL》</a> 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何合理的设计查询。</p>
-<p>本篇依然基于和书本相同的 MySQL 5.5 版本，本文所提及的一些 <strong>优化器的限制</strong> 在 MySQL 后续版本或是在 MariaDB 中得到了优化。</p>
+<p>在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇基于 <strong>MySQL 5.5</strong> 版本，结合 <a href="https://book.douban.com/subject/23008813/">《高性能 MySQL》</a> 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何合理的对各种类型的查询进行设计。</p>
 <h1 id="查询执行的基础">查询执行的基础</h1>
 <h3 id="mysql-客户端服务器通信协议">MySQL 客户端/服务器通信协议</h3>
 <p>一般来说不需要去理解 MySQL 通信协议的内部实现细节，只需要大致理解通信协议是如何工作的。MySQL 客户端和服务器之间的通信协议是 &ldquo;<strong>半双工</strong>&rdquo; 的，这意味着在任何一个时刻，要么是由服务器向客户端发送数据，要么是由客户端向服务器发送数据，这两个动作不能同时发生，无法也无须将一个消息切成小块独立来发送。</p>
@@ -370,7 +369,7 @@ outer_row <span style="color:#f92672">=</span> outer_iter.next
   outer_row <span style="color:#f92672">=</span> outer_iter.next
 end
 </code></pre></div><p>内连接的泳道图如下所示：</p>
-<p>【图6-2】</p>
+<p><img src="/images/sql-join.jpg" alt=""></p>
 <ul>
 <li>外连接 OUTER JOIN</li>
 </ul>
@@ -398,10 +397,10 @@ end
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film <span style="color:#66d9ef">where</span> film_id <span style="color:#66d9ef">in</span>
 (<span style="color:#66d9ef">select</span> film_id <span style="color:#66d9ef">from</span> sakila.film_actor <span style="color:#66d9ef">where</span> actor_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>)
 
-<span style="color:#f92672">|</span> id <span style="color:#f92672">|</span> select_type       <span style="color:#f92672">|</span>  <span style="color:#66d9ef">table</span>     <span style="color:#f92672">|</span>  type  <span style="color:#f92672">|</span>  possible_keys          <span style="color:#f92672">|</span>
-<span style="color:#f92672">|</span> <span style="color:#75715e">-- | ----------------- | ---------- |------- |------------------------ |
-</span><span style="color:#75715e"></span><span style="color:#f92672">|</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">PRIMARY</span>            <span style="color:#f92672">|</span> film       <span style="color:#f92672">|</span> <span style="color:#66d9ef">ALL</span>    <span style="color:#f92672">|</span> <span style="color:#66d9ef">Null</span>                    <span style="color:#f92672">|</span>
-<span style="color:#f92672">|</span> <span style="color:#ae81ff">2</span> <span style="color:#f92672">|</span> DEPENDENT SUBQUERY <span style="color:#f92672">|</span> film_actor <span style="color:#f92672">|</span> eq_ref <span style="color:#f92672">|</span> <span style="color:#66d9ef">PRIMARY</span>, idx_fk_film_id <span style="color:#f92672">|</span>
+<span style="color:#f92672">|</span> id <span style="color:#f92672">|</span> select_type        <span style="color:#f92672">|</span>  <span style="color:#66d9ef">table</span>     <span style="color:#f92672">|</span>  type  <span style="color:#f92672">|</span>  possible_keys          <span style="color:#f92672">|</span>
+<span style="color:#f92672">|</span> <span style="color:#75715e">-- | ------------------ | ---------- |------- |------------------------ |
+</span><span style="color:#75715e"></span><span style="color:#f92672">|</span>  <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">PRIMARY</span>            <span style="color:#f92672">|</span> film       <span style="color:#f92672">|</span> <span style="color:#66d9ef">ALL</span>    <span style="color:#f92672">|</span> <span style="color:#66d9ef">Null</span>                    <span style="color:#f92672">|</span>
+<span style="color:#f92672">|</span>  <span style="color:#ae81ff">2</span> <span style="color:#f92672">|</span> DEPENDENT SUBQUERY <span style="color:#f92672">|</span> film_actor <span style="color:#f92672">|</span> eq_ref <span style="color:#f92672">|</span> <span style="color:#66d9ef">PRIMARY</span>, idx_fk_film_id <span style="color:#f92672">|</span>
 </code></pre></div><p>一般会认为 MySQL 会先执行子查询返回所有包含 actor_id 为 1 的 film_id 列表，然后用 IN() 列列表查询。很不幸 MySQL <strong>不是</strong> 这样做的，MySQL 会将相关的外层表压倒子查询中，它认为这样可以更高效地查找到数据行，查询会被改写成下面的样子：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">exists</span>
 (<span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film_actor <span style="color:#66d9ef">where</span> actor_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> 
@@ -409,10 +408,30 @@ end
 </code></pre></div><p>这时子查询需要根据 film_id 来关联外部表 film，因为需要 film_id 字段，MySQL 认为无法先执行这个子查询，所以它选择先对 film 表进行 <strong>全表扫描</strong>，然后根据返回的 film_id <strong>逐个执行子查询</strong>。如果外层的表是一个非常大的表，那么这个查询的性能会非常糟糕。当然我们很容易用下面的办法来重写这个查询：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> film.<span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film 
 <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> sakila.film_actor <span style="color:#66d9ef">using</span>(film_id) <span style="color:#66d9ef">where</span> actor_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
-</code></pre></div><p>并不是所有的关联子查询的性能都很差，</p>
-<p>仍需注意的是，MySQL 在 from 子句中遇到子查询时，先执行子查询并将其结果放到一个临时表中（MySQL 的临时表是没有任何索引的，在编写复杂的子查询和关联查询的时候需要注意这一点），然后将这个临时表当做一个普通表对待（派生表 derived）。</p>
+</code></pre></div><p>对于关联子查询，一般会建议使用左外连接（LEFT OUTER JOIN）来重写，但并不是所有的关联子查询的性能都很差，比如对于需要产生临时中间表（使用了 DISTINCT 或 GROUP BY）的关联查询，用 EXISTS 子查询重写后却能得到更好的查询效率。仍需注意的是，MySQL 在 from 子句中遇到子查询时，先执行子查询并将其结果放到一个临时表中（<strong>MySQL 的临时表是没有任何索引的</strong>，在编写复杂的子查询和关联查询的时候需要注意这一点），然后将这个临时表当做一个普通表对待（派生表 derived）。</p>
 <h3 id="优化排序">优化排序</h3>
+<p>排序是一个成本很高的操作，从性能角度考虑应该尽可能避免排序或者尽可能 <strong>避免对大量数据进行排序</strong>。在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 已经介绍了 MySQL 如何通过索引进行排序，当不能使用索引生成排序结果时，MySQL 需要自己进行文件排序（filesort），如果数据量小则在内存中进行，如果数据量大（超过了排序缓冲区）则需要 <strong>使用磁盘</strong>，MySQL 会先将数据分块，对每个独立的块使用快速排序，并将各个块的排序结果放在磁盘上，最后合并返回。MySQL 有两种排序算法：</p>
+<ul>
+<li>
+<p>两次传输排序（旧版本使用）</p>
+<p>读取行指针和需要排序的字段，对其进行排序，然后再根据排序结果读取所需要的数据行。这需要进行两次数据传输，第二次读取排序后的所有记录时，会产生 <strong>大量的随机 I/O</strong>，成本非常高。当使用 MyISAM 表的时候成本会更高，因为 MyISAM 使用系统调用进行数据的读取，优点在于排序时存储尽可能少的数据，这让排序缓冲区中可以 <strong>容纳更多的行数进行排序</strong>。</p>
+</li>
+<li>
+<p>单次传输排序（新版本使用）</p>
+<p>先读取查询所需要的所有列，然后再根据给定列进行排序，最后直接返回排序结果。这个算法在 MySQL 4.1 和后续更新的版本才引入，不再需要两次传输读取数据，对于 I/O 密集型的应用，这样做的 <strong>效率高</strong> 了很多。缺点是，如果返回的列非常多、非常大，会额外占用大量的空间，所以可能会有更多的排序块需要合并。</p>
+</li>
+</ul>
+<p>当查询需要所有列的总长度不超过 <code>max_length_for_sort_data</code> 时，MySQL 使用单次传输排序，总大小超过或者任何需要的列是 BLOB 或者 TEXT 时则使用 two-pass 算法。</p>
+<p>MySQL 会分两种情况来处理关联查询时候的排序，如果 order by 子句中的所有列都来自关联的第一个表，那么在关联处理第一个表时就进行文件排序，在 explain 结果的 Extra 字段会有 <code>Using filesort</code>；除此之外的所有情况，MySQL 会将关联的结果存放到一个 <strong>临时表</strong> 中，然后在所有的关联都结束后，再进行文件排序，这样 Extra 字段可以看到 <code>Using temporary; Using filesort</code>，如果查询中有 limit 的话，limit 也会在排序之后应用，所以即使需要返回较少的数据，临时表和需要排序的数据量仍会非常大。</p>
 <h3 id="优化-group-by-和-distinct">优化 group by 和 distinct</h3>
+<p>很多场景下 MySQL 使用相同的办法优化这两种查询，优化器也会在内部处理时相互转化这两类查询，它们都可以使用索引来优化。当无法使用索引的时候，group by 使用 <strong>临时表或者文件排序</strong> 来做分组。</p>
+<p>如果需要对关联查询做分组 group by，并且是按照查找表中的某个列进行分组，那么通常采用查找表的 <strong>标识列分组</strong> 的效率会比其他列更高。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> actor.first_name, actor.last_name, c.cnt <span style="color:#66d9ef">from</span> sakila.actor
+<span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> (<span style="color:#66d9ef">select</span> actor_id, <span style="color:#a6e22e">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> cnt <span style="color:#66d9ef">from</span> sakila.film_actor <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> actor_id) 
+<span style="color:#66d9ef">as</span> c <span style="color:#66d9ef">using</span> (actor_id);
+</code></pre></div><p>虽然使用子查询和 <code>ONLY_FULL_GROUP_BY</code> 的 SQL_MODE 成本有点高，因为子查询需要创建和填充临时表，而子查询中创建的临时表是 <strong>没有任何索引</strong> 的。</p>
+<p>但在分组查询的 select 中直接使用 <strong>非分组列</strong>（nonaggregated column，可以使用 MIN() 或者 MAX() 函数来绕过 SQL_MODE 的限制）通常不是什么好主意，因为这样的结果通常是不定的，当索引改变或者优化器选择不同的优化策略时都可能导致 <strong>结果不一样</strong>。MySQL 是不会对这类查询返回错误，这种写法大部分是由于偷懒而不是优化而设计的，所以建议将 SQL_MODE 设置为包含 <code>ONLY_FULL_GROUP_BY</code>，这时 MySQL 会对这类查询直接返回一个错误，提醒你需要重写这个查询。</p>
+<p>如果没有通过 order by 子句显式地指定排序列，分组查询会自动按照分组的字段进行排序，如果不关心结果集的顺序，而这种默认排序又导致了需要文件排序，则可以使用 <code>order by null</code> 让 MySQL 不再进行文件排序。</p>
 <h3 id="优化-limit-分页">优化 limit 分页</h3>
 <h3 id="优化-union-查询">优化 UNION 查询</h3>
 <h4 id="union-的限制">UNION 的限制</h4>
@@ -478,7 +497,7 @@ end
     <div class="copyright">
         &copy;
         
-        <span itemprop="copyrightYear">2019 - 2020</span>
+        <span itemprop="copyrightYear">2019 - 2021</span>
         
         <span class="with-love">
     	 <i class="iconfont icon-love"></i> 

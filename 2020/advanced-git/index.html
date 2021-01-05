@@ -57,7 +57,7 @@
     "datePublished": "2020-12-28 13:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-12-28 13:19:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/advanced-git\/",
-    "wordCount" : "292",
+    "wordCount" : "357",
     "keywords" : [ "tools", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,292 words</span>
+                 <span class="post-word-count">,357 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -214,8 +214,26 @@
 <h4 id="git-merge---squash">git merge &ndash;squash</h4>
 <p>将当前分支的所有提交压扁成一个再提交到共用分支上去，优点是把所有变更合在⼀起，更容易阅读；bisect友好；想要回滚或者 revert ⾮常⽅便；缺点是丢失了所有的历史记录。</p>
 <h3 id="回退与重放">回退与重放</h3>
-<p>checkout reset revert cherry-pick</p>
+<h4 id="checkout">checkout</h4>
+<p>Checkout 可以将代码 <strong>复原到任何一个仓库状态</strong> 上，且不修改仓库中的任何信息。在使用 tag 标签切换代码版本后，可能会提示版本 v5.0 不在任何一个分支上，即当前在脱离 HEAD 的状态，所做的提交都会被遗弃，需要按照提示创建一个新的分支，才能保留创建的提交。</p>
+<p><img src="/images/git-checkout.png" alt=""></p>
+<p>所以 checkout 最重要的作用就是查看代码的历史版本，此外还可以使用 <code>git checkout -- &lt;file&gt;</code> 来丢弃工作区中的修改。</p>
+<p><img src="/images/git-checkout--.png" alt=""></p>
+<h4 id="reset">reset</h4>
+<p>Reset 会强行将当前分支 HEAD 指针移动到指定状态</p>
+<ul>
+<li>&ndash;soft：只移动指针，不碰 暂存区 / 工作区，使本地的修改得到了完全的保留</li>
+<li>&ndash;mixed（默认）：保留中间的文件变更，使其变成 not staged 状态（可以压扁提交，但会丢失中间的提交信息 ）</li>
+<li>&ndash;hard：清空当前的全部修改</li>
+</ul>
+<h4 id="cherry-pick">cherry-pick</h4>
+<p>将某个提交在另外的分⽀上 <strong>重放</strong>，使用场景为将一个 bug fix 同步到较老的产品中或者将在 master 上进行的变更希望进入 release 环节。</p>
+<p>先使用 checkout 切换到需要重放的分支上，然后 <code>git cherry-pick &lt;commmitId&gt;</code> 重放某个提交的修改，如果需要 cherry-pick 多个提交可以使用 <code>&lt;commitId&gt;..&lt;commitId&gt;</code> 来代表一个提交的区间。</p>
+<h4 id="revert">revert</h4>
+<p>产生一个 <strong>反向提交</strong>，撤销某个提交。使用场景为撤销历史中的某个更改，如 BUG 或不恰当的功能；或是回滚某次发布。<code>git revert &lt;commitId&gt;</code> ，revert 一个 revert 可以恢复之前的那次 revert。</p>
 <h3 id="bisect-与-stash">bisect 与 stash</h3>
+<h4 id="stash">stash</h4>
+<h4 id="bisect">bisect</h4>
 <h1 id="github-协作详解">Github 协作详解</h1>
 
     </div>
@@ -277,7 +295,7 @@
     <div class="copyright">
         &copy;
         
-        <span itemprop="copyrightYear">2019 - 2020</span>
+        <span itemprop="copyrightYear">2019 - 2021</span>
         
         <span class="with-love">
     	 <i class="iconfont icon-love"></i> 
