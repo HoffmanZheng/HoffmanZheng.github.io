@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Database：高性能 MySQL - 优化查询",
     "headline" : "Database：高性能 MySQL - 优化查询",
-    "description" : "一个 MySQL 的查询任务，可以看作是一系列子任务，每个子任务都会消耗一定的时间，包括：网络、CPU 计算、生成统计信息和执行计划、锁等待等。如果要优化查询，实际上要优化其子任务，消除其中的一些子任务，减少子任务的执行次数，让子任务运行得更快。因此，了解 查询的生命周期、清楚查询的时间消耗情况对于优化查询有很大的意义。\n在 Database：高性能 MySQL - 索引 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇基于 MySQL 5.5 版本，结合 《高性能 MySQL》 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何合理的对各种类型的查询进行设计。\n查询执行的基础 MySQL 客户端\/服务器通信协议 一般来说不需要去理解 MySQL 通信协议的内部实现细节，只需要大致理解通信协议是如何工作的。MySQL 客户端和服务器之间的通信协议是 \x26ldquo;半双工\x26rdquo; 的，这意味着在任何一个时刻，要么是由服务器向客户端发送数据，要么是由客户端向服务器发送数据，这两个动作不能同时发生，无法也无须将一个消息切成小块独立来发送。\n这种协议让 MySQL 通信简单快速，但也给了 MySQL 一些限制，比如：\n  无法进行 流量控制，服务器必须接收客户端传来的完整查询消息才能响应，当查询语句过长超过 max_allowed_packet 时，服务器会拒绝接收并抛出错误。\n  客户端必须完整地接收整个返回结果，而不能简单地只取前面几条结果，然后让服务器停止发送数据。这也是在必要的时候一定要在查询中加上 limit 限制的原因。\n  MySQL 通常需要等所有数据都发送给客户端后才能 释放这条查询所占用的资源，如果查询返回了一个很大的结果集，库函数会花很多时间和内存来存储所有的结果集，给服务器造成一定的压力。\n  查询执行流程 MySQL 执行一个查询的过程，大体上可分为服务器层和存储引擎层两部分：\nServer 层    阶段 职责     连接器 TCP 握手后服务器端验证登录用户身份   查询缓存 先检查查询缓存，如果命中则立刻返回存储在缓存中的结果   分析器 根据语法规则判断输入的 SQL 语句是否满足语法规范   优化器 选择并生成最优的执行计划   执行器 调用存储引擎的 API 执行查询    存储引擎层 负责数据的存储和提取，MySQL 插件式的存储引擎架构支持 InnoDB、MyISAM、Memory 等多个存储引擎。现在最常用的存储引擎是 InnoDB，它从 MySQL 5.",
+    "description" : "一个 MySQL 的查询任务，可以看作是一系列子任务，每个子任务都会消耗一定的时间，包括：网络、CPU 计算、生成统计信息和执行计划、锁等待等。如果要优化查询，实际上要优化其子任务，消除其中的一些子任务，减少子任务的执行次数，让子任务运行得更快。因此，了解 查询的生命周期、清楚查询的时间消耗情况对于优化查询有很大的意义。\n在 Database：高性能 MySQL - 索引 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇基于 MySQL 5.5 版本，结合 《高性能 MySQL》 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何对各种类型的查询，比如子查询、关联查询、排序、分组、分页等，进行合理的设计。\n查询执行的基础 MySQL 客户端\/服务器通信协议 一般来说不需要去理解 MySQL 通信协议的内部实现细节，只需要大致理解通信协议是如何工作的。MySQL 客户端和服务器之间的通信协议是 \x26ldquo;半双工\x26rdquo; 的，这意味着在任何一个时刻，要么是由服务器向客户端发送数据，要么是由客户端向服务器发送数据，这两个动作不能同时发生，无法也无须将一个消息切成小块独立来发送。\n这种协议让 MySQL 通信简单快速，但也给了 MySQL 一些限制，比如：\n  无法进行 流量控制，服务器必须接收客户端传来的完整查询消息才能响应，当查询语句过长超过 max_allowed_packet 时，服务器会拒绝接收并抛出错误。\n  客户端必须完整地接收整个返回结果，而不能简单地只取前面几条结果，然后让服务器停止发送数据。这也是在必要的时候一定要在查询中加上 LIMIT 限制的原因。\n  MySQL 通常需要等所有数据都发送给客户端后才能 释放这条查询所占用的资源，如果查询返回了一个很大的结果集，库函数会花很多时间和内存来存储所有的结果集，给服务器造成一定的压力。\n  查询执行流程 MySQL 执行一个查询的过程，大体上可分为服务器层和存储引擎层两部分：\nServer 层    阶段 职责     连接器 TCP 握手后服务器端验证登录用户身份   查询缓存 先检查查询缓存，如果命中则立刻返回存储在缓存中的结果   分析器 根据语法规则判断输入的 SQL 语句是否满足语法规范   优化器 选择并生成最优的执行计划   执行器 调用存储引擎的 API 执行查询    存储引擎层 负责数据的存储和提取，MySQL 插件式的存储引擎架构支持 InnoDB、MyISAM、Memory 等多个存储引擎。现在最常用的存储引擎是 InnoDB，它从 MySQL 5.",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-12-22 13:29:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-12-22 13:29:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/database-optimize-sql\/",
-    "wordCount" : "947",
+    "wordCount" : "1120",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,947 words</span>
+                 <span class="post-word-count">,1120 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -156,7 +156,7 @@
           
 
           <p>一个 MySQL 的查询任务，可以看作是一系列子任务，每个子任务都会消耗一定的时间，包括：网络、CPU 计算、生成统计信息和执行计划、锁等待等。如果要优化查询，实际上要优化其子任务，消除其中的一些子任务，减少子任务的执行次数，让子任务运行得更快。因此，了解 <strong>查询的生命周期</strong>、清楚查询的时间消耗情况对于优化查询有很大的意义。</p>
-<p>在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇基于 <strong>MySQL 5.5</strong> 版本，结合 <a href="https://book.douban.com/subject/23008813/">《高性能 MySQL》</a> 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何合理的对各种类型的查询进行设计。</p>
+<p>在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇基于 <strong>MySQL 5.5</strong> 版本，结合 <a href="https://book.douban.com/subject/23008813/">《高性能 MySQL》</a> 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何对各种类型的查询，比如子查询、关联查询、排序、分组、分页等，进行合理的设计。</p>
 <h1 id="查询执行的基础">查询执行的基础</h1>
 <h3 id="mysql-客户端服务器通信协议">MySQL 客户端/服务器通信协议</h3>
 <p>一般来说不需要去理解 MySQL 通信协议的内部实现细节，只需要大致理解通信协议是如何工作的。MySQL 客户端和服务器之间的通信协议是 &ldquo;<strong>半双工</strong>&rdquo; 的，这意味着在任何一个时刻，要么是由服务器向客户端发送数据，要么是由客户端向服务器发送数据，这两个动作不能同时发生，无法也无须将一个消息切成小块独立来发送。</p>
@@ -166,7 +166,7 @@
 <p>无法进行 <strong>流量控制</strong>，服务器必须接收客户端传来的完整查询消息才能响应，当查询语句过长超过 <code>max_allowed_packet</code> 时，服务器会拒绝接收并抛出错误。</p>
 </li>
 <li>
-<p>客户端必须完整地接收整个返回结果，而不能简单地只取前面几条结果，然后让服务器停止发送数据。这也是在必要的时候一定要在查询中加上 <code>limit</code> 限制的原因。</p>
+<p>客户端必须完整地接收整个返回结果，而不能简单地只取前面几条结果，然后让服务器停止发送数据。这也是在必要的时候一定要在查询中加上 <code>LIMIT</code> 限制的原因。</p>
 </li>
 <li>
 <p>MySQL 通常需要等所有数据都发送给客户端后才能 <strong>释放这条查询所占用的资源</strong>，如果查询返回了一个很大的结果集，库函数会花很多时间和内存来存储所有的结果集，给服务器造成一定的压力。</p>
@@ -209,7 +209,9 @@
 <p>负责数据的存储和提取，MySQL 插件式的存储引擎架构支持 InnoDB、MyISAM、Memory 等多个存储引擎。现在最常用的存储引擎是 InnoDB，它从 MySQL 5.5 开始成为了默认的存储引擎。</p>
 <p><img src="/images/mysql_execution.jpg" alt=""></p>
 <h3 id="查询缓存">查询缓存</h3>
-<p>TODO</p>
+<p>在 MySQL 服务器收到 SQL 查询请求后，会先在查询缓存中检查，如果查询命中该缓存，MySQL 会立刻返回结果，<strong>跳过</strong> 解析、优化和执行阶段。</p>
+<p>在判断缓存是否命中时，MySQL 不会解析、&ldquo;正规化&rdquo; 或者参数化查询语句，而是直接使用 SQL 语句和客户端发送过来的其他原始信息，任何字符上的不同，例如空格、注释等都会导致 <strong>缓存的不命中</strong>，所以编写 SQL 语句的时候使用统一的编码规则是一个好的习惯。</p>
+<p>如果出现大量缓存未命中的情况，大多数情况是由于缓存失效，而 <strong>缓存失效主要是数据修改导致的</strong>。在 MySQL 中如果更新操作和带缓存的读操作混合，那么查询缓存带来的好处通常很难衡量。更新操作会不断地使得缓存失效，而同时每次查询还会向缓存中再写入新的数据，这都会带来额外的消耗，所以只有当后续的查询能够在缓存失效前使用缓存才会有效地利用查询缓存。</p>
 <h3 id="查询优化处理">查询优化处理</h3>
 <p>在查询缓存没有命中后，Server 会将 SQL 语句转换成一个 <strong>执行计划</strong>，MySQL 再依照这个执行计划和存储引擎进行交互。这包括多个子阶段：</p>
 <table>
@@ -234,16 +236,16 @@
 </tr>
 </tbody>
 </table>
-<p>MySQL 的查询优化器 <strong>基于其成本模型</strong> 选择最优的执行计划，并引入了估算某些操作（比如执行一次 where 条件比较）代价的因子，可以通过 <code>show status like 'Last_query_cost'</code> 可以得知 MySQL 当前查询计算的成本。优化器在评估成本的时候并不考虑任何层面的缓存，它假设读取任务数据都需要一次磁盘 I/0，优化器对于每种类型的查询所做的优化都不尽相同，具体的会在 <strong>优化特定类型的查询</strong> 中进行讲述。</p>
+<p>MySQL 的查询优化器 <strong>基于其成本模型</strong> 选择最优的执行计划，并引入了估算某些操作（比如执行一次 WHERE 条件比较）代价的因子，可以通过 <code>show status like 'Last_query_cost'</code> 可以得知 MySQL 当前查询计算的成本。优化器在评估成本的时候并不考虑任何层面的缓存，它假设读取任务数据都需要一次磁盘 I/0，优化器对于每种类型的查询所做的优化都不尽相同，具体的会在 <strong>优化特定类型的查询</strong> 中进行讲述。</p>
 <h1 id="慢查询基础优化数据访问">慢查询基础：优化数据访问</h1>
 <h3 id="是否请求了不需要的数据">是否请求了不需要的数据</h3>
 <p>查询性能低下的最基本的原因是访问的数据太多，对于低效的查询，可以分析下查询是否检索了大量 <strong>超过需要的数据</strong>，确认 MySQL 是否分析了大量超过需要的数据行。</p>
 <ul>
 <li>
-<p>有些查询会请求超过实际需要的数据，然后 <strong>将多余的数据丢弃</strong>，这会给 MySQL 服务器带来额外的负担，并增加网络开销，且消耗了应用服务器的 CPU 和内存资源。一个常见的误解是认为 MySQL 会只返回需要的数据，实际 MySQL 却是先返回全部结果集再进行计算，一些开发者会使用 select 语句查询大量的结果，然后获取前面的 N 行后关闭结果集，应用程序会在接收全部的结果集数据后抛弃其中大部分数据，最简单有效的解决方法是在这样的查询后面加上 <code>limit</code>。</p>
+<p>有些查询会请求超过实际需要的数据，然后 <strong>将多余的数据丢弃</strong>，这会给 MySQL 服务器带来额外的负担，并增加网络开销，且消耗了应用服务器的 CPU 和内存资源。一个常见的误解是认为 MySQL 会只返回需要的数据，实际 MySQL 却是先返回全部结果集再进行计算，一些开发者会使用 SELECT 语句查询大量的结果，然后获取前面的 N 行后关闭结果集，应用程序会在接收全部的结果集数据后抛弃其中大部分数据，最简单有效的解决方法是在这样的查询后面加上 <code>LIMIT</code>。</p>
 </li>
 <li>
-<p>一些 DBA 是严格禁止 <code>select *</code> 写法的，取出所有列，会让优化器无法完成覆盖扫描这类优化，还会为服务器带来额外的 I/O、内存和 CPU 的消耗。但查询返回超过需要的数据也 <strong>不总是坏事</strong>，一些开发者认为这种浪费数据库资源的方式可以简化开发，提高代码的复用性。如果应用程序对获取的所有的列进行缓存，这相比多个只获取部分列的查询可能更有好处。</p>
+<p>一些 DBA 是严格禁止 <code>SELECT *</code> 写法的，取出所有列，会让优化器无法完成覆盖扫描这类优化，还会为服务器带来额外的 I/O、内存和 CPU 的消耗。但查询返回超过需要的数据也 <strong>不总是坏事</strong>，一些开发者认为这种浪费数据库资源的方式可以简化开发，提高代码的复用性。如果应用程序对获取的所有的列进行缓存，这相比多个只获取部分列的查询可能更有好处。</p>
 </li>
 <li>
 <p>对于不断重复执行、每次都返回相同数据的查询，比较好的方案是：在初次查询的时候将这个数据 <strong>缓存</strong> 起来，需要的时候从缓存中取出，这样性能显然会更好。</p>
@@ -251,7 +253,7 @@
 </ul>
 <h3 id="mysql-是否在扫描额外的记录">MySQL 是否在扫描额外的记录</h3>
 <p>在确定查询只返回需要的数据以后，接下来应该看看查询为了返回结果是否使用了预期之外的访问类型、扫描了过多的数据，即扫描的行数对返回的行数的比率较大。也就是说，查询在存储引擎层执行时 <strong>并不能</strong> 高效地找到需要的数据，导致需要扫描大量的数据返回给服务器层，<strong>在服务器层过滤数据</strong> 后才能取得需要的数据。</p>
-<p>在 explain 语句中的 <code>type</code> 列反应了查询的访问类型，从全表扫描 all, 到索引扫描 index、范围扫描 range、索引查询 ref、常数引用 const 等，它们的速度从慢到快，扫描的行数也是从大到小。如果查询没有办法使用合适的访问类型，最好的解决办法通常是增加一个合适的索引，这也是笔者在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 中所讲述的问题。</p>
+<p>在 explain 语句中的 <code>type</code> 列反应了查询的访问类型，从全表扫描 ALL, 到索引扫描 INDEX、范围扫描 RANGE、索引查询 REF、常数引用 CONST 等，它们的速度从慢到快，扫描的行数也是从大到小。如果查询没有办法使用合适的访问类型，最好的解决办法通常是增加一个合适的索引，这也是笔者在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 中所讲述的问题。</p>
 <p>好的索引可以让查询使用合适的访问类型，<strong>在存储引擎层就使用索引过滤不匹配的记录</strong>，尽可能地只扫描需要的数据行，减少 I/O 次数。但有些查询需要扫描大量的数据却只返回少数的行，比如使用聚合函数 <code>count() + group by</code> 分组的查询，对这些查询通常也可以尝试以下技巧去尝试优化：</p>
 <ul>
 <li>
@@ -311,10 +313,10 @@
 <p>MySQL 优化器最重要的一部分就是关联查询优化，其中涵盖的要点太多，其中需要特别提到的是：</p>
 <ul>
 <li>
-<p>确保 on 或者 using 子句中的列上有索引</p>
+<p>确保 ON 或者 USING 子句中的列上有索引</p>
 </li>
 <li>
-<p>确保任何的 group by 和 order by 中的表达式只涉及到一个表中的列，这样 MySQL 才有可能使用索引来优化这个过程</p>
+<p>确保任何的 GROUP BY 和 ORDER BY 中的表达式只涉及到一个表中的列，这样 MySQL 才有可能使用索引来优化这个过程</p>
 </li>
 </ul>
 <h4 id="优化器对关联查询做的优化">优化器对关联查询做的优化</h4>
@@ -327,7 +329,7 @@
 actor.acotor_id, actor.first_name, actor.last_name
 <span style="color:#66d9ef">from</span> sakila.film <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> sakila.film_actor <span style="color:#66d9ef">using</span>(film_id) 
 <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> sakila.actor <span style="color:#66d9ef">using</span>(actor_id)
-</code></pre></div><p>可以用 film 表作为 <strong>驱动表</strong> 先查找 film_actor 表，然后以此结果为驱动再查找 actor 表（oracle 术语表述），然而 explain 后看到的执行计划却是先用 actor 表驱动的，对此可以看下 explain <code>straight_join</code> 的执行计划，发现以 film 做驱动表后第一个关联表 <strong>需要扫描更多的行数</strong>（优化器预估需要读取的数据页数），第二个和第三个关联表都是根据索引查询，速度都很快，所以在实际执行的时候 MySQL 选择了顺序倒转的执行方式，让查询进行更少的嵌套查询和回溯操作。</p>
+</code></pre></div><p>可以用 film 表作为 <strong>驱动表</strong> 先查找 film_actor 表，然后以此结果为驱动再查找 actor 表（oracle 术语表述），然而 explain 后看到的执行计划却是先用 actor 表驱动的，对此可以看下 explain <code>STRAIGHT_JOIN</code> 的执行计划，发现以 film 做驱动表后第一个关联表 <strong>需要扫描更多的行数</strong>（优化器预估需要读取的数据页数），第二个和第三个关联表都是根据索引查询，速度都很快，所以在实际执行的时候 MySQL 选择了顺序倒转的执行方式，让查询进行更少的嵌套查询和回溯操作。</p>
 <p>关联优化器会尝试在所有的关联顺序中选择一个成本最小的来生成执行计划树，遍历每一个表然后逐个做嵌套循环计算每一个可能的执行计划的成本，最后返回一个最优的执行计划。糟糕的是，如果有 n 个表关联，就需要检查 <strong>n 的阶乘</strong> 种关联顺序，那所有可能的执行计划的 &ldquo;<strong>搜索空间</strong>&rdquo; 随着关联表个数增长的速度会非常快。当搜索空间非常大的时候，优化器不可能逐一评估每一种关联顺序的成本，当关联的表超过 <code>optimizer_search_depth</code> 时，优化器会选择使用 &ldquo;<strong>贪婪</strong>&rdquo; 搜索的方式查找 &ldquo;最优&rdquo; 的关联顺序，不会计算每一种关联顺序的成本，所以偶尔也会选择一个 <strong>不是最优</strong> 的执行计划。</p>
 <ul>
 <li>将外连接转化成内连接</li>
@@ -422,19 +424,39 @@ end
 </li>
 </ul>
 <p>当查询需要所有列的总长度不超过 <code>max_length_for_sort_data</code> 时，MySQL 使用单次传输排序，总大小超过或者任何需要的列是 BLOB 或者 TEXT 时则使用 two-pass 算法。</p>
-<p>MySQL 会分两种情况来处理关联查询时候的排序，如果 order by 子句中的所有列都来自关联的第一个表，那么在关联处理第一个表时就进行文件排序，在 explain 结果的 Extra 字段会有 <code>Using filesort</code>；除此之外的所有情况，MySQL 会将关联的结果存放到一个 <strong>临时表</strong> 中，然后在所有的关联都结束后，再进行文件排序，这样 Extra 字段可以看到 <code>Using temporary; Using filesort</code>，如果查询中有 limit 的话，limit 也会在排序之后应用，所以即使需要返回较少的数据，临时表和需要排序的数据量仍会非常大。</p>
-<h3 id="优化-group-by-和-distinct">优化 group by 和 distinct</h3>
-<p>很多场景下 MySQL 使用相同的办法优化这两种查询，优化器也会在内部处理时相互转化这两类查询，它们都可以使用索引来优化。当无法使用索引的时候，group by 使用 <strong>临时表或者文件排序</strong> 来做分组。</p>
-<p>如果需要对关联查询做分组 group by，并且是按照查找表中的某个列进行分组，那么通常采用查找表的 <strong>标识列分组</strong> 的效率会比其他列更高。</p>
+<p>MySQL 会分两种情况来处理关联查询时候的排序，如果 ORDER BY 子句中的所有列都来自关联的第一个表，那么在关联处理第一个表时就进行文件排序，在 explain 结果的 Extra 字段会有 <code>Using filesort</code>；除此之外的所有情况，MySQL 会将关联的结果存放到一个 <strong>临时表</strong> 中，然后在所有的关联都结束后，再进行文件排序，这样 Extra 字段可以看到 <code>Using temporary; Using filesort</code>，如果查询中有 LIMIT 的话，LIMIT 也会在排序之后应用，所以即使需要返回较少的数据，临时表和需要排序的数据量仍会非常大。</p>
+<h3 id="优化-group-by-和-distinct">优化 GROUP BY 和 DISTINCT</h3>
+<p>很多场景下 MySQL 使用相同的办法优化这两种查询，优化器也会在内部处理时相互转化这两类查询，它们都可以使用索引来优化。当无法使用索引的时候，GROUP BY 使用 <strong>临时表或者文件排序</strong> 来做分组。</p>
+<p>如果需要对关联查询做分组 GROUP BY，并且是按照查找表中的某个列进行分组，那么通常采用查找表的 <strong>标识列分组</strong> 的效率会比其他列更高。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> actor.first_name, actor.last_name, c.cnt <span style="color:#66d9ef">from</span> sakila.actor
 <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> (<span style="color:#66d9ef">select</span> actor_id, <span style="color:#a6e22e">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> cnt <span style="color:#66d9ef">from</span> sakila.film_actor <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> actor_id) 
 <span style="color:#66d9ef">as</span> c <span style="color:#66d9ef">using</span> (actor_id);
 </code></pre></div><p>虽然使用子查询和 <code>ONLY_FULL_GROUP_BY</code> 的 SQL_MODE 成本有点高，因为子查询需要创建和填充临时表，而子查询中创建的临时表是 <strong>没有任何索引</strong> 的。</p>
-<p>但在分组查询的 select 中直接使用 <strong>非分组列</strong>（nonaggregated column，可以使用 MIN() 或者 MAX() 函数来绕过 SQL_MODE 的限制）通常不是什么好主意，因为这样的结果通常是不定的，当索引改变或者优化器选择不同的优化策略时都可能导致 <strong>结果不一样</strong>。MySQL 是不会对这类查询返回错误，这种写法大部分是由于偷懒而不是优化而设计的，所以建议将 SQL_MODE 设置为包含 <code>ONLY_FULL_GROUP_BY</code>，这时 MySQL 会对这类查询直接返回一个错误，提醒你需要重写这个查询。</p>
-<p>如果没有通过 order by 子句显式地指定排序列，分组查询会自动按照分组的字段进行排序，如果不关心结果集的顺序，而这种默认排序又导致了需要文件排序，则可以使用 <code>order by null</code> 让 MySQL 不再进行文件排序。</p>
-<h3 id="优化-limit-分页">优化 limit 分页</h3>
-<h3 id="优化-union-查询">优化 UNION 查询</h3>
-<h4 id="union-的限制">UNION 的限制</h4>
+<p>但在分组查询的 SELECT 中直接使用 <strong>非分组列</strong>（nonaggregated column，可以使用 MIN() 或者 MAX() 函数来绕过 SQL_MODE 的限制）通常不是什么好主意，因为这样的结果通常是不定的，当索引改变或者优化器选择不同的优化策略时都可能导致 <strong>结果不一样</strong>。MySQL 是不会对这类查询返回错误，这种写法大部分是由于偷懒而不是优化而设计的，所以建议将 SQL_MODE 设置为包含 <code>ONLY_FULL_GROUP_BY</code>，这时 MySQL 会对这类查询直接返回一个错误，提醒你需要重写这个查询。</p>
+<p>如果没有通过 ORDER BY 子句显式地指定排序列，分组查询会自动按照分组的字段进行排序，如果不关心结果集的顺序，而这种默认排序又导致了需要文件排序，则可以使用 <code>order by null</code> 让 MySQL 不再进行文件排序。</p>
+<h3 id="优化-limit-分页">优化 LIMIT 分页</h3>
+<p>我们通常会使用 LIMIT 加上偏移量的方法实现分页，同时加上合适的 ORDER BY 子句，如果有对应的索引，通常效率应该不错。但在偏移量非常大的时候（翻页到非常后的页面），比如 <code>limit 10000, 20</code> 需要查询 10020 条记录然后只返回最后 20 条，前面的 10000 条记录都将被抛弃，这样查询的代价非常高。要优化这种大偏移量的 LIMIT 分页查询，要么是在页面中限制分页的数量，要么是优化大偏移量的性能。</p>
+<p>优化此类分页查询的一个最简单办法就是尽可能地使用索引覆盖扫描 <strong>延迟关联</strong>，这在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 最后面的索引案例学习中的优化排序有具体的讲解。</p>
+<p>LIMIT 和 OFFSET 的问题，其实是 OFFSET 的问题，它会导致 MySQL 扫描大量不需要的行然后再抛弃掉。如果可以使用书签记录上次取数据的位置，那么下次就可以直接从该书签记录的位置开始扫描，这样就可以 <strong>避免使用 OFFSET</strong>。比如前一次查询返回的主键是 16030 的租借记录，那么下一页的查询就可以从 16030 这个点开始：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.rental <span style="color:#66d9ef">where</span> rental_id <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16030</span> 
+<span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> rental_id <span style="color:#66d9ef">desc</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">20</span>
+</code></pre></div><h3 id="优化-union-查询">优化 UNION 查询</h3>
+<p>有时，MySQL <strong>无法</strong> 将限制条件从外层 &ldquo;下推&rdquo; 到内层，使得原本能够限制部分返回结果的条件无法应用到内层查询的优化上。比如希望 UNION 的各个子句能够根据 LIMIT 只取部分结果集，或者希望能够先排好序再合并结果集的话，就需要在 UNION 的各个子句中分别使用这些子句。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#75715e">/*</span><span style="color:#75715e">*</span><span style="color:#75715e"> 会将 actor 和 customer 表中的记录都取出来放到一个临时表中，然后再从临时表取出前 20 条 </span><span style="color:#75715e">*/</span>
+(<span style="color:#66d9ef">select</span> first_name, last_name <span style="color:#66d9ef">from</span> sakila.actor <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> last_name)
+<span style="color:#66d9ef">union</span> <span style="color:#66d9ef">all</span>
+(<span style="color:#66d9ef">select</span> first_name, last_name <span style="color:#66d9ef">from</span> sakila.customer <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> last_name)
+<span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">20</span>
+
+<span style="color:#75715e">/*</span><span style="color:#75715e">*</span><span style="color:#75715e"> 从 actor 和 customer 表中各取 20 条记录放到临时表中 </span><span style="color:#75715e">*/</span>
+(<span style="color:#66d9ef">select</span> first_name, last_name <span style="color:#66d9ef">from</span> sakila.actor <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> last_name <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">20</span>)
+<span style="color:#66d9ef">union</span> <span style="color:#66d9ef">all</span>
+(<span style="color:#66d9ef">select</span> first_name, last_name <span style="color:#66d9ef">from</span> sakila.customer <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> last_name <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">20</span>)
+<span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">20</span>
+<span style="color:#75715e">/*</span><span style="color:#75715e">*</span><span style="color:#75715e"> 仍需注意：从临时表中取出数据的顺序并不是一定的，
+</span><span style="color:#75715e">如果想获得正确的顺序，还需要加上一个全局的 ORDER BY 和 LIMIT 操作 </span><span style="color:#75715e">*/</span>
+</code></pre></div><p>MySQL 总是通过创建并填充临时表的方式来执行 UNION 查询，因此很多优化策略在 UNION 查询中都 <strong>没法很好地使用</strong>，经常需要手动地将 WHERE、LIMIT、ORDER BY 等子句 &ldquo;下推&rdquo; 到 UNION 的各个子查询中，以便优化器可以充分利用这些条件进行优化。</p>
+<p>除非确实需要服务器消除重复的行，否则就一定要使用 UNION ALL，如果没有 ALL 关键字，MySQL 会给临时表加上 DISTINCT 选项，这会导致 <strong>对整个临时表的数据做唯一性检查</strong>，这样做的代价非常高。事实上，MySQL 总是将结果放入临时表，然后再读出，再返回给客户端，虽然很多时候这样做是没有必要的，MySQL 可以直接把这些结果返回给客户端。</p>
 
     </div>
 
