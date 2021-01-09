@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="https://nervousorange.github.io/2020/advanced-git/" />
+  
+  <link rel="canonical" href="https://nervousorange.github.io/2021/database-innodb/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Database：InnoDB 存储引擎 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Database：InnoDB 存储引擎 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/nervousorange.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Database：InnoDB 存储引擎",
+    "headline" : "Database：InnoDB 存储引擎",
+    "description" : "在之前的博客 Database：MySQL 数据库 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 《MySQL技术内幕：InnoDB存储引擎》 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 核心实现和工作机制，主要内容有：缓冲池、线程工作机制、日志文件、锁、事务以及数据的备份与恢复等。\nMySQL 存储引擎 MySQL 数据库区别于其他数据库的最重要的一个特点就是其 插件式的表存储引擎（Pluggable Storage Engines），其提供了一系列标准的管理和服务支持，如 SQL 分析器和优化器等，这些标准与存储引擎本身无关，而存储引擎是底层物理结构的实现，每个存储引擎开发者可以按照自己的意愿来进行开发。 MySQL 数据库的体系结构如下图：\n需要注意的是，存储引擎是 基于表的，而不是数据库。每个存储引擎都有各自的特点，开发站应该根据具体的应用选择适合的存储引擎，以下是一些存储引擎的简单介绍：\nInnoDB 支持事务，行锁，外键，使用 MVCC 获得高并发性，实现了 SQL 的 4 种隔离级别，默认为 REPEATABLE，使用一种被称为 next-key locking 的策略来避免幻读（phantom）现象的产生，聚集索引，按主键顺序，从 MySQL 5.5.8 开始成为 MySQL 默认的存储引擎，众多互联网公司的成功应用已经证明了 InnoDB 存储引擎的高可用性、高性能以及高可扩展性。\nMyISAM 不支持事务，表锁，支持全文索引，在 5.5.8 之前是默认的存储引擎，只缓存索引文件，不缓冲数据文件。\nNDB 集群 存储引擎，数据全部放在内存中，主键查找速度极快，通过添加 NDB 数据存储节点（Data Node）可以线性地提高数据库性能；有一个问题值得注意，那就是 NDB 存储引擎的连接操作 JOIN 是在 MySQL 数据库层完成的，而不是在存储引擎层完成的。这意味着，复杂的连接操作需要巨大的网络开销，因此关联查询速度很慢。\nMemory 数据存放于内存，数据库重启或者发生崩溃，表中的数据都将消失，使用了 哈希索引，只支持表锁，并发性能较差；MySQL 使用 Memory 存储引擎作为 临时表 来存放查询的中间结果集。\nArchive 只支持 INSERT SELECT 操作，支持索引，压缩比例 1：10，非常 适合存储归档数据，如日志信息。使用行锁来实现高并发的插入操作，但并不是事务安全的引擎。",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-01-07 13:19:47 \x2b0100 \x2b0100",
+    "dateModified" : "2021-01-07 13:19:47 \x2b0100 \x2b0100",
+    "url" : "https:\/\/nervousorange.github.io\/2021\/database-innodb\/",
+    "wordCount" : "296",
+    "keywords" : [ "Database", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Database：InnoDB 存储引擎</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://nervousorange.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-01-07 itemprop="datePublished">January 7, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,296 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>在之前的博客 <a href="https://nervousorange.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 <a href="https://book.douban.com/subject/24708143/">《MySQL技术内幕：InnoDB存储引擎》</a> 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 <strong>核心实现和工作机制</strong>，主要内容有：缓冲池、线程工作机制、日志文件、锁、事务以及数据的备份与恢复等。</p>
+<h3 id="mysql-存储引擎">MySQL 存储引擎</h3>
+<p>MySQL 数据库区别于其他数据库的最重要的一个特点就是其 <strong>插件式的表存储引擎</strong>（Pluggable Storage Engines），其提供了一系列标准的管理和服务支持，如 SQL 分析器和优化器等，这些标准与存储引擎本身无关，而存储引擎是底层物理结构的实现，每个存储引擎开发者可以按照自己的意愿来进行开发。 MySQL 数据库的体系结构如下图：</p>
+<p><img src="/images/mysql-architecture.png" alt=""></p>
+<p>需要注意的是，存储引擎是 <strong>基于表的</strong>，而不是数据库。每个存储引擎都有各自的特点，开发站应该根据具体的应用选择适合的存储引擎，以下是一些存储引擎的简单介绍：</p>
+<h4 id="innodb">InnoDB</h4>
+<p>支持事务，行锁，外键，使用 MVCC 获得高并发性，实现了 SQL 的 4 种隔离级别，默认为 REPEATABLE，使用一种被称为 <code>next-key locking</code> 的策略来避免幻读（phantom）现象的产生，聚集索引，按主键顺序，从 MySQL 5.5.8 开始成为 MySQL 默认的存储引擎，众多互联网公司的成功应用已经证明了 InnoDB 存储引擎的高可用性、高性能以及高可扩展性。</p>
+<h4 id="myisam">MyISAM</h4>
+<p>不支持事务，表锁，支持全文索引，在 5.5.8 之前是默认的存储引擎，只缓存索引文件，不缓冲数据文件。</p>
+<h4 id="ndb">NDB</h4>
+<p><strong>集群</strong> 存储引擎，数据全部放在内存中，主键查找速度极快，通过添加 NDB 数据存储节点（Data Node）可以线性地提高数据库性能；有一个问题值得注意，那就是 NDB 存储引擎的连接操作 JOIN 是在 MySQL 数据库层完成的，而不是在存储引擎层完成的。这意味着，复杂的连接操作需要巨大的网络开销，因此关联查询速度很慢。</p>
+<h4 id="memory">Memory</h4>
+<p>数据存放于内存，数据库重启或者发生崩溃，表中的数据都将消失，使用了 <strong>哈希索引</strong>，只支持表锁，并发性能较差；MySQL 使用 Memory 存储引擎作为 <strong>临时表</strong> 来存放查询的中间结果集。</p>
+<h4 id="archive">Archive</h4>
+<p>只支持 INSERT SELECT 操作，支持索引，压缩比例 1：10，非常 <strong>适合存储归档数据</strong>，如日志信息。使用行锁来实现高并发的插入操作，但并不是事务安全的引擎。</p>
+<h4 id="federated">Federated</h4>
+<p>不存放数据，它只是指向一台远程 MySQL 数据库服务器上的表，类似于 SQL Server 的链接服务器和 Oracle 的透明网关，但只支持 MySQL 的数据库表。</p>
+<h4 id="maria">Maria</h4>
+<p>由 MySQL 创始人之一的 Micheal Widenius 开发，可以看做是 MyISAM 的后续版本。特点是支持缓存数据和索引文件，应用了行锁设计，提供了MVCC功能，支持事务和非事务安全的选项，以及更好的 BLOB 字符类型的处理性能。</p>
+<h4 id="mysql-的临时表">MySQL 的临时表</h4>
+<p>MySQL 数据库使用 Memory 存储引擎作为临时表来存放查询的中间结果集。如果中间结果集大于 Memory 存储引擎表的容量设置，又或者中间结果中含有 TEXT 或 BLOB 列类型字段，则 MySQL 数据库会把其转换到 MyISAM 存储引擎表而 <strong>放到磁盘中</strong>。之前提到过 MyISAM 不缓存数据文件，因此这时产生的临时表的性能对于查询会有损失。</p>
+<h3 id="innodb-存储引擎">InnoDB 存储引擎</h3>
+<p>早期的 InnoDB 的版本随着 MySQL 数据库的更新而更新，从 5.1 版本开始，MySQL 允许存储引擎开发商以动态方式加载引擎，官方称 InnoDB Plugin，其各个版本的功能升级如下表：</p>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>老版本 InnoDB</td>
+<td>支持 ACID、行锁设计、MVCC</td>
+</tr>
+<tr>
+<td>InnoDB 1.0.x（MySQL 5.1）</td>
+<td>增加了 compress 和 dynamic 页格式</td>
+</tr>
+<tr>
+<td>InnoDB 1.1.x（MySQL 5.5）</td>
+<td>增加了 Linux AIO、多回滚段</td>
+</tr>
+<tr>
+<td>InnoDB 1.2.x（MySQL 5.6）</td>
+<td>增加了全文索引支持、在线索引添加</td>
+</tr>
+</tbody>
+</table>
+<p>下图简单展示了 InnoDB 存储引擎的体系架构，可以看到 InnoDB 主要由一个大的内存池和多个后台线程组成</p>
+<p><img src="/images/InnoDB-architecture.jpg" alt=""></p>
+<h4 id="缓冲池">缓冲池</h4>
+<p>InnoDB 是 <strong>基于磁盘</strong> 的数据库系统（Disk-base Database），由于 CPU 速度与磁盘速度之间的鸿沟，基于磁盘的数据库系统通常使用缓冲池，通过 <strong>内存的速度</strong> 来弥补磁盘速度较慢对性能的影响。查询时先判断该页是否在缓冲池中，如果在则称该页在缓冲池被命中，直接读取该页，否则读取磁盘上的页；修改时先修改在缓冲池中的页，然后再以一定的频率刷新到磁盘上。为了提高数据库的整体性能，页从缓冲区刷新回磁盘的操作 <strong>并不是在每次页发生更新时触发</strong>，而是通过一种称为 checkpoint 的机制刷新回磁盘。</p>
+<p>可见缓冲池的大小直接影响着数据库的整体性能：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">show</span> variables <span style="color:#66d9ef">like</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">innodb_buffer_pool_size</span><span style="color:#e6db74">&#39;</span>;
+
+Variable_name          <span style="color:#f92672">|</span>Value    <span style="color:#f92672">|</span>
+<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span>
+innodb_buffer_pool_size<span style="color:#f92672">|</span><span style="color:#ae81ff">134217728</span><span style="color:#f92672">|</span>
+</code></pre></div><p>具体来看，缓冲池中缓存的数据页类型有：索引页、数据页、undo 页、插入缓冲、自适应哈希索引、InnoDB 存储的锁信息、数据字典信息等。</p>
+<p><img src="/images/InnoDB-buffer-pool.jpg" alt=""></p>
+<ul>
+<li>LRU</li>
+</ul>
+<p>数据库中的缓冲池是通过 LRU（Lastest Recent Used，最近最少使用）算法来管理的，即最频繁使用的页在 LRU 列表的前端，而最少使用的页在 LRU 列表的尾端。当缓冲池不能存放新读取到的页时，将首先释放 LRU 列表中尾端的页。</p>
+<ul>
+<li>Checkpoint</li>
+</ul>
+<h4 id="后台线程">后台线程</h4>
+<ul>
+<li>Master Thread</li>
+</ul>
+<p>核心的后台线程，主要负责将缓冲池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓冲、UNDO 页的回收等。</p>
+<ul>
+<li>I/O Thread</li>
+</ul>
+<p>异步 I/O 线程来处理写 I/O 请求，以极大地提高数据库的性能。可以通过 <code>show engine innodb status</code> 来观察 InnoDB 中的 IO Thread，默认为 1 个 insert buffer thread，1 个 log thread，4 个 read thread 和 4 个 write thread，可以使用 <code>innodb_read_io_threads</code> 和 <code>innodb_write_io_threads</code> 参数进行设置。</p>
+<p>【缺 IO】</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">show</span> <span style="color:#66d9ef">engine</span> innodb status;
+</code></pre></div><ul>
+<li>Purge Thread</li>
+</ul>
+<p>在事务提交后，<strong>回收已经使用并分配的 undo 页</strong>。在 InnoDB 1.1 版本之前，purge 操作仅在 Master Thread 中完成，1.1 版本开始 purge 操作可以独立到单独的线程中进行，1.2 版本开始支持多个 Purge Thread 来加快 undo 页的回收，以此来减轻 Master Thread 的工作，从而提高 CPU 的使用率以及提升存储引擎的性能。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">show</span> variables <span style="color:#66d9ef">like</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">innodb_purge_threads</span><span style="color:#e6db74">&#39;</span>;
+
+Variable_name       <span style="color:#f92672">|</span>Value<span style="color:#f92672">|</span>
+<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span>
+innodb_purge_threads<span style="color:#f92672">|</span><span style="color:#ae81ff">4</span>    <span style="color:#f92672">|</span>
+</code></pre></div><ul>
+<li>Page Cleaner Thread</li>
+</ul>
+<p>InnoDB 1.2.x 引入的，将 <strong>脏页刷新</strong> 操作放入单独的线程来完成，减轻原 Master Thread 的工作及对于用户查询线程的阻塞， 进一步提高 InnoDB 存储引擎的性能。</p>
+<h3 id="日志文件">日志文件</h3>
+<h3 id="锁">锁</h3>
+<h3 id="事务">事务</h3>
+<h3 id="备份与恢复">备份与恢复</h3>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://nervousorange.github.io/2021/database-innodb/>https://nervousorange.github.io/2021/database-innodb/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://nervousorange.github.io/tags/database/">
+                    #Database</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://nervousorange.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://nervousorange.github.io/2020/advanced-git/" class="prev" rel="prev" title="Git 进阶与 GitHub 协作详解"><i class="iconfont icon-left"></i>&nbsp;Git 进阶与 GitHub 协作详解</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://nervousorange.github.io/">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

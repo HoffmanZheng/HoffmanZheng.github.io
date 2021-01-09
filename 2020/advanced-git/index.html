@@ -10,7 +10,7 @@
   
   
   <link rel="prev" href="https://nervousorange.github.io/2020/database-optimize-sql/" />
-  
+  <link rel="next" href="https://nervousorange.github.io/2021/database-innodb/" />
   <link rel="canonical" href="https://nervousorange.github.io/2020/advanced-git/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -57,7 +57,7 @@
     "datePublished": "2020-12-28 13:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-12-28 13:19:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/advanced-git\/",
-    "wordCount" : "399",
+    "wordCount" : "737",
     "keywords" : [ "tools", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,399 words</span>
+                 <span class="post-word-count">,737 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -205,6 +205,7 @@
 <p>Rebase 文档介绍说的是：基于另外一个分支的尖端，将当前分支的提交 <strong>重演</strong> 一遍（Reapply commits on top of another base tip）。之前讲 commit 的时候说过，commit 对象都是不可变的，rebase 的重演并不是将 A、B、C 移动到 G 上面去，而是 <strong>产生了三个全新的提交</strong> A&rsquo; B&rsquo; C&rsquo;，所以这个时候提交历史被改变了。</p>
 <p><img src="/images/git-rebase.png" alt=""></p>
 <p>每次重演的时候，需要依次解决遇到的所有的冲突，痛苦的是 ，同一个文件可能需要 <strong>反复的去解决冲突</strong> 。Rebase 的优点是分支历史是一条直线，清楚直观；对 bisect 友好；缺点是较为复杂，劝退新手；如果冲突可能要重复解决；会⼲扰别⼈（<strong>和别⼈共享的分⽀永远不要force push</strong>）</p>
+<p><img src="/images/git-rebase-practice.png" alt=""></p>
 <ul>
 <li>每次 rebase 之后都需要使用 force push  才能更新远程分支（因为分支分叉了），所以 <strong>只能在自己的分支上 rebase 共用分支</strong>（rebase master）。</li>
 <li>在自己的分支 my-feature 上 rebase master 合并之后，也是无法 push 到 origin 的，因为和 origin/my-feature 分叉了，但是可以 force push，因为是自己的分支，不会影响到别人。</li>
@@ -213,9 +214,12 @@
 <p>因此 rebase 的使用场景有：定时将你的分⽀和主⼲进⾏同步。分支开发，时间长久，要合并时发现冲突太多了，因此需要定期同步。这个场景使用 merge 的话，提交的历史记录就会杂乱不堪， rebase 保持提交历史是一根直线的状态。</p>
 <h4 id="git-merge---squash">git merge &ndash;squash</h4>
 <p>将当前分支的所有提交压扁成一个再提交到共用分支上去，优点是把所有变更合在⼀起，更容易阅读；bisect友好；想要回滚或者 revert ⾮常⽅便；缺点是丢失了所有的历史记录。</p>
+<p><img src="/images/git-merge-squash.png" alt=""></p>
+<p>然后在公共的分支上产生一个压扁后的提交记录：</p>
+<p><img src="/images/git-merge-squash-result.png" alt=""></p>
 <h3 id="回退与重放">回退与重放</h3>
 <h4 id="checkout">checkout</h4>
-<p>Checkout 可以将代码 <strong>复原到任何一个仓库状态</strong> 上，且不修改仓库中的任何信息。在使用 tag 标签切换代码版本后，可能会提示版本 v5.0 不在任何一个分支上，即当前在脱离 HEAD 的状态，所做的提交都会被遗弃，需要按照提示创建一个新的分支，才能保留创建的提交。</p>
+<p>Checkout 可以将代码 <strong>复原到任何一个仓库状态</strong> 上，且不修改仓库中的任何信息。在使用 tag 标签切换代码版本后，可能会提示版本 v5.0 不在任何一个分支上，即当前在 <strong>脱离 HEAD</strong> 的状态，所做的提交都会被遗弃，需要按照提示创建一个新的分支，才能保留创建的提交。</p>
 <p><img src="/images/git-checkout.png" alt=""></p>
 <p>所以 checkout 最重要的作用就是查看代码的历史版本，此外还可以使用 <code>git checkout -- &lt;file&gt;</code> 来丢弃工作区中的修改。</p>
 <p><img src="/images/git-checkout--.png" alt=""></p>
@@ -248,7 +252,78 @@
 <li>切换提交历史后， <code>git bisect good/bad/skip</code></li>
 <li><code>git bisect run ./run.sh</code>  使用脚本实现自动化 bisect</li>
 </ol>
-<h1 id="github-协作详解">Github 协作详解</h1>
+<h4 id="bisect-学习案例">bisect 学习案例</h4>
+<p>使用 git bisect 在 <a href="https://github.com/apache/maven">Maven</a> 找出在 3.6.0 和 3.6.1 版本之间导致 <a href="https://issues.apache.org/jira/browse/MNG-6700">MNG-6700</a> 的提交记录，可以使用 <a href="https://github.com/hcsp/maven-issue-reproduction">MNG-6700 BUG Reproduction</a> 复现这个问题。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">/** clone maven 项目到本地，切换版本，然后打包，解压包后就可以找到 mvn */
+git clone https://github.com/apache/maven.git
+git checkout maven-3.6.0
+mvn clean package -Dmaven.test.skip<span style="color:#f92672">=</span>true -Drat.skip<span style="color:#f92672">=</span>true
+unzip apache-maven/target/apache-maven-3.6.0-bin.zip -d .
+
+/** 执行另外一个目录下的 maven 构建，使用 -f 参数，发现 3.6.0 版本没有出现问题 */
+apache-maven-3.6.0/bin/mvn -f ../maven-issue-reproduction/pom.xml compile
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> --- maven-compiler-plugin:3.1:compile <span style="color:#f92672">(</span>default-compile<span style="color:#f92672">)</span> @ maven-issue-reproduction ---
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Changes detected - recompiling the module!
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Compiling <span style="color:#ae81ff">1</span> source file to C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\z</span>ch69<span style="color:#ae81ff">\r</span>ecipes<span style="color:#ae81ff">\t</span>emp<span style="color:#ae81ff">\m</span>aven<span style="color:#ae81ff">\.</span>.<span style="color:#ae81ff">\m</span>aven-issue-reproduction<span style="color:#ae81ff">\t</span>arget<span style="color:#ae81ff">\c</span>lasses
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> BUILD SUCCESS
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Total time:  16.961 s
+
+
+/** 使用 3.6.1 版本 compile 出错，复现问题 */
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> BUILD FAILURE
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Total time:  01:01 min
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Finished at: 2021-01-09T11:33:01+08:00
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
+<span style="color:#f92672">[</span>ERROR<span style="color:#f92672">]</span> Failed to execute goal org.jetbrains.kotlin:kotlin-maven-plugin:1.3.0:compile <span style="color:#f92672">(</span>compile<span style="color:#f92672">)</span> on project maven-issue-reproduction: Compilation failure: Compilation failure:
+<span style="color:#f92672">[</span>ERROR<span style="color:#f92672">]</span> C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\z</span>ch69<span style="color:#ae81ff">\r</span>ecipes<span style="color:#ae81ff">\t</span>emp<span style="color:#ae81ff">\m</span>aven-issue-reproduction<span style="color:#ae81ff">\c</span>ommon<span style="color:#ae81ff">\O</span>s.kt:<span style="color:#f92672">[</span>3,12<span style="color:#f92672">]</span> Redeclaration: Os
+<span style="color:#f92672">[</span>ERROR<span style="color:#f92672">]</span> C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\z</span>ch69<span style="color:#ae81ff">\r</span>ecipes<span style="color:#ae81ff">\t</span>emp<span style="color:#ae81ff">\m</span>aven<span style="color:#ae81ff">\.</span>.<span style="color:#ae81ff">\m</span>aven-issue-reproduction<span style="color:#ae81ff">\.</span><span style="color:#ae81ff">\c</span>ommon<span style="color:#ae81ff">\O</span>s.kt:<span style="color:#f92672">[</span>3,12<span style="color:#f92672">]</span> Redeclaration: Os
+
+/** 标记 3.6.1 为有问题的版本，开始 bisect */
+git bisect bad
+You need to start by <span style="color:#e6db74">&#34;git bisect start&#34;</span>
+Do you want me to <span style="color:#66d9ef">do</span> it <span style="color:#66d9ef">for</span> you <span style="color:#f92672">[</span>Y/n<span style="color:#f92672">]</span>? Y
+
+/** 标记 3.6.0 为没有问题的版本后，bisect 将仓库状态自动切换到了提交历史 2928dc6b6 */
+zch69@DESKTOP-BIRCN7U MINGW64 ~/recipes/temp/maven <span style="color:#f92672">(</span><span style="color:#f92672">(</span>maven-3.6.1<span style="color:#f92672">)</span>|BISECTING<span style="color:#f92672">)</span>
+$ git checkout maven-3.6.0
+$ git bisect good
+Bisecting: <span style="color:#ae81ff">27</span> revisions left to test after this <span style="color:#f92672">(</span>roughly <span style="color:#ae81ff">5</span> steps<span style="color:#f92672">)</span>
+<span style="color:#f92672">[</span>2928dc6b68660cc5ac4022b0bfbc84d51d6905e4<span style="color:#f92672">]</span> refactoring: extracted initParent<span style="color:#f92672">(</span><span style="color:#f92672">)</span> method
+
+zch69@DESKTOP-BIRCN7U MINGW64 ~/recipes/temp/maven <span style="color:#f92672">(</span><span style="color:#f92672">(</span>2928dc6b6...<span style="color:#f92672">)</span>|BISECTING<span style="color:#f92672">)</span>
+$ gst
+HEAD detached at 2928dc6b6
+You are currently bisecting, started from branch <span style="color:#e6db74">&#39;d66c9c0b3&#39;</span>.
+  <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git bisect reset&#34;</span> to get back to the original branch<span style="color:#f92672">)</span>
+</code></pre></div><p>之后手动重复以上过程就可以找到导致这个问题的提交记录，但完全可以用脚本来 <strong>自动化</strong> 这个过程：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#!/bin/sh
+</span><span style="color:#75715e"></span>
+VERSION<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>mvn help:evaluate -Dexpression<span style="color:#f92672">=</span>project.version -q -DforceStdout<span style="color:#66d9ef">)</span> 
+rm -rf apache-maven-*
+mvn clean package -Dmaven.test.skip<span style="color:#f92672">=</span>true -Drat.skip<span style="color:#f92672">=</span>true
+unzip apache-maven/target/apache-maven-$VERSION-bin.zip -d .
+apache-maven-$VERSION/bin/mvn -f ../maven-issue-reproduction/pom.xml compile
+</code></pre></div><p>运行 <code>git bisect run ./run.sh</code> 后就可以等着最后的结果了：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">8b7055fe3ff3696b821409a6904ff4d69aa3ff6b is the first bad commit
+commit 8b7055fe3ff3696b821409a6904ff4d69aa3ff6b
+Author: Mickael Istria &lt;mistria@redhat.com&gt;
+Date:   Thu Nov <span style="color:#ae81ff">29</span> 22:21:29 <span style="color:#ae81ff">2018</span> +0100
+
+    <span style="color:#f92672">[</span>MNG-6533<span style="color:#f92672">]</span> Prefer passing the interim project in ProjectBuildingResult
+
+    Initialize the interim project with <span style="color:#e6db74">&#34;simple&#34;</span> items <span style="color:#f92672">(</span>ie <span style="color:#66d9ef">do</span> not build
+    not reference parent <span style="color:#66d9ef">if</span> it<span style="color:#960050;background-color:#1e0010">&#39;</span>s not yet in the projectIndex<span style="color:#f92672">)</span> and returns
+    it when installation fails further.
+    This give a partial validation of the file, pretty convenient in IDEs.
+
+ .../maven/project/DefaultProjectBuilder.java       | <span style="color:#ae81ff">46</span> ++++++++++++++++------
+ <span style="color:#ae81ff">1</span> file changed, <span style="color:#ae81ff">33</span> insertions<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">13</span> deletions<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
+bisect run success
+</code></pre></div><h1 id="github-协作详解">Github 协作详解</h1>
 
     </div>
 
@@ -294,6 +369,8 @@
         
         <a href="https://nervousorange.github.io/2020/database-optimize-sql/" class="prev" rel="prev" title="Database：高性能 MySQL - 优化查询"><i class="iconfont icon-left"></i>&nbsp;Database：高性能 MySQL - 优化查询</a>
          
+        
+        <a href="https://nervousorange.github.io/2021/database-innodb/" class="next" rel="next" title="Database：InnoDB 存储引擎">Database：InnoDB 存储引擎&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
