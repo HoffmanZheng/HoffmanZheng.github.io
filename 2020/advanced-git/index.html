@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Git 进阶与 GitHub 协作详解",
     "headline" : "Git 进阶与 GitHub 协作详解",
-    "description" : "在 Git 与 GitHub 使用指北 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 Git Reference Manual 介绍一些 Git 底层原理和高阶操作，以及 GitHub 的协作流程。\nGit 进阶 仓库、提交、分支的本质 Repository Git 仓库的本质其实就是一个可以 追溯所有历史 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 commitID， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 \/ 副本 \/ 代码快照，所以仓库的本质即是所有这些快照的集合。\n可以通过 git log 来查看仓库历史上的状态，然后使用 git checkout \x26lt;commitID\x26gt; 来使仓库恢复到某个状态。在 GitHub 网站上可以使用 https:\/\/github.com\/\x26lt;userName\x26gt;\/\x26lt;repositoryName\x26gt;\/tree\/\x26lt;commitID\/tag\/branch\x26gt; 看到这个仓库在某个时刻的状态。\n以下几种方式都可以标识仓库的状态：\n 提交的 commitID，是一个十六进制字符串的 SHA-1 分支名 branch，指向分支最新一次的提交 HEAD，指向当前分支的头 标签 tag，是针对某个仓库状态打的标签，git tag v1.0   相关阅读：GeeksforGeeks：What is a GIT Repository?\n Commit commit 提交是指将仓库从一个状态转移到另外一个状态时发生的变化，它产生的 commit 对象包括：",
+    "description" : "在 Git 与 GitHub 使用指北 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 Git Reference Manual 介绍一些 Git 底层原理和高阶操作，以及在 GitHub 协作的流程。\nGit 进阶 仓库、提交、分支的本质 Repository Git 仓库的本质其实就是一个可以 追溯所有历史 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 commitID， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 \/ 副本 \/ 代码快照，所以仓库的本质即是所有这些快照的集合。\n可以通过 git log 来查看仓库历史上的状态，然后使用 git checkout \x26lt;commitID\x26gt; 来使仓库恢复到某个状态。在 GitHub 网站上可以使用 https:\/\/github.com\/\x26lt;userName\x26gt;\/\x26lt;repositoryName\x26gt;\/tree\/\x26lt;commitID\/tag\/branch\x26gt; 看到这个仓库在某个时刻的状态。\n以下几种方式都可以标识仓库的状态：\n 提交的 commitID，是一个十六进制字符串的 SHA-1 分支名 branch，指向分支最新一次的提交 HEAD，指向当前分支的头 标签 tag，是针对某个仓库状态打的标签，git tag v1.0   相关阅读：GeeksforGeeks：What is a GIT Repository?\n Commit commit 提交是指将仓库从一个状态转移到另外一个状态时发生的变化，它产生的 commit 对象包括：",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2020-12-28 13:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2020-12-28 13:19:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/advanced-git\/",
-    "wordCount" : "737",
+    "wordCount" : "777",
     "keywords" : [ "tools", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,737 words</span>
+                 <span class="post-word-count">,777 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -155,7 +155,7 @@
           
           
 
-          <p>在 <a href="https://nervousorange.github.io/2019/git/">Git 与 GitHub 使用指北</a> 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 <a href="https://git-scm.com/docs">Git Reference Manual</a> 介绍一些 Git 底层原理和高阶操作，以及 GitHub 的协作流程。</p>
+          <p>在 <a href="https://nervousorange.github.io/2019/git/">Git 与 GitHub 使用指北</a> 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 <a href="https://git-scm.com/docs">Git Reference Manual</a> 介绍一些 Git 底层原理和高阶操作，以及在 GitHub 协作的流程。</p>
 <h1 id="git-进阶">Git 进阶</h1>
 <h3 id="仓库提交分支的本质">仓库、提交、分支的本质</h3>
 <h4 id="repository">Repository</h4>
@@ -324,6 +324,16 @@ Date:   Thu Nov <span style="color:#ae81ff">29</span> 22:21:29 <span style="colo
  <span style="color:#ae81ff">1</span> file changed, <span style="color:#ae81ff">33</span> insertions<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">13</span> deletions<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
 bisect run success
 </code></pre></div><h1 id="github-协作详解">Github 协作详解</h1>
+<p>GitHub 已经逐渐成为软件行业的一个事实标准，几乎所有的开源项目都可以在 GitHub 上找到代码，它已经不只是一个网站、一个平台了，可以说它已经是软件行业的图腾或者说是宗教了。</p>
+<h3 id="github-协作方式">GitHub 协作方式</h3>
+<p>GitHub 的出现，一改之前项目协作的困难，使得任何人发现了 BUG 都可以来帮助修改。但不能把主分支的 <strong>写权限</strong> 随便给外面的人，以免用户滥用把仓库搞乱。所以就出现了 <code>fork</code> 方式的协同合作：</p>
+<p><img src="/images/github-fork-process.png" alt=""></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">// fork 后的仓库并不会自动地随着上游仓库而更新，需要手动 sync a fork
+git remote add upstream https://github.com/apache/maven.git   // 添加上游仓库
+git fetch upstream  // 获取上游仓库的提交历史
+git merge upstream/master   // 获取更新
+</code></pre></div><h3 id="github-社区">GitHub 社区</h3>
+<p>TODO</p>
 
     </div>
 

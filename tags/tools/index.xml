@@ -17,7 +17,7 @@
       <pubDate>Mon, 28 Dec 2020 13:19:47 +0100</pubDate>
       
       <guid>https://nervousorange.github.io/2020/advanced-git/</guid>
-      <description>在 Git 与 GitHub 使用指北 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 Git Reference Manual 介绍一些 Git 底层原理和高阶操作，以及 GitHub 的协作流程。
+      <description>在 Git 与 GitHub 使用指北 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 Git Reference Manual 介绍一些 Git 底层原理和高阶操作，以及在 GitHub 协作的流程。
 Git 进阶 仓库、提交、分支的本质 Repository Git 仓库的本质其实就是一个可以 追溯所有历史 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 commitID， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 / 副本 / 代码快照，所以仓库的本质即是所有这些快照的集合。
 可以通过 git log 来查看仓库历史上的状态，然后使用 git checkout &amp;lt;commitID&amp;gt; 来使仓库恢复到某个状态。在 GitHub 网站上可以使用 https://github.com/&amp;lt;userName&amp;gt;/&amp;lt;repositoryName&amp;gt;/tree/&amp;lt;commitID/tag/branch&amp;gt; 看到这个仓库在某个时刻的状态。
 以下几种方式都可以标识仓库的状态：

@@ -57,7 +57,7 @@
     "datePublished": "2021-01-07 13:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2021-01-07 13:19:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2021\/database-innodb\/",
-    "wordCount" : "1655",
+    "wordCount" : "1843",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,1655 words</span>
+                 <span class="post-word-count">,1843 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -404,8 +404,6 @@ innodb_purge_threads<span style="color:#f92672">|</span><span style="color:#ae81
 <li>Page Cleaner Thread</li>
 </ul>
 <p>InnoDB 1.2.x 引入的，将 <strong>脏页刷新</strong> 操作放入单独的线程来完成，减轻原 Master Thread 的工作及对于用户查询线程的阻塞， 进一步提高 InnoDB 存储引擎的性能。</p>
-<h4 id="innodb-关键特性">InnoDB 关键特性</h4>
-<p>【TODO】</p>
 <h3 id="文件">文件</h3>
 <h4 id="错误日志与慢查询日志">错误日志与慢查询日志</h4>
 <ul>
@@ -596,7 +594,141 @@ innodb_data_file_path <span style="color:#f92672">=</span> /db/ibdata1:2000M;/dr
 <p>为了保证事务 <strong>ACID 的持久性</strong>，必须将 <code>innodb_flush_log_at_trx_commit</code> 设置为 1，也就是每当有事务提交时就必须确保事务都已经写入重做日志文件。那么当数据库因为意外发生宕机时，可以通过重做日志文件恢复，并保证可以恢复已经提交的事务。</p>
 <p>与二进制日志文件的区别：二进制日志是在事务提交前就记录所有与 MySQL 数据库（包括其他存储引擎的）有关的日志记录，记录的都是关于一个事务的具体操作内容，是逻辑日志；而重做日志是在事务进行的过程中也在不断记录每个页更改的物理情况。</p>
 <h3 id="锁">锁</h3>
+<p>锁是数据库系统区别于文件系统的一个关键特性，它对数据库的并发访问提供了支持，并确保了每个用户能 <strong>以一致的方式读取和修改数据</strong>。</p>
+<p>不同的数据库和存储引擎在锁的实现上不尽相同，比如 MyISAM 的 <strong>表锁</strong> 设计在并发插入的时候性能就不尽人意，SQL Server 2005 版本之前的 <strong>页锁</strong> 一定程度上提高了并发性能，但对热点数据页的并发问题仍无能为力，到 2005 版本 SQL Server 开始支持乐观并发和悲观并发，在乐观并发下开始支持行级锁。在 SQL Server 中锁是一种稀有的资源，锁越多开销就越大，因此它会有 <strong>锁升级</strong>，如果行级锁升级到表锁，并发性能就又回到了从前。</p>
+<p>InnoDB 存储引擎的锁实现和 Oracle 数据库非常类似，提供一致性的非锁定读、行级锁支持。行级锁 <strong>没有额外的开销</strong>，不需要锁升级，可以同时得到并发性和一致性。</p>
+<p>除了共享锁 S Lock 和排他锁 X Lock 外，InnoDB 还支持 <strong>多粒度锁定和意向锁</strong>，如果需要对页上的记录上 X 锁，需要先对数据库、表、页上意向锁 IX，若其中任何一个部分等待，那么该操作需要等待粗粒度锁的完成。意向锁与行级锁的兼容性如下表所示：</p>
+<p><img src="/images/innodb-lock-granual.jpg" alt=""></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>IS</th>
+<th>IX</th>
+<th>S</th>
+<th>X</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IS</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>IX</td>
+<td>√</td>
+<td>√</td>
+<td>不兼容</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>S</td>
+<td>√</td>
+<td>不兼容</td>
+<td>√</td>
+<td>不兼容</td>
+</tr>
+<tr>
+<td>X</td>
+<td>不兼容</td>
+<td>不兼容</td>
+<td>不兼容</td>
+<td>不兼容</td>
+</tr>
+</tbody>
+</table>
+<p>InnoDB 支持意向锁设计比较简练，其意向锁即为 <strong>表级别</strong> 的锁，因此意向锁其实不会阻塞除全表扫以外的任何请求。</p>
+<h4 id="一致性非锁定读">一致性非锁定读</h4>
+<p>InnoDB 存储引擎在读取正在执行 DELETE 或 UPDATE 操作的行时，不会等待行上 X 锁的释放，而是去读取行的一个 <strong>快照</strong> 数据。该实现通过事务中回滚数据用的 undo 段来完成，因此快照数据本身没有额外的开销。读取快照数据也不需要上锁，因为没有事务需要对历史的数据进行修改操作。</p>
+<p><img src="/images/consistent-nonlocking-read.jpg" alt=""></p>
+<p>非锁定读的机制让读取不会占用和等待表上的锁，极大地 <strong>提高了数据库的并发性</strong>。每行记录可能有不止一个历史版本，由此带来的并发控制称为多版本并发控制 MVCC。InnoDB 在 RC、RR 隔离级别下使用非锁定的一致性读，但采用了不同的读取方式。在 RC 下总是读取被锁定行的最新一份快照数据，而在 RR 下总是读取事务开始时的行数据版本。</p>
+<p>需要特别注意的是，RC 的非锁定读 <strong>违反</strong> 了事务 ACID 中的 I 特性，如下表：</p>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>会话 A</th>
+<th>会话 B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>BEGIN</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>SELECT * FROM parent WHERE id = 1;</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td>BEGIN</td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+<td>UPDATE parent SET id = 3 WHERE id = 1;</td>
+</tr>
+<tr>
+<td>5</td>
+<td>SELECT * FROM parent WHERE id = 1;（能读到）</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td></td>
+<td>COMMIT;</td>
+</tr>
+<tr>
+<td>7</td>
+<td>SELECT * FROM parent WHERE id = 1;（读不到）</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>COMMIT</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h4 id="一致性锁定读">一致性锁定读</h4>
+<p>虽然在默认的 RR 模式下，InnoDB 的 SELECT 操作使用一致性非锁定读，但在某些情况下用户需要显式地对数据库读取操作进行加锁以保证数据逻辑的一致性，InnoDB 支持两种锁定读操作：</p>
+<table>
+<thead>
+<tr>
+<th>锁定读操作</th>
+<th>锁类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SELECT &hellip; FOR UPDATE</td>
+<td>X 锁</td>
+</tr>
+<tr>
+<td>SELECT &hellip; LOCK IN SHARE MODE</td>
+<td>S 锁</td>
+</tr>
+</tbody>
+</table>
+<p>锁定读的锁会在事务提交后释放，因此在使用上述两句 SELECT 锁定语句时，务必加上 BEGIN，<code>START TRANSACTION</code> 或者 <code>SET AUTOCOMMIT=0</code></p>
+<h4 id="自增长与锁">自增长与锁</h4>
+<h4 id="锁的算法">锁的算法</h4>
+<h4 id="锁问题">锁问题</h4>
+<h4 id="阻塞">阻塞</h4>
+<h4 id="死锁">死锁</h4>
 <h3 id="事务">事务</h3>
+<h4 id="redo">Redo</h4>
+<h4 id="undo">Undo</h4>
+<h4 id="group-commit">Group Commit</h4>
+<h4 id="事务的隔离级别">事务的隔离级别</h4>
+<h4 id="不好的事务习惯">不好的事务习惯</h4>
 <h3 id="备份与恢复">备份与恢复</h3>
 
     </div>
