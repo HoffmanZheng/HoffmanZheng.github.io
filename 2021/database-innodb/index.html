@@ -57,7 +57,7 @@
     "datePublished": "2021-01-07 13:19:47 \x2b0100 \x2b0100",
     "dateModified" : "2021-01-07 13:19:47 \x2b0100 \x2b0100",
     "url" : "https:\/\/nervousorange.github.io\/2021\/database-innodb\/",
-    "wordCount" : "1843",
+    "wordCount" : "2152",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,1843 words</span>
+                 <span class="post-word-count">,2152 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -718,9 +718,117 @@ innodb_data_file_path <span style="color:#f92672">=</span> /db/ibdata1:2000M;/dr
 </tbody>
 </table>
 <p>锁定读的锁会在事务提交后释放，因此在使用上述两句 SELECT 锁定语句时，务必加上 BEGIN，<code>START TRANSACTION</code> 或者 <code>SET AUTOCOMMIT=0</code></p>
-<h4 id="自增长与锁">自增长与锁</h4>
+<h4 id="自增长和外键中的锁">自增长和外键中的锁</h4>
+<p>自增长是很多 DBA 或开发人员首选的主键方式，InnoDB 对每个含有自增长的表都有一个自增长计数器，在进行插入操作时会依据这个自增长的计数器加 1 赋予自增长列，其实现使用了 <code>AUTO-INC Locking</code>，这种锁不是在一个事务完成后释放，而是在 <strong>完成对自增长值插入的 SQL 语句后立即释放</strong>，提高了插入的性能。</p>
+<p>虽然 AUTO-INC Locking 一定程度上提高了并发插入的效率，但对于大数量的插入，仍需等待前一个插入的完成。从 MySQL 5.1.22 版本开始，InnoDB 提供了一种 <strong>轻量级互斥量</strong> 的自增长实现方式，提供了一个参数 <code>innodb_autoinc_lock_mode</code> 来控制自增长的模式，大大提高了自增长值插入的性能，其有效值如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>innodb_autoinc_lock_mode</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>MySQL 5.1.22 版本之前自增长的实现方式，通过表锁的 AUTO-INC-Locking 方式，因为有了新的自增长实现方式，0 这个选项不应该是新版用户的首选项</td>
+</tr>
+<tr>
+<td>1（默认）</td>
+<td>对于能在插入前就确定插入行数的 insert 语句，使用互斥量 <code>mutex</code> 对内存中的计数器进行累加的操作；对于不能在插入前确定插入行数的语句使用传统表锁的 AUTO-INC Locking 方式；</td>
+</tr>
+<tr>
+<td>2</td>
+<td>对所有的插入语句都通过互斥量来实现自增长，这是性能最高的方式，然而在并发插入时会导致 <strong>自增长的值可能不是连续的</strong>，且使用 <code>statement-base replication</code> 会出现主从数据不一致，必须使用 <code>row-base replication</code></td>
+</tr>
+</tbody>
+</table>
+<p>MyISAM 自增长的实现和 InnoDB 不同，其采用表锁设计，自增长不用考虑并发插入的问题。如果在 master 上使用 InnoDB 存储引擎，slave 上用 MyISAM 存储引擎的的 replication 架构下，需要考虑这种情况。</p>
+<p>外键用户引用完整性的约束检查，对于外键的插入或更新，首先需要查询父表中的记录，这时 <strong>不会</strong> 采用一致性非锁定读的方式，而是使用 <code>SELECT ... LOCK IN SHARE MODE</code> 的方式，主动给父表加一个 S 锁。如果这时父表上已经加了 X 锁，字表上的操作会被阻塞。如下表所示，如果访问父表时使用的是一致性非锁定读，这时 Session B 会读到父表有 id = 3 的记录，可以进行插入操作，但是如果会话 A 对事务提交了，则父表中就不存在 id = 3 的记录，这时数据在父、字表就会存在不一致的情况。</p>
+<table>
+<thead>
+<tr>
+<th>时间</th>
+<th>会话 A</th>
+<th>会话 B</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>BEGIN</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>DELETE FROM parent WHERE id = 3;</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td>BEGIN</td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+<td>INSERT INTO child SELECT 2,3 <!-- raw HTML omitted --># 第二列是外键，执行该句时被阻塞</td>
+</tr>
+</tbody>
+</table>
 <h4 id="锁的算法">锁的算法</h4>
+<p>InnoDB 一共有三种行锁：</p>
+<table>
+<thead>
+<tr>
+<th>行锁</th>
+<th>锁定范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Record Lock</td>
+<td>单个行记录上的锁</td>
+</tr>
+<tr>
+<td>Gap Lock</td>
+<td>间隙锁，锁定一个范围，但不包含记录本身</td>
+</tr>
+<tr>
+<td>Next-Key Lock</td>
+<td>Gap + Record Lock，锁定一个范围，并且锁定记录本身</td>
+</tr>
+</tbody>
+</table>
+<p>Record Lock 总是会去 <strong>锁住索引记录</strong>，如果没有索引，则使用隐式的主键进行锁定。Next-Key Lock 设计的目的是为了解决幻读，然而当查询的索引含有唯一属性时（查询条件需包含所有的唯一索引列，不然仍是 range 类型查询，依然使用 Next-Key Lock），InnoDB 会对 Next-Key Lock 进行优化，将其 <strong>降级为 Record Lock</strong>，即仅锁住索引本身，而不是范围，提高应用的并发性。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">CREATE</span> <span style="color:#66d9ef">TABLE</span> <span style="color:#a6e22e">z</span> (a <span style="color:#66d9ef">INT</span>, b <span style="color:#66d9ef">INT</span>, <span style="color:#66d9ef">PRIMARY</span> <span style="color:#66d9ef">KEY</span>(a), <span style="color:#66d9ef">KEY</span>(b));
+
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> z <span style="color:#66d9ef">SELECT</span> <span style="color:#ae81ff">1</span>,<span style="color:#ae81ff">1</span>;
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> z <span style="color:#66d9ef">SELECT</span> <span style="color:#ae81ff">3</span>,<span style="color:#ae81ff">1</span>;
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> z <span style="color:#66d9ef">SELECT</span> <span style="color:#ae81ff">5</span>,<span style="color:#ae81ff">3</span>;
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> z <span style="color:#66d9ef">SELECT</span> <span style="color:#ae81ff">7</span>,<span style="color:#ae81ff">6</span>;
+<span style="color:#66d9ef">INSERT</span> <span style="color:#66d9ef">INTO</span> z <span style="color:#66d9ef">SELECT</span> <span style="color:#ae81ff">10</span>,<span style="color:#ae81ff">8</span>;
+</code></pre></div><p>若会话 A 执行 <code>SELECT * FROM z WHERE b=3 FOR UPDATE</code>，其通过索引列 b 进行查询，因此使用 Next-Key Locking 技术加锁，对两个索引分别进行锁定。对于聚集索引仅对列 a=5 的索引加上 Record Lock，对辅助索引加上 Next-Key Lock（1, 3），InnoDB 还会对辅助索引的下一个键值加上 Gap Lock，即还有一个范围为（3, 6）的锁。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">SELECT * FROM z WHERE a <span style="color:#f92672">=</span> <span style="color:#ae81ff">5</span> LOCK IN SHARE MODE;    // a<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> 聚集索引锁占用，阻塞
+INSERT INTO z SELECT 4,2;   // b<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> 在辅助索引的锁范围内，阻塞
+INSERT INTO z SELECT 6,5;   // b<span style="color:#f92672">=</span><span style="color:#ae81ff">5</span> 在辅助索引的锁范围内，阻塞
+
+// 下面的 SQL 不会被阻塞，可以立即执行
+INSERT INTO z SELECT 8,6;
+INSERT INTO z SELECT 2,0;
+INSERT INTO z SELECT 6,7;
+</code></pre></div><p>可以看到，Gap Lock 的作用是为了阻止多个事务将记录插入到同一个范围内，而这会导致幻读 <code>Phantom Problem</code> 问题的产生。例如在上面的例子中，会话 A 已经锁定了 b = 3 的记录，若此时没有 Gap Lock 锁定（3, 6），那么用户可以插入索引列 b = 3 的记录，这会导致会话 A 中的用户再次执行同样查询时会返回不同的记录，导致幻读问题的产生。</p>
 <h4 id="锁问题">锁问题</h4>
+<ul>
+<li>脏读</li>
+<li>幻读 Phantom Problem</li>
+</ul>
+<p>幻读指在同一事务下，连续执行两次同样的 SQL 语句，第二次可能会返回之前不存在的行。不同于 Oracle 数据库需要在 SERIALIZABLE 的事务隔离级别下才能解决幻读问题，InnoDB 在 RR 下就通过 Next-Key Lock 的算法避免了幻读。</p>
+<p>如果将事务隔离级别设置为 RC，将会关闭使用 Gap Lock，这样会破坏事务的隔离性，并且造成 replication <strong>主从数据的不一致</strong> 。此外，RC 的性能也不会优于默认的 RR。</p>
+<ul>
+<li>不可重复读</li>
+<li>丢失更新</li>
+</ul>
 <h4 id="阻塞">阻塞</h4>
 <h4 id="死锁">死锁</h4>
 <h3 id="事务">事务</h3>
