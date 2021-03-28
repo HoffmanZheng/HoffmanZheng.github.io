@@ -54,8 +54,8 @@
     "accountablePerson" : "Chenghao Zheng",
     "copyrightHolder" : "Chenghao Zheng",
     "copyrightYear" : "2020",
-    "datePublished": "2020-03-04 13:19:47 \x2b0100 \x2b0100",
-    "dateModified" : "2020-03-04 13:19:47 \x2b0100 \x2b0100",
+    "datePublished": "2020-03-04 13:19:47 \u002b0100 \u002b0100",
+    "dateModified" : "2020-03-04 13:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/database-mysql\/",
     "wordCount" : "508",
     "keywords" : [ "Database", "人间一场大梦"]
@@ -273,26 +273,26 @@
 <table>
 <thead>
 <tr>
-<th align="center">问题</th>
-<th align="left">描述</th>
+<th style="text-align:center">问题</th>
+<th style="text-align:left">描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center">脏读</td>
-<td align="left">一个事务 A 读取了另一个未提交的事务 B 的数据，但是事务 A 提交之前，事务 B 又回滚了，导致事务 A 刚刚读到的就是一个脏数据（RC 隔离级别可解决）。</td>
+<td style="text-align:center">脏读</td>
+<td style="text-align:left">一个事务 A 读取了另一个未提交的事务 B 的数据，但是事务 A 提交之前，事务 B 又回滚了，导致事务 A 刚刚读到的就是一个脏数据（RC 隔离级别可解决）。</td>
 </tr>
 <tr>
-<td align="center">不可重复读</td>
-<td align="left">同一个事务两次查询同一行记录，得到的结果不一样。因为另一个事务对该行记录进行了修改操作（行排它锁可解决）。</td>
+<td style="text-align:center">不可重复读</td>
+<td style="text-align:left">同一个事务两次查询同一行记录，得到的结果不一样。因为另一个事务对该行记录进行了修改操作（行排它锁可解决）。</td>
 </tr>
 <tr>
-<td align="center">幻读</td>
-<td align="left">同一个事务两次查询某一范围，得到的记录数不一样，因为另一个事务在这个范围内进行了增加或删除操作（临键锁可解决）。</td>
+<td style="text-align:center">幻读</td>
+<td style="text-align:left">同一个事务两次查询某一范围，得到的记录数不一样，因为另一个事务在这个范围内进行了增加或删除操作（临键锁可解决）。</td>
 </tr>
 <tr>
-<td align="center">丢失更新</td>
-<td align="left">两个事务同时修改同一行记录，事务 A 的修改被后面的事务 B 覆盖了（需要自己加锁来解决）。</td>
+<td style="text-align:center">丢失更新</td>
+<td style="text-align:left">两个事务同时修改同一行记录，事务 A 的修改被后面的事务 B 覆盖了（需要自己加锁来解决）。</td>
 </tr>
 </tbody>
 </table>

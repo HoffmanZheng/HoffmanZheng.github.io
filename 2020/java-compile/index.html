@@ -54,8 +54,8 @@
     "accountablePerson" : "Chenghao Zheng",
     "copyrightHolder" : "Chenghao Zheng",
     "copyrightYear" : "2020",
-    "datePublished": "2020-09-05 09:19:47 \x2b0100 \x2b0100",
-    "dateModified" : "2020-09-05 09:19:47 \x2b0100 \x2b0100",
+    "datePublished": "2020-09-05 09:19:47 \u002b0100 \u002b0100",
+    "dateModified" : "2020-09-05 09:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/java-compile\/",
     "wordCount" : "1057",
     "keywords" : [ "Java", "人间一场大梦"]
@@ -191,84 +191,84 @@
 <p>从 <a href="https://injdk.cn">Java I tell you-爪哇我话你知</a> 上选择 AdoptOpenJDK 下载后，即可得到含 sun 包源码的 OpenJDK，词法相关的类大多在 <code>com.sun.tools.javac.parser</code> 包下，类结构如下图所示。两个由 Factory 生成的实现类 Scanner 和 JavacParser 负责整个词法分析的过程控制。<code>JavacParser</code> 规定了哪些词是符合 Java 语言规范的，而具体的读取和归类不同词法的操作由 <code>Scanner</code> 完成，它会逐个读取 Java 源文件的单个字符，然后解析出符合 Java 语言规范的 Token 序列。<code>Token</code> 规定了所有 Java 语言的合法关键词，<code>Names</code> 用来存储和表示解析后的词法。</p>
 <p><img src="/images/javacScanner.png" alt=""></p>
 <p>词法分析过程是在 JavacParser 的 parseCompilationUnit 方法中完成的，源码如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> JCTree<span style="color:#f92672">.</span><span style="color:#a6e22e">JCCompilationUnit</span> <span style="color:#a6e22e">parseCompilationUnit</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> JCTree<span style="color:#f92672">.</span><span style="color:#a6e22e">JCCompilationUnit</span> <span style="color:#a6e22e">parseCompilationUnit</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
     Token firstToken <span style="color:#f92672">=</span> token<span style="color:#f92672">;</span>
     JCExpression pid <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     JCModifiers mods <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">boolean</span> consumedToplevelDoc <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">boolean</span> seenImport <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">boolean</span> seenPackage <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    List<span style="color:#f92672">&lt;</span>JCAnnotation<span style="color:#f92672">&gt;</span> packageAnnotations <span style="color:#f92672">=</span> List<span style="color:#f92672">.</span><span style="color:#a6e22e">nil</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> MONKEYS_AT<span style="color:#f92672">)</span>  <span style="color:#75715e">// 解析注解 @
-</span><span style="color:#75715e"></span>    	mods <span style="color:#f92672">=</span> modifiersOpt<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    List<span style="color:#f92672">&lt;</span>JCAnnotation<span style="color:#f92672">&gt;</span> packageAnnotations <span style="color:#f92672">=</span> List<span style="color:#f92672">.</span><span style="color:#a6e22e">nil</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> MONKEYS_AT<span style="color:#f92672">)</span>  <span style="color:#75715e">// 解析注解 @
+</span><span style="color:#75715e"></span>    	mods <span style="color:#f92672">=</span> modifiersOpt<span style="color:#f92672">();</span>
 
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> PACKAGE<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">// 解析 package 声明
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> PACKAGE<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">// 解析 package 声明
 </span><span style="color:#75715e"></span>        seenPackage <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mods <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            checkNoMods<span style="color:#f92672">(</span>mods<span style="color:#f92672">.</span><span style="color:#a6e22e">flags</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mods <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            checkNoMods<span style="color:#f92672">(</span>mods<span style="color:#f92672">.</span><span style="color:#a6e22e">flags</span><span style="color:#f92672">);</span>
             packageAnnotations <span style="color:#f92672">=</span> mods<span style="color:#f92672">.</span><span style="color:#a6e22e">annotations</span><span style="color:#f92672">;</span>
             mods <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     	<span style="color:#f92672">}</span>
-        nextToken<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        pid <span style="color:#f92672">=</span> qualident<span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        accept<span style="color:#f92672">(</span>SEMI<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        nextToken<span style="color:#f92672">();</span>
+        pid <span style="color:#f92672">=</span> qualident<span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+        accept<span style="color:#f92672">(</span>SEMI<span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
-    ListBuffer<span style="color:#f92672">&lt;</span>JCTree<span style="color:#f92672">&gt;</span> defs <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListBuffer<span style="color:#f92672">&lt;</span>JCTree<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    ListBuffer<span style="color:#f92672">&lt;</span>JCTree<span style="color:#f92672">&gt;</span> defs <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListBuffer<span style="color:#f92672">&lt;</span>JCTree<span style="color:#f92672">&gt;();</span>
     <span style="color:#66d9ef">boolean</span> checkForImports <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">boolean</span> firstTypeDecl <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> EOF<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span> <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> endPosTable<span style="color:#f92672">.</span><span style="color:#a6e22e">errorEndPos</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">!=</span> EOF<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span> <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span> <span style="color:#f92672">&lt;=</span> endPosTable<span style="color:#f92672">.</span><span style="color:#a6e22e">errorEndPos</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             <span style="color:#75715e">// error recovery
-</span><span style="color:#75715e"></span>            skip<span style="color:#f92672">(</span>checkForImports<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 跳过错误字符
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> EOF<span style="color:#f92672">)</span>
+</span><span style="color:#75715e"></span>            skip<span style="color:#f92672">(</span>checkForImports<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>  <span style="color:#75715e">// 跳过错误字符
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> EOF<span style="color:#f92672">)</span>
             	<span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
     	<span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>checkForImports <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> mods <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> IMPORT<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// 解析 import 声明
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>checkForImports <span style="color:#f92672">&amp;&amp;</span> mods <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> IMPORT<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// 解析 import 声明
 </span><span style="color:#75715e"></span>            seenImport <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-            defs<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>importDeclaration<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            defs<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>importDeclaration<span style="color:#f92672">());</span>
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            Comment docComment <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">comment</span><span style="color:#f92672">(</span>CommentStyle<span style="color:#f92672">.</span><span style="color:#a6e22e">JAVADOC</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>firstTypeDecl <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>seenImport <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>seenPackage<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                docComment <span style="color:#f92672">=</span> firstToken<span style="color:#f92672">.</span><span style="color:#a6e22e">comment</span><span style="color:#f92672">(</span>CommentStyle<span style="color:#f92672">.</span><span style="color:#a6e22e">JAVADOC</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            Comment docComment <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">comment</span><span style="color:#f92672">(</span>CommentStyle<span style="color:#f92672">.</span><span style="color:#a6e22e">JAVADOC</span><span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>firstTypeDecl <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>seenImport <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>seenPackage<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                docComment <span style="color:#f92672">=</span> firstToken<span style="color:#f92672">.</span><span style="color:#a6e22e">comment</span><span style="color:#f92672">(</span>CommentStyle<span style="color:#f92672">.</span><span style="color:#a6e22e">JAVADOC</span><span style="color:#f92672">);</span>
                 consumedToplevelDoc <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
         	<span style="color:#f92672">}</span>
-            JCTree def <span style="color:#f92672">=</span> typeDeclaration<span style="color:#f92672">(</span>mods<span style="color:#f92672">,</span> docComment<span style="color:#f92672">)</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 解析 class 类主体
+            JCTree def <span style="color:#f92672">=</span> typeDeclaration<span style="color:#f92672">(</span>mods<span style="color:#f92672">,</span> docComment<span style="color:#f92672">);</span>  <span style="color:#75715e">// 解析 class 类主体
 </span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>def <span style="color:#66d9ef">instanceof</span> JCExpressionStatement<span style="color:#f92672">)</span>
-                def <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>JCExpressionStatement<span style="color:#f92672">)</span>def<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">expr</span><span style="color:#f92672">;</span>
-                defs<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>def<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                def <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>JCExpressionStatement<span style="color:#f92672">)</span>def<span style="color:#f92672">).</span><span style="color:#a6e22e">expr</span><span style="color:#f92672">;</span>
+                defs<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>def<span style="color:#f92672">);</span>
             <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>def <span style="color:#66d9ef">instanceof</span> JCClassDecl<span style="color:#f92672">)</span>
                 checkForImports <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
             mods <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
             firstTypeDecl <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
-    JCTree<span style="color:#f92672">.</span><span style="color:#a6e22e">JCCompilationUnit</span> toplevel <span style="color:#f92672">=</span> F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>firstToken<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">TopLevel</span><span style="color:#f92672">(</span>packageAnnotations<span style="color:#f92672">,</span> pid<span style="color:#f92672">,</span> defs<span style="color:#f92672">.</span><span style="color:#a6e22e">toList</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>consumedToplevelDoc<span style="color:#f92672">)</span>
-    	attach<span style="color:#f92672">(</span>toplevel<span style="color:#f92672">,</span> firstToken<span style="color:#f92672">.</span><span style="color:#a6e22e">comment</span><span style="color:#f92672">(</span>CommentStyle<span style="color:#f92672">.</span><span style="color:#a6e22e">JAVADOC</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>defs<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-    	storeEnd<span style="color:#f92672">(</span>toplevel<span style="color:#f92672">,</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">prevToken</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">endPos</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    JCTree<span style="color:#f92672">.</span><span style="color:#a6e22e">JCCompilationUnit</span> toplevel <span style="color:#f92672">=</span> F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>firstToken<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">).</span><span style="color:#a6e22e">TopLevel</span><span style="color:#f92672">(</span>packageAnnotations<span style="color:#f92672">,</span> pid<span style="color:#f92672">,</span> defs<span style="color:#f92672">.</span><span style="color:#a6e22e">toList</span><span style="color:#f92672">());</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>consumedToplevelDoc<span style="color:#f92672">)</span>
+    	attach<span style="color:#f92672">(</span>toplevel<span style="color:#f92672">,</span> firstToken<span style="color:#f92672">.</span><span style="color:#a6e22e">comment</span><span style="color:#f92672">(</span>CommentStyle<span style="color:#f92672">.</span><span style="color:#a6e22e">JAVADOC</span><span style="color:#f92672">));</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>defs<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span>
+    	storeEnd<span style="color:#f92672">(</span>toplevel<span style="color:#f92672">,</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">prevToken</span><span style="color:#f92672">().</span><span style="color:#a6e22e">endPos</span><span style="color:#f92672">);</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>keepDocComments<span style="color:#f92672">)</span>
     	toplevel<span style="color:#f92672">.</span><span style="color:#a6e22e">docComments</span> <span style="color:#f92672">=</span> docComments<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>keepLineMap<span style="color:#f92672">)</span>
-    	toplevel<span style="color:#f92672">.</span><span style="color:#a6e22e">lineMap</span> <span style="color:#f92672">=</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">getLineMap</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">endPosTable</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setParser</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> <span style="color:#75715e">// remove reference to parser
+    	toplevel<span style="color:#f92672">.</span><span style="color:#a6e22e">lineMap</span> <span style="color:#f92672">=</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">getLineMap</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">endPosTable</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setParser</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span> <span style="color:#75715e">// remove reference to parser
 </span><span style="color:#75715e"></span>    toplevel<span style="color:#f92672">.</span><span style="color:#a6e22e">endPositions</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">endPosTable</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">return</span> toplevel<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>可以看到，词法分析器会把这个类中的所有关键词都匹配到 Token 类中的某一项，如 PACKAGE、SEMI、PUBLIC 等，除了在 Java 语言规范中定义的保留关键词，还有一个特殊的词 <code>Token.IDENTIFIER</code>，这个用于表示用户定义的名称，如类名、包名、变量名、方法名等。</p>
 <p>以解析 PACKAGE 为例看下 Token 是如何被分辨的：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> JCExpression <span style="color:#a6e22e">qualident</span><span style="color:#f92672">(</span><span style="color:#66d9ef">boolean</span> allowAnnos<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    JCExpression t <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Ident</span><span style="color:#f92672">(</span>ident<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 构建一个 JCIdent 语法节点
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> DOT<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">// 如果下一个 Token 是 . 则继续循环读取
+    JCExpression t <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">).</span><span style="color:#a6e22e">Ident</span><span style="color:#f92672">(</span>ident<span style="color:#f92672">()));</span>  <span style="color:#75715e">// 构建一个 JCIdent 语法节点
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> DOT<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">// 如果下一个 Token 是 . 则继续循环读取
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">;</span>
-        nextToken<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        nextToken<span style="color:#f92672">();</span>
         List<span style="color:#f92672">&lt;</span>JCAnnotation<span style="color:#f92672">&gt;</span> tyannos <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>allowAnnos<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            tyannos <span style="color:#f92672">=</span> typeAnnotationsOpt<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            tyannos <span style="color:#f92672">=</span> typeAnnotationsOpt<span style="color:#f92672">();</span>
         <span style="color:#f92672">}</span>
-        t <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Select</span><span style="color:#f92672">(</span>t<span style="color:#f92672">,</span> ident<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tyannos <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> tyannos<span style="color:#f92672">.</span><span style="color:#a6e22e">nonEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            t <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>tyannos<span style="color:#f92672">.</span><span style="color:#a6e22e">head</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">AnnotatedType</span><span style="color:#f92672">(</span>tyannos<span style="color:#f92672">,</span> t<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        t <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos<span style="color:#f92672">).</span><span style="color:#a6e22e">Select</span><span style="color:#f92672">(</span>t<span style="color:#f92672">,</span> ident<span style="color:#f92672">()));</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tyannos <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> tyannos<span style="color:#f92672">.</span><span style="color:#a6e22e">nonEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            t <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>tyannos<span style="color:#f92672">.</span><span style="color:#a6e22e">head</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">).</span><span style="color:#a6e22e">AnnotatedType</span><span style="color:#f92672">(</span>tyannos<span style="color:#f92672">,</span> t<span style="color:#f92672">));</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">return</span> t<span style="color:#f92672">;</span>
@@ -281,7 +281,7 @@
 </span><span style="color:#75715e"> * identifier token is returned.
 </span><span style="color:#75715e"> */</span>
 TokenKind <span style="color:#a6e22e">lookupKind</span><span style="color:#f92672">(</span>Name name<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>name<span style="color:#f92672">.</span><span style="color:#a6e22e">getIndex</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> maxKey<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> TokenKind<span style="color:#f92672">.</span><span style="color:#a6e22e">IDENTIFIER</span> <span style="color:#f92672">:</span> key<span style="color:#f92672">[</span>name<span style="color:#f92672">.</span><span style="color:#a6e22e">getIndex</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>name<span style="color:#f92672">.</span><span style="color:#a6e22e">getIndex</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> maxKey<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> TokenKind<span style="color:#f92672">.</span><span style="color:#a6e22e">IDENTIFIER</span> <span style="color:#f92672">:</span> key<span style="color:#f92672">[</span>name<span style="color:#f92672">.</span><span style="color:#a6e22e">getIndex</span><span style="color:#f92672">()];</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>可以看出，<strong>读取 Token 流的顺序</strong> 是由 JavacParser 类规定的，每次读取下一个 Token 刚好就是所需要的一个关键词，这是因为我们在写 Java 代码时遵守的规则：package 语法、import 语法、类定义、field 定义等，除了这些规则规定的一些 Java 语法关键词，也就只有用户自定义的变量名称了。最终形成如下图所示的一个 Token 流。</p>
 <p><img src="/images/tokenStream.jpg" alt=""></p>
@@ -316,29 +316,29 @@ TokenKind <span style="color:#a6e22e">lookupKind</span><span style="color:#f9267
 <p>以 JavacParser 中的 importDeclaration() 为例看下语法树的构建过程：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/** ImportDeclaration = IMPORT [ STATIC ] Ident { &#34;.&#34; Ident } [ &#34;.&#34; &#34;*&#34; ] &#34;;&#34;
 </span><span style="color:#75715e">     */</span>
-    JCTree <span style="color:#a6e22e">importDeclaration</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    JCTree <span style="color:#a6e22e">importDeclaration</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">;</span>
-        nextToken<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        nextToken<span style="color:#f92672">();</span>
         <span style="color:#66d9ef">boolean</span> importStatic <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> STATIC<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">//  检查是否有 static 关键词
-</span><span style="color:#75715e"></span>            checkStaticImports<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> STATIC<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">//  检查是否有 static 关键词
+</span><span style="color:#75715e"></span>            checkStaticImports<span style="color:#f92672">();</span>
             importStatic <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-            nextToken<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            nextToken<span style="color:#f92672">();</span>
         <span style="color:#f92672">}</span>
-        JCExpression pid <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Ident</span><span style="color:#f92672">(</span>ident<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        JCExpression pid <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">).</span><span style="color:#a6e22e">Ident</span><span style="color:#f92672">(</span>ident<span style="color:#f92672">()));</span>
         <span style="color:#66d9ef">do</span> <span style="color:#f92672">{</span>
             <span style="color:#66d9ef">int</span> pos1 <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">;</span>
-            accept<span style="color:#f92672">(</span>DOT<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> STAR<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 如果最后一个 Token 是 *，则命名 Token 为 asterisk
-</span><span style="color:#75715e"></span>                pid <span style="color:#f92672">=</span> to<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos1<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Select</span><span style="color:#f92672">(</span>pid<span style="color:#f92672">,</span> names<span style="color:#f92672">.</span><span style="color:#a6e22e">asterisk</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                nextToken<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            accept<span style="color:#f92672">(</span>DOT<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> STAR<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 如果最后一个 Token 是 *，则命名 Token 为 asterisk
+</span><span style="color:#75715e"></span>                pid <span style="color:#f92672">=</span> to<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos1<span style="color:#f92672">).</span><span style="color:#a6e22e">Select</span><span style="color:#f92672">(</span>pid<span style="color:#f92672">,</span> names<span style="color:#f92672">.</span><span style="color:#a6e22e">asterisk</span><span style="color:#f92672">));</span>
+                nextToken<span style="color:#f92672">();</span>
                 <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
             <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                pid <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos1<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Select</span><span style="color:#f92672">(</span>pid<span style="color:#f92672">,</span> ident<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                pid <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos1<span style="color:#f92672">).</span><span style="color:#a6e22e">Select</span><span style="color:#f92672">(</span>pid<span style="color:#f92672">,</span> ident<span style="color:#f92672">()));</span>
             <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> DOT<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        accept<span style="color:#f92672">(</span>SEMI<span style="color:#f92672">)</span><span style="color:#f92672">;</span>    <span style="color:#75715e">// ; import 解析完成
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Import</span><span style="color:#f92672">(</span>pid<span style="color:#f92672">,</span> importStatic<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> DOT<span style="color:#f92672">);</span>
+        accept<span style="color:#f92672">(</span>SEMI<span style="color:#f92672">);</span>    <span style="color:#75715e">// ; import 解析完成
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos<span style="color:#f92672">).</span><span style="color:#a6e22e">Import</span><span style="color:#f92672">(</span>pid<span style="color:#f92672">,</span> importStatic<span style="color:#f92672">));</span>
     <span style="color:#f92672">}</span>
 </code></pre></div><p>如果是多级目录，则继续读取下一个 Token 并构造 JCFieldAccess 节点。所有的语法节点的生成都是在 <code>TreeMaker</code> 类中完成的，TreeMaker 实现了再 JCTree.Factory 接口定义的所有节点的构成方法。对一个类形成的抽象语法树大概是下图这个样子：</p>
 <p><img src="/images/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91.jpg" alt=""></p>
@@ -388,8 +388,8 @@ TokenKind <span style="color:#a6e22e">lookupKind</span><span style="color:#f9267
   MD5 checksum 61944717f8416e375dc796bcf2c47b72
   Compiled from <span style="color:#e6db74">&#34;ClassFileStructure.java&#34;</span>
 public class COM.sootNsmoke.ClassFileStructure
-  minor version: 0
-  major version: 52
+  minor version: <span style="color:#ae81ff">0</span>
+  major version: <span style="color:#ae81ff">52</span>
   flags: ACC_PUBLIC, ACC_SUPER
 Constant pool:
    <span style="color:#75715e">#1 = Methodref          #6.#20         // java/lang/Object.&#34;&lt;init&gt;&#34;:()V</span>
@@ -426,32 +426,32 @@ Constant pool:
   <span style="color:#75715e">#32 = Utf8               println</span>
   <span style="color:#75715e">#33 = Utf8               (Ljava/lang/String;)V</span>
 <span style="color:#f92672">{</span>
-  public COM.sootNsmoke.ClassFileStructure<span style="color:#f92672">(</span><span style="color:#f92672">)</span>;
-    descriptor: <span style="color:#f92672">(</span><span style="color:#f92672">)</span>V
+  public COM.sootNsmoke.ClassFileStructure<span style="color:#f92672">()</span>;
+    descriptor: <span style="color:#f92672">()</span>V
     flags: ACC_PUBLIC
     Code:
-      stack<span style="color:#f92672">=</span>1, locals<span style="color:#f92672">=</span>1, args_size<span style="color:#f92672">=</span>1
+      stack<span style="color:#f92672">=</span>1, locals<span style="color:#f92672">=</span>1, args_size<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
          0: aload_0
          1: invokespecial <span style="color:#75715e">#1                  // Method java/lang/Object.&#34;&lt;init&gt;&#34;:()V</span>
          4: <span style="color:#66d9ef">return</span>
       LineNumberTable:
-        line 3: 0
+        line 3: <span style="color:#ae81ff">0</span>
       LocalVariableTable:
         Start  Length  Slot  Name   Signature
             <span style="color:#ae81ff">0</span>       <span style="color:#ae81ff">5</span>     <span style="color:#ae81ff">0</span>  this   LCOM/sootNsmoke/ClassFileStructure;
 
-  public static void main<span style="color:#f92672">(</span>java.lang.String<span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">)</span>;
-    descriptor: <span style="color:#f92672">(</span><span style="color:#f92672">[</span>Ljava/lang/String;<span style="color:#f92672">)</span>V
+  public static void main<span style="color:#f92672">(</span>java.lang.String<span style="color:#f92672">[])</span>;
+    descriptor: <span style="color:#f92672">([</span>Ljava/lang/String;<span style="color:#f92672">)</span>V
     flags: ACC_PUBLIC, ACC_STATIC
     Code:
-      stack<span style="color:#f92672">=</span>2, locals<span style="color:#f92672">=</span>1, args_size<span style="color:#f92672">=</span>1
+      stack<span style="color:#f92672">=</span>2, locals<span style="color:#f92672">=</span>1, args_size<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
          0: getstatic     <span style="color:#75715e">#2                  // Field java/lang/System.out:Ljava/io/PrintStream;</span>
          3: ldc           <span style="color:#75715e">#3                  // String hello world!</span>
          5: invokevirtual <span style="color:#75715e">#4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V</span>
          8: <span style="color:#66d9ef">return</span>
       LineNumberTable:
-        line 5: 0
-        line 6: 8
+        line 5: <span style="color:#ae81ff">0</span>
+        line 6: <span style="color:#ae81ff">8</span>
       LocalVariableTable:
         Start  Length  Slot  Name   Signature
             <span style="color:#ae81ff">0</span>       <span style="color:#ae81ff">9</span>     <span style="color:#ae81ff">0</span>  args   <span style="color:#f92672">[</span>Ljava/lang/String;

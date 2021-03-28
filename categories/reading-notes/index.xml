@@ -6,18 +6,14 @@
     <description>Recent content in Reading notes on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 07 Jan 2021 13:19:47 +0100</lastBuildDate>
-    
-	<atom:link href="https://nervousorange.github.io/categories/reading-notes/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Thu, 07 Jan 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://nervousorange.github.io/categories/reading-notes/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Database：InnoDB 存储引擎</title>
       <link>https://nervousorange.github.io/2021/database-innodb/</link>
       <pubDate>Thu, 07 Jan 2021 13:19:47 +0100</pubDate>
       
       <guid>https://nervousorange.github.io/2021/database-innodb/</guid>
-      <description>在之前的博客 Database：MySQL 数据库 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 《MySQL技术内幕：InnoDB存储引擎》 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 核心实现和工作机制，主要内容有：缓冲池、后台线程工作机制、日志文件、锁、事务以及数据的备份与恢复等。
+      <description>在之前的博客 Database：MySQL 数据库 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 《MySQL技术内幕：InnoDB存储引擎》 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 核心实现和工作机制，主要内容有：缓冲池、后台线程工作机制、日志文件、锁、事务等。
 MySQL 存储引擎 MySQL 数据库区别于其他数据库的最重要的一个特点就是其 插件式的表存储引擎（Pluggable Storage Engines），其提供了一系列标准的管理和服务支持，如 SQL 分析器和优化器等，这些标准与存储引擎本身无关，而存储引擎是底层物理结构的实现，每个存储引擎开发者可以按照自己的意愿来进行开发。 MySQL 数据库的体系结构如下图：
 需要注意的是，存储引擎是 基于表的，而不是数据库。每个存储引擎都有各自的特点，开发者应该根据具体的应用选择适合的存储引擎，以下是一些存储引擎的简单介绍：
 InnoDB 支持事务，行锁，外键，使用 MVCC 获得高并发性，实现了 SQL 的 4 种隔离级别，默认为 REPEATABLE，使用一种被称为 next-key locking 的策略来避免幻读（phantom）现象的产生，聚集索引，按主键顺序，从 MySQL 5.5.8 开始成为 MySQL 默认的存储引擎，众多互联网公司的成功应用已经证明了 InnoDB 存储引擎的高可用性、高性能以及高可扩展性。
@@ -121,7 +117,7 @@ GBK 《汉字内码扩展规范》扩展了 GB2312，加入更多的汉字，编
 本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I/O 的工作机制 的内容为参考，讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。
 Java I/O 类库的基本架构 基于字节的 I/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。
 需要明确的是，字节流从哪里读或是写入到哪里，操作数据的方式是可以组合使用的，如：
-OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(&amp;#34;pathName&amp;#34;)));基于字符的 I/O 操作接口 虽然 I/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。
+OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(&amp;#34;pathName&amp;#34;))); 基于字符的 I/O 操作接口 虽然 I/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。
 例如写字符的操作接口为 void write(char[] cbuf, int off, int len)
 字节与字符的转化接口 字符在写入文件持久化或者网络传输之前，都需要先经过编码转换，下图中 InputStreamReader 就是从字节到字符的转化桥梁，在初始化时需要指定编码字符集，否则会采用操作系统默认的字符集，很可能出现乱码问题。具体的编码解码过程可以查看：深入分析 Java Web 中的中文编码问题</description>
     </item>

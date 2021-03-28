@@ -6,10 +6,17 @@
     <description>Recent content in Java on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 22 Sep 2020 09:19:47 +0100</lastBuildDate>
-    
-	<atom:link href="https://nervousorange.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
-    
+    <lastBuildDate>Wed, 24 Mar 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://nervousorange.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java：异常处理与日志记录</title>
+      <link>https://nervousorange.github.io/2021/java-exception-log/</link>
+      <pubDate>Wed, 24 Mar 2021 13:19:47 +0100</pubDate>
+      
+      <guid>https://nervousorange.github.io/2021/java-exception-log/</guid>
+      <description>在开发 Java 项目中通常依赖 Eclipse/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹快速定位并解决线上问题。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。
+Java 的异常处理 Java 的日志记录 日志组件的选择 纵览 Java Log 的发展历程：
+ Log4j（作者Ceki Gülcü）出来时就等到了广泛的应用（注意这里是直接使用），是 Java 日志事实上的标准，并成为了 Apache 的项目 Apache 要求把 Log4j 并入到 JDK，SUN 拒绝，并在 JDK1.4 版本后增加了 JUL（java.util.logging） 毕竟是 JDK 自带的，JUL 也有很多人用。同时还有其他日志组件，如 SimpleLog 等。这时如果有人想换成其它日志组件，如 Log4j 换成 JUL，因为 API 完全不同，就需要改动代码。 Apache 见此，开发了 JCL（Jakarta Commons Logging），即 commons-logging-xx.jar。它只提供一套 通用的日志接口 API，并不提供日志的实现。很好的设计原则嘛，依赖抽象而非实现。这样应用程序可以在运行时选择自己想要的日志实现组件。 这样看上去也挺美好的，但是 Log4j 的作者觉得 JCL 不好用，自己开发出 slf4j，它跟 JCL 类似，本身不替供日志具体实现，只对外提供接口或门面。目的就是为了替代 JCL。同时，还开发出 Logback，一个比 Log4j 拥有 更高性能 的组件，目的是为了替代 Log4j。 Apache 参考了 Logback 并做了一系列优化，推出了log4j 2  因此现在市面上常用的日志组件有：</description>
+    </item>
     
     <item>
       <title>深入分析 ClassLoader 工作机制</title>
@@ -63,7 +70,7 @@ GBK 《汉字内码扩展规范》扩展了 GB2312，加入更多的汉字，编
 本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I/O 的工作机制 的内容为参考，讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。
 Java I/O 类库的基本架构 基于字节的 I/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。
 需要明确的是，字节流从哪里读或是写入到哪里，操作数据的方式是可以组合使用的，如：
-OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(&amp;#34;pathName&amp;#34;)));基于字符的 I/O 操作接口 虽然 I/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。
+OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(&amp;#34;pathName&amp;#34;))); 基于字符的 I/O 操作接口 虽然 I/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。
 例如写字符的操作接口为 void write(char[] cbuf, int off, int len)
 字节与字符的转化接口 字符在写入文件持久化或者网络传输之前，都需要先经过编码转换，下图中 InputStreamReader 就是从字节到字符的转化桥梁，在初始化时需要指定编码字符集，否则会采用操作系统默认的字符集，很可能出现乱码问题。具体的编码解码过程可以查看：深入分析 Java Web 中的中文编码问题</description>
     </item>
@@ -75,7 +82,7 @@ OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new Fi
       
       <guid>https://nervousorange.github.io/2020/deploy/</guid>
       <description>本篇介绍 Java 程序部署的三种方式：exec 插件、jar 包、Docker 方式部署，以及使用 Nginx 实现简单的负载均衡。
-Java 程序的部署 Maven exec 插件部署  导入 Maven 的 exec 插件：Maven Repository：exec-maven-plugin，然后在 pom.xml 中进行配置，使之可以调用外部命令执行 Java 程序并自动加载依赖的 classpath 路径：  &amp;lt;plugin&amp;gt;&amp;lt;groupId&amp;gt;org.codehaus.mojo&amp;lt;/groupId&amp;gt;&amp;lt;artifactId&amp;gt;exec-maven-plugin&amp;lt;/artifactId&amp;gt;&amp;lt;version&amp;gt;1.6.0&amp;lt;/version&amp;gt;&amp;lt;executions&amp;gt;&amp;lt;execution&amp;gt;&amp;lt;id&amp;gt;run&amp;lt;/id&amp;gt;&amp;lt;goals&amp;gt;&amp;lt;goal&amp;gt;exec&amp;lt;/goal&amp;gt;&amp;lt;/goals&amp;gt;&amp;lt;configuration&amp;gt;&amp;lt;executable&amp;gt;java&amp;lt;/executable&amp;gt;&amp;lt;arguments&amp;gt;&amp;lt;argument&amp;gt;-classpath&amp;lt;/argument&amp;gt;&amp;lt;!--automatically creates the classpath using all project dependencies,also adding the project build directory --&amp;gt;&amp;lt;classpath/&amp;gt;&amp;lt;argument&amp;gt;com.github.NervousOrange.springboot.Application&amp;lt;/argument&amp;gt;&amp;lt;/arguments&amp;gt;&amp;lt;/configuration&amp;gt;&amp;lt;/execution&amp;gt;&amp;lt;/executions&amp;gt;&amp;lt;/plugin&amp;gt;mvn exec:exec@[executionID] 即可完成程序的部署；-X 参数可以用于排查部署时出现的问题，-DskipTests 可以跳过测试。 windosw下（需使用系统 cmd） netstat -ano | findstr &amp;quot;8080&amp;quot; 可以查看当前端口被占用的情况，tasklist |findstr &amp;quot;进程id号&amp;quot; 查找对应的进程名称，然后 taskkill /f /t /im &amp;quot;进程id或者进程名称&amp;quot; 杀掉当前占用端口的进程  部署效果图：</description>
+Java 程序的部署 Maven exec 插件部署  导入 Maven 的 exec 插件：Maven Repository：exec-maven-plugin，然后在 pom.xml 中进行配置，使之可以调用外部命令执行 Java 程序并自动加载依赖的 classpath 路径：  &amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;org.codehaus.mojo&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;exec-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.6.0&amp;lt;/version&amp;gt; &amp;lt;executions&amp;gt; &amp;lt;execution&amp;gt; &amp;lt;id&amp;gt;run&amp;lt;/id&amp;gt; &amp;lt;goals&amp;gt; &amp;lt;goal&amp;gt;exec&amp;lt;/goal&amp;gt; &amp;lt;/goals&amp;gt; &amp;lt;configuration&amp;gt; &amp;lt;executable&amp;gt;java&amp;lt;/executable&amp;gt; &amp;lt;arguments&amp;gt; &amp;lt;argument&amp;gt;-classpath&amp;lt;/argument&amp;gt; &amp;lt;!-- automatically creates the classpath using all project dependencies, also adding the project build directory --&amp;gt; &amp;lt;classpath/&amp;gt; &amp;lt;argument&amp;gt;com.github.NervousOrange.springboot.Application&amp;lt;/argument&amp;gt; &amp;lt;/arguments&amp;gt; &amp;lt;/configuration&amp;gt; &amp;lt;/execution&amp;gt; &amp;lt;/executions&amp;gt; &amp;lt;/plugin&amp;gt; mvn exec:exec@[executionID] 即可完成程序的部署；-X 参数可以用于排查部署时出现的问题，-DskipTests 可以跳过测试。 windosw下（需使用系统 cmd） netstat -ano | findstr &amp;quot;8080&amp;quot; 可以查看当前端口被占用的情况，tasklist |findstr &amp;quot;进程id号&amp;quot; 查找对应的进程名称，然后 taskkill /f /t /im &amp;quot;进程id或者进程名称&amp;quot; 杀掉当前占用端口的进程  部署效果图：</description>
     </item>
     
     <item>
@@ -90,7 +97,7 @@ CPU 采用 时间片轮转 的方式运行进程，使用上下文切换的方�
  上下文指某一时刻 CPU 寄存器和程序计数器的内容，通过在内存中保存 / 读取来完成其切换。上下⽂切换通常是计算密集型的，意味着此操作会消耗⼤量的 CPU 时间，故线程也不是越多越好。如何减少系统中上下⽂切换次数，是提升多线程性能的⼀个重点课题。
  如果说进程让操作系统的并发性成为了可能，那么 线程 就让进程的内部并发成为了可能。每个线程执行进程中的一个子任务，使得杀毒软件一遍检测用户电脑一遍清理垃圾成为可能。
 进程和线程的区别  进程间的通信比较复杂，而线程间的通信比较简单。线程相比进程更为轻量级，多线程并发相比多进程开销更小。 进程和线程本质的区别是 是否单独占有内存地址空间及其他的系统资源（比如 I/O）：进程间存在内存隔离，而线程共享所属进程占有的内存地址空间和隔离，数据共享简单，但是同步复杂。 进程是操作系统进行资源分配的基本单位，而线程是操作系统进行调度的基本单位。一个进程出现问题不会影响其他进程；而一个线程崩溃可能影响整个程序的稳定性。  Java 线程与操作系统内核线程 用户级线程与内核级线程 推荐阅读：用户级线程和内核级线程，你分清楚了吗？
- 用户级线程 ULT：由应用程序实现和管理（创建、同步、调度等），线程阻塞则整个进程阻塞。对操作系统来说，用户级线程具有不可见性、透明性，ULT 下 CPU 的调度还是以进程为单位。 内核级线程 KLT：需通过 系统调用 创建，由系统内核管理，可实现多核 CPU 并行处理。线程阻塞不会影响同进程内其他线程的运行。  线程池的意义  JVM 运行在用户态，通过调用系统库来创建内核线程，由 CPU 来完成线程的调度；但是从用户态到内核态的权限提升和状态切换需要相当的 系统开销，频繁的创建和销毁线程将不利于程序性能的提升。 为此，将线程池化管理，对线程进行统一分配、调优和监控，避免频繁的线程创建，减少状态切换带来的资源消耗，重用线程 就是使用线程池的意义。 线程池比较适合处理数量庞大，但是处理时间较短的任务。如果某个任务耗时过长，会导致池内任务堆积。  线程池原理 ThreadPoolExecutor 的构造器参数 public ThreadPoolExecutor(int corePoolSize,int maximumPoolSize,long keepAliveTime,TimeUnit unit,BlockingQueue&amp;lt;Runnable&amp;gt; workQueue,ThreadFactory threadFactory,RejectedExecutionHandler handler)  corePoolSize：核⼼线程数 maximumPoolSize：池内最大线程数   最大线程数 = 核心线程 + 非核心线程。非核心线程如果长时间闲置，就会被销毁。</description>
+ 用户级线程 ULT：由应用程序实现和管理（创建、同步、调度等），线程阻塞则整个进程阻塞。对操作系统来说，用户级线程具有不可见性、透明性，ULT 下 CPU 的调度还是以进程为单位。 内核级线程 KLT：需通过 系统调用 创建，由系统内核管理，可实现多核 CPU 并行处理。线程阻塞不会影响同进程内其他线程的运行。  线程池的意义  JVM 运行在用户态，通过调用系统库来创建内核线程，由 CPU 来完成线程的调度；但是从用户态到内核态的权限提升和状态切换需要相当的 系统开销，频繁的创建和销毁线程将不利于程序性能的提升。 为此，将线程池化管理，对线程进行统一分配、调优和监控，避免频繁的线程创建，减少状态切换带来的资源消耗，重用线程 就是使用线程池的意义。 线程池比较适合处理数量庞大，但是处理时间较短的任务。如果某个任务耗时过长，会导致池内任务堆积。  线程池原理 ThreadPoolExecutor 的构造器参数 public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue&amp;lt;Runnable&amp;gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler)  corePoolSize：核⼼线程数 maximumPoolSize：池内最大线程数   最大线程数 = 核心线程 + 非核心线程。非核心线程如果长时间闲置，就会被销毁。</description>
     </item>
     
     <item>
@@ -101,7 +108,7 @@ CPU 采用 时间片轮转 的方式运行进程，使用上下文切换的方�
       <guid>https://nervousorange.github.io/2020/java-hashmap/</guid>
       <description>本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。
 HashMap 的实现原理 1. 哈希表底层实现原理 哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry&amp;lt;K, V&amp;gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。
-transient Node&amp;lt;K,V&amp;gt;[] table;static class Node&amp;lt;K,V&amp;gt; implements Map.Entry&amp;lt;K,V&amp;gt; {final int hash;final K key;V value;Node&amp;lt;K,V&amp;gt; next;}2. 为什么采用数组+链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。
+transient Node&amp;lt;K,V&amp;gt;[] table; static class Node&amp;lt;K,V&amp;gt; implements Map.Entry&amp;lt;K,V&amp;gt; { final int hash; final K key; V value; Node&amp;lt;K,V&amp;gt; next; } 2. 为什么采用数组+链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。
 为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。
 3. 哈希冲突的解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量 * 装载因子，则会触发 resize() 方法，初始化 table 或是使哈希表容量翻倍。</description>
     </item>
@@ -114,8 +121,8 @@ transient Node&amp;lt;K,V&amp;gt;[] table;static class Node&amp;lt;K,V&amp;gt; 
       <guid>https://nervousorange.github.io/2020/java-thread-safe-collection/</guid>
       <description>在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。
 List 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 Verctor 的复合操作（如遍历+修改）仍会导致 并发修改异常。
-public synchronized boolean add(E e);public synchronized boolean isEmpty();public synchronized E get(int index);public synchronized void sort(Comparator&amp;lt;? super E&amp;gt; c);1.2 SynchronizedList SynchronizedList 类和 vector 类似，只不过是在方法内进行同步锁：
-public E get(int index) {synchronized (mutex) {return list.get(index);}}public E set(int index, E element) {synchronized (mutex) {return list.</description>
+public synchronized boolean add(E e); public synchronized boolean isEmpty(); public synchronized E get(int index); public synchronized void sort(Comparator&amp;lt;? super E&amp;gt; c); 1.2 SynchronizedList SynchronizedList 类和 vector 类似，只不过是在方法内进行同步锁：
+public E get(int index) { synchronized (mutex) {return list.get(index);}} public E set(int index, E element) { synchronized (mutex) {return list.</description>
     </item>
     
     <item>

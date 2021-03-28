@@ -54,8 +54,8 @@
     "accountablePerson" : "Chenghao Zheng",
     "copyrightHolder" : "Chenghao Zheng",
     "copyrightYear" : "2020",
-    "datePublished": "2020-01-02 16:11:47 \x2b0100 \x2b0100",
-    "dateModified" : "2020-01-02 16:11:47 \x2b0100 \x2b0100",
+    "datePublished": "2020-01-02 16:11:47 \u002b0100 \u002b0100",
+    "dateModified" : "2020-01-02 16:11:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/java-collection\/",
     "wordCount" : "707",
     "keywords" : [ "Java", "人间一场大梦"]
@@ -224,9 +224,9 @@
 <li>Key 不能重复（是唯一的），每个 Key 最多只能映射到一个值，但多个 Key 可以引用相同的对象。</li>
 <li>Map 的常用方法有：</li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">containsKey<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> containsValue<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-get<span style="color:#f92672">(</span>Key<span style="color:#f92672">)</span><span style="color:#f92672">;</span> put<span style="color:#f92672">(</span>K<span style="color:#f92672">,</span> V<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-keySet<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>  <span style="color:#75715e">//返回所有的 key
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">containsKey<span style="color:#f92672">();</span> containsValue<span style="color:#f92672">();</span>
+get<span style="color:#f92672">(</span>Key<span style="color:#f92672">);</span> put<span style="color:#f92672">(</span>K<span style="color:#f92672">,</span> V<span style="color:#f92672">);</span>
+keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返回所有的 key
 </span></code></pre></div><ul>
 <li>HashMap 的 key 的 set 就是一个 HashSet，HashSet 有的功能 HashMap 都有，所有 HashSet 里面包了一个 HashMap。</li>
 <li>HashMap 的线程不安全性：HashMap的实现 没有被同步 &mdash;&gt; HashMap 的死循环（搜这个）。
@@ -275,11 +275,11 @@ keySet<span style="color:#f92672">(</span><span style="color:#f92672">)</span><s
 <p><code>RandomAccess</code> 接口声明了一个约定：实现这个接口的类具有随机访问功能。</p>
 <p><code>Collections.binarySearch</code> 方法中，会先判断 List 是否是 RandomAccess 的实例，然后调用不同的二分查找方法。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">binarySearch</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span><span style="color:#f92672">?</span> <span style="color:#66d9ef">extends</span> Comparable<span style="color:#f92672">&lt;</span><span style="color:#f92672">?</span> <span style="color:#66d9ef">super</span> T<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> list<span style="color:#f92672">,</span> T key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>list <span style="color:#66d9ef">instanceof</span> RandomAccess <span style="color:#f92672">|</span><span style="color:#f92672">|</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">&lt;</span>BINARYSEARCH_THRESHOLD<span style="color:#f92672">)</span>
-            <span style="color:#66d9ef">return</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">indexedBinarySearch</span><span style="color:#f92672">(</span>list<span style="color:#f92672">,</span> key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">binarySearch</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> Comparable<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> T<span style="color:#f92672">&gt;&gt;</span> list<span style="color:#f92672">,</span> T key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>list <span style="color:#66d9ef">instanceof</span> RandomAccess <span style="color:#f92672">||</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()&lt;</span>BINARYSEARCH_THRESHOLD<span style="color:#f92672">)</span>
+            <span style="color:#66d9ef">return</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">indexedBinarySearch</span><span style="color:#f92672">(</span>list<span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
         <span style="color:#66d9ef">else</span>
-            <span style="color:#66d9ef">return</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">iteratorBinarySearch</span><span style="color:#f92672">(</span>list<span style="color:#f92672">,</span> key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">return</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">iteratorBinarySearch</span><span style="color:#f92672">(</span>list<span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
 </code></pre></div><p>ArrayList 实现了 RandomAccess 接口，而 LinkedList 没有实现。</p>
 <ul>
@@ -308,12 +308,12 @@ keySet<span style="color:#f92672">(</span><span style="color:#f92672">)</span><s
 <li>如果要在指定位置 i 插入和删除元素的话 <code>add(int index, E element)</code>，会调用 <code>System.arraycopy</code> 来实现 i 位置及之后元素的移动；而在扩容时则调用了 <code>Arrays.copyOf</code> 方法</li>
 </ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">native</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">arraycopy</span><span style="color:#f92672">(</span>Object src<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> srcPos<span style="color:#f92672">,</span>
-                           Object dest<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> destPos<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> length<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                           Object dest<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> destPos<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> length<span style="color:#f92672">);</span>
 
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> <span style="color:#a6e22e">copyOf</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> original<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> newLength<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> copy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>newLength<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">copyOf</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> original<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> newLength<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> copy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>newLength<span style="color:#f92672">];</span>
         System<span style="color:#f92672">.</span><span style="color:#a6e22e">arraycopy</span><span style="color:#f92672">(</span>original<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> copy<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span>
-                         Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>original<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> newLength<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                         Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>original<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> newLength<span style="color:#f92672">));</span>
         <span style="color:#66d9ef">return</span> copy<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="2-hashmaphashtable-及-hashset">2. HashMap、HashTable 及 HashSet</h3>
@@ -335,26 +335,26 @@ keySet<span style="color:#f92672">(</span><span style="color:#f92672">)</span><s
 <table>
 <thead>
 <tr>
-<th align="center">HashMap</th>
-<th align="center">HashSet</th>
+<th style="text-align:center">HashMap</th>
+<th style="text-align:center">HashSet</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center">实现了 Map 接口</td>
-<td align="center">实现 Set 接口</td>
+<td style="text-align:center">实现了 Map 接口</td>
+<td style="text-align:center">实现 Set 接口</td>
 </tr>
 <tr>
-<td align="center">存储键值对</td>
-<td align="center">仅存储对象</td>
+<td style="text-align:center">存储键值对</td>
+<td style="text-align:center">仅存储对象</td>
 </tr>
 <tr>
-<td align="center">调用 <code>put()</code>向map中添加元素</td>
-<td align="center">调用 <code>add()</code>方法向Set中添加元素</td>
+<td style="text-align:center">调用 <code>put()</code>向map中添加元素</td>
+<td style="text-align:center">调用 <code>add()</code>方法向Set中添加元素</td>
 </tr>
 <tr>
-<td align="center">HashMap 使用键（Key）计算 HashCode</td>
-<td align="center">HashSet 使用成员对象来计算HashCode 值，对于两个对象来说 HashCode 可能相同，所以 equals() 方法用来判断对象的相等性，</td>
+<td style="text-align:center">HashMap 使用键（Key）计算 HashCode</td>
+<td style="text-align:center">HashSet 使用成员对象来计算HashCode 值，对于两个对象来说 HashCode 可能相同，所以 equals() 方法用来判断对象的相等性，</td>
 </tr>
 </tbody>
 </table>
@@ -405,19 +405,19 @@ keySet<span style="color:#f92672">(</span><span style="color:#f92672">)</span><s
 </li>
 </ul>
 <h4 id="31-comparator定制排序">3.1 Comparator定制排序</h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>arrayList<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>arrayList<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;()</span> <span style="color:#f92672">{</span>
 	<span style="color:#a6e22e">@Override</span>
 	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Integer o1<span style="color:#f92672">,</span> Integer o2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-		<span style="color:#66d9ef">return</span> o2<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>o1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>    <span style="color:#75715e">// 从小到大排序，变成了从大到小。
+		<span style="color:#66d9ef">return</span> o2<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>o1<span style="color:#f92672">);</span>    <span style="color:#75715e">// 从小到大排序，变成了从大到小。
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>               <span style="color:#75715e">// 用匿名内部类 重写比较器，定制原生数据类型的比较方法。
+<span style="color:#f92672">});</span>               <span style="color:#75715e">// 用匿名内部类 重写比较器，定制原生数据类型的比较方法。
 </span></code></pre></div><h4 id="32-重写-compareto-方法实现按年龄来排序">3.2 重写 compareTo 方法实现按年龄来排序</h4>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span>  <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Person<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> age<span style="color:#f92672">;</span>
 
     <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Person</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> age<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">();</span>
         <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> name<span style="color:#f92672">;</span>
         <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">age</span> <span style="color:#f92672">=</span> age<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
@@ -426,9 +426,9 @@ keySet<span style="color:#f92672">(</span><span style="color:#f92672">)</span><s
 </span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@Override</span>
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Person o<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#75715e">// TODO Auto-generated method stub
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">age</span> <span style="color:#f92672">&gt;</span> o<span style="color:#f92672">.</span><span style="color:#a6e22e">getAge</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">age</span> <span style="color:#f92672">&gt;</span> o<span style="color:#f92672">.</span><span style="color:#a6e22e">getAge</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
             <span style="color:#66d9ef">return</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">age</span> <span style="color:#f92672">&lt;</span> o<span style="color:#f92672">.</span><span style="color:#a6e22e">getAge</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">age</span> <span style="color:#f92672">&lt;</span> o<span style="color:#f92672">.</span><span style="color:#a6e22e">getAge</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
             <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
         <span style="color:#66d9ef">return</span> age<span style="color:#f92672">;</span>

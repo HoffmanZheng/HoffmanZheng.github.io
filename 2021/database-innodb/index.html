@@ -10,7 +10,7 @@
   
   
   <link rel="prev" href="https://nervousorange.github.io/2020/advanced-git/" />
-  
+  <link rel="next" href="https://nervousorange.github.io/2021/java-exception-log/" />
   <link rel="canonical" href="https://nervousorange.github.io/2021/database-innodb/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Database：InnoDB 存储引擎",
     "headline" : "Database：InnoDB 存储引擎",
-    "description" : "在之前的博客 Database：MySQL 数据库 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 《MySQL技术内幕：InnoDB存储引擎》 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 核心实现和工作机制，主要内容有：缓冲池、后台线程工作机制、日志文件、锁、事务以及数据的备份与恢复等。\nMySQL 存储引擎 MySQL 数据库区别于其他数据库的最重要的一个特点就是其 插件式的表存储引擎（Pluggable Storage Engines），其提供了一系列标准的管理和服务支持，如 SQL 分析器和优化器等，这些标准与存储引擎本身无关，而存储引擎是底层物理结构的实现，每个存储引擎开发者可以按照自己的意愿来进行开发。 MySQL 数据库的体系结构如下图：\n需要注意的是，存储引擎是 基于表的，而不是数据库。每个存储引擎都有各自的特点，开发者应该根据具体的应用选择适合的存储引擎，以下是一些存储引擎的简单介绍：\nInnoDB 支持事务，行锁，外键，使用 MVCC 获得高并发性，实现了 SQL 的 4 种隔离级别，默认为 REPEATABLE，使用一种被称为 next-key locking 的策略来避免幻读（phantom）现象的产生，聚集索引，按主键顺序，从 MySQL 5.5.8 开始成为 MySQL 默认的存储引擎，众多互联网公司的成功应用已经证明了 InnoDB 存储引擎的高可用性、高性能以及高可扩展性。\nMyISAM 不支持事务，表锁，支持全文索引，在 5.5.8 之前是默认的存储引擎，只缓存索引文件，不缓冲数据文件。\nNDB 集群 存储引擎，数据全部放在内存中，主键查找速度极快，通过添加 NDB 数据存储节点（Data Node）可以线性地提高数据库性能；有一个问题值得注意，那就是 NDB 存储引擎的连接操作 JOIN 是在 MySQL 数据库层完成的，而不是在存储引擎层完成的。这意味着，复杂的连接操作需要巨大的网络开销，因此关联查询速度很慢。\nMemory 数据存放于内存，数据库重启或者发生崩溃，表中的数据都将消失，使用了 哈希索引，只支持表锁，并发性能较差；MySQL 使用 Memory 存储引擎作为 临时表 来存放查询的中间结果集。\nArchive 只支持 INSERT SELECT 操作，支持索引，压缩比例 1：10，非常 适合存储归档数据，如日志信息。使用行锁来实现高并发的插入操作，但并不是事务安全的引擎。",
+    "description" : "在之前的博客 Database：MySQL 数据库 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 《MySQL技术内幕：InnoDB存储引擎》 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 核心实现和工作机制，主要内容有：缓冲池、后台线程工作机制、日志文件、锁、事务等。\nMySQL 存储引擎 MySQL 数据库区别于其他数据库的最重要的一个特点就是其 插件式的表存储引擎（Pluggable Storage Engines），其提供了一系列标准的管理和服务支持，如 SQL 分析器和优化器等，这些标准与存储引擎本身无关，而存储引擎是底层物理结构的实现，每个存储引擎开发者可以按照自己的意愿来进行开发。 MySQL 数据库的体系结构如下图：\n需要注意的是，存储引擎是 基于表的，而不是数据库。每个存储引擎都有各自的特点，开发者应该根据具体的应用选择适合的存储引擎，以下是一些存储引擎的简单介绍：\nInnoDB 支持事务，行锁，外键，使用 MVCC 获得高并发性，实现了 SQL 的 4 种隔离级别，默认为 REPEATABLE，使用一种被称为 next-key locking 的策略来避免幻读（phantom）现象的产生，聚集索引，按主键顺序，从 MySQL 5.5.8 开始成为 MySQL 默认的存储引擎，众多互联网公司的成功应用已经证明了 InnoDB 存储引擎的高可用性、高性能以及高可扩展性。\nMyISAM 不支持事务，表锁，支持全文索引，在 5.5.8 之前是默认的存储引擎，只缓存索引文件，不缓冲数据文件。\nNDB 集群 存储引擎，数据全部放在内存中，主键查找速度极快，通过添加 NDB 数据存储节点（Data Node）可以线性地提高数据库性能；有一个问题值得注意，那就是 NDB 存储引擎的连接操作 JOIN 是在 MySQL 数据库层完成的，而不是在存储引擎层完成的。这意味着，复杂的连接操作需要巨大的网络开销，因此关联查询速度很慢。\nMemory 数据存放于内存，数据库重启或者发生崩溃，表中的数据都将消失，使用了 哈希索引，只支持表锁，并发性能较差；MySQL 使用 Memory 存储引擎作为 临时表 来存放查询的中间结果集。\nArchive 只支持 INSERT SELECT 操作，支持索引，压缩比例 1：10，非常 适合存储归档数据，如日志信息。使用行锁来实现高并发的插入操作，但并不是事务安全的引擎。",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -54,10 +54,10 @@
     "accountablePerson" : "Chenghao Zheng",
     "copyrightHolder" : "Chenghao Zheng",
     "copyrightYear" : "2021",
-    "datePublished": "2021-01-07 13:19:47 \x2b0100 \x2b0100",
-    "dateModified" : "2021-01-07 13:19:47 \x2b0100 \x2b0100",
+    "datePublished": "2021-01-07 13:19:47 \u002b0100 \u002b0100",
+    "dateModified" : "2021-01-07 13:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2021\/database-innodb\/",
-    "wordCount" : "2910",
+    "wordCount" : "2909",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,2910 words</span>
+                 <span class="post-word-count">,2909 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -155,7 +155,7 @@
           
           
 
-          <p>在之前的博客 <a href="https://nervousorange.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 <a href="https://book.douban.com/subject/24708143/">《MySQL技术内幕：InnoDB存储引擎》</a> 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 <strong>核心实现和工作机制</strong>，主要内容有：缓冲池、后台线程工作机制、日志文件、锁、事务以及数据的备份与恢复等。</p>
+          <p>在之前的博客 <a href="https://nervousorange.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 <a href="https://book.douban.com/subject/24708143/">《MySQL技术内幕：InnoDB存储引擎》</a> 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 <strong>核心实现和工作机制</strong>，主要内容有：缓冲池、后台线程工作机制、日志文件、锁、事务等。</p>
 <h3 id="mysql-存储引擎">MySQL 存储引擎</h3>
 <p>MySQL 数据库区别于其他数据库的最重要的一个特点就是其 <strong>插件式的表存储引擎</strong>（Pluggable Storage Engines），其提供了一系列标准的管理和服务支持，如 SQL 分析器和优化器等，这些标准与存储引擎本身无关，而存储引擎是底层物理结构的实现，每个存储引擎开发者可以按照自己的意愿来进行开发。 MySQL 数据库的体系结构如下图：</p>
 <p><img src="/images/mysql-architecture.png" alt=""></p>
@@ -209,10 +209,10 @@
 <h4 id="缓冲池">缓冲池</h4>
 <p>InnoDB 是 <strong>基于磁盘</strong> 的数据库系统（Disk-base Database），由于 CPU 速度与磁盘速度之间的鸿沟，基于磁盘的数据库系统通常使用缓冲池，通过 <strong>内存的速度</strong> 来弥补磁盘速度较慢对性能的影响。查询时先判断该页是否在缓冲池中，如果在则称该页在缓冲池被命中，直接读取该页，否则读取磁盘上的页；修改时先修改在缓冲池中的页，然后再以一定的频率刷新到磁盘上。为了提高数据库的整体性能，页从缓冲区刷新回磁盘的操作 <strong>并不是在每次页发生更新时触发</strong>，而是通过一种称为 <code>Checkpoint</code> 的机制刷新回磁盘。</p>
 <p>可见缓冲池的大小直接影响着数据库的整体性能：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">show</span> variables <span style="color:#66d9ef">like</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">innodb_buffer_pool_size</span><span style="color:#e6db74">&#39;</span>;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">show</span> variables <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;innodb_buffer_pool_size&#39;</span>;
 
 Variable_name          <span style="color:#f92672">|</span>Value    <span style="color:#f92672">|</span>
-<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span>
+<span style="color:#f92672">-----------------------|---------|</span>
 innodb_buffer_pool_size<span style="color:#f92672">|</span><span style="color:#ae81ff">134217728</span><span style="color:#f92672">|</span>
 </code></pre></div><p>具体来看，缓冲池中缓存的数据页类型有：索引页、数据页、undo 页、插入缓冲、自适应哈希索引、InnoDB 存储的锁信息、数据字典信息等。</p>
 <p><img src="/images/InnoDB-buffer-pool.jpg" alt=""></p>
@@ -221,10 +221,10 @@ innodb_buffer_pool_size<span style="color:#f92672">|</span><span style="color:#a
 </ul>
 <p>数据库中的缓冲池是通过 LRU（Lastest Recent Used，最近最少使用）算法来管理的，即最频繁使用的页在 LRU 列表的前端，而最少使用的页在 LRU 列表的尾端。当缓冲池不能存放新读取到的页时，将 <strong>首先释放 LRU 列表中尾端的页</strong>。</p>
 <p>InnoDB 对传统的 LRU 算法做了一些优化，新增了 <code>midpoint insertion strategy</code> 算法，新读取到的页并不是直接放入到 LRU 列表的首部，而是放入到 LRU 列表的 midpoint 位置，midpoint 位置由参数 <code>innodb_old_blocks_pct</code> 控制，默认位置在 LRU 列表长度的 5/8 （37%）处。midpoint 之后的列表称为 old 列表，之前的列表称为 new 列表，可以简单理解为 new 列表中的页都是最为活跃的热点数据。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">show</span> variables <span style="color:#66d9ef">like</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">innodb_old_blocks_pct</span><span style="color:#e6db74">&#39;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">show</span> variables <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;innodb_old_blocks_pct&#39;</span>
 
 Variable_name        <span style="color:#f92672">|</span>Value<span style="color:#f92672">|</span>
-<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span>
+<span style="color:#f92672">---------------------|-----|</span>
 innodb_old_blocks_pct<span style="color:#f92672">|</span><span style="color:#ae81ff">37</span>   <span style="color:#f92672">|</span>
 </code></pre></div><p>若是直接将读取到的页放入到 LRU 的首部，那么某些 SQL 操作（索引或者数据的扫描操作）可能会使缓冲池中的页被刷新出，从而影响缓冲池的效率。如果页被放入 LRU 列表的首部，可能将所需要的 <strong>热点数据页</strong> 从 LRU 列表中移除，为此 InnoDB 引入了 <code>innodb_old_blocks_time</code>，表示页读取到 mid 位置后需要等待多久才会被加入到 LRU 列表的热端。当页从 LRU 列表的 old 部分加入到 new 部分时，称此操作为 <code>page made young</code>，因设置了 innodb_old_blocks_time 导致页没有从 old 移动到 new 部分的操作称为 page_not_made_young</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">show engine innodb status;
@@ -232,18 +232,18 @@ innodb_old_blocks_pct<span style="color:#f92672">|</span><span style="color:#ae8
 ----------------------
 BUFFER POOL AND MEMORY
 ----------------------
-Total memory allocated 137363456; in additional pool allocated 0
-Dictionary memory allocated 10088749
+Total memory allocated 137363456; in additional pool allocated <span style="color:#ae81ff">0</span>
+Dictionary memory allocated <span style="color:#ae81ff">10088749</span>
 Buffer pool size   <span style="color:#ae81ff">8191</span>     // 缓冲池中页的数量，除了 LRU 还可能有自适应哈希索引、插入缓冲、锁信息等
 Free buffers       <span style="color:#ae81ff">0</span>        
 Database pages     <span style="color:#ae81ff">7545</span>     // LRU 列表中页的数量
-Old database pages 2765
+Old database pages <span style="color:#ae81ff">2765</span>
 Modified db pages  <span style="color:#ae81ff">0</span>        // 脏页的数量
-Pending reads 0
-Pending writes: LRU 0, flush list 1, single page 0
+Pending reads <span style="color:#ae81ff">0</span>
+Pending writes: LRU 0, flush list 1, single page <span style="color:#ae81ff">0</span>
 Pages made young 1115739907, not young <span style="color:#ae81ff">0</span>     // LRU 列表中页移动到前端的次数
 0.00 youngs/s, 0.00 non-youngs/s
-Pages read 592119280, created 299958, written 7230109
+Pages read 592119280, created 299958, written <span style="color:#ae81ff">7230109</span>
 0.00 reads/s, 0.00 creates/s, 1.75 writes/s
 Buffer pool hit rate <span style="color:#ae81ff">1000</span> / 1000, young-making rate <span style="color:#ae81ff">0</span> / <span style="color:#ae81ff">1000</span> not <span style="color:#ae81ff">0</span> / <span style="color:#ae81ff">1000</span>    // 缓冲池的命中率，若小于 95% 需要观察 LRU 列表是否被污染
 Pages read ahead 0.00/s, evicted without access 0.00/s, Random read ahead 0.00/s
@@ -292,11 +292,11 @@ Last checkpoint at  <span style="color:#ae81ff">49109625197</span>      // 已�
 <p>核心的后台线程，完成 InnoDB 主要工作，负责将缓冲池中的数据异步刷新到磁盘，保证数据的一致性，包括脏页的刷新、合并插入缓冲、UNDO 页的回收等。</p>
 <p><strong>InnoDB 1.0.x（MySQL 5.1）</strong> 版本之前的 Master Thread</p>
 <p>Master Thread 内部由多个循环组合，大多数的操作在主循环中，其中有两大部分的操作 —— 每秒钟的操作和每十秒的操作，其行为伪代码如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">master_thread</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">master_thread</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
   <span style="color:#66d9ef">goto</span> loop<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 loop:
-<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 10<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>               <span style="color:#75715e">// ---------- 每秒钟的操作 -------------
+<span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 10<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>               <span style="color:#75715e">// ---------- 每秒钟的操作 -------------
 </span><span style="color:#75715e"></span>  thread_sleep<span style="color:#f92672">(</span>1<span style="color:#f92672">)</span>  <span style="color:#75715e">// sleep 1 second
 </span><span style="color:#75715e"></span>  <span style="color:#66d9ef">do</span> log buffer flush to disk                <span style="color:#75715e">// 刷新日志缓冲到磁盘，即使这个事务还没提交
 </span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>last_one_second_ios <span style="color:#f92672">&lt;</span> 5<span style="color:#f92672">)</span>              
@@ -312,7 +312,7 @@ loop:
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">do</span> merge at most 5 insert buffer             <span style="color:#75715e">// 合并至多 5 个插入缓冲
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">do</span> log buffer flush to disk                  <span style="color:#75715e">// 将日志缓冲刷新到磁盘
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">do</span> full purge                                <span style="color:#75715e">// 删除无用的 Undo 页
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>buf_get_modified_ratio_pct <span style="color:#f92672">&gt;</span> 70<span style="color:#f92672">%</span><span style="color:#f92672">)</span>
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>buf_get_modified_ratio_pct <span style="color:#f92672">&gt;</span> 70<span style="color:#f92672">%)</span>
   <span style="color:#66d9ef">do</span> buffer pool flush 100 dirty page        <span style="color:#75715e">// 如果缓冲池脏页比例过大，刷新 100 个脏页，否则刷新 10 个脏页
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">else</span>
   buffer pool flush 10 dirty page
@@ -352,9 +352,9 @@ backgroud loop<span style="color:#f92672">:</span>
 <p>可以通过 SHOW ENGINE INNODB STATUS 查看当前 Master Thread 的状态信息，如下所示：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">show engine innodb status;
 
-<span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span>
+<span style="color:#f92672">=====================================</span>
 <span style="color:#ae81ff">210111</span> 18:33:26 INNODB MONITOR OUTPUT
-<span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span><span style="color:#f92672">=</span>
+<span style="color:#f92672">=====================================</span>
 Per second averages calculated from the last <span style="color:#ae81ff">12</span> seconds     // 过去 <span style="color:#ae81ff">12</span> 秒内引擎的状态统计
 -----------------
 BACKGROUND THREAD
@@ -363,14 +363,14 @@ srv_master_thread loops: <span style="color:#ae81ff">6572378</span> 1_second, <s
                        // 主线程 每秒操作次数，每秒挂起操作次数，每十秒操作次数，backgroud loop 次数，flush loop 次数  --- 说明服务器压力较小
                        // 如果服务器压力较大，可以看到每秒挂起的次数小于每秒操作的次数；
                        // 因为 InnoDB 做了一些优化，当压力大时不总是等待 <span style="color:#ae81ff">1</span> 秒，所以可以通过两者的差值反应当前数据库的负载压力
-srv_master_thread log flush and writes: 6663025
+srv_master_thread log flush and writes: <span style="color:#ae81ff">6663025</span>
 ----------
 </code></pre></div><p><strong>InnoDB 1.2.x（MySQL 5.6）</strong> 版本的 Master Thread</p>
 <p>InnoDB 1.2.x 版本再次对 Master Thread 做了优化，伪代码如下：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#66d9ef">if</span> InnoDB is idle
-  srv_master_do_idle_tasks<span style="color:#f92672">(</span><span style="color:#f92672">)</span>;     // 之前版本每 <span style="color:#ae81ff">10</span> 秒的操作
+  srv_master_do_idle_tasks<span style="color:#f92672">()</span>;     // 之前版本每 <span style="color:#ae81ff">10</span> 秒的操作
 <span style="color:#66d9ef">else</span> 
-  srv_master_do_active_tasks<span style="color:#f92672">(</span><span style="color:#f92672">)</span>；  // 之前版本每秒钟的操作
+  srv_master_do_active_tasks<span style="color:#f92672">()</span>；  // 之前版本每秒钟的操作
 </code></pre></div><p>此外，这个版本将刷新脏页的操作从 Master Thread 线程分离到一个单独的 Page Cleaner Thread 线程，从而减轻了 Master Thread 的工作，同时 <strong>避免</strong> 了 FLUSH_LRU_LIST Checkpoint 和 Async/Sync Flush Checkpoint <strong>对用户查询线程的阻塞</strong>，进一步提高了系统的并发性。</p>
 <ul>
 <li>I/O Thread</li>
@@ -378,9 +378,9 @@ srv_master_thread log flush and writes: 6663025
 <p>异步 I/O 线程来处理写 I/O 请求，以极大地提高数据库的性能。可以通过 <code>show engine innodb status</code> 来观察 InnoDB 中的 IO Thread，默认为 1 个 insert buffer thread，1 个 log thread，4 个 read thread 和 4 个 write thread，可以使用 <code>innodb_read_io_threads</code> 和 <code>innodb_write_io_threads</code> 参数进行设置。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">show</span> <span style="color:#66d9ef">engine</span> innodb status;
 
-<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#75715e">--
+<span style="color:#f92672">------</span><span style="color:#75715e">--
 </span><span style="color:#75715e">FILE I/O
-</span><span style="color:#75715e"></span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#75715e">--
+</span><span style="color:#75715e"></span><span style="color:#f92672">------</span><span style="color:#75715e">--
 </span><span style="color:#75715e">I/O thread 0 state: waiting for completed aio requests (insert buffer thread)
 </span><span style="color:#75715e"></span>I<span style="color:#f92672">/</span>O thread <span style="color:#ae81ff">1</span> state: waiting <span style="color:#66d9ef">for</span> completed aio <span style="color:#a6e22e">requests</span> (log thread)
 I<span style="color:#f92672">/</span>O thread <span style="color:#ae81ff">2</span> state: waiting <span style="color:#66d9ef">for</span> completed aio <span style="color:#a6e22e">requests</span> (<span style="color:#66d9ef">read</span> thread)
@@ -395,10 +395,10 @@ I<span style="color:#f92672">/</span>O thread <span style="color:#ae81ff">9</spa
 <li>Purge Thread</li>
 </ul>
 <p>在事务提交后，<strong>回收已经使用并分配的 undo 页</strong>。在 InnoDB 1.1 版本之前，purge 操作仅在 Master Thread 中完成，1.1 版本开始 purge 操作可以独立到单独的线程中进行，1.2 版本开始支持多个 Purge Thread 来加快 undo 页的回收，以此来减轻 Master Thread 的工作，从而提高 CPU 的使用率以及提升存储引擎的性能。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">show</span> variables <span style="color:#66d9ef">like</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">innodb_purge_threads</span><span style="color:#e6db74">&#39;</span>;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">show</span> variables <span style="color:#66d9ef">like</span> <span style="color:#e6db74">&#39;innodb_purge_threads&#39;</span>;
 
 Variable_name       <span style="color:#f92672">|</span>Value<span style="color:#f92672">|</span>
-<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">|</span>
+<span style="color:#f92672">--------------------|-----|</span>
 innodb_purge_threads<span style="color:#f92672">|</span><span style="color:#ae81ff">4</span>    <span style="color:#f92672">|</span>
 </code></pre></div><ul>
 <li>Page Cleaner Thread</li>
@@ -838,7 +838,7 @@ INSERT INTO z SELECT 6,7;
 <tbody>
 <tr>
 <td>1</td>
-<td>SET SESSION tx_isolation='READ-COMMITTED&rsquo;</td>
+<td>SET SESSION tx_isolation=&lsquo;READ-COMMITTED&rsquo;</td>
 <td></td>
 </tr>
 <tr>
@@ -1096,7 +1096,7 @@ INSERT INTO t VALUES<span style="color:#f92672">(</span>1<span style="color:#f92
 <p>隔离级别越低，事务请求的锁越少或保持锁的时间就越短。这也是为什么大多数数据库系统默认的事务隔离级别为 RC。大部分用户可能会质疑 SERIALIZABLE 隔离级别带来的性能问题，但是根据 <a href="https://book.douban.com/subject/2586390/">《Transaction Processing》</a> 的描述，两者的 <strong>开销几乎是一样的</strong>。同样的，即使使用 RC 的隔离级别，用户也不会得到性能的大幅提升。SERIALIZABLE 级别下的 InnoDB 会对每个 SELECT 语句自动加上 <code>LOCK IN SHARE MODE</code> ，对一致性的非锁定读不再予以支持，SERIALIZABLE 主要用于 InnoDB 存储引擎的分布式事务。</p>
 <p>在 MySQL 5.1 中 RC 隔离级别默认只能工作在二进制日志为 ROW 的格式下，如果二进制日志工作在默认的 STATEMENT 下，则会出现如下的错误：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sql" data-lang="sql">ERROR <span style="color:#ae81ff">1598</span> (HY000): Binary logging <span style="color:#66d9ef">not</span> possible. 
-Message: <span style="color:#66d9ef">Transaction</span> <span style="color:#66d9ef">level</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">READ-COMMITTED</span><span style="color:#e6db74">&#39;</span> <span style="color:#66d9ef">in</span> InnoDB <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> safe <span style="color:#66d9ef">for</span> binlog <span style="color:#66d9ef">mode</span> <span style="color:#e6db74">&#39;</span><span style="color:#e6db74">STATEMENT</span><span style="color:#e6db74">&#39;</span>
+Message: <span style="color:#66d9ef">Transaction</span> <span style="color:#66d9ef">level</span> <span style="color:#e6db74">&#39;READ-COMMITTED&#39;</span> <span style="color:#66d9ef">in</span> InnoDB <span style="color:#66d9ef">is</span> <span style="color:#66d9ef">not</span> safe <span style="color:#66d9ef">for</span> binlog <span style="color:#66d9ef">mode</span> <span style="color:#e6db74">&#39;STATEMENT&#39;</span>
 </code></pre></div><p>RC + STATEMENT 可能会在产生数据不一致问题：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">CREATE TABLE t <span style="color:#f92672">(</span>
 a INT PRIMARY KEY
@@ -1114,11 +1114,10 @@ COMMIT;
 
 // 接着在会话 A 提交，并查看表中数据
 COMMIT;
-SELECT * FROM t;    // 3
+SELECT * FROM t;    // <span style="color:#ae81ff">3</span>
 
 // 但是在 slave 上却看不到任何记录
 </code></pre></div><p>因为 RC 下事务并 <strong>没有使用 gap lock 进行锁定</strong>，因此会话 B 中可以再小于等于 5 的范围内插入一条记录，STATEMENT 格式记录的是 master 上产生的 SQL 语句，因此在 master 服务器上执行的顺序为先删后插，但是在 binlog 中记录的却是先插后删，逻辑顺序上产生了不一致。</p>
-<h3 id="备份与恢复">备份与恢复</h3>
 
     </div>
 
@@ -1164,6 +1163,8 @@ SELECT * FROM t;    // 3
         
         <a href="https://nervousorange.github.io/2020/advanced-git/" class="prev" rel="prev" title="Git 进阶与 GitHub 协作详解"><i class="iconfont icon-left"></i>&nbsp;Git 进阶与 GitHub 协作详解</a>
          
+        
+        <a href="https://nervousorange.github.io/2021/java-exception-log/" class="next" rel="next" title="Java：异常处理与日志记录">Java：异常处理与日志记录&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 

@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Java：线程池原理、源码分析",
     "headline" : "Java：线程池原理、源码分析",
-    "description" : "本篇为 Java：初识多线程、原理及实现 的续篇，介绍 Java 中的线程池，主要内容有：进程与线程、线程池化的意义、Executors 工具类、线程池工作流程、线程复用原理等。\n为什么需要线程池 进程与线程 起源 进程 是在批处理操作系统的基础上，为进一步提高计算机效率，改善操作系统串行的运行方式的产物。进程的出现改变了内存中始终只有一个程序运行的事实，进程是在内存中独享一片内存空间的程序，各个进程之间互不干扰。\nCPU 采用 时间片轮转 的方式运行进程，使用上下文切换的方式让操作系统的并发成为可能。虽然并发从宏观上看有多个任务在执行，但对于单核 CPU 来说，任意时刻都只有一个任务在占用 CPU 资源。\n 上下文指某一时刻 CPU 寄存器和程序计数器的内容，通过在内存中保存 \/ 读取来完成其切换。上下⽂切换通常是计算密集型的，意味着此操作会消耗⼤量的 CPU 时间，故线程也不是越多越好。如何减少系统中上下⽂切换次数，是提升多线程性能的⼀个重点课题。\n 如果说进程让操作系统的并发性成为了可能，那么 线程 就让进程的内部并发成为了可能。每个线程执行进程中的一个子任务，使得杀毒软件一遍检测用户电脑一遍清理垃圾成为可能。\n进程和线程的区别  进程间的通信比较复杂，而线程间的通信比较简单。线程相比进程更为轻量级，多线程并发相比多进程开销更小。 进程和线程本质的区别是 是否单独占有内存地址空间及其他的系统资源（比如 I\/O）：进程间存在内存隔离，而线程共享所属进程占有的内存地址空间和隔离，数据共享简单，但是同步复杂。 进程是操作系统进行资源分配的基本单位，而线程是操作系统进行调度的基本单位。一个进程出现问题不会影响其他进程；而一个线程崩溃可能影响整个程序的稳定性。  Java 线程与操作系统内核线程 用户级线程与内核级线程 推荐阅读：用户级线程和内核级线程，你分清楚了吗？\n 用户级线程 ULT：由应用程序实现和管理（创建、同步、调度等），线程阻塞则整个进程阻塞。对操作系统来说，用户级线程具有不可见性、透明性，ULT 下 CPU 的调度还是以进程为单位。 内核级线程 KLT：需通过 系统调用 创建，由系统内核管理，可实现多核 CPU 并行处理。线程阻塞不会影响同进程内其他线程的运行。  线程池的意义  JVM 运行在用户态，通过调用系统库来创建内核线程，由 CPU 来完成线程的调度；但是从用户态到内核态的权限提升和状态切换需要相当的 系统开销，频繁的创建和销毁线程将不利于程序性能的提升。 为此，将线程池化管理，对线程进行统一分配、调优和监控，避免频繁的线程创建，减少状态切换带来的资源消耗，重用线程 就是使用线程池的意义。 线程池比较适合处理数量庞大，但是处理时间较短的任务。如果某个任务耗时过长，会导致池内任务堆积。  线程池原理 ThreadPoolExecutor 的构造器参数 public ThreadPoolExecutor(int corePoolSize,\rint maximumPoolSize,\rlong keepAliveTime,\rTimeUnit unit,\rBlockingQueue\x26lt;Runnable\x26gt; workQueue,\rThreadFactory threadFactory,\rRejectedExecutionHandler handler)  corePoolSize：核⼼线程数 maximumPoolSize：池内最大线程数   最大线程数 = 核心线程 \x2b 非核心线程。非核心线程如果长时间闲置，就会被销毁。",
+    "description" : "本篇为 Java：初识多线程、原理及实现 的续篇，介绍 Java 中的线程池，主要内容有：进程与线程、线程池化的意义、Executors 工具类、线程池工作流程、线程复用原理等。\n为什么需要线程池 进程与线程 起源 进程 是在批处理操作系统的基础上，为进一步提高计算机效率，改善操作系统串行的运行方式的产物。进程的出现改变了内存中始终只有一个程序运行的事实，进程是在内存中独享一片内存空间的程序，各个进程之间互不干扰。\nCPU 采用 时间片轮转 的方式运行进程，使用上下文切换的方式让操作系统的并发成为可能。虽然并发从宏观上看有多个任务在执行，但对于单核 CPU 来说，任意时刻都只有一个任务在占用 CPU 资源。\n 上下文指某一时刻 CPU 寄存器和程序计数器的内容，通过在内存中保存 \/ 读取来完成其切换。上下⽂切换通常是计算密集型的，意味着此操作会消耗⼤量的 CPU 时间，故线程也不是越多越好。如何减少系统中上下⽂切换次数，是提升多线程性能的⼀个重点课题。\n 如果说进程让操作系统的并发性成为了可能，那么 线程 就让进程的内部并发成为了可能。每个线程执行进程中的一个子任务，使得杀毒软件一遍检测用户电脑一遍清理垃圾成为可能。\n进程和线程的区别  进程间的通信比较复杂，而线程间的通信比较简单。线程相比进程更为轻量级，多线程并发相比多进程开销更小。 进程和线程本质的区别是 是否单独占有内存地址空间及其他的系统资源（比如 I\/O）：进程间存在内存隔离，而线程共享所属进程占有的内存地址空间和隔离，数据共享简单，但是同步复杂。 进程是操作系统进行资源分配的基本单位，而线程是操作系统进行调度的基本单位。一个进程出现问题不会影响其他进程；而一个线程崩溃可能影响整个程序的稳定性。  Java 线程与操作系统内核线程 用户级线程与内核级线程 推荐阅读：用户级线程和内核级线程，你分清楚了吗？\n 用户级线程 ULT：由应用程序实现和管理（创建、同步、调度等），线程阻塞则整个进程阻塞。对操作系统来说，用户级线程具有不可见性、透明性，ULT 下 CPU 的调度还是以进程为单位。 内核级线程 KLT：需通过 系统调用 创建，由系统内核管理，可实现多核 CPU 并行处理。线程阻塞不会影响同进程内其他线程的运行。  线程池的意义  JVM 运行在用户态，通过调用系统库来创建内核线程，由 CPU 来完成线程的调度；但是从用户态到内核态的权限提升和状态切换需要相当的 系统开销，频繁的创建和销毁线程将不利于程序性能的提升。 为此，将线程池化管理，对线程进行统一分配、调优和监控，避免频繁的线程创建，减少状态切换带来的资源消耗，重用线程 就是使用线程池的意义。 线程池比较适合处理数量庞大，但是处理时间较短的任务。如果某个任务耗时过长，会导致池内任务堆积。  线程池原理 ThreadPoolExecutor 的构造器参数 public ThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit, BlockingQueue\u0026lt;Runnable\u0026gt; workQueue, ThreadFactory threadFactory, RejectedExecutionHandler handler)  corePoolSize：核⼼线程数 maximumPoolSize：池内最大线程数   最大线程数 = 核心线程 \u002b 非核心线程。非核心线程如果长时间闲置，就会被销毁。",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -54,8 +54,8 @@
     "accountablePerson" : "Chenghao Zheng",
     "copyrightHolder" : "Chenghao Zheng",
     "copyrightYear" : "2020",
-    "datePublished": "2020-03-27 10:19:47 \x2b0100 \x2b0100",
-    "dateModified" : "2020-03-27 10:19:47 \x2b0100 \x2b0100",
+    "datePublished": "2020-03-27 10:19:47 \u002b0100 \u002b0100",
+    "dateModified" : "2020-03-27 10:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/java-threadpool\/",
     "wordCount" : "1146",
     "keywords" : [ "Java", "人间一场大梦"]
@@ -243,30 +243,30 @@
 <table>
 <thead>
 <tr>
-<th align="center">线程池状态</th>
-<th align="center">ctl 高 3 位 （后 29 位皆为 0）</th>
+<th style="text-align:center">线程池状态</th>
+<th style="text-align:center">ctl 高 3 位 （后 29 位皆为 0）</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="center">RUNNING</td>
-<td align="center">111</td>
+<td style="text-align:center">RUNNING</td>
+<td style="text-align:center">111</td>
 </tr>
 <tr>
-<td align="center">SHUTDOWN</td>
-<td align="center">000</td>
+<td style="text-align:center">SHUTDOWN</td>
+<td style="text-align:center">000</td>
 </tr>
 <tr>
-<td align="center">STOP</td>
-<td align="center">001</td>
+<td style="text-align:center">STOP</td>
+<td style="text-align:center">001</td>
 </tr>
 <tr>
-<td align="center">TIDYING</td>
-<td align="center">010</td>
+<td style="text-align:center">TIDYING</td>
+<td style="text-align:center">010</td>
 </tr>
 <tr>
-<td align="center">TERMINATED</td>
-<td align="center">011</td>
+<td style="text-align:center">TERMINATED</td>
+<td style="text-align:center">011</td>
 </tr>
 </tbody>
 </table>
@@ -277,52 +277,52 @@
 <p>如此，通过当前 ctl 的值与 CAPACITY  的与运算就可以求得当前线程池状态 / 当前活跃线程数量</p>
 </li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> AtomicInteger ctl <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> AtomicInteger<span style="color:#f92672">(</span>ctlOf<span style="color:#f92672">(</span>RUNNING<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> AtomicInteger ctl <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> AtomicInteger<span style="color:#f92672">(</span>ctlOf<span style="color:#f92672">(</span>RUNNING<span style="color:#f92672">,</span> 0<span style="color:#f92672">));</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> COUNT_BITS <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">SIZE</span> <span style="color:#f92672">-</span> 3<span style="color:#f92672">;</span>       <span style="color:#75715e">// = 29
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> CAPACITY   <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> COUNT_BITS<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> CAPACITY   <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">&lt;&lt;</span> COUNT_BITS<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
 
     <span style="color:#75715e">// runState is stored in the high-order bits
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> RUNNING    <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> COUNT_BITS<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> SHUTDOWN   <span style="color:#f92672">=</span>  0 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> COUNT_BITS<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> STOP       <span style="color:#f92672">=</span>  1 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> COUNT_BITS<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> TIDYING    <span style="color:#f92672">=</span>  2 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> COUNT_BITS<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> TERMINATED <span style="color:#f92672">=</span>  3 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> COUNT_BITS<span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> RUNNING    <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">&lt;&lt;</span> COUNT_BITS<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> SHUTDOWN   <span style="color:#f92672">=</span>  0 <span style="color:#f92672">&lt;&lt;</span> COUNT_BITS<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> STOP       <span style="color:#f92672">=</span>  1 <span style="color:#f92672">&lt;&lt;</span> COUNT_BITS<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> TIDYING    <span style="color:#f92672">=</span>  2 <span style="color:#f92672">&lt;&lt;</span> COUNT_BITS<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> TERMINATED <span style="color:#f92672">=</span>  3 <span style="color:#f92672">&lt;&lt;</span> COUNT_BITS<span style="color:#f92672">;</span>
 
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">runStateOf</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span>     <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> c <span style="color:#f92672">&amp;</span> <span style="color:#f92672">~</span>CAPACITY<span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">workerCountOf</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span>  <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> c <span style="color:#f92672">&amp;</span> CAPACITY<span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="四种常见的线程池">四种常见的线程池</h3>
 <p>Executors 工具类中提供的⼏个静态⽅法来创建线程池。⼤家到了这⼀步，如果看懂了前⾯讲的 ThreadPoolExecutor 构造⽅法中各种参数的意义，那么⼀看到 Executors 类中提供的线程池的源码就应该知道这个线程池是⼲嘛的。</p>
 <h4 id="newcachedthreadpool">newCachedThreadPool</h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ExecutorService <span style="color:#a6e22e">newCachedThreadPool</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ExecutorService <span style="color:#a6e22e">newCachedThreadPool</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span>
                                       60L<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">SECONDS</span><span style="color:#f92672">,</span>
-                                      <span style="color:#66d9ef">new</span> SynchronousQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                                      <span style="color:#66d9ef">new</span> SynchronousQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;());</span>
     <span style="color:#f92672">}</span>
 </code></pre></div><p>当需要执⾏很多 <strong>短时间</strong> 的任务时，CacheThreadPool 的线程复⽤率⽐较⾼， 会显著的提⾼性能。⽽且线程 60s 后会回收，意味着即使没有任务进来，CacheThreadPool 并不会占⽤很多资源 。</p>
 <h4 id="newfixedthreadpool">newFixedThreadPool</h4>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ExecutorService <span style="color:#a6e22e">newFixedThreadPool</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> nThreads<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ThreadPoolExecutor<span style="color:#f92672">(</span>nThreads<span style="color:#f92672">,</span> nThreads<span style="color:#f92672">,</span>
                                       0L<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">MILLISECONDS</span><span style="color:#f92672">,</span>
-                                      <span style="color:#66d9ef">new</span> LinkedBlockingQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                                      <span style="color:#66d9ef">new</span> LinkedBlockingQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;());</span>
     <span style="color:#f92672">}</span>
 </code></pre></div><p>可以看到 newFixedThreadPool 创建的都是核心线程，如果任务队列中没有任务可取，线程会一直阻塞在 getTask() 方法，而 newCachedThreadPool 会在等待 60s 后收回非核心线程。所以在没有任务的情况下 FixedThreadPool 会 <strong>占用更多的资源</strong>。</p>
 <p>两种线程池都⼏乎不会触发拒绝策略，但是原理不同。FixedThreadPool 是因为阻塞队列可以很⼤（最⼤为Integer最⼤值），故⼏乎不会触发拒绝策略；CachedThreadPool 是因为线程池很⼤（最⼤为Integer最⼤值），⼏乎不会导致线程数量⼤于最⼤线程数，故⼏乎不会触发拒绝策略 。</p>
 <h4 id="newsinglethreadexecutor">newSingleThreadExecutor</h4>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ExecutorService <span style="color:#a6e22e">newSingleThreadExecutor</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ExecutorService <span style="color:#a6e22e">newSingleThreadExecutor</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> FinalizableDelegatedExecutorService
             <span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ThreadPoolExecutor<span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span>
                                     0L<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">MILLISECONDS</span><span style="color:#f92672">,</span>
-                                    <span style="color:#66d9ef">new</span> LinkedBlockingQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                                    <span style="color:#66d9ef">new</span> LinkedBlockingQueue<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;()));</span>
     <span style="color:#f92672">}</span>
 </code></pre></div><p>有且仅有⼀个核⼼线程，使⽤了 LinkedBlockingQueue（容量很⼤），所以，不会创建⾮核⼼线程。所有任务按照先来先执⾏的顺序执⾏。如果这个唯⼀的线程不空闲，那么新来的任务会存储在任务队列⾥等待执⾏。</p>
 <h4 id="newscheduledthreadpool">newScheduledThreadPool</h4>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ScheduledExecutorService <span style="color:#a6e22e">newScheduledThreadPool</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> corePoolSize<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ScheduledThreadPoolExecutor<span style="color:#f92672">(</span>corePoolSize<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ScheduledThreadPoolExecutor<span style="color:#f92672">(</span>corePoolSize<span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ScheduledThreadPoolExecutor</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> corePoolSize<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>corePoolSize<span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> NANOSECONDS<span style="color:#f92672">,</span>
-              <span style="color:#66d9ef">new</span> DelayedWorkQueue<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+              <span style="color:#66d9ef">new</span> DelayedWorkQueue<span style="color:#f92672">());</span>
     <span style="color:#f92672">}</span>
 </code></pre></div><p>⼀个定⻓线程池，⽀持定时及周期性任务执⾏。</p>
 <p>四种常⻅的线程池基本够我们使⽤了，但是《阿⾥把把开发⼿册》<strong>不建议</strong> 我们直接使⽤ Executors 类中的线程池，⽽是通过 ThreadPoolExecutor 的⽅式，这样的处理⽅式让写的同学需要更加明确线程池的运⾏规则，规避资源耗尽的⻛险。</p>
@@ -330,59 +330,59 @@
 <p>ThreadPoolExecutor 的 <code>execute(Runnable command)</code> 处理用户新提交的任务：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// JDK 1.8
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span>Runnable command<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>command <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NullPointerException<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>command <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NullPointerException<span style="color:#f92672">();</span>
     	 <span style="color:#75715e">// 任务为空，抛异常
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>workerCountOf<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> corePoolSize<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             <span style="color:#75715e">// 当前有核心线程空闲，调用核心线程执行任务
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>addWorker<span style="color:#f92672">(</span>command<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>addWorker<span style="color:#f92672">(</span>command<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">))</span>
                 <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-            c <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            c <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
             <span style="color:#75715e">// 若 addWorker 调用核心线程失败，则更新 ctl，执行下方代码，将任务添加进队列
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
     
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isRunning<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>command<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isRunning<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>command<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
             <span style="color:#75715e">// 当前核心线程无空闲，则将任务添加到任务队列中
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> recheck <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span> isRunning<span style="color:#f92672">(</span>recheck<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> remove<span style="color:#f92672">(</span>command<span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-                reject<span style="color:#f92672">(</span>command<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> recheck <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span> isRunning<span style="color:#f92672">(</span>recheck<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> remove<span style="color:#f92672">(</span>command<span style="color:#f92672">))</span>
+                reject<span style="color:#f92672">(</span>command<span style="color:#f92672">);</span>
             <span style="color:#75715e">// 再次检查线程池状态，不在 RUNNING 状态则从队列中移除任务，执行拒绝策略
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>workerCountOf<span style="color:#f92672">(</span>recheck<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span>
-                addWorker<span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>workerCountOf<span style="color:#f92672">(</span>recheck<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span>
+                addWorker<span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
             <span style="color:#75715e">// 若线程池处于 RUNNING 状态，但没有 worker，则创建线程
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
     
-        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>addWorker<span style="color:#f92672">(</span>command<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-            reject<span style="color:#f92672">(</span>command<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>addWorker<span style="color:#f92672">(</span>command<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">))</span>
+            reject<span style="color:#f92672">(</span>command<span style="color:#f92672">);</span>
    	<span style="color:#75715e">// 如果任务队列满了无法加入，则会创建非核心线程执行任务，若失败则执行拒绝策略
 </span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 </code></pre></div><p>然后再看一下在 execute() 中多次被调用的 <code>addWorker(Runnable firstTask, boolean core)</code> 方法：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">addWorker</span><span style="color:#f92672">(</span>Runnable firstTask<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> core<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         retry<span style="color:#f92672">:</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#f92672">;</span><span style="color:#f92672">;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">int</span> rs <span style="color:#f92672">=</span> runStateOf<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">int</span> rs <span style="color:#f92672">=</span> runStateOf<span style="color:#f92672">(</span>c<span style="color:#f92672">);</span>
 
             <span style="color:#75715e">// Check if queue empty only if necessary.
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>rs <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> SHUTDOWN <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
-                <span style="color:#f92672">!</span> <span style="color:#f92672">(</span>rs <span style="color:#f92672">=</span><span style="color:#f92672">=</span> SHUTDOWN <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
-                   firstTask <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
-                   <span style="color:#f92672">!</span> workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>rs <span style="color:#f92672">&gt;=</span> SHUTDOWN <span style="color:#f92672">&amp;&amp;</span>
+                <span style="color:#f92672">!</span> <span style="color:#f92672">(</span>rs <span style="color:#f92672">==</span> SHUTDOWN <span style="color:#f92672">&amp;&amp;</span>
+                   firstTask <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span>
+                   <span style="color:#f92672">!</span> workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()))</span>
                 <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
             <span style="color:#75715e">// 
 </span><span style="color:#75715e"></span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#f92672">;</span><span style="color:#f92672">;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">int</span> wc <span style="color:#f92672">=</span> workerCountOf<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>wc <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> CAPACITY <span style="color:#f92672">|</span><span style="color:#f92672">|</span>
-                    wc <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> <span style="color:#f92672">(</span>core <span style="color:#f92672">?</span> corePoolSize <span style="color:#f92672">:</span> maximumPoolSize<span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">int</span> wc <span style="color:#f92672">=</span> workerCountOf<span style="color:#f92672">(</span>c<span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>wc <span style="color:#f92672">&gt;=</span> CAPACITY <span style="color:#f92672">||</span>
+                    wc <span style="color:#f92672">&gt;=</span> <span style="color:#f92672">(</span>core <span style="color:#f92672">?</span> corePoolSize <span style="color:#f92672">:</span> maximumPoolSize<span style="color:#f92672">))</span>
                     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
                 <span style="color:#75715e">// 根据 core 的布尔值创建核心 / 非核心线程，若当前线程数以达到预设值，则返回 false
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>compareAndIncrementWorkerCount<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>compareAndIncrementWorkerCount<span style="color:#f92672">(</span>c<span style="color:#f92672">))</span>
                     <span style="color:#66d9ef">break</span> retry<span style="color:#f92672">;</span>
                 <span style="color:#75715e">// 满足可以新增线程的条件，CAS 更新 ctl，跳出循环
-</span><span style="color:#75715e"></span>                c <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// Re-read ctl
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>runStateOf<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> rs<span style="color:#f92672">)</span>
+</span><span style="color:#75715e"></span>                c <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>  <span style="color:#75715e">// Re-read ctl
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>runStateOf<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> rs<span style="color:#f92672">)</span>
                     <span style="color:#66d9ef">continue</span> retry<span style="color:#f92672">;</span>
                 <span style="color:#75715e">// else CAS failed due to workerCount change; retry inner loop
 </span><span style="color:#75715e"></span>                <span style="color:#75715e">// CAS 更新失败，若线程池状态没变，重复当前 for 循环，状态变了则从 retry 重来
@@ -393,38 +393,38 @@
         <span style="color:#66d9ef">boolean</span> workerAdded <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
         Worker w <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
         <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            w <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Worker<span style="color:#f92672">(</span>firstTask<span style="color:#f92672">)</span><span style="color:#f92672">;</span>               <span style="color:#75715e">// 这里会创建一个新的线程
+            w <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Worker<span style="color:#f92672">(</span>firstTask<span style="color:#f92672">);</span>               <span style="color:#75715e">// 这里会创建一个新的线程
 </span><span style="color:#75715e"></span>            <span style="color:#66d9ef">final</span> Thread t <span style="color:#f92672">=</span> w<span style="color:#f92672">.</span><span style="color:#a6e22e">thread</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>t <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>             <span style="color:#75715e">// 若线程创建失败，则跳至最下方 finally
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>t <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>             <span style="color:#75715e">// 若线程创建失败，则跳至最下方 finally
 </span><span style="color:#75715e"></span>                <span style="color:#66d9ef">final</span> ReentrantLock mainLock <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">mainLock</span><span style="color:#f92672">;</span>
-                mainLock<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                mainLock<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">();</span>
                 <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
                     <span style="color:#75715e">// Recheck while holding lock.
 </span><span style="color:#75715e"></span>                    <span style="color:#75715e">// Back out on ThreadFactory failure or if
 </span><span style="color:#75715e"></span>                    <span style="color:#75715e">// shut down before lock acquired.
-</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">int</span> rs <span style="color:#f92672">=</span> runStateOf<span style="color:#f92672">(</span>ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">int</span> rs <span style="color:#f92672">=</span> runStateOf<span style="color:#f92672">(</span>ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">());</span>
 
-                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>rs <span style="color:#f92672">&lt;</span> SHUTDOWN <span style="color:#f92672">|</span><span style="color:#f92672">|</span>
-                        <span style="color:#f92672">(</span>rs <span style="color:#f92672">=</span><span style="color:#f92672">=</span> SHUTDOWN <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> firstTask <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">isAlive</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#75715e">// precheck that t is startable
-</span><span style="color:#75715e"></span>                            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalThreadStateException<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                        workers<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>w<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                        <span style="color:#66d9ef">int</span> s <span style="color:#f92672">=</span> workers<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>rs <span style="color:#f92672">&lt;</span> SHUTDOWN <span style="color:#f92672">||</span>
+                        <span style="color:#f92672">(</span>rs <span style="color:#f92672">==</span> SHUTDOWN <span style="color:#f92672">&amp;&amp;</span> firstTask <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">isAlive</span><span style="color:#f92672">())</span> <span style="color:#75715e">// precheck that t is startable
+</span><span style="color:#75715e"></span>                            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalThreadStateException<span style="color:#f92672">();</span>
+                        workers<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>
+                        <span style="color:#66d9ef">int</span> s <span style="color:#f92672">=</span> workers<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>
                         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s <span style="color:#f92672">&gt;</span> largestPoolSize<span style="color:#f92672">)</span>
                             largestPoolSize <span style="color:#f92672">=</span> s<span style="color:#f92672">;</span> 
                         workerAdded <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
                     <span style="color:#f92672">}</span>
                 <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
-                    mainLock<span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                    mainLock<span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">();</span>
                 <span style="color:#f92672">}</span>
                 <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>workerAdded<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    t<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>                   <span style="color:#75715e">// 启动这个线程，开始工作
+                    t<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>                   <span style="color:#75715e">// 启动这个线程，开始工作
 </span><span style="color:#75715e"></span>                    workerStarted <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
                 <span style="color:#f92672">}</span>
             <span style="color:#f92672">}</span>
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span> workerStarted<span style="color:#f92672">)</span>
-                addWorkerFailed<span style="color:#f92672">(</span>w<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span> workerStarted<span style="color:#f92672">)</span>
+                addWorkerFailed<span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>
             <span style="color:#75715e">// 创建线程失败，则执行 addWorkerFailed(w)
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
         <span style="color:#66d9ef">return</span> workerStarted<span style="color:#f92672">;</span>         <span style="color:#75715e">// 返回是否成功创建线程并开始任务
@@ -440,84 +440,84 @@
         <span style="color:#66d9ef">volatile</span> <span style="color:#66d9ef">long</span> completedTasks<span style="color:#f92672">;</span>
         
         Worker<span style="color:#f92672">(</span>Runnable firstTask<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            setState<span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span> <span style="color:#75715e">// inhibit interrupts until runWorker
+            setState<span style="color:#f92672">(-</span>1<span style="color:#f92672">);</span> <span style="color:#75715e">// inhibit interrupts until runWorker
 </span><span style="color:#75715e"></span>            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">firstTask</span> <span style="color:#f92672">=</span> firstTask<span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">thread</span> <span style="color:#f92672">=</span> getThreadFactory<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">newThread</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>  <span style="color:#75715e">// 调用构造器时，会新开一个线程
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">thread</span> <span style="color:#f92672">=</span> getThreadFactory<span style="color:#f92672">().</span><span style="color:#a6e22e">newThread</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>  <span style="color:#75715e">// 调用构造器时，会新开一个线程
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 
-        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// 线程开始工作时调用这个 run 
-</span><span style="color:#75715e"></span>            runWorker<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// 线程开始工作时调用这个 run 
+</span><span style="color:#75715e"></span>            runWorker<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
         <span style="color:#f92672">}</span>
 
 	<span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">runWorker</span><span style="color:#f92672">(</span>Worker w<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        Thread wt <span style="color:#f92672">=</span> Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">currentThread</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        Thread wt <span style="color:#f92672">=</span> Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">currentThread</span><span style="color:#f92672">();</span>
         Runnable task <span style="color:#f92672">=</span> w<span style="color:#f92672">.</span><span style="color:#a6e22e">firstTask</span><span style="color:#f92672">;</span>
         w<span style="color:#f92672">.</span><span style="color:#a6e22e">firstTask</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-        w<span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> <span style="color:#75715e">// allow interrupts
+        w<span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">();</span> <span style="color:#75715e">// allow interrupts
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">boolean</span> completedAbruptly <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
         <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>task <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">(</span>task <span style="color:#f92672">=</span> getTask<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>task <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>task <span style="color:#f92672">=</span> getTask<span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             <span style="color:#75715e">// 执行自己的任务或者从任务队列中取出一个任务
-</span><span style="color:#75715e"></span>                w<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>                w<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">();</span>
                 <span style="color:#75715e">// 将 Worker 自身上锁
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>runStateAtLeast<span style="color:#f92672">(</span>ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> STOP<span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span>
-                     <span style="color:#f92672">(</span>Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">interrupted</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
-                      runStateAtLeast<span style="color:#f92672">(</span>ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> STOP<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span>
-                    <span style="color:#f92672">!</span>wt<span style="color:#f92672">.</span><span style="color:#a6e22e">isInterrupted</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-                    wt<span style="color:#f92672">.</span><span style="color:#a6e22e">interrupt</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>runStateAtLeast<span style="color:#f92672">(</span>ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(),</span> STOP<span style="color:#f92672">)</span> <span style="color:#f92672">||</span>
+                     <span style="color:#f92672">(</span>Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">interrupted</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span>
+                      runStateAtLeast<span style="color:#f92672">(</span>ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(),</span> STOP<span style="color:#f92672">)))</span> <span style="color:#f92672">&amp;&amp;</span>
+                    <span style="color:#f92672">!</span>wt<span style="color:#f92672">.</span><span style="color:#a6e22e">isInterrupted</span><span style="color:#f92672">())</span>
+                    wt<span style="color:#f92672">.</span><span style="color:#a6e22e">interrupt</span><span style="color:#f92672">();</span>
                 <span style="color:#75715e">// 检测线程池状态，若线程池处于中断状态，当前线程将中断
 </span><span style="color:#75715e"></span>                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                    beforeExecute<span style="color:#f92672">(</span>wt<span style="color:#f92672">,</span> task<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// 执行 beforeExecute
+                    beforeExecute<span style="color:#f92672">(</span>wt<span style="color:#f92672">,</span> task<span style="color:#f92672">);</span>       <span style="color:#75715e">// 执行 beforeExecute
 </span><span style="color:#75715e"></span>                    Throwable thrown <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
                     <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                        task<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// 执行任务
+                        task<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>       <span style="color:#75715e">// 执行任务
 </span><span style="color:#75715e"></span>                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>RuntimeException x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
                         thrown <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span> <span style="color:#66d9ef">throw</span> x<span style="color:#f92672">;</span>
                     <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Error x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
                         thrown <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span> <span style="color:#66d9ef">throw</span> x<span style="color:#f92672">;</span>
                     <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        thrown <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error<span style="color:#f92672">(</span>x<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                        thrown <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error<span style="color:#f92672">(</span>x<span style="color:#f92672">);</span>
                     <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
-                        afterExecute<span style="color:#f92672">(</span>task<span style="color:#f92672">,</span> thrown<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// 执行 afterExecute
+                        afterExecute<span style="color:#f92672">(</span>task<span style="color:#f92672">,</span> thrown<span style="color:#f92672">);</span>      <span style="color:#75715e">// 执行 afterExecute
 </span><span style="color:#75715e"></span>                    <span style="color:#f92672">}</span>
                 <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span> n
                     task <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-                    w<span style="color:#f92672">.</span><span style="color:#a6e22e">completedTasks</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
-                    w<span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>   <span style="color:#75715e">// 解锁 Worker
+                    w<span style="color:#f92672">.</span><span style="color:#a6e22e">completedTasks</span><span style="color:#f92672">++;</span>
+                    w<span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">();</span>   <span style="color:#75715e">// 解锁 Worker
 </span><span style="color:#75715e"></span>                <span style="color:#f92672">}</span>
             <span style="color:#f92672">}</span>
             completedAbruptly <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
-            processWorkerExit<span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> completedAbruptly<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            processWorkerExit<span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> completedAbruptly<span style="color:#f92672">);</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
         
 
 </code></pre></div><p>⾸先去执⾏创建这个 worker 时就有的任务，当执⾏完这个任务后，worker 的⽣命周期并没有结束，在 while 循环中，worker 会不断地调⽤ <code>getTask()</code> ⽅法从阻塞队列中获取任务然后调⽤ <code>task.run()</code> 执⾏任务，从⽽达到 <strong>复⽤线程</strong> 的⽬的。只要 getTask() ⽅法不返回 null，此线程就不会退出。</p>
 <p>当然，核⼼线程池中创建的线程想要拿到阻塞队列中的任务，先要判断线程池的状态，如果 STOP 或 TERMINATED，返回 null 。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> Runnable <span style="color:#a6e22e">getTask</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> Runnable <span style="color:#a6e22e">getTask</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">boolean</span> timedOut <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#75715e">// Did the last poll() time out?
 </span><span style="color:#75715e"></span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#f92672">;</span><span style="color:#f92672">;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">int</span> rs <span style="color:#f92672">=</span> runStateOf<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(;;)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> ctl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">int</span> rs <span style="color:#f92672">=</span> runStateOf<span style="color:#f92672">(</span>c<span style="color:#f92672">);</span>
 
             <span style="color:#75715e">// Check if queue empty only if necessary.
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>rs <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> SHUTDOWN <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>rs <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> STOP <span style="color:#f92672">|</span><span style="color:#f92672">|</span> workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                decrementWorkerCount<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>rs <span style="color:#f92672">&gt;=</span> SHUTDOWN <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>rs <span style="color:#f92672">&gt;=</span> STOP <span style="color:#f92672">||</span> workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+                decrementWorkerCount<span style="color:#f92672">();</span>
                 <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
             <span style="color:#f92672">}</span>
 
-            <span style="color:#66d9ef">int</span> wc <span style="color:#f92672">=</span> workerCountOf<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">int</span> wc <span style="color:#f92672">=</span> workerCountOf<span style="color:#f92672">(</span>c<span style="color:#f92672">);</span>
 
             <span style="color:#75715e">// Are workers subject to culling?
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">boolean</span> timed <span style="color:#f92672">=</span> allowCoreThreadTimeOut <span style="color:#f92672">|</span><span style="color:#f92672">|</span> wc <span style="color:#f92672">&gt;</span> corePoolSize<span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">boolean</span> timed <span style="color:#f92672">=</span> allowCoreThreadTimeOut <span style="color:#f92672">||</span> wc <span style="color:#f92672">&gt;</span> corePoolSize<span style="color:#f92672">;</span>
             <span style="color:#75715e">// allowCoreThreadTimeOut 变量默认是 false，核⼼线程即使空闲也不会被销毁
 </span><span style="color:#75715e"></span>            <span style="color:#75715e">// 如果为 true，核⼼线程在 keepAliveTime 内仍空闲则会被销毁。
 </span><span style="color:#75715e"></span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>wc <span style="color:#f92672">&gt;</span> maximumPoolSize <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">(</span>timed <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> timedOut<span style="color:#f92672">)</span><span style="color:#f92672">)</span>
-                <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>wc <span style="color:#f92672">&gt;</span> 1 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>compareAndDecrementWorkerCount<span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">)</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>wc <span style="color:#f92672">&gt;</span> maximumPoolSize <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>timed <span style="color:#f92672">&amp;&amp;</span> timedOut<span style="color:#f92672">))</span>
+                <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>wc <span style="color:#f92672">&gt;</span> 1 <span style="color:#f92672">||</span> workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>compareAndDecrementWorkerCount<span style="color:#f92672">(</span>c<span style="color:#f92672">))</span>
                     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
             <span style="color:#75715e">// 如果运⾏线程数超过了最⼤线程数，但是缓存队列已经空了，这时递减 worker 数量。
 </span><span style="color:#75715e"></span>            <span style="color:#75715e">// 如果有设置允许线程超时或者线程数量超过了核⼼线程数量，
@@ -528,8 +528,8 @@
             <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
                 Runnable r <span style="color:#f92672">=</span> timed <span style="color:#f92672">?</span>
                     workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span>keepAliveTime<span style="color:#f92672">,</span> TimeUnit<span style="color:#f92672">.</span><span style="color:#a6e22e">NANOSECONDS</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span>
-                    workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">take</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
+                    workQueue<span style="color:#f92672">.</span><span style="color:#a6e22e">take</span><span style="color:#f92672">();</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
                     <span style="color:#66d9ef">return</span> r<span style="color:#f92672">;</span>
                 timedOut <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
             <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException retry<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>

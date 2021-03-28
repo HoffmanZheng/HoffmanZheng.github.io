@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Java：程序的部署和 Nginx 负载均衡",
     "headline" : "Java：程序的部署和 Nginx 负载均衡",
-    "description" : "本篇介绍 Java 程序部署的三种方式：exec 插件、jar 包、Docker 方式部署，以及使用 Nginx 实现简单的负载均衡。\nJava 程序的部署 Maven exec 插件部署  导入 Maven 的 exec 插件：Maven Repository：exec-maven-plugin，然后在 pom.xml 中进行配置，使之可以调用外部命令执行 Java 程序并自动加载依赖的 classpath 路径：  \x26lt;plugin\x26gt;\r\x26lt;groupId\x26gt;org.codehaus.mojo\x26lt;\/groupId\x26gt;\r\x26lt;artifactId\x26gt;exec-maven-plugin\x26lt;\/artifactId\x26gt;\r\x26lt;version\x26gt;1.6.0\x26lt;\/version\x26gt;\r\x26lt;executions\x26gt;\r\x26lt;execution\x26gt;\r\x26lt;id\x26gt;run\x26lt;\/id\x26gt;\r\x26lt;goals\x26gt;\r\x26lt;goal\x26gt;exec\x26lt;\/goal\x26gt;\r\x26lt;\/goals\x26gt;\r\x26lt;configuration\x26gt;\r\x26lt;executable\x26gt;java\x26lt;\/executable\x26gt;\r\x26lt;arguments\x26gt;\r\x26lt;argument\x26gt;-classpath\x26lt;\/argument\x26gt;\r\x26lt;!--automatically creates the classpath using all project dependencies,\ralso adding the project build directory --\x26gt;\r\x26lt;classpath\/\x26gt;\r\x26lt;argument\x26gt;com.github.NervousOrange.springboot.Application\x26lt;\/argument\x26gt;\r\x26lt;\/arguments\x26gt;\r\x26lt;\/configuration\x26gt;\r\x26lt;\/execution\x26gt;\r\x26lt;\/executions\x26gt;\r\x26lt;\/plugin\x26gt;\rmvn exec:exec@[executionID] 即可完成程序的部署；-X 参数可以用于排查部署时出现的问题，-DskipTests 可以跳过测试。 windosw下（需使用系统 cmd） netstat -ano | findstr \x26quot;8080\x26quot; 可以查看当前端口被占用的情况，tasklist |findstr \x26quot;进程id号\x26quot; 查找对应的进程名称，然后 taskkill \/f \/t \/im \x26quot;进程id或者进程名称\x26quot; 杀掉当前占用端口的进程  部署效果图：",
+    "description" : "本篇介绍 Java 程序部署的三种方式：exec 插件、jar 包、Docker 方式部署，以及使用 Nginx 实现简单的负载均衡。\nJava 程序的部署 Maven exec 插件部署  导入 Maven 的 exec 插件：Maven Repository：exec-maven-plugin，然后在 pom.xml 中进行配置，使之可以调用外部命令执行 Java 程序并自动加载依赖的 classpath 路径：  \u0026lt;plugin\u0026gt; \u0026lt;groupId\u0026gt;org.codehaus.mojo\u0026lt;\/groupId\u0026gt; \u0026lt;artifactId\u0026gt;exec-maven-plugin\u0026lt;\/artifactId\u0026gt; \u0026lt;version\u0026gt;1.6.0\u0026lt;\/version\u0026gt; \u0026lt;executions\u0026gt; \u0026lt;execution\u0026gt; \u0026lt;id\u0026gt;run\u0026lt;\/id\u0026gt; \u0026lt;goals\u0026gt; \u0026lt;goal\u0026gt;exec\u0026lt;\/goal\u0026gt; \u0026lt;\/goals\u0026gt; \u0026lt;configuration\u0026gt; \u0026lt;executable\u0026gt;java\u0026lt;\/executable\u0026gt; \u0026lt;arguments\u0026gt; \u0026lt;argument\u0026gt;-classpath\u0026lt;\/argument\u0026gt; \u0026lt;!-- automatically creates the classpath using all project dependencies, also adding the project build directory --\u0026gt; \u0026lt;classpath\/\u0026gt; \u0026lt;argument\u0026gt;com.github.NervousOrange.springboot.Application\u0026lt;\/argument\u0026gt; \u0026lt;\/arguments\u0026gt; \u0026lt;\/configuration\u0026gt; \u0026lt;\/execution\u0026gt; \u0026lt;\/executions\u0026gt; \u0026lt;\/plugin\u0026gt; mvn exec:exec@[executionID] 即可完成程序的部署；-X 参数可以用于排查部署时出现的问题，-DskipTests 可以跳过测试。 windosw下（需使用系统 cmd） netstat -ano | findstr \u0026quot;8080\u0026quot; 可以查看当前端口被占用的情况，tasklist |findstr \u0026quot;进程id号\u0026quot; 查找对应的进程名称，然后 taskkill \/f \/t \/im \u0026quot;进程id或者进程名称\u0026quot; 杀掉当前占用端口的进程  部署效果图：",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -54,10 +54,10 @@
     "accountablePerson" : "Chenghao Zheng",
     "copyrightHolder" : "Chenghao Zheng",
     "copyrightYear" : "2020",
-    "datePublished": "2020-04-21 11:30:47 \x2b0100 \x2b0100",
-    "dateModified" : "2020-04-21 11:30:47 \x2b0100 \x2b0100",
+    "datePublished": "2020-04-21 11:30:47 \u002b0100 \u002b0100",
+    "dateModified" : "2020-04-21 11:30:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2020\/deploy\/",
-    "wordCount" : "298",
+    "wordCount" : "294",
     "keywords" : [ "Java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,298 words</span>
+                 <span class="post-word-count">,294 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -175,8 +175,8 @@
 			&lt;<span style="color:#f92672">executable</span>&gt;java&lt;/<span style="color:#f92672">executable</span>&gt;
 			&lt;<span style="color:#f92672">arguments</span>&gt;
 				&lt;<span style="color:#f92672">argument</span>&gt;-classpath&lt;/<span style="color:#f92672">argument</span>&gt;
-	<span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> automatically creates the classpath using all project dependencies,
-</span><span style="color:#75715e">          also adding the project build directory </span><span style="color:#75715e">--&gt;</span>
+	<span style="color:#75715e">&lt;!-- automatically creates the classpath using all project dependencies,
+</span><span style="color:#75715e">          also adding the project build directory --&gt;</span>
 				&lt;<span style="color:#f92672">classpath</span>/&gt;
 				&lt;<span style="color:#f92672">argument</span>&gt;com.github.NervousOrange.springboot.Application&lt;/<span style="color:#f92672">argument</span>&gt;
 			&lt;/<span style="color:#f92672">arguments</span>&gt;
@@ -200,12 +200,12 @@
 <ol>
 <li>编写 Dockerfile 将之前打的 jar 包放进去，对外暴露 8080 端口。</li>
 </ol>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> java:openjdk-8u111-alpine</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mkdir /app<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /app       //工作目录</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> target/Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar /app<span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">EXPOSE</span><span style="color:#e6db74"> 8080</span><span style="color:#960050;background-color:#1e0010">
-</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;java&#34;</span>,<span style="color:#e6db74">&#34;-jar&#34;</span>,<span style="color:#e6db74">&#34;Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar&#34;</span>]<span style="color:#960050;background-color:#1e0010">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-dockerfile" data-lang="dockerfile"><span style="color:#66d9ef">FROM</span><span style="color:#e6db74"> java:openjdk-8u111-alpine</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">RUN</span> mkdir /app<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">WORKDIR</span><span style="color:#e6db74"> /app       //工作目录</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">COPY</span> target/Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar /app<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">EXPOSE</span><span style="color:#e6db74"> 8080</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;java&#34;</span>,<span style="color:#e6db74">&#34;-jar&#34;</span>,<span style="color:#e6db74">&#34;Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar&#34;</span>]<span style="color:#960050;background-color:#1e0010">
 </span></code></pre></div><ol start="2">
 <li>
 <p>构建一个 Docker 镜像：<code>docker build .</code> 随后可以用 <code>docker tag [imageID] [imageName]:tag</code> 来修改生成镜像的名字和版本</p>
