@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Java：异常处理与日志记录",
     "headline" : "Java：异常处理与日志记录",
-    "description" : "在开发 Java 项目中通常依赖 Eclipse\/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹快速定位并解决线上问题。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。\nJava 的异常处理 Java 的日志记录 日志组件的选择 纵览 Java Log 的发展历程：\n Log4j（作者Ceki Gülcü）出来时就等到了广泛的应用（注意这里是直接使用），是 Java 日志事实上的标准，并成为了 Apache 的项目 Apache 要求把 Log4j 并入到 JDK，SUN 拒绝，并在 JDK1.4 版本后增加了 JUL（java.util.logging） 毕竟是 JDK 自带的，JUL 也有很多人用。同时还有其他日志组件，如 SimpleLog 等。这时如果有人想换成其它日志组件，如 Log4j 换成 JUL，因为 API 完全不同，就需要改动代码。 Apache 见此，开发了 JCL（Jakarta Commons Logging），即 commons-logging-xx.jar。它只提供一套 通用的日志接口 API，并不提供日志的实现。很好的设计原则嘛，依赖抽象而非实现。这样应用程序可以在运行时选择自己想要的日志实现组件。 这样看上去也挺美好的，但是 Log4j 的作者觉得 JCL 不好用，自己开发出 slf4j，它跟 JCL 类似，本身不替供日志具体实现，只对外提供接口或门面。目的就是为了替代 JCL。同时，还开发出 Logback，一个比 Log4j 拥有 更高性能 的组件，目的是为了替代 Log4j。 Apache 参考了 Logback 并做了一系列优化，推出了log4j 2  因此现在市面上常用的日志组件有：",
+    "description" : "在开发 Java 项目中通常依赖 Eclipse\/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹 快速定位并解决线上问题。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。\n本篇将结合 阿里巴巴《Java 开发手册（嵩山版）》、 Log4j 2.x 官方文档、 Takipi 日志相关文章 讲解在项目中如何优雅地处理异常以及高效且有效地记录日志。\nJava 的异常处理 错误码 阿里巴巴《Java 开发手册（嵩山版）》 中有关错误码给出了以下几点指导：\n 错误码就像康熙字典中的生僻字一样，用词似乎精准，但是字典不容易随身携带并且简单易懂。1）错误码必须能够快速知晓 错误来源，可快速判断是谁的问题。 2）错误码必须能够进行清晰地比对（代码中容易 equals）。 3） 错误码有利于团队快速对错误原因达到 一致认知 错误码分成两个部分：错误产生来源 \u002b 四位数字编号 ，可参考手册中的附表（避免随意定义新的错误码），用于快速溯源。将来源于客户、当前系统、第三方服务的错误快速 区分。在无法具体确定的错误场景中，可直接使用 宏观错误码，比如 A0001（用户端错误）、B0001（系统执行出错）、C0001（调用第三方服务出错） 错误码不能直接输出给用户作为提示信息使用。堆栈（stack_trace）、错误信息（error_message）、错误码（ error_code）、提示信息（ user_tip）是一个有效关联并互相转义的和谐整体，但是 请勿互相越俎代庖。错误码之外的业务独特信息由 error_message 来承载，而不是让错误码本身涵盖过多具体业务属性 在获取第三方服务错误码时，向上抛出允许 本系统转义，由 C 转为 B，并且在错误信息上带上原有的第三方错误码。  异常处理 阿里巴巴《Java 开发手册（嵩山版）》 中有关异常处理给出了以下几点指导：\n 异常设计的初衷是解决程序运行中的各种意外情况，而不是做流程或条件控制，且异常的处理效率比条件判断方式要低很多。 非受检异常如 RuntimeException、NullPointerException 等不应该通过 catch 的方式来处理，而是自行使用条件判断。 尽可能 区分异常类型，再做对应的异常处理。定义异常时区分 unckecked \/ checked 异常，避免直接抛出 new RuntimeException() 或是 Exception \/ Throwable，应使用 有业务含义 的自定义异常。 如果不想处理异常，可以将该异常抛出给它的调用者。最外层的业务使用者，必须处理异常，将其 转化 为用户可以理解的内容。在事务场景中，应注意在 catch 后 手动回滚 事务。 finally 块必须对资源对象、流对象进行关闭，推荐使用 try-with-resources 方式。在 finally 中禁止使用 return，finally 中的 return 会无情地屏蔽掉 try 中的 return 语句。 方法的返回值可以为 null，不强制返回空集合，或者空对象等，必须添加 注释充分说明什么情况下会返回 null 值。必须考虑到远程调用失败、 序列化失败、运行时异常等场景返回 null 的情况。 防止 NullPointerException 是程序员的基本修养，注意 NPE 产生的场景：  返回类型为基本数据类型， return 包装数据类型的对象时，自动拆箱有可能产生 NPE。 反例： public int f() { return Integer 对象}， 如果为 null，自动解箱抛 NPE。 数据库的查询结果可能为 null。 集合里的元素即使 isNotEmpty，取出的数据元素也可能为 null。 远程调用返回对象时，一律要求进行空指针判断，防止 NPE。 对于 Session 中获取的数据，建议进行 NPE 检查，避免空指针。 级联调用 obj.",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2021-03-24 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2021-03-24 13:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2021\/java-exception-log\/",
-    "wordCount" : "558",
+    "wordCount" : "709",
     "keywords" : [ "java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/study-notes/"> Study notes </a>
                         
                 </span>
-                 <span class="post-word-count">,558 words</span>
+                 <span class="post-word-count">,709 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -155,8 +155,48 @@
           
           
 
-          <p>在开发 Java 项目中通常依赖 Eclipse/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹快速定位并解决线上问题。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。</p>
+          <p>在开发 Java 项目中通常依赖 Eclipse/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹 <strong>快速定位并解决线上问题</strong>。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。</p>
+<p>本篇将结合 <a href="https://developer.aliyun.com/topic/java20">阿里巴巴《Java 开发手册（嵩山版）》</a>、 <a href="https://logging.apache.org/log4j/2.x/">Log4j 2.x 官方文档</a>、 <a href="https://www.overops.com/">Takipi 日志相关文章</a> 讲解在项目中如何优雅地处理异常以及高效且有效地记录日志。</p>
 <h1 id="java-的异常处理">Java 的异常处理</h1>
+<h3 id="错误码">错误码</h3>
+<p><a href="https://developer.aliyun.com/topic/java20">阿里巴巴《Java 开发手册（嵩山版）》</a> 中有关错误码给出了以下几点指导：</p>
+<ol>
+<li>错误码就像康熙字典中的生僻字一样，用词似乎精准，但是字典不容易随身携带并且简单易懂。1）错误码必须能够快速知晓 <strong>错误来源</strong>，可快速判断是谁的问题。 2）错误码必须能够进行清晰地比对（代码中容易 equals）。 3） 错误码有利于团队快速对错误原因达到 <strong>一致认知</strong></li>
+<li>错误码分成两个部分：错误产生来源 + 四位数字编号 ，可参考手册中的附表（避免随意定义新的错误码），用于快速溯源。将来源于客户、当前系统、第三方服务的错误快速 <strong>区分</strong>。在无法具体确定的错误场景中，可直接使用 <strong>宏观错误码</strong>，比如 A0001（用户端错误）、B0001（系统执行出错）、C0001（调用第三方服务出错）</li>
+<li>错误码不能直接输出给用户作为提示信息使用。堆栈（stack_trace）、错误信息（error_message）、错误码（ error_code）、提示信息（ user_tip）是一个有效关联并互相转义的和谐整体，但是 <strong>请勿互相越俎代庖</strong>。错误码之外的业务独特信息由 error_message 来承载，而不是让错误码本身涵盖过多具体业务属性</li>
+<li>在获取第三方服务错误码时，向上抛出允许 <strong>本系统转义</strong>，由 C 转为 B，并且在错误信息上带上原有的第三方错误码。</li>
+</ol>
+<h3 id="异常处理">异常处理</h3>
+<p><a href="https://developer.aliyun.com/topic/java20">阿里巴巴《Java 开发手册（嵩山版）》</a> 中有关异常处理给出了以下几点指导：</p>
+<ol>
+<li>异常设计的初衷是解决程序运行中的各种意外情况，而不是做流程或条件控制，且异常的处理效率比条件判断方式要低很多。</li>
+<li>非受检异常如 RuntimeException、NullPointerException 等不应该通过 catch 的方式来处理，而是自行使用条件判断。</li>
+<li>尽可能 <strong>区分异常类型</strong>，再做对应的异常处理。定义异常时区分 unckecked / checked 异常，避免直接抛出 <code>new RuntimeException()</code> 或是 Exception / Throwable，应使用 <strong>有业务含义</strong> 的自定义异常。</li>
+<li>如果不想处理异常，可以将该异常抛出给它的调用者。最外层的业务使用者，必须处理异常，将其 <strong>转化</strong> 为用户可以理解的内容。在事务场景中，应注意在 catch 后 <strong>手动回滚</strong> 事务。</li>
+<li>finally 块必须对资源对象、流对象进行关闭，推荐使用 <code>try-with-resources</code> 方式。在 finally 中禁止使用 return，finally 中的 return 会无情地屏蔽掉 try 中的 return 语句。</li>
+<li>方法的返回值可以为 null，不强制返回空集合，或者空对象等，必须添加 <strong>注释充分说明什么情况下会返回 null 值</strong>。必须考虑到远程调用失败、 序列化失败、运行时异常等场景返回 null 的情况。</li>
+<li>防止 <code>NullPointerException</code> 是程序员的基本修养，注意 NPE 产生的场景：
+<ul>
+<li>返回类型为基本数据类型， return 包装数据类型的对象时，自动拆箱有可能产生 NPE。
+反例： public int f() { return Integer 对象}， 如果为 null，自动解箱抛 NPE。</li>
+<li>数据库的查询结果可能为 null。</li>
+<li>集合里的元素即使 isNotEmpty，取出的数据元素也可能为 null。</li>
+<li>远程调用返回对象时，一律要求进行空指针判断，防止 NPE。</li>
+<li>对于 Session 中获取的数据，建议进行 NPE 检查，避免空指针。</li>
+<li>级联调用 obj.getA().getB().getC()；一连串调用，易产生 NPE。</li>
+</ul>
+</li>
+</ol>
+<h4 id="统一的异常处理">统一的异常处理</h4>
+<p>对于不可避免需要处理的各种异常，代码中就会出现大量的 try&hellip; catch&hellip; finally&hellip; 代码块，不仅有大量的代码冗余，还影响代码的可读性。但异常还是要处理的，那么如何优雅地处理各种异常呢。</p>
+<p>在写测试用例的时候体验过 JUnit 的 Assert 带给我们的丝滑，可以模仿其写一个断言类，<strong>使用 asset 断言来代替日常的异常 throw</strong>，在断言失败时会调用抛出异常的接口。</p>
+<p><img src="/images/asset-replace-throw.jpg" alt=""></p>
+<p>将错误码和异常信息封装在枚举中，这样就不用每一种异常都单独定义一个异常类了。</p>
+<p><img src="/images/exception-enum.jpg" alt=""></p>
+<p>最终的业务逻辑在判断处理异常时就会变得非常简洁了：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLIENT_INVALID_INPUT</span><span style="color:#f92672">.</span><span style="color:#a6e22e">assertNotNull</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLIENT_INVALID_INPUT</span><span style="color:#f92672">.</span><span style="color:#a6e22e">assertNotNull</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Object<span style="color:#f92672">());</span>
+</code></pre></div><p>至于统一的异常处理，可以参考使用下 Spring 提供的 <code>@ExceptionHandler</code> 。</p>
 <h1 id="java-的日志记录">Java 的日志记录</h1>
 <h3 id="日志组件的选择">日志组件的选择</h3>
 <p>纵览 Java Log 的发展历程：</p>
