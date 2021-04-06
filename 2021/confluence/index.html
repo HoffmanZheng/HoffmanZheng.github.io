@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="https://nervousorange.github.io/2021/java-concurrency/" />
+  
+  <link rel="canonical" href="https://nervousorange.github.io/2021/confluence/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           多人协作平台 Confluence 搭建 | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="多人协作平台 Confluence 搭建 | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/nervousorange.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "多人协作平台 Confluence 搭建",
+    "headline" : "多人协作平台 Confluence 搭建",
+    "description" : "Confluence 是一个专业的企业知识管理与协同软件，也可以用于构建企业 wiki。使用简单，但它强大的编辑和站点管理特征能够帮助团队成员之间共享信息、文档协作、集体讨论，信息推送。\n如果开发环境没有外网， 则可以考虑自行搭建 Confluence 作为产品文档、接口文档、升级日志的协作平台，提高开发协作的效率。本篇采用 Win 10 的 Linux 子系统演示搭建 Confluence 平台，Linux 子系统安装参考：适用于 Linux 的 Windows 子系统安装指南 (Windows 10)\n\/\/ 添加执行权限 chzheng@DESKTOP-RV9C8IN:\/usr\/src$ chmod \u002bx atlassian-confluence-5.4.4-x64.bin chzheng@DESKTOP-RV9C8IN:\/usr\/src$ .\/atlassian-confluence-5.4.4-x64.bin Unpacking JRE ... Starting Installer ... Apr 05, 2021 7:49:11 PM java.util.prefs.FileSystemPreferences$1 run INFO: Created user preferences directory. Apr 05, 2021 7:49:11 PM java.util.prefs.FileSystemPreferences$2 run INFO: Created system preferences directory in java.home. You do not have administrator rights to this machine and as such, some installation options will not be available.",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2021",
+    "datePublished": "2021-04-04 13:19:47 \u002b0100 \u002b0100",
+    "dateModified" : "2021-04-04 13:19:47 \u002b0100 \u002b0100",
+    "url" : "https:\/\/nervousorange.github.io\/2021\/confluence\/",
+    "wordCount" : "314",
+    "keywords" : [ "tools", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">多人协作平台 Confluence 搭建</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://nervousorange.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2021-04-04 itemprop="datePublished">April 4, 2021</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://nervousorange.github.io/categories/study-notes/"> Study notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,314 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>Confluence 是一个专业的企业知识管理与协同软件，也可以用于构建企业 wiki。使用简单，但它强大的编辑和站点管理特征能够帮助团队成员之间共享信息、文档协作、集体讨论，信息推送。</p>
+<p>如果开发环境没有外网， 则可以考虑自行搭建 Confluence 作为产品文档、接口文档、升级日志的协作平台，提高开发协作的效率。本篇采用 Win 10 的 Linux 子系统演示搭建 Confluence 平台，Linux 子系统安装参考：<a href="https://docs.microsoft.com/zh-cn/windows/wsl/install-win10#step-4---download-the-linux-kernel-update-package">适用于 Linux 的 Windows 子系统安装指南 (Windows 10)</a></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">// 添加执行权限
+chzheng@DESKTOP-RV9C8IN:/usr/src$ chmod +x atlassian-confluence-5.4.4-x64.bin 
+chzheng@DESKTOP-RV9C8IN:/usr/src$ ./atlassian-confluence-5.4.4-x64.bin
+Unpacking JRE ...
+Starting Installer ...
+Apr 05, <span style="color:#ae81ff">2021</span> 7:49:11 PM java.util.prefs.FileSystemPreferences$1 run
+INFO: Created user preferences directory.
+Apr 05, <span style="color:#ae81ff">2021</span> 7:49:11 PM java.util.prefs.FileSystemPreferences$2 run
+INFO: Created system preferences directory in java.home.
+You <span style="color:#66d9ef">do</span> not have administrator rights to this machine and as such, some installation options will not be available. Are you sure you want to <span style="color:#66d9ef">continue</span>?
+Yes <span style="color:#f92672">[</span>y, Enter<span style="color:#f92672">]</span>, No <span style="color:#f92672">[</span>n<span style="color:#f92672">]</span>
+y             // 选项一
+This will install Confluence 5.4.4 on your computer.
+OK <span style="color:#f92672">[</span>o, Enter<span style="color:#f92672">]</span>, Cancel <span style="color:#f92672">[</span>c<span style="color:#f92672">]</span>
+o            // 选项二，是否确认安装
+Choose the appropriate installation or upgrade option.
+Please choose one of the following:
+Express Install <span style="color:#f92672">(</span>uses default settings<span style="color:#f92672">)</span> <span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>, Custom Install <span style="color:#f92672">(</span>recommended <span style="color:#66d9ef">for</span> advanced users<span style="color:#f92672">)</span> <span style="color:#f92672">[</span>2, Enter<span style="color:#f92672">]</span>, Upgrade an existing Confluence installation <span style="color:#f92672">[</span>3<span style="color:#f92672">]</span>
+<span style="color:#ae81ff">1</span>            // 选项三，选择安装方式，默认、自定义、升级现有的
+See where Confluence will be installed and the settings that will be used.
+Installation Directory: /home/chzheng/atlassian/confluence
+Home Directory: /home/chzheng/atlassian/application-data/confluence
+HTTP Port: <span style="color:#ae81ff">8090</span>
+RMI Port: <span style="color:#ae81ff">8000</span>
+Install as service: No
+Install <span style="color:#f92672">[</span>i, Enter<span style="color:#f92672">]</span>, Exit <span style="color:#f92672">[</span>e<span style="color:#f92672">]</span>
+i           // 选项四，确认安装
+
+Extracting files ...
+
+
+Please wait a few moments <span style="color:#66d9ef">while</span> Confluence starts up.
+Launching Confluence ...
+Installation of Confluence 5.4.4 is complete
+Your installation of Confluence 5.4.4 is now ready and can be accessed via
+your browser.
+Confluence 5.4.4 can be accessed at http://localhost:8090
+Finishing installation ...
+</code></pre></div><p>22</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">chzheng@DESKTOP-RV9C8IN:~/atlassian/confluence/bin$ ./stop-confluence.sh
+executing as current user
+If you encounter issues starting up Confluence Standalone, please see the Installation guide at http://confluence.atlassian.com/display/DOC/Confluence+Installation+Guide
+
+Server startup logs are located in /home/chzheng/atlassian/confluence/logs/catalina.out
+Using CATALINA_BASE:   /home/chzheng/atlassian/confluence
+Using CATALINA_HOME:   /home/chzheng/atlassian/confluence
+Using CATALINA_TMPDIR: /home/chzheng/atlassian/confluence/temp
+Using JRE_HOME:        /home/chzheng/atlassian/confluence/jre/
+Using CLASSPATH:       /home/chzheng/atlassian/confluence/bin/bootstrap.jar
+Using CATALINA_PID:    /home/chzheng/atlassian/confluence/work/catalina.pid
+</code></pre></div><p>confluence5.1-crack</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">chzheng@DESKTOP-RV9C8IN:~/atlassian/confluence/confluence/WEB-INF/lib$ cp atlassian-extras-2.4.jar /mnt/c/Users/Chenghao<span style="color:#ae81ff">\ </span>Zheng/Downloads/
+</code></pre></div><p>AAABMQ0ODAoPeJxtkMtqwzAQRff6CkHXCn7ElAQEVSxB3foRYqc0S8WdJAJHNpJtmn59lTjZlC5n5
+s7hzDxlrcasM9iLcOAtQ38ZhDguK1cEPuJga6O6XrWaxq0+NAPoGlA+nPdgisPWgrGU+Cg2IK8hL
+nug103izYkXIbfTy7rP5Rloffo5gT6i2nFmrqlGoL0Z4BESmVQNVXpUVu0beLE1aJjpBolRNsMNT
+w+ysTARUuXmFqpLBzd8XGSZ2MQJS5ED6R60dKriu1PmMmmF4TPxAxJEE+BxRNwMtgeTt19gqYdKk
+dNdscUZexc4E5jhknG8ZjlnM1SYo9TKTjIq/1ClWqUCV4JlqAQzgkk4XVVvHlnwzSeZR68+SRa7O
+brbumma8Ef1v9x6MPVJWvjzy19S54krMC4CFQCByvVcmHBbVsdM0arWAewSX5Vx5QIVAIFG8eb6J
+5zTYHjNs6t8rsN4cWzTX02fb</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Chenghao Zheng@DESKTOP-RV9C8IN MINGW64 ~/Downloads/soft
+$ docker run --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD<span style="color:#f92672">=</span><span style="color:#ae81ff">123456</span> -d -v /D/Docker/mysql:/var/lib/mysql mysql:8.0
+
+</code></pre></div><p>create database wiki character set UTF8;</p>
+<p>jdbc:mysql://127.0.0.1:3306/wiki?useUnicode=true&amp;characterEncoding=UTF8&amp;sessionVariables=storage_engine%3DInnoDB</p>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://nervousorange.github.io/2021/confluence/>https://nervousorange.github.io/2021/confluence/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://nervousorange.github.io/tags/tools/">
+                    #tools</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://nervousorange.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://nervousorange.github.io/2021/java-concurrency/" class="prev" rel="prev" title="Java：并发编程实战"><i class="iconfont icon-left"></i>&nbsp;Java：并发编程实战</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2021</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://nervousorange.github.io/">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    
+    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

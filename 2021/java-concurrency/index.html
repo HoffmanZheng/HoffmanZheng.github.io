@@ -57,7 +57,7 @@
     "datePublished": "2021-04-02 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2021-04-02 13:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2021\/java-concurrency\/",
-    "wordCount" : "313",
+    "wordCount" : "741",
     "keywords" : [ "java", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,313 words</span>
+                 <span class="post-word-count">,741 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -185,49 +185,178 @@
 <span style="color:#f92672">}</span>
 </code></pre></div><p>线程因未捕获异常而终止时，应用程序可能看起来仍然在工作，所以这个错误可能会被忽略。任何代码都可能抛出一个 RuntimeException，不要盲目地认为它一定会正常返回，因此线程应该在 <code>try-catch</code> 代码块中调用任务，捕获那些未检查的异常，也可以使用 <code>try-finally</code> 代码块来 <strong>确保框架能够知道</strong> 线程非正常退出的情况，并作出正确的响应。如以下展示了如何在线程池内部处理非受检异常：</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
- Throwable thrown <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
- <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-  <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>isInterrupted<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-   runTask<span style="color:#f92672">(</span>getTaskFromWorkQueue<span style="color:#f92672">());</span>
-  <span style="color:#f92672">}</span> 
- <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-  thrown <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
- <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
-  threadExited<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> thrown<span style="color:#f92672">);</span>      <span style="color:#75715e">// 通知框架该线程已经终结
+    Throwable thrown <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>isInterrupted<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            runTask<span style="color:#f92672">(</span>getTaskFromWorkQueue<span style="color:#f92672">());</span>
+        <span style="color:#f92672">}</span> 
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        thrown <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+        threadExited<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> thrown<span style="color:#f92672">);</span>      <span style="color:#75715e">// 通知框架该线程已经终结
 </span><span style="color:#75715e"></span>        <span style="color:#75715e">// 框架可能会用新的线程代替这个工作线程，确保不会影响到后续任务的执行
-</span><span style="color:#75715e"></span> <span style="color:#f92672">}</span>
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>除了上述主动 <strong>处理未检查异常</strong> 的方法，Thread 中提供了 UncaughtExceptionHandler，它能检测出某个线程由于未捕获异常而终结的情况，然后做出相应的处理（默认为将栈追踪信息输出到 System.err）：例如将错误信息及相应的栈追踪信息写入应用程序中、尝试重新启动线程、执行其他修复或诊断等。</p>
+</code></pre></div><p>除了上述主动 <strong>处理未检查异常</strong> 的方法，Thread 中提供了 <code>UncaughtExceptionHandler</code>，它能检测出某个线程由于未捕获异常而终结的情况，然后做出相应的处理（默认为将栈追踪信息输出到 System.err）：例如将错误信息及相应的栈追踪信息写入应用程序中、尝试重新启动线程、执行其他修复或诊断等。</p>
 <p>如果想为线程池中的所有线程设置一个 UncaughtExceptionHandler，需要为 ThreadPoolExecutor 的构造函数提供一个 ThreadFactory（<code>thread.setUncaughtExceptionHandler(new CustomUEH());</code>），将任务封装在能够捕获异常的 Runable 或 Callable 中，或者改写 ThreadPoolExecutor 的 <code>afterExecute</code> 方法。需要注意的是，只有通过 execute 提交的任务，才能将它抛出的异常交给未捕获异常处理，而通过 submit 提交的任务，都会将异常封装在 Future.get 的 ExecutionException 中以重新抛出。</p>
 <h4 id="一组任务的结果收集">一组任务的结果收集</h4>
 <p>如果希望得到一组任务的计算结果，可以保留与每个任务关联的 Future，然后反复调用 get 方法，timeout 指定为 0，通过轮询判断任务是否完成。这种方法虽然可行，但有些繁琐，幸运的是还有一种更好的方法：<code>CompletionService</code>。它将 Executor 和 BlockingQueue 的功能融合在一起，在提交任务后通过队列的 take 和 poll 等方法来获取已完成的结果。</p>
 <h3 id="任务的取消与线程的关闭">任务的取消与线程的关闭</h3>
 <p>任务和线程的启动很容易，在大多数时候，我们都会让它们运行直到结束，或者让它们自行停止。然而有时候我们希望 <strong>提前结束任务或线程</strong>，或许是因为用户取消了操作，或者应用程序需要被快速关闭。Java 没有提供任何机制来安全地终止线程，只提供了中断（Interruption）作为 <strong>协作</strong> 机制，去 <strong>通知</strong> 另一个线程去终止当前的工作，因为任务本身的代码比发出取消请求的代码更清楚如何执行清除工作（避免将共享的数据置于不一致的状态）。</p>
 <blockquote>
-<p><a href="http://java.sun.com/j2se/1.5.0/docs/guide/misc/threadPrimitiveDeprecation.html">Why are Thread.stop, Thread.suspend, Thread.resume and Runtime.runFinalizersOnExit Deprecated?</a> 中讲述了 Thread.stop 和 suspend 等方法存在的一些缺陷，以及废弃的原因。</p>
+<p><a href="http://java.sun.com/j2se/1.5.0/docs/guide/misc/threadPrimitiveDeprecation.html">Why are Thread.stop, Thread.suspend, Thread.resume and Runtime.runFinalizersOnExit Deprecated?</a> 中讲述了 Thread.stop 和 suspend 等方法存在的一些缺陷，以及废弃的原因：</p>
+<ul>
+<li>Thread.stop 是不安全的，终止一个线程会抛出 <code>ThreadDeath</code> 并 unlock 所有它拥有的锁，导致这些锁保护的共享对象处在一个不一致的状态。如果其他线程在这些共享对象上操作可能会导致任意的行为，ThreadDeath 会悄悄地杀死线程，因此并没有警告说应用程序处在一个危险的状态。</li>
+<li>如果想终止一个等待中的线程，可以使用 <code>Thread.interrupt</code> ，它使用了基于状态的信号机制。如果一个方法 catch 了 InterruptedException 但是没有声明抛出这个受检异常，那它应该通过 <code>Thread.currentThread().interrupt();</code> 重新中断线程。</li>
+<li>Thread.suspend 本质上容易发生死锁，如果目标线程在挂起时持有了一个锁，那么其他线程在目标线程恢复前将无法获取这个锁保护的对象。如果恢复目标线程的线程在调用 <code>Thread.resume</code> 之前尝试获取这个锁，则会导致死锁。</li>
+<li>可以使用 <code>Object.wait</code> 挂起线程，<code>Object.notify</code> 恢复线程。注意 wait 和 notify 方法都在同步代码块中进行调用，保证序列化运行以减少竞争。</li>
+</ul>
 </blockquote>
 <h4 id="取消任务">取消任务</h4>
-<p>试想如果通过在任务中设置 “已请求取消” <strong>标志位</strong> + 轮询的方式实现任务的取消，那么在请求取消的时刻和下一次检查标志位之间就会存在延迟，在与阻塞方法联合使用时可能会导致更严重的问题：任务可能 <strong>永远不会检查</strong> 取消标志。</p>
+<p>如果通过在任务中设置 “已请求取消” <strong>标志位</strong> + 轮询的方式实现任务的取消，那么在请求取消的时刻和下一次检查标志位之间就会存在延迟，在与阻塞方法联合使用时可能会导致更严重的问题：任务可能 <strong>永远不会检查</strong> 取消标志。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BrokenPrimeProducer</span> <span style="color:#66d9ef">extends</span> Thread <span style="color:#f92672">{</span>
  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> BlockingQueue<span style="color:#f92672">&lt;</span>BigInteger<span style="color:#f92672">&gt;</span> queue<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">volatile</span> <span style="color:#66d9ef">boolean</span> cancelled <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">volatile</span> <span style="color:#66d9ef">boolean</span> cancelled <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// 标志位
+</span><span style="color:#75715e"></span>    
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
             BigInteger p <span style="color:#f92672">=</span> BigInteger<span style="color:#f92672">.</span><span style="color:#a6e22e">ONE</span><span style="color:#f92672">;</span>
             <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>cancelled<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                queue<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>p <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">nextProbablePrime</span><span style="color:#f92672">());</span>   <span style="color:#75715e">// 一直阻塞，无法退出
+                queue<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>p <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">nextProbablePrime</span><span style="color:#f92672">());</span>   <span style="color:#75715e">// 队列满，一直阻塞，无法通过 cancel 取消
 </span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException consumed<span style="color:#f92672">)</span> <span style="color:#f92672">{}</span>
     <span style="color:#f92672">}</span>
     
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">cancel</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>cancelled <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>为此 Java 使用一种协作的方式通知另一个线程停止当前的工作，每个线程都有一个 boolean 状态的中断状态，</p>
+</code></pre></div><p>为此 Java 使用中断作为一种协作的方式去通知另一个线程 <strong>在合适的情况下</strong> 停止当前的工作。每个线程都有一个 boolean 类型的中断状态，在调用 interrupt() 方法后被设置，它并不会真正地去中断一个正在运行的线程，而只是发出中断请求，然后由线程在下一个合适的时刻中断自己。</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Thread</span> <span style="color:#66d9ef">implements</span> Runable <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">interrupt</span><span style="color:#f92672">()</span> <span style="color:#f92672">{...}</span>                <span style="color:#75715e">// 中断该线程
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isInterrupted</span><span style="color:#f92672">()</span> <span style="color:#f92672">{...}</span>         <span style="color:#75715e">// 判断当前线程是否被中断
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">interrupted</span><span style="color:#f92672">()</span> <span style="color:#f92672">{...}</span>    <span style="color:#75715e">// 测试这个线程是否被中断
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">interrupted</span><span style="color:#f92672">()</span> <span style="color:#f92672">{...}</span>    <span style="color:#75715e">// 测试这个线程是否被中断，清除中断状态，并返回它之前的值  -&gt; 除非想屏蔽这个中断，否则必须对它进行处理，抛出 InterruptedException 或者调用 interrupt
+</span><span style="color:#75715e"></span>    
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * @throws  InterruptedException
+</span><span style="color:#75715e">     *          if any thread has interrupted the current thread. The
+</span><span style="color:#75715e">     *          &lt;i&gt;interrupted status&lt;/i&gt; of the current thread is
+</span><span style="color:#75715e">     *          cleared when this exception is thrown.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">native</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sleep</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> millis<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>一些阻塞库中的方法，比如 Thread.sleep 和 Object.wait 等，都会检查线程何时中断，清除中断状态后抛出 <code>InterruptedException</code> ，因此上述通过标志位取消任务的机制可以优化为使用中断来实现：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BrokenPrimeProducer</span> <span style="color:#66d9ef">extends</span> Thread <span style="color:#f92672">{</span>
+ <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> BlockingQueue<span style="color:#f92672">&lt;</span>BigInteger<span style="color:#f92672">&gt;</span> queue<span style="color:#f92672">;</span>
+    
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            BigInteger p <span style="color:#f92672">=</span> BigInteger<span style="color:#f92672">.</span><span style="color:#a6e22e">ONE</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">currentThread</span><span style="color:#f92672">().</span><span style="color:#a6e22e">isInterrupted</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 检测中断
+</span><span style="color:#75715e"></span>                <span style="color:#75715e">// 这里显式的检测是不必要的，但执行后会对中断提供更高的响应性
+</span><span style="color:#75715e"></span>                queue<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>p <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">nextProbablePrime</span><span style="color:#f92672">());</span>          <span style="color:#75715e">// 响应中断
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException consumed<span style="color:#f92672">)</span> <span style="color:#f92672">{}</span>
+    <span style="color:#f92672">}</span>
+    
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">cancel</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>interrupt<span style="color:#f92672">();}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>在响应中断方面，非线程所有者应该小心地 <strong>保存中断状态</strong>（传递 InterruptedException / 使用 interrupt 恢复中断状态），这样拥有线程的代码才能对中断做出响应。这也是大多数可阻塞的库函数都只是抛出 InterruptedException 作为中断响应的原因，它们的取消策略就是尽快退出执行流程，并把中断信息传递给调用者，从而使调用栈中的上层代码可以采取进一步的操作。</p>
+<p>如果代码不会调用可中断的阻塞方法，仍然可以通过在任务代码中选择合适的频率轮询当前线程的中断状态来响应中断。以 ThreadPoolExecutor 为例，它的工作者线程在检测到中断时，如果线程池正在关闭，它会在结束之前执行一些线程池清理工作，否则它可能创建一个新线程将线程池恢复到合理的规模。</p>
+<p>此外还可以使用 <code>future.cancel(boolean mayInterruptIfRunning)</code> 来实现取消，参数 mayInterruptIfRunning 表示能否中断运行中的任务。使用 AbstractExecutorService.newTaskFor + 实现 RunnableFuture 可以实现非标准的取消，定制的取消代码可以实现日志记录或者收集取消操作的统计信息，以及一些不响应中断的操作。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">timeRun</span> <span style="color:#f92672">(</span>Runnable r<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> timeout<span style="color:#f92672">,</span> TimeUnit unit<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+    Future<span style="color:#f92672">&lt;?&gt;</span> task <span style="color:#f92672">=</span> taskExec<span style="color:#f92672">.</span><span style="color:#a6e22e">submit</span><span style="color:#f92672">(</span>r<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        task<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>timeout<span style="color:#f92672">,</span> unit<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>TimeoutException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 接下来任务会被取消
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>ExecutionException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">throw</span> launderThrowable<span style="color:#f92672">(</span>e<span style="color:#f92672">.</span><span style="color:#a6e22e">getCause</span><span style="color:#f92672">());</span> <span style="color:#75715e">// 重新抛出任务中的异常
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+        task<span style="color:#f92672">.</span><span style="color:#a6e22e">cancel</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+        <span style="color:#75715e">// 超时后取消任务，如果任务成功返回，这个操作不会有任何影响
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>虽然 Java 没有提供抢占式的中断机制，然而通过推迟中断请求的处理，开发人员能制定更灵活的中断策略，从而使应用程序在响应性和健壮性之间实现合理的平衡。</p>
+<h4 id="停止基于线程的服务">停止基于线程的服务</h4>
+<p>应用服务通常会创建拥有多个线程的服务，且这些服务的生命周期通常比创建它们的方法的生命周期 <strong>更长</strong>。如果应用程序准备退出，那么这些服务所拥有的线程也需要结束。由于无法通过抢占式的方法来停止线程，因此它们需要自行结束（需提供生命周期方法）。</p>
+<ul>
+<li>比如日志服务，应用线程调用 log 方法将日志放入某个队列，由专门的日志线程负责写入，是一种多生产者单消费者的设计。如果直接关闭日志服务，就会 <strong>丢失</strong> 那些正在等待被写入到日志的信息，并且由于队列满了其他正在调用 log 的线程将会被阻塞。为此可以设置一个标志位，在日志放入队列前进行判断，但这样就存在 “先判断再运行” 的竞态条件问题。由于队列的 put 本身可以阻塞，可以以原子方式检查关闭请求，并递增一个计数器来保持提交消息的权利：</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LogService</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> BlockingQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> queue<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> LoggerThread loggerThread<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> PrintWriter writer<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> isShutdown<span style="color:#f92672">;</span>                 <span style="color:#75715e">// 标志位  
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> reservations<span style="color:#f92672">;</span>                   <span style="color:#75715e">// 计数器
+</span><span style="color:#75715e"></span>    
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">start</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span> loggerThread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span> <span style="color:#f92672">}</span>
+    
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">stop</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">synchronized</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> isShutdown <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+        loggerThread<span style="color:#f92672">.</span><span style="color:#a6e22e">interrupt</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+    
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">log</span> <span style="color:#f92672">(</span>String msg<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isShutdown<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>                   <span style="color:#75715e">// 在应用线程调用 log 时先检查标志位
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(...);</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#f92672">++</span>reservations<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        queue<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>msg<span style="color:#f92672">);</span>                         
+        <span style="color:#75715e">// 对共享的标志位和计数器上锁已经足够了，队列本身会阻塞
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+    
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LoggerThread</span> <span style="color:#66d9ef">extends</span> Thread <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>LogService<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isShutdown <span style="color:#f92672">&amp;&amp;</span> reservation <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                                <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+                            <span style="color:#f92672">}</span>
+                        <span style="color:#f92672">}</span>
+                        String msg <span style="color:#f92672">=</span> queue<span style="color:#f92672">.</span><span style="color:#a6e22e">take</span><span style="color:#f92672">();</span>
+                        <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>LogService<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#f92672">--</span>reservations<span style="color:#f92672">;</span> <span style="color:#f92672">}</span>
+                        writer<span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>msg<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">/** retry */</span><span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+                writer<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span> 
+</code></pre></div><ul>
+<li>另一种关闭生产者-消费者服务的方式就是使用 “毒丸 Poison Pill” 对象。当从队列中获取到这个毒丸对象时就停止服务。在先进先出 FIFO 的队列中，毒丸对象能确保在关闭消费者之前能够完成队列中之前提交的所有工作，而生产者在提交毒丸对象后也不会再提交任务工作。 遗憾的是，毒丸对象只适用于生产者和消费者的数量都已知的情况。</li>
+<li>在调用 shutdownNow 关闭线程池时，除了想得到所有已提交但尚未开始的任务，还想获取所有已经开始但尚未结束的任务，可以通过 <strong>封装</strong> ExecutorService 并使得 execute 记录哪些任务是在线程池关闭后被取消的：</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrackingExecutor</span> <span style="color:#66d9ef">extends</span> AbstractExecutorService <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> ExecutorService exec<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Set<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span> tasksCancelledAtShutdown <span style="color:#f92672">=</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">synchronizedSet</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;);</span>
+    
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">execute</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> Runnable runnable<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        exec<span style="color:#f92672">.</span><span style="color:#a6e22e">execute</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Runnable<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                    runnable<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+                <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isShutdown<span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> Thread<span style="color:#f92672">.</span><span style="color:#a6e22e">currentThread</span><span style="color:#f92672">().</span><span style="color:#a6e22e">isInterrupted</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                        tasksCancelledAtShutdown<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>runnable<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span> 
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    
+    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getCancelledTasks</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>exec<span style="color:#f92672">.</span><span style="color:#a6e22e">isTerminated</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(...);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;(</span>tasksCancelledAtShutdown<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    
+    <span style="color:#75715e">// 将 ExecutorService 的其他方法委托给 exec
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 </code></pre></div><h1 id="活跃性安全性与并发测试">活跃性、安全性与并发测试</h1>
 <h3 id="线程安全性">线程安全性</h3>
