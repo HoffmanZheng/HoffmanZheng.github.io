@@ -57,7 +57,7 @@
     "datePublished": "2021-04-02 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2021-04-02 13:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2021\/java-concurrency\/",
-    "wordCount" : "741",
+    "wordCount" : "1029",
     "keywords" : [ "java", "人间一场大梦"]
 }
 </script>
@@ -134,12 +134,14 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,741 words</span>
+                 <span class="post-word-count">,1029 words</span>
         </div>
     </header>
     <div class="post-content">
         
 
+        
+            
         
 
         
@@ -358,11 +360,118 @@
     
     <span style="color:#75715e">// 将 ExecutorService 的其他方法委托给 exec
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
-</code></pre></div><h1 id="活跃性安全性与并发测试">活跃性、安全性与并发测试</h1>
-<h3 id="线程安全性">线程安全性</h3>
+</code></pre></div><h1 id="活跃性并发的性能与测试">活跃性、并发的性能与测试</h1>
+<p>我们使用加锁机制来确保线程安全，但如果过度使用加锁，则可能导致 <strong>锁顺序死锁</strong>。同样我们使用线程池和信号量来限制对资源的使用，但它们可能会导致资源死锁。在数据库系统的设计中提供了 <strong>主动监测死锁及从死锁中恢复</strong>（选择一个牺牲者放弃事务，释放它持有的资源，详见 <a href="https://nervousorange.github.io/2021/database-innodb/">Database：InnoDB 存储引擎</a>）的机制，但 Java 应用程序是 <strong>无法</strong> 从死锁中恢复过来的，因此在设计时就一定要排除可能导致死锁出现的条件。</p>
 <h3 id="避免活跃性危险">避免活跃性危险</h3>
-<h3 id="并发性能与测试">并发性能与测试</h3>
-<h1 id="java-对并发的支持">Java 对并发的支持</h1>
+<h4 id="死锁">死锁</h4>
+<p>如果两个线程试图以 <strong>不同的顺序</strong> 来获得相同的锁，则可能会发生锁顺序死锁，如下图所示：</p>
+<p><img src="/images/lock-ordering-deadlock.jpg" alt=""></p>
+<p>想要避免锁顺序死锁，需要对程序中的加锁行为进行全局分析，查看是否存在 <strong>嵌套的锁获取</strong> 操作。有时候看似能够控制锁顺序的代码依然没有避免死锁的发生，如下列的代码，如果一个线程从 X 向 Y 转账，另一个线程从 Y 向 X 转账，那么就有可能会发生死锁。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">transferMoney</span> <span style="color:#f92672">(</span>Account fromAccount<span style="color:#f92672">,</span> Account toAccount<span style="color:#f92672">,</span> DollarAmount amount<span style="color:#f92672">)</span> 
+    <span style="color:#66d9ef">throws</span> InsufficientFundsException <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>fromAccount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>toAccount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>    <span style="color:#75715e">// 嵌套的锁获取操作
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>fromAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">getBalance</span><span style="color:#f92672">().</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>amount<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> InsufficientFundsException<span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                fromAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">debit</span><span style="color:#f92672">(</span>amount<span style="color:#f92672">);</span>
+                toAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">credit</span><span style="color:#f92672">(</span>amount<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>由于我们无法控制参数的顺序，因此必须在整个程序中定义锁的顺序，可以使用 <code>System.identityHashCode</code> 方法重新定义锁的顺序，来保证所有的线程 <strong>以固定的顺序</strong> 来获取锁：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> Object tieLock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Object<span style="color:#f92672">();</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">transferMoney</span> <span style="color:#f92672">(</span>Account fromAccount<span style="color:#f92672">,</span> Account toAccount<span style="color:#f92672">,</span> DollarAmount amount<span style="color:#f92672">)</span> 
+    <span style="color:#66d9ef">throws</span> InsufficientFundsException <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Helper</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">transfer</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> InsufficientFundsException <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>fromAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">getBalance</span><span style="color:#f92672">().</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>amount<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> InsufficientFundsException<span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                fromAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">debit</span><span style="color:#f92672">(</span>amount<span style="color:#f92672">);</span>
+                toAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">credit</span><span style="color:#f92672">(</span>amount<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    
+    <span style="color:#66d9ef">int</span> fromHash <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">identityHashCode</span><span style="color:#f92672">(</span>fromAccount<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">int</span> toHash <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">identityHashCode</span><span style="color:#f92672">(</span>toAccount<span style="color:#f92672">);</span>
+    
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>fromHash <span style="color:#f92672">&lt;</span> toHash<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>fromAccount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>toAccount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">new</span> Helper<span style="color:#f92672">().</span><span style="color:#a6e22e">transfer</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>fromHash <span style="color:#f92672">&gt;</span> toHash<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>toAccount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>fromAccount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">new</span> Helper<span style="color:#f92672">().</span><span style="color:#a6e22e">transfer</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>tieLock<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>          
+            <span style="color:#75715e">// 极少情况拥有相同的散列值，加入另一个锁以保证串行
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>fromAccount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>toAccount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">new</span> Helper<span style="color:#f92672">().</span><span style="color:#a6e22e">transfer</span><span style="color:#f92672">();</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>在持有锁的时候调用某个外部方法也可能出现活跃性问题，如果在这个外部方法中可能会获取其他锁（可能导致锁顺序死锁），或者阻塞时间过长，导致其他线程无法及时获得当前被持有的锁。如果在调用某个方法时不需要持有锁，这种调用表被称为 <strong>开放调用</strong>。这种通过开放调用来避免死锁的方法，类似于采用封装机制来提供线程安全的方法，在分析的时候更为简单，更容易确保采用一致的顺序来获得锁。</p>
+<h4 id="死锁的避免与诊断">死锁的避免与诊断</h4>
+<p>如果一个程序每次至多只能获得一个锁，那么就不会产生锁顺序死锁。如果必须获取多个锁，在设计时必须考虑锁的顺序：尽量减少潜在的加锁交互数量，将获取锁时需要遵循的协议写入正式文档并始终遵循这些协议。</p>
+<p>还有一项技术可以检测死锁和从死锁中恢复过来，即使用显示锁中的 <strong>定时 tryLock</strong> 或者可轮询的锁，
+指定一个超时时限，在等待超过该时间后 tryLock 会返回一个失败信息，可以在发生死锁意外情况后释放自己持有的锁，让出系统的控制权。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">transferMoney</span> <span style="color:#f92672">(</span>Account fromAccount<span style="color:#f92672">,</span> Account toAccount<span style="color:#f92672">,</span> 
+                              DollarAmount amount<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> timeout<span style="color:#f92672">,</span> TimeUnit unit<span style="color:#f92672">)</span> 
+    <span style="color:#66d9ef">throws</span> InsufficientFundsException<span style="color:#f92672">,</span> InterruptedException<span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">long</span> stopTime <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">nanoTime</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> unit<span style="color:#f92672">.</span><span style="color:#a6e22e">toNanos</span><span style="color:#f92672">(</span>timeout<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>fromAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">.</span><span style="color:#a6e22e">tryLock</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>toAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">.</span><span style="color:#a6e22e">tryLock</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>fromAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">getBalance</span><span style="color:#f92672">().</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>amount<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> InsufficientFundsException<span style="color:#f92672">();</span>
+                        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                            fromAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">debit</span><span style="color:#f92672">(</span>amount<span style="color:#f92672">);</span>
+                            toAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">credit</span><span style="color:#f92672">(</span>amount<span style="color:#f92672">);</span>
+                            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                        <span style="color:#f92672">}</span>
+                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+                        toAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">();</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">// 获取 toAccount 锁失败，释放掉 fromAccount 锁
+</span><span style="color:#75715e"></span>                fromAccount<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">nanoTime</span><span style="color:#f92672">()</span> <span style="color:#f92672">&lt;</span> stopTime<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span> <span style="color:#f92672">}</span>   
+        <span style="color:#75715e">// 在指定时间内不能获得所有需要的锁，返回失败的状态
+</span><span style="color:#75715e"></span>        NANOSECONDS<span style="color:#f92672">.</span><span style="color:#a6e22e">sleep</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Random<span style="color:#f92672">().</span><span style="color:#a6e22e">nextInt</span><span style="color:#f92672">()</span> <span style="color:#f92672">%</span> 1000<span style="color:#f92672">);</span>   
+        <span style="color:#75715e">// 休眠一段时间，降低活锁发生的可能性
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h4 id="其他活跃性危险">其他活跃性危险</h4>
+<ol>
+<li>
+<p>当线程由于无法访问它所需要的戏院而不能继续执行时，就发生了 <strong>饥饿</strong>，比如对线程的优先级使用不当，或者在持有锁时执行一些无法结束的结构（无限制地等待某个资源）。在 Thread API 中定义的线程优先级只是作为线程调度的参考，JVM 会根据需要将它们映射到操作系统的调度优先级，由操作系统的线程调度器尽力地提供公平的、活跃性良好的调度。尽量 <strong>不要改变线程的优先级</strong>，只要改变了线程的优先级，程序的行为就将与 <strong>平台相关</strong>，并且有导致发生饥饿问题的风险。</p>
+</li>
+<li>
+<p><strong>活锁</strong> 是另一种形式的活跃性问题，虽然不会阻塞线程，但是线程将不断重复执行相同的操作，且总会失败。活锁通常是由过度的错误恢复代码造成的，当多个相互协作的线程都对彼此进行响应从而修改各自的状态，并使得任何一个线程都无法继续执行时，就发生了活锁。这就像两个过于礼貌的人在半路上面对面地相遇：他们彼此都让出对方的路，然后又在另一条路上相遇了，因此他们就这样反复地避让下去。要解决这种活锁问题，就需要 <strong>在重试机制中引入随机性</strong>，比如等待一段随机的时间再重试。</p>
+</li>
+</ol>
+<h3 id="性能与可伸缩性">性能与可伸缩性</h3>
+<h4 id="amdahl-定律">Amdahl 定律</h4>
+<h4 id="线程引入的开销">线程引入的开销</h4>
+<h4 id="减少锁的竞争">减少锁的竞争</h4>
+<h3 id="并发程序的测试">并发程序的测试</h3>
+<h1 id="安全性与-java-对并发的支持">安全性与 Java 对并发的支持</h1>
 <h3 id="显式锁与条件队列">显式锁与条件队列</h3>
 <h3 id="aqs">AQS</h3>
 <h3 id="cas">CAS</h3>
@@ -454,8 +563,9 @@
 
 
     
-    
-    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
     
   
 
