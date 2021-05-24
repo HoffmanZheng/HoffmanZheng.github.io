@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Database：Redis 设计与实现",
     "headline" : "Database：Redis 设计与实现",
-    "description" : "Redis 是一个开源的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件，支持多种类型的数据结构和范围查询。 Redis 内置了复制（replication）、事务（transactions）和不同级别的磁盘持久化（persistence），并通过 Redis哨兵（Sentinel）和自动分区（Cluster）提供高可用性（high availability）。\n本篇将结合 《Redis 设计与实现》 讲解 Redis 的内部机制、单机特性以及多机特性。\nRedis 数据结构与功能实现 Redis 数据结构 字符串 链表 字典 跳跃表 整数集合 压缩列表 对象 发布与订阅 事务 排序 单机数据库的实现 数据库 RDB 持久化 AOF 持久化 服务器 多机数据库的实现 复制 Sentinel 集群 ",
+    "description" : "Redis 是一个开源的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件，支持多种类型的数据结构和范围查询。 Redis 内置了复制（replication）、事务（transactions）和不同级别的磁盘持久化（persistence），并通过 Redis哨兵（Sentinel）和自动分区（Cluster）提供高可用性（high availability）。\n本篇将结合 《Redis 设计与实现》 讲解 Redis 的内部机制、单机特性以及多机特性。\nRedis 数据结构 Redis 有五种不同的 对象类型，包括字符串、列表、哈希、集合和有序集合，每种对象都用到了至少一种数据结构，这样就可以根据不同的使用场景，为对象设置不同的数据结构（内部编码）实现，从而优化对象在不同场景下的使用效率。\n如上图所示，可以看到每种数据结构都有 2 种以上的 内部编码实现，例如 String 数据结构就包含了 raw、int 和 embstr 三种内部编码。同时，有些内部编码可以作为多种外部数据结构的内部实现，例如 ziplist 就是 hash、list 和 zset 共有的内部编码，而 set 的内部编码可能是 hashtable 或者 intset。\nRedis 使用对象来表示数据库中的键和值，每次当我们在 Redis 数据库中新创建一个键值对时，我们至少会创建两个对象，一个键对象，一个值对象。每个对象都由一个 redisObject 结构表示：\ntypedef struct redisObject { unsigned type : 4; \/\/ 类型 \tunsigned encoding : 4; \/\/ 编码 \tvoid *ptr; \/\/ 指向底层实现数据结构的指针 \t\/\/ ... } robj; 字符串 Redis 中的字符串是 可以修改 的，称为 SDS Simple Dynamic String，简单动态字符串。它有三种不同的编码实现：int、raw、embstr。当一个 key 的 value 是整型时，Redis 就将其编码为 int 类型，这种编码类型节省了内存。Redis 默认会缓存 10000 个整型值（#define OBJSHAREDINTEGERS 10000），这就意味着，如果有 10 个不同的 KEY，其 value 都是 10000 以内的值，事实上全部都是 共享同一个对象。",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2021-05-08 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2021-05-08 13:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2021\/database-redis\/",
-    "wordCount" : "37",
+    "wordCount" : "307",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,12 +134,14 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,37 words</span>
+                 <span class="post-word-count">,307 words</span>
         </div>
     </header>
     <div class="post-content">
         
 
+        
+            
         
 
         
@@ -155,15 +157,98 @@
 
           <p>Redis 是一个开源的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件，支持多种类型的数据结构和范围查询。 Redis 内置了复制（replication）、事务（transactions）和不同级别的磁盘持久化（persistence），并通过 Redis哨兵（Sentinel）和自动分区（Cluster）提供高可用性（high availability）。</p>
 <p>本篇将结合 <a href="https://book.douban.com/subject/25900156/">《Redis 设计与实现》</a> 讲解 Redis 的内部机制、单机特性以及多机特性。</p>
-<h1 id="redis-数据结构与功能实现">Redis 数据结构与功能实现</h1>
 <h3 id="redis-数据结构">Redis 数据结构</h3>
-<h4 id="字符串">字符串</h4>
-<h4 id="链表">链表</h4>
-<h4 id="字典">字典</h4>
-<h4 id="跳跃表">跳跃表</h4>
-<h4 id="整数集合">整数集合</h4>
-<h4 id="压缩列表">压缩列表</h4>
-<h4 id="对象">对象</h4>
+<p>Redis 有五种不同的 <strong>对象类型</strong>，包括字符串、列表、哈希、集合和有序集合，每种对象都用到了至少一种数据结构，这样就可以根据不同的使用场景，为对象设置不同的数据结构（内部编码）实现，从而优化对象在不同场景下的使用效率。</p>
+<p><img src="/images/redis-data-structure.jpg" alt=""></p>
+<p>如上图所示，可以看到每种数据结构都有 2 种以上的 <strong>内部编码实现</strong>，例如 String 数据结构就包含了 raw、int 和 embstr 三种内部编码。同时，有些内部编码可以作为多种外部数据结构的内部实现，例如 ziplist 就是 hash、list 和 zset 共有的内部编码，而 set 的内部编码可能是 hashtable 或者 intset。</p>
+<p>Redis 使用对象来表示数据库中的键和值，每次当我们在 Redis 数据库中新创建一个键值对时，我们至少会创建两个对象，一个键对象，一个值对象。每个对象都由一个 <code>redisObject</code> 结构表示：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> redisObject {
+	<span style="color:#66d9ef">unsigned</span> type : <span style="color:#ae81ff">4</span>;        <span style="color:#75715e">// 类型
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">unsigned</span> encoding : <span style="color:#ae81ff">4</span>;    <span style="color:#75715e">// 编码
+</span><span style="color:#75715e"></span>	<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr;                <span style="color:#75715e">// 指向底层实现数据结构的指针
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// ...
+</span><span style="color:#75715e"></span>} robj;
+</code></pre></div><h4 id="字符串">字符串</h4>
+<p>Redis 中的字符串是 <strong>可以修改</strong> 的，称为 SDS <code>Simple Dynamic String</code>，简单动态字符串。它有三种不同的编码实现：int、raw、embstr。当一个 key 的 value 是整型时，Redis 就将其编码为 int 类型，这种编码类型节省了内存。Redis 默认会缓存 10000 个整型值（#define OBJSHAREDINTEGERS 10000），这就意味着，如果有 10 个不同的 KEY，其 value 都是 10000 以内的值，事实上全部都是 <strong>共享同一个对象</strong>。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">127.0.0.1:6379&gt; set msg <span style="color:#ae81ff">9999</span>
+OK
+127.0.0.1:6379&gt; object encoding msg
+<span style="color:#e6db74">&#34;int&#34;</span>
+127.0.0.1:6379&gt; set msg hello
+OK
+127.0.0.1:6379&gt; object encoding msg
+<span style="color:#e6db74">&#34;embstr&#34;</span>
+127.0.0.1:6379&gt; set story <span style="color:#e6db74">&#34;long, long, long ago there lived a king.&#34;</span>
+OK
+127.0.0.1:6379&gt; strlen story
+<span style="color:#f92672">(</span>integer<span style="color:#f92672">)</span> <span style="color:#ae81ff">40</span>
+127.0.0.1:6379&gt; object encoding story
+<span style="color:#e6db74">&#34;raw&#34;</span>
+</code></pre></div><p><code>embstr</code> 和 raw 编码的长度界限是 39，长度超过 39 字节以后，就是 raw 编码类型。embstr 编码将创建字符串对象所需的 <strong>空间分配的次数</strong> 从 raw 编码的两次降低为一次。因为 embstr 编码的字符串对象的所有数据都保存在一块连续的内存里面，所以这种编码的字符串对象比起 raw 编码的字符串对象能更好地利用缓存带来的优势，并且释放 embstr 编码的字符串对象只需要调用一次内存释放函数，而释放 raw 编码对象的字符串对象需要调用两次内存释放函数。</p>
+<p>raw 编码的 SDS 数据结构如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="color:#66d9ef">struct</span> sdshdr {
+ <span style="color:#66d9ef">int</span> len;    <span style="color:#75715e">// buf 数组中已使用的字节数量
+</span><span style="color:#75715e"></span> <span style="color:#66d9ef">int</span> free;   <span style="color:#75715e">// buf 数组中未使用的字节数量
+</span><span style="color:#75715e"></span> <span style="color:#66d9ef">char</span> buf[];
+}
+</code></pre></div><p>相比 C 字符串，SDS 具有以下优点：</p>
+<ol>
+<li>O(1) 复杂度获取字符串长度，C 字符串需要遍历获取，复杂度为 0(N)</li>
+<li>杜绝了因忘记重分配内存而导致的缓冲区溢出</li>
+<li>通过 <strong>空间预分配</strong>（小于 1MB，分配 2 * len + 1，大于等于 1MB 分配 1MB 的未使用空间）
+和 <strong>惰性空间释放</strong>（free 记录未使用空间代替内存回收）减少了修改字符串时所需的 <strong>内存重分配</strong> 次数</li>
+<li>使用 len 属性值而不是空字符判断结尾，可以保存任意格式的二进制数据</li>
+<li>兼容部分 C 字符串函数</li>
+</ol>
+<h4 id="列表">列表</h4>
+<p>列表对象的编码可以是 ziplist 或者 linkedlist。<code>linkedlist</code> 就是我们非常熟悉的双向链表，特征有：双端、无环、带表头和表尾指针、带长度计数器、多态。当列表保存的所有字符串元素长度都小于 64 字节，并且列表长度小于 512 时，列表使用 <code>ziplist</code> 编码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">127.0.0.1:6379&gt; rpush numbers <span style="color:#ae81ff">1</span> three <span style="color:#ae81ff">5</span>
+<span style="color:#f92672">(</span>integer<span style="color:#f92672">)</span> <span style="color:#ae81ff">3</span>
+127.0.0.1:6379&gt; type numbers
+list
+127.0.0.1:6379&gt; object encoding numbers
+<span style="color:#e6db74">&#34;ziplist&#34;</span>
+</code></pre></div><p>压缩列表是 Redis 为了 <strong>节约内存</strong> 而开发的，是由一系列特殊编码的连续内存块组成的顺序型数据结构，其结构为：</p>
+<p><code>&lt;zlbytes&gt;&lt;zltail&gt;&lt;zllen&gt;&lt;entry&gt;&lt;entry&gt; ... &lt;entry&gt;&lt;zlend&gt;</code></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">属性</th>
+<th style="text-align:left">长度(字节)</th>
+<th style="text-align:left">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">zlbytes</td>
+<td style="text-align:left">4</td>
+<td style="text-align:left">表示这个 ziplist 占用了多少字节，其中包括了 zlbytes 本身占用的 4 个字节：在对压缩列表进行内存重分配，或者计算 zlend 的位置时使用</td>
+</tr>
+<tr>
+<td style="text-align:left">zltail</td>
+<td style="text-align:left">4</td>
+<td style="text-align:left">表示到 ziplist 中最后一个元素的偏移量，有了这个值，pop 操作的时间复杂度就是 O(1) 了，即不需要遍历整个 ziplist</td>
+</tr>
+<tr>
+<td style="text-align:left">zllen</td>
+<td style="text-align:left">2</td>
+<td style="text-align:left">表示 ziplist 中有多少个 entry，即保存了多少个元素。由于这个字段占用 16 位，所以最大值是2^16-1，当这个值等于 UNIT16_MAX(65535) 时，节点的真实数量需要遍历整个压缩列表才能计算得出</td>
+</tr>
+<tr>
+<td style="text-align:left">entryX</td>
+<td style="text-align:left">不定</td>
+<td style="text-align:left">压缩列表包含的各个节点，节点的长度由保存的内存决定</td>
+</tr>
+<tr>
+<td style="text-align:left">zlend</td>
+<td style="text-align:left">1</td>
+<td style="text-align:left">特殊值 0xFF(255)，用于标记压缩列表的末端</td>
+</tr>
+</tbody>
+</table>
+<h4 id="哈希">哈希</h4>
+<h4 id="集合">集合</h4>
+<h4 id="有序集合">有序集合</h4>
 <h3 id="发布与订阅">发布与订阅</h3>
 <h3 id="事务">事务</h3>
 <h3 id="排序">排序</h3>
@@ -263,8 +348,9 @@
 
 
     
-    
-    <script src="/js/vendor_no_gallery.min.js" async=""></script>
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
     
   
 
