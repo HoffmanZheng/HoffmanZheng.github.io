@@ -18,7 +18,7 @@
 Redis 数据结构 Redis 有五种不同的 对象类型，包括字符串、列表、哈希、集合和有序集合，每种对象都用到了至少一种数据结构，这样就可以根据不同的使用场景，为对象设置不同的数据结构（内部编码）实现，从而优化对象在不同场景下的使用效率。
 如上图所示，可以看到每种数据结构都有 2 种以上的 内部编码实现，例如 String 数据结构就包含了 raw、int 和 embstr 三种内部编码。同时，有些内部编码可以作为多种外部数据结构的内部实现，例如 ziplist 就是 hash、list 和 zset 共有的内部编码，而 set 的内部编码可能是 hashtable 或者 intset。
 Redis 使用对象来表示数据库中的键和值，每次当我们在 Redis 数据库中新创建一个键值对时，我们至少会创建两个对象，一个键对象，一个值对象。每个对象都由一个 redisObject 结构表示：
-typedef struct redisObject { unsigned type : 4; // 类型 	unsigned encoding : 4; // 编码 	void *ptr; // 指向底层实现数据结构的指针 	// ... } robj; 字符串 Redis 中的字符串对象是 可以修改 的，称为 SDS Simple Dynamic String，简单动态字符串。它有三种不同的编码实现：int、raw、embstr。当一个 key 的 value 是整型时，Redis 就将其编码为 int 类型，这种编码类型节省了内存。Redis 默认会缓存 10000 个整型值（#define OBJSHAREDINTEGERS 10000），这就意味着，如果有 10 个不同的 KEY，其 value 都是 10000 以内的值，事实上全部都是 共享同一个对象。</description>
+typedef struct redisObject { unsigned type : 4; // 类型 	unsigned encoding : 4; // 编码 	void *ptr; // 指向底层实现数据结构的指针 	// ... } robj; 因为 C 语言并不具备自动内存回收功能，所以 Redis 在自己的对象系统中构建了一个 引用计数 技术实现的内存回收机制。对象的引用计数属性还带有 对象共享 的作用，不仅字符串键可以使用共享对象，那么在数据结构中嵌套了字符串对象的对象都可以使用这些共享对象。</description>
     </item>
     
     <item>
