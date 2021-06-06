@@ -57,7 +57,7 @@
     "datePublished": "2021-05-08 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2021-05-08 13:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2021\/database-redis\/",
-    "wordCount" : "775",
+    "wordCount" : "797",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,775 words</span>
+                 <span class="post-word-count">,797 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -340,6 +340,12 @@ list
 <p><img src="/images/redis-aof-rewrite.jpg" alt=""></p>
 <p>对于 <strong>过期键</strong>，当过期键被惰性删除或者定期删除之后，程序会向 AOF 文件追加一条 DEL 命令，来显式地记录该键已被删除。在 AOF 重写的过程中，已过期的键不会被保存到重写后的 AOF 文件中，因此数据库中包含过期键不会对 AOF 产生影响。</p>
 <h3 id="事件">事件</h3>
+<p>Redis 服务器是一个事件驱动程序，服务器通过处理文件事件（监听客户端）和时间事件（serverCron 函数）来实现功能。</p>
+<p>文件事件使用 <strong>I/O 多路复用</strong> 来同时监听多个套接字，并且根据套接字目前执行的任务来为套接字关联不同的事件处理器。文件事件处理器以 <strong>单线程</strong> 方式运行，但通过使用 I/O 多路复用程序来监听多个套接字，这样既实现了高性能的网络通信模型，又可以很好地与 Redis 服务器中其他以单线程方式运行的模块进行对接，以保持 Redis 内存单线程设计的简单性。</p>
+<p>文件事件是对套接字操作的抽象，每当一个套接字准备好执行连接应答、写入、读取、关闭等操作时，就会产生一个文件事件，所以多个文件事件有可能会 <strong>并发地出现</strong>。但 I/O 多路复用程序总是将所有产生事件的套接字都放到一个队列里面，然后以 <strong>有序、同步</strong>、每次一个套接字的方式向文件事件分派器传送套接字。</p>
+<p><img src="/images/redis-file-event.jpg" alt=""></p>
+<p>时间事件分为只执行一次的定时事件和周期性事件。</p>
+<p>服务器将</p>
 <h1 id="多机数据库的实现">多机数据库的实现</h1>
 <h3 id="复制">复制</h3>
 <h3 id="sentinel">Sentinel</h3>
