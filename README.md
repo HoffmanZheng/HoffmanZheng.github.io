@@ -26,6 +26,7 @@
 * [Database：高性能 MySQL - 索引](https://nervousorange.github.io/2020/database-index/)
 * [Database：高性能 MySQL - 优化查询](https://nervousorange.github.io/2020/database-optimize-sql/)
 * [Database：InnoDB 存储引擎](https://nervousorange.github.io/2021/database-innodb/)
+* [Database：Redis 设计与实现](https://nervousorange.github.io/2021/database-redis/)
 #### 网络
 * [Net：计算机网络读书笔记](https://nervousorange.github.io/2020/net-http-tcp/)
 * [深入 Web 请求过程](https://nervousorange.github.io/2020/dns-cdn/)
