@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>component on 人间一场大梦</title>
+    <link>https://nervousorange.github.io/tags/component/</link>
+    <description>Recent content in component on 人间一场大梦</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 26 Aug 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://nervousorange.github.io/tags/component/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>深入解析 Spring 架构与设计</title>
+      <link>https://nervousorange.github.io/2021/java-spring/</link>
+      <pubDate>Thu, 26 Aug 2021 13:19:47 +0100</pubDate>
+      
+      <guid>https://nervousorange.github.io/2021/java-spring/</guid>
+      <description>IoC 容器的实现 Spring AOP 的实现 Spring MVC 与 Web 环境 数据库操作组件的实现 Spring 事物处理的实现 </description>
+    </item>
+    
+  </channel>
+</rss>
