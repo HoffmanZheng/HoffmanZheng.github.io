@@ -10,7 +10,7 @@
   
   
   <link rel="prev" href="https://nervousorange.github.io/2021/database-redis/" />
-  <link rel="next" href="https://nervousorange.github.io/2021/microservice-dubbo/" />
+  
   <link rel="canonical" href="https://nervousorange.github.io/2021/java-spring/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -57,7 +57,7 @@
     "datePublished": "2021-08-26 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2021-08-26 13:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/nervousorange.github.io\/2021\/java-spring\/",
-    "wordCount" : "520",
+    "wordCount" : "549",
     "keywords" : [ "component", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,520 words</span>
+                 <span class="post-word-count">,549 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -266,6 +266,14 @@ XmlBeanDefinitionReader reader <span style="color:#f92672">=</span> <span style=
 <p><img src="/images/spring-BeanDefinitionReader.png" alt=""></p>
 <p>向容器中注册 Bean 即是将 beanName 与 BeanDefinition 的映射关系写入到 DefaultListableBeanFactory 内部的哈希表中。如果遇到同名的 BeanDefinition，进行处理的时候需要依据 allowBeanDefinitionOverriding 的配置来完成。完成注册后，BeanDefinition 就可以被容器使用了，这些信息是容易建立依赖反转的基础。</p>
 <h4 id="ioc-容器的依赖注入">IoC 容器的依赖注入</h4>
+<p>依赖注入的过程通常是用户第一次向 IoC 容器索要 Bean 时触发的，也就是 BeanFactory 的 getBean
+接口，其具体实现在 AbstractBeanFactory 中：</p>
+<p><img src="/images/spring-getBean.png" alt=""></p>
+<p>对于 IoC 容器的使用，Spring 提供了许多参数的配置，每一个参数配置实际上代表了一个 IoC 
+容器的实现特性，这些特性的实现很多都需要在依赖注入的过程中或者对 Bean 
+进行生命周期管理的过程中来完成</p>
+<p>createBean 不但生成了需要的 Bean，还对 Bean 初始化进行了处理，比如实现了在 BeanDefinition
+中的 init-method 属性定义，Bean 后置处理器的实现，等等</p>
 <h4 id="容器的其他特性">容器的其他特性</h4>
 <h3 id="spring-aop-的实现">Spring AOP 的实现</h3>
 <h3 id="spring-mvc-与-web-环境">Spring MVC 与 Web 环境</h3>
@@ -316,8 +324,6 @@ XmlBeanDefinitionReader reader <span style="color:#f92672">=</span> <span style=
         
         <a href="https://nervousorange.github.io/2021/database-redis/" class="prev" rel="prev" title="Database：Redis 设计与实现"><i class="iconfont icon-left"></i>&nbsp;Database：Redis 设计与实现</a>
          
-        
-        <a href="https://nervousorange.github.io/2021/microservice-dubbo/" class="next" rel="next" title="深入理解 Apache Dubbo 与实战">深入理解 Apache Dubbo 与实战&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
