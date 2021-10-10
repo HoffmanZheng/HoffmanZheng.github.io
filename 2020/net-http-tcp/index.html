@@ -188,7 +188,7 @@
 <p><img src="/images/%E9%9D%9E%E6%8C%81%E7%BB%AD%E8%BF%9E%E6%8E%A5.png" alt=""></p>
 <p>而在采用持续连接的情况下，服务器在发送响应后 <strong>保持该 TCP 连接</strong> 打开，使一个完整的 Web 页面请求甚至对同个客户可以用单个持续的 TCP 连接进行传输。如果一个连接经过一段时间间隔仍未被使用，HTTP 服务器就关闭该连接。</p>
 <p>在 HTTP / 1.0 中默认使用非持续连接；而从 HTTP / 1.1 起默认使用持续连接，以保持连接特性，会在请求 / 响应头中加入：（它不会永久保持连接，有一个保持时间）</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Connection：keep-alive
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Connection：keep-alive
 </code></pre></div><h4 id="http-报文格式">HTTP 报文格式</h4>
 <p>以访问 <a href="https://www.baidu.com">www.baidu.com</a> 为例，HTTP 请求报文格式（每行由一个回车和换行符结束）：</p>
 <p><img src="/images/%E8%AF%B7%E6%B1%82%E5%A4%B4.png" alt=""></p>

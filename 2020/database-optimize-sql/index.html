@@ -265,7 +265,7 @@
 </ul>
 <h3 id="一个复杂查询还是多个简单查询">一个复杂查询还是多个简单查询</h3>
 <p>在传统的数据库查询实现中，开发者总认为网络通信、查询解析和优化是一件 <strong>代价很高</strong> 的事情，强调数据库层要完成尽可能多的工作，然后写出一个较为复杂的查询。但这样的想法对于 MySQL 并不适用，MySQL 从设计上让连接和断开连接都很 <strong>轻量级</strong>，在返回一个小的查询结果方面很高效。现代的网络速度比以前要快很多，无论是带宽还是延迟，即使是一个千兆网卡也能轻松满足每秒超过 2000 次的查询，所以运行多个小查询现在已经不是大问题了。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> tag 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> tag 
 <span style="color:#66d9ef">join</span> tag_post <span style="color:#66d9ef">on</span> tag_post.tag_id <span style="color:#f92672">=</span> tag.id 
 <span style="color:#66d9ef">join</span> post <span style="color:#66d9ef">on</span> tag_post.post_id <span style="color:#f92672">=</span> post.id 
 <span style="color:#66d9ef">where</span> tag.tag <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;mysql&#39;</span>;
@@ -295,13 +295,13 @@
 <li>但当统计带 where 子句的结果集行数，可以是统计某个列值的数量时，MyISAM 的 count() 和其他的存储引擎没有任何不同。</li>
 <li>有时候可以利用 MyISAM count(*) 全表非常快的特性做一些优化：</li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#a6e22e">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">from</span> world.City <span style="color:#66d9ef">where</span> id <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#a6e22e">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">from</span> world.City <span style="color:#66d9ef">where</span> id <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">5</span>
 
 <span style="color:#75715e">/** 将条件反转，用总数去减，就可以将扫描的行数减少到 5 行以内，
 </span><span style="color:#75715e">count(*) 子查询会被直接当做一个常数来处理 */</span>
 <span style="color:#66d9ef">select</span>(<span style="color:#66d9ef">select</span> <span style="color:#a6e22e">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">from</span> world.City) <span style="color:#f92672">-</span> <span style="color:#a6e22e">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">from</span> world.City <span style="color:#66d9ef">where</span> id <span style="color:#f92672">&lt;=</span> <span style="color:#ae81ff">5</span>
 </code></pre></div><p>例：如果要查询返回各种不同颜色的商品数量</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#a6e22e">sum</span>(<span style="color:#66d9ef">IF</span>(color <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;blue&#39;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)) <span style="color:#66d9ef">as</span> blue, 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#a6e22e">sum</span>(<span style="color:#66d9ef">IF</span>(color <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;blue&#39;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)) <span style="color:#66d9ef">as</span> blue, 
 <span style="color:#a6e22e">sum</span>(<span style="color:#66d9ef">IF</span>(color <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;red&#39;</span>, <span style="color:#ae81ff">1</span>, <span style="color:#ae81ff">0</span>)) <span style="color:#66d9ef">as</span> red <span style="color:#66d9ef">from</span> items;
 
 <span style="color:#75715e">/** 或者使用 count() 而不是 sum() 来实现同样的目的，
@@ -325,7 +325,7 @@
 </ul>
 <p>数据表的关联并不总是按照在查询中指定的顺序进行，决定关联的顺序是优化器很重要的一部分功能，关联查询优化器通过 <strong>评估不同顺序的成本</strong> 来选择一个代价最小的关联顺序。（在遇到右外连接时，MySQL 会将其改写成等价的左外连接。）</p>
 <p>比如下面的查询：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> film.film_id, film.title, film.release_year, 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> film.film_id, film.title, film.release_year, 
 actor.acotor_id, actor.first_name, actor.last_name
 <span style="color:#66d9ef">from</span> sakila.film <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> sakila.film_actor <span style="color:#66d9ef">using</span>(film_id) 
 <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> sakila.actor <span style="color:#66d9ef">using</span>(actor_id)
@@ -343,7 +343,7 @@ actor.acotor_id, actor.first_name, actor.last_name
 <li>等值传播</li>
 </ul>
 <p>如果两个列的值通过等式关联，那么 MySQL 能够把其中一个列的 where 条件传递到另一个列上。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> film.film_id <span style="color:#66d9ef">from</span> sakila.film 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> film.film_id <span style="color:#66d9ef">from</span> sakila.film 
 <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> sakila.film_actor <span style="color:#66d9ef">using</span>(film_id) <span style="color:#66d9ef">where</span> film.film_id <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">500</span>
 <span style="color:#75715e">/** where 子句中的 film_id 不仅适用于 film 表，而且对于 film_actor 表同样适用 */</span>
 </code></pre></div><ul>
@@ -355,7 +355,7 @@ actor.acotor_id, actor.first_name, actor.last_name
 <ul>
 <li>内连接 INNER JOIN</li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> tb1.col1, tb2.col2 <span style="color:#66d9ef">from</span> tb1 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> tb1.col1, tb2.col2 <span style="color:#66d9ef">from</span> tb1 
 innner <span style="color:#66d9ef">join</span> tb2 <span style="color:#66d9ef">using</span>(col3) <span style="color:#66d9ef">where</span> tb1.col1 <span style="color:#66d9ef">in</span> (<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>);
 
 <span style="color:#75715e">/** 伪代码如下 */</span>
@@ -375,7 +375,7 @@ end
 <ul>
 <li>外连接 OUTER JOIN</li>
 </ul>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> tb1.col1, tb2.col2 <span style="color:#66d9ef">from</span> tb1 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> tb1.col1, tb2.col2 <span style="color:#66d9ef">from</span> tb1 
 <span style="color:#66d9ef">left</span> <span style="color:#66d9ef">outer</span> <span style="color:#66d9ef">join</span> tb2 <span style="color:#66d9ef">using</span>(col3) <span style="color:#66d9ef">where</span> tb1.col1 <span style="color:#66d9ef">in</span> (<span style="color:#ae81ff">5</span>, <span style="color:#ae81ff">6</span>)
 
 <span style="color:#75715e">/** 伪代码如下 */</span>
@@ -396,7 +396,7 @@ outer_row <span style="color:#f92672">=</span> outer_iter.next
 end
 </code></pre></div><h3 id="优化子查询">优化子查询</h3>
 <p>MySQL 的子查询 <strong>实现得非常糟糕</strong>，最糟糕的一类查询是 where 条件中包含 IN() 的子查询语句。例如下面的查询：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film <span style="color:#66d9ef">where</span> film_id <span style="color:#66d9ef">in</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film <span style="color:#66d9ef">where</span> film_id <span style="color:#66d9ef">in</span>
 (<span style="color:#66d9ef">select</span> film_id <span style="color:#66d9ef">from</span> sakila.film_actor <span style="color:#66d9ef">where</span> actor_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>)
 
 <span style="color:#f92672">|</span> id <span style="color:#f92672">|</span> select_type        <span style="color:#f92672">|</span>  <span style="color:#66d9ef">table</span>     <span style="color:#f92672">|</span>  type  <span style="color:#f92672">|</span>  possible_keys          <span style="color:#f92672">|</span>
@@ -404,11 +404,11 @@ end
 </span><span style="color:#75715e"></span><span style="color:#f92672">|</span>  <span style="color:#ae81ff">1</span> <span style="color:#f92672">|</span> <span style="color:#66d9ef">PRIMARY</span>            <span style="color:#f92672">|</span> film       <span style="color:#f92672">|</span> <span style="color:#66d9ef">ALL</span>    <span style="color:#f92672">|</span> <span style="color:#66d9ef">Null</span>                    <span style="color:#f92672">|</span>
 <span style="color:#f92672">|</span>  <span style="color:#ae81ff">2</span> <span style="color:#f92672">|</span> DEPENDENT SUBQUERY <span style="color:#f92672">|</span> film_actor <span style="color:#f92672">|</span> eq_ref <span style="color:#f92672">|</span> <span style="color:#66d9ef">PRIMARY</span>, idx_fk_film_id <span style="color:#f92672">|</span>
 </code></pre></div><p>一般会认为 MySQL 会先执行子查询返回所有包含 actor_id 为 1 的 film_id 列表，然后用 IN() 列列表查询。很不幸 MySQL <strong>不是</strong> 这样做的，MySQL 会将相关的外层表压倒子查询中，它认为这样可以更高效地查找到数据行，查询会被改写成下面的样子：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">exists</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film <span style="color:#66d9ef">where</span> <span style="color:#66d9ef">exists</span>
 (<span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film_actor <span style="color:#66d9ef">where</span> actor_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> 
  <span style="color:#66d9ef">and</span> film_actor.film_id <span style="color:#f92672">=</span> film.film_id)
 </code></pre></div><p>这时子查询需要根据 film_id 来关联外部表 film，因为需要 film_id 字段，MySQL 认为无法先执行这个子查询，所以它选择先对 film 表进行 <strong>全表扫描</strong>，然后根据返回的 film_id <strong>逐个执行子查询</strong>。如果外层的表是一个非常大的表，那么这个查询的性能会非常糟糕。当然我们很容易用下面的办法来重写这个查询：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> film.<span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> film.<span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.film 
 <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> sakila.film_actor <span style="color:#66d9ef">using</span>(film_id) <span style="color:#66d9ef">where</span> actor_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
 </code></pre></div><p>对于关联子查询，一般会建议使用左外连接（LEFT OUTER JOIN）来重写，但并不是所有的关联子查询的性能都很差，比如对于需要产生临时中间表（使用了 DISTINCT 或 GROUP BY）的关联查询，用 EXISTS 子查询重写后却能得到更好的查询效率。仍需注意的是，MySQL 在 from 子句中遇到子查询时，先执行子查询并将其结果放到一个临时表中（<strong>MySQL 的临时表是没有任何索引的</strong>，在编写复杂的子查询和关联查询的时候需要注意这一点），然后将这个临时表当做一个普通表对待（派生表 derived）。</p>
 <h3 id="优化排序">优化排序</h3>
@@ -428,7 +428,7 @@ end
 <h3 id="优化-group-by-和-distinct">优化 GROUP BY 和 DISTINCT</h3>
 <p>很多场景下 MySQL 使用相同的办法优化这两种查询，优化器也会在内部处理时相互转化这两类查询，它们都可以使用索引来优化。当无法使用索引的时候，GROUP BY 使用 <strong>临时表或者文件排序</strong> 来做分组。</p>
 <p>如果需要对关联查询做分组 GROUP BY，并且是按照查找表中的某个列进行分组，那么通常采用查找表的 <strong>标识列分组</strong> 的效率会比其他列更高。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> actor.first_name, actor.last_name, c.cnt <span style="color:#66d9ef">from</span> sakila.actor
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> actor.first_name, actor.last_name, c.cnt <span style="color:#66d9ef">from</span> sakila.actor
 <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> (<span style="color:#66d9ef">select</span> actor_id, <span style="color:#a6e22e">count</span>(<span style="color:#f92672">*</span>) <span style="color:#66d9ef">as</span> cnt <span style="color:#66d9ef">from</span> sakila.film_actor <span style="color:#66d9ef">group</span> <span style="color:#66d9ef">by</span> actor_id) 
 <span style="color:#66d9ef">as</span> c <span style="color:#66d9ef">using</span> (actor_id);
 </code></pre></div><p>虽然使用子查询和 <code>ONLY_FULL_GROUP_BY</code> 的 SQL_MODE 成本有点高，因为子查询需要创建和填充临时表，而子查询中创建的临时表是 <strong>没有任何索引</strong> 的。</p>
@@ -438,11 +438,11 @@ end
 <p>我们通常会使用 LIMIT 加上偏移量的方法实现分页，同时加上合适的 ORDER BY 子句，如果有对应的索引，通常效率应该不错。但在偏移量非常大的时候（翻页到非常后的页面），比如 <code>limit 10000, 20</code> 需要查询 10020 条记录然后只返回最后 20 条，前面的 10000 条记录都将被抛弃，这样查询的代价非常高。要优化这种大偏移量的 LIMIT 分页查询，要么是在页面中限制分页的数量，要么是优化大偏移量的性能。</p>
 <p>优化此类分页查询的一个最简单办法就是尽可能地使用索引覆盖扫描 <strong>延迟关联</strong>，这在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 最后面的索引案例学习中的优化排序有具体的讲解。</p>
 <p>LIMIT 和 OFFSET 的问题，其实是 OFFSET 的问题，它会导致 MySQL 扫描大量不需要的行然后再抛弃掉。如果可以使用书签记录上次取数据的位置，那么下次就可以直接从该书签记录的位置开始扫描，这样就可以 <strong>避免使用 OFFSET</strong>。比如前一次查询返回的主键是 16030 的租借记录，那么下一页的查询就可以从 16030 这个点开始：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.rental <span style="color:#66d9ef">where</span> rental_id <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16030</span> 
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.rental <span style="color:#66d9ef">where</span> rental_id <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16030</span> 
 <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> rental_id <span style="color:#66d9ef">desc</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">20</span>
 </code></pre></div><h3 id="优化-union-查询">优化 UNION 查询</h3>
 <p>有时，MySQL <strong>无法</strong> 将限制条件从外层 &ldquo;下推&rdquo; 到内层，使得原本能够限制部分返回结果的条件无法应用到内层查询的优化上。比如希望 UNION 的各个子句能够根据 LIMIT 只取部分结果集，或者希望能够先排好序再合并结果集的话，就需要在 UNION 的各个子句中分别使用这些子句。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#75715e">/** 会将 actor 和 customer 表中的记录都取出来放到一个临时表中，然后再从临时表取出前 20 条 */</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#75715e">/** 会将 actor 和 customer 表中的记录都取出来放到一个临时表中，然后再从临时表取出前 20 条 */</span>
 (<span style="color:#66d9ef">select</span> first_name, last_name <span style="color:#66d9ef">from</span> sakila.actor <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> last_name)
 <span style="color:#66d9ef">union</span> <span style="color:#66d9ef">all</span>
 (<span style="color:#66d9ef">select</span> first_name, last_name <span style="color:#66d9ef">from</span> sakila.customer <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> last_name)
