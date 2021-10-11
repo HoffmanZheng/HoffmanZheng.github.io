@@ -13,12 +13,12 @@
       <pubDate>Sun, 10 Oct 2021 13:19:47 +0100</pubDate>
       
       <guid>https://nervousorange.github.io/2021/ruby-bundler/</guid>
-      <description>本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 Gem 管理 Ruby 的组件，使用 Bundler 是用来解决项目中 Gem 组件的依赖问题，使用 RVM 管理不同版本的 Ruby 环境等。
+      <description>本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 RubyGems 管理 Ruby 的组件，使用 Bundler 来解决项目中 gem 组件的依赖问题，使用 RVM 管理不同版本的 Ruby 环境等。
 推荐阅读：
- Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾) Ruby Gemfile 详解  RubyGems RubyGems 是用来寻找并管理 Ruby 组件的工具，让你可以轻松下载别人的代码。gem 工具允许你用一个单一命令完成下载以及安装，允许你一键卸载，并且中心化管理所有安装了的库。
-gem install -v 4.1 gem uninstall gem list rails 但 RubyGems 也有没有解决的问题，比如存在多个需要 gem 的项目，该如何对依赖的 gem 版本进行分别管理？
-Bundler Bundler 的出现修复了 gem 没有解决的问题，它让项目可以根据定义来使用 gem，并且在安装 gem 时就进行版本冲突的解析。Ruby 的开发者只需要列出他所需要的 Gem，然后 Bundler 就会找出合适的版本让它们在一起工作，并且把一个可行解（但不一定是最优解）放入 Gemfile.lock。这个文件保证了共享代码或者部署到服务器时能够安装到正确的依赖版本。
-项目第一次安装依赖时可以执行 bundle install --path=vendor/bundle 把 gem 安装到项目的 vendor/bundle 目录下，再在 git 中忽略此目录，这样做就不会因为多个项目安装 gem 到系统目录，而导致系统里的 gem 冲突。</description>
+ Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾) Ruby Gemfile 详解  RubyGems Ruby 主要通过 require 函数来引入外部的库文件，参数可以传文件名，相对路径或是绝对路径。当参数是文件名时，Ruby 会去 $LOAD_PATH 这个全局变量定义的路径中搜索库文件。
+$ ruby -e &amp;#34;puts $:&amp;#34; /usr/local/lib/ruby/site_ruby/2.7.0 /usr/local/lib/ruby/site_ruby/2.7.0/x86_64-darwin20 /usr/local/lib/ruby/site_ruby /usr/local/lib/ruby/vendor_ruby/2.7.0 /usr/local/lib/ruby/vendor_ruby/2.7.0/x86_64-darwin20 /usr/local/lib/ruby/vendor_ruby /usr/local/Cellar/ruby@2.7/2.7.4/lib/ruby/2.7.0 /usr/local/Cellar/ruby@2.7/2.7.4/lib/ruby/2.7.0/x86_64-darwin20 $LOAD_PATH 是一个数组变量，里面存放依赖路径字符串，可以看到其中的目录可以分成三大类：
+ site_ruby 默认优先级最高，安装本机相关库 vendor_ruby 操作系统供应商进行定制用的，一般为空 2.7.4 ruby 标准库目录，比如 date, csv 库  require 会按照 $LOAD_PATH 数组里面的路径顺序进行查找，找到了就不继续往下找了。
+RubyGems 是用来寻找并管理 Ruby 组件的工具，让你可以轻松下载别人的代码，它重写了 require 函数的实现，并将 gem 安装到和 site_ruby 平级的 gems 目录下。gem 工具允许你用一个单一命令完成下载以及安装，允许你一键卸载，并且中心化管理所有安装了的库。</description>
     </item>
     
     <item>
