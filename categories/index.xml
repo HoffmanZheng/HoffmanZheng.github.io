@@ -2,26 +2,26 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Categories on 人间一场大梦</title>
-    <link>https://nervousorange.github.io/categories/</link>
+    <link>https://hoffmanzheng.github.io/categories/</link>
     <description>Recent content in Categories on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 Oct 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://nervousorange.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 23 Oct 2021 03:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Study notes</title>
-      <link>https://nervousorange.github.io/categories/study-notes/</link>
-      <pubDate>Sun, 10 Oct 2021 13:19:47 +0100</pubDate>
+      <link>https://hoffmanzheng.github.io/categories/study-notes/</link>
+      <pubDate>Sat, 23 Oct 2021 03:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/categories/study-notes/</guid>
+      <guid>https://hoffmanzheng.github.io/categories/study-notes/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Reading notes</title>
-      <link>https://nervousorange.github.io/categories/reading-notes/</link>
+      <link>https://hoffmanzheng.github.io/categories/reading-notes/</link>
       <pubDate>Thu, 26 Aug 2021 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/categories/reading-notes/</guid>
+      <guid>https://hoffmanzheng.github.io/categories/reading-notes/</guid>
       <description></description>
     </item>
     

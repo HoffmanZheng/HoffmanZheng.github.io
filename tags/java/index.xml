@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Java on 人间一场大梦</title>
-    <link>https://nervousorange.github.io/tags/java/</link>
+    <link>https://hoffmanzheng.github.io/tags/java/</link>
     <description>Recent content in Java on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 02 Apr 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://nervousorange.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 02 Apr 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/java/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Java：并发编程实战</title>
-      <link>https://nervousorange.github.io/2021/java-concurrency/</link>
+      <link>https://hoffmanzheng.github.io/2021/java-concurrency/</link>
       <pubDate>Fri, 02 Apr 2021 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2021/java-concurrency/</guid>
+      <guid>https://hoffmanzheng.github.io/2021/java-concurrency/</guid>
       <description>在 摩尔定律 失效的今天，通过提高时钟频率来提升处理器的性能已变得越来越困难，如何高效地使用并发，充分发挥多核处理器的强大计算能力变得益发重要。操作系统的出现使得计算机可以每次运行多个程序，实现了 进程级别的并发，操作系统为每个进程分配各自的资源（比如内存），不同的进程之间可以通过一些通信机制来交换数据，包括套接字、文件、共享内存等。
 线程的出现允许在同一个进程中同时存在 多个程序控制流，它们共享进程中的资源，并且可以被同时调度到多个 CPU 上运行。多线程程序通过对多核处理器的充分利用来提升系统吞吐率，然而这却会引入更多的问题：指令重排、并发修改、死锁、饥饿、活锁、上下文切换、线程调度开销等。
 本篇将结合 《Java 并发编程实战》 讲解在 Java 项目中如何利用线程来提高并发程序的吞吐量或响应性，如何确保并发程序的执行与预期一致，避免安全性和活跃性问题。
@@ -25,10 +25,10 @@ public class OutOfTime { public static void main(String[] args) throws Exception
     
     <item>
       <title>Java：异常处理与日志记录</title>
-      <link>https://nervousorange.github.io/2021/java-exception-log/</link>
+      <link>https://hoffmanzheng.github.io/2021/java-exception-log/</link>
       <pubDate>Wed, 24 Mar 2021 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2021/java-exception-log/</guid>
+      <guid>https://hoffmanzheng.github.io/2021/java-exception-log/</guid>
       <description>在开发 Java 项目中通常依赖 Eclipse/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹 快速定位并解决线上问题。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。
 本篇将结合 阿里巴巴《Java 开发手册（嵩山版）》、 Log4j 2.x 官方文档、 Takipi 日志相关文章 讲解在项目中如何优雅地处理异常以及高效且有效地记录日志。
 Java 的异常处理 错误码 阿里巴巴《Java 开发手册（嵩山版）》 中有关错误码给出了以下几点指导：
@@ -38,10 +38,10 @@ Java 的异常处理 错误码 阿里巴巴《Java 开发手册（嵩山版）�
     
     <item>
       <title>深入分析 ClassLoader 工作机制</title>
-      <link>https://nervousorange.github.io/2020/java-classloader/</link>
+      <link>https://hoffmanzheng.github.io/2020/java-classloader/</link>
       <pubDate>Tue, 22 Sep 2020 09:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/java-classloader/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/java-classloader/</guid>
       <description>Java 是个强类型的编程语言，一个变量的类型在编译时就已经决定了，就是最初声明它的类型， 如果想把它当成另一个类型来使用，需要先经过显式的类型转换，转换时可能会因为类型不符而抛出 ClassCastException。
 本篇以 《深入分析 Java Web 技术内幕》 第六章 深入分析 ClassLoader 工作机制 的内容为参考，讲解 Java 中的类型，类加载机制，类加载错误分析 等。
 Java 中的类型 如开篇所说，一个 Java 对象的类型在声明的时候就被确定了，但 Java 是面对对象的语言，有丰富的接口和抽象类，一个对象被传来传去的时候，可能就丢失了它的一些类型信息，但 Java 也像 C++ 那样是拥有 RTTI (Run-Time Type Identification) 运行时类型识别 特性的语言。在任何时刻，任何一个对象都清楚地知道自己的具体类型（可以通过反射获取）。
@@ -53,10 +53,10 @@ Java 中的类型 如开篇所说，一个 Java 对象的类型在声明的时�
     
     <item>
       <title>Javac 编译原理与 class 文件结构</title>
-      <link>https://nervousorange.github.io/2020/java-compile/</link>
+      <link>https://hoffmanzheng.github.io/2020/java-compile/</link>
       <pubDate>Sat, 05 Sep 2020 09:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/java-compile/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/java-compile/</guid>
       <description>JVM 让 Java 成为了一次编译，到处运行，具有平台无关性的高级语言。要让 Java 代码跑在 JVM 中少不了 Javac 编译器，它把人类能理解的 Java 源代码语言翻译成 JVM 容易理解的字节码（将 .java 文件转换成 .class 文件）。某种意义上来说，Javac 编译器的存在使 Java 语言向开发者屏蔽了很多与机器相关的细节，JVM 使 Java 语言的执行和平台无关，这才成就了 Java 的繁荣。
 本篇以 《深入分析 Java Web 技术内幕》 第四章 Javac 编译原理 及第五章 深入 class 文件结构 的内容为参考，讲解 Javac 编译器的基本结构，Javac 的工作原理，class 文件结构等。
 Javac 编译器的基本结构 Javac 编译器的作用就是将符合 Java 语言规范的源代码转化成符合 Java 虚拟机规范的 Java 字节码，是从一个语言规范到另一个语言规范的转化，这大概需要以下几个步骤：
@@ -65,10 +65,10 @@ Javac 编译器的基本结构 Javac 编译器的作用就是将符合 Java 语�
     
     <item>
       <title>深入分析 Java Web 中的中文编码问题</title>
-      <link>https://nervousorange.github.io/2020/java-encode/</link>
+      <link>https://hoffmanzheng.github.io/2020/java-encode/</link>
       <pubDate>Sat, 29 Aug 2020 09:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/java-encode/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/java-encode/</guid>
       <description>作为非英语国家程序员，编码问题是我们一直都绕不过去的一道坎。
 本篇以 《深入分析 Java Web 技术内幕》 第三章 深入分析 Java Web 中的中文编码问题 的内容为参考，讲解常见的编码格式、Java 中的编解码、Java Web 中的编解码，及常见乱码问题分析等。
 计算机中存储信息的最小单元是 1 个字节，即 8 bits，所以能表示的字符范围是 0~255 个，而我们人类的语言太多，表示这些语言的符号太多，因而必须要经过一些翻译工作，才能让计算机理解我们的语言。这个翻译工作就是从 char 到 byte 的编码过程。
@@ -80,10 +80,10 @@ GBK 《汉字内码扩展规范》扩展了 GB2312，加入更多的汉字，编
     
     <item>
       <title>深入分析 Java I/O 的工作机制</title>
-      <link>https://nervousorange.github.io/2020/java-io/</link>
+      <link>https://hoffmanzheng.github.io/2020/java-io/</link>
       <pubDate>Mon, 17 Aug 2020 09:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/java-io/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/java-io/</guid>
       <description>I/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I/O 瓶颈。
 本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I/O 的工作机制 的内容为参考，讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。
 Java I/O 类库的基本架构 基于字节的 I/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。
@@ -95,20 +95,20 @@ OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new Fi
     
     <item>
       <title>Java：程序的部署和 Nginx 负载均衡</title>
-      <link>https://nervousorange.github.io/2020/deploy/</link>
+      <link>https://hoffmanzheng.github.io/2020/deploy/</link>
       <pubDate>Tue, 21 Apr 2020 11:30:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/deploy/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/deploy/</guid>
       <description>本篇介绍 Java 程序部署的三种方式：exec 插件、jar 包、Docker 方式部署，以及使用 Nginx 实现简单的负载均衡。
-Java 程序的部署 Maven exec 插件部署  导入 Maven 的 exec 插件：Maven Repository：exec-maven-plugin，然后在 pom.xml 中进行配置，使之可以调用外部命令执行 Java 程序并自动加载依赖的 classpath 路径：  &amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;org.codehaus.mojo&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;exec-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.6.0&amp;lt;/version&amp;gt; &amp;lt;executions&amp;gt; &amp;lt;execution&amp;gt; &amp;lt;id&amp;gt;run&amp;lt;/id&amp;gt; &amp;lt;goals&amp;gt; &amp;lt;goal&amp;gt;exec&amp;lt;/goal&amp;gt; &amp;lt;/goals&amp;gt; &amp;lt;configuration&amp;gt; &amp;lt;executable&amp;gt;java&amp;lt;/executable&amp;gt; &amp;lt;arguments&amp;gt; &amp;lt;argument&amp;gt;-classpath&amp;lt;/argument&amp;gt; &amp;lt;!-- automatically creates the classpath using all project dependencies, also adding the project build directory --&amp;gt; &amp;lt;classpath/&amp;gt; &amp;lt;argument&amp;gt;com.github.NervousOrange.springboot.Application&amp;lt;/argument&amp;gt; &amp;lt;/arguments&amp;gt; &amp;lt;/configuration&amp;gt; &amp;lt;/execution&amp;gt; &amp;lt;/executions&amp;gt; &amp;lt;/plugin&amp;gt; mvn exec:exec@[executionID] 即可完成程序的部署；-X 参数可以用于排查部署时出现的问题，-DskipTests 可以跳过测试。 windosw下（需使用系统 cmd） netstat -ano | findstr &amp;quot;8080&amp;quot; 可以查看当前端口被占用的情况，tasklist |findstr &amp;quot;进程id号&amp;quot; 查找对应的进程名称，然后 taskkill /f /t /im &amp;quot;进程id或者进程名称&amp;quot; 杀掉当前占用端口的进程  部署效果图：</description>
+Java 程序的部署 Maven exec 插件部署  导入 Maven 的 exec 插件：Maven Repository：exec-maven-plugin，然后在 pom.xml 中进行配置，使之可以调用外部命令执行 Java 程序并自动加载依赖的 classpath 路径：  &amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;org.codehaus.mojo&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;exec-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.6.0&amp;lt;/version&amp;gt; &amp;lt;executions&amp;gt; &amp;lt;execution&amp;gt; &amp;lt;id&amp;gt;run&amp;lt;/id&amp;gt; &amp;lt;goals&amp;gt; &amp;lt;goal&amp;gt;exec&amp;lt;/goal&amp;gt; &amp;lt;/goals&amp;gt; &amp;lt;configuration&amp;gt; &amp;lt;executable&amp;gt;java&amp;lt;/executable&amp;gt; &amp;lt;arguments&amp;gt; &amp;lt;argument&amp;gt;-classpath&amp;lt;/argument&amp;gt; &amp;lt;!-- automatically creates the classpath using all project dependencies, also adding the project build directory --&amp;gt; &amp;lt;classpath/&amp;gt; &amp;lt;argument&amp;gt;com.github.hoffmanzheng.springboot.Application&amp;lt;/argument&amp;gt; &amp;lt;/arguments&amp;gt; &amp;lt;/configuration&amp;gt; &amp;lt;/execution&amp;gt; &amp;lt;/executions&amp;gt; &amp;lt;/plugin&amp;gt; mvn exec:exec@[executionID] 即可完成程序的部署；-X 参数可以用于排查部署时出现的问题，-DskipTests 可以跳过测试。 windosw下（需使用系统 cmd） netstat -ano | findstr &amp;quot;8080&amp;quot; 可以查看当前端口被占用的情况，tasklist |findstr &amp;quot;进程id号&amp;quot; 查找对应的进程名称，然后 taskkill /f /t /im &amp;quot;进程id或者进程名称&amp;quot; 杀掉当前占用端口的进程  部署效果图：</description>
     </item>
     
     <item>
       <title>Java：线程池原理、源码分析</title>
-      <link>https://nervousorange.github.io/2020/java-threadpool/</link>
+      <link>https://hoffmanzheng.github.io/2020/java-threadpool/</link>
       <pubDate>Fri, 27 Mar 2020 10:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/java-threadpool/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/java-threadpool/</guid>
       <description>本篇为 Java：初识多线程、原理及实现 的续篇，介绍 Java 中的线程池，主要内容有：进程与线程、线程池化的意义、Executors 工具类、线程池工作流程、线程复用原理等。
 为什么需要线程池 进程与线程 起源 进程 是在批处理操作系统的基础上，为进一步提高计算机效率，改善操作系统串行的运行方式的产物。进程的出现改变了内存中始终只有一个程序运行的事实，进程是在内存中独享一片内存空间的程序，各个进程之间互不干扰。
 CPU 采用 时间片轮转 的方式运行进程，使用上下文切换的方式让操作系统的并发成为可能。虽然并发从宏观上看有多个任务在执行，但对于单核 CPU 来说，任意时刻都只有一个任务在占用 CPU 资源。
@@ -120,10 +120,10 @@ CPU 采用 时间片轮转 的方式运行进程，使用上下文切换的方�
     
     <item>
       <title>Java：HashMap 源码解读</title>
-      <link>https://nervousorange.github.io/2020/java-hashmap/</link>
+      <link>https://hoffmanzheng.github.io/2020/java-hashmap/</link>
       <pubDate>Tue, 28 Jan 2020 14:11:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/java-hashmap/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/java-hashmap/</guid>
       <description>本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。
 HashMap 的实现原理 1. 哈希表底层实现原理 哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry&amp;lt;K, V&amp;gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。
 transient Node&amp;lt;K,V&amp;gt;[] table; static class Node&amp;lt;K,V&amp;gt; implements Map.Entry&amp;lt;K,V&amp;gt; { final int hash; final K key; V value; Node&amp;lt;K,V&amp;gt; next; } 2. 为什么采用数组+链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。
@@ -133,10 +133,10 @@ transient Node&amp;lt;K,V&amp;gt;[] table; static class Node&amp;lt;K,V&amp;gt; 
     
     <item>
       <title>Java：多线程下的安全容器</title>
-      <link>https://nervousorange.github.io/2020/java-thread-safe-collection/</link>
+      <link>https://hoffmanzheng.github.io/2020/java-thread-safe-collection/</link>
       <pubDate>Thu, 16 Jan 2020 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/java-thread-safe-collection/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/java-thread-safe-collection/</guid>
       <description>在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。
 List 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 Verctor 的复合操作（如遍历+修改）仍会导致 并发修改异常。
 public synchronized boolean add(E e); public synchronized boolean isEmpty(); public synchronized E get(int index); public synchronized void sort(Comparator&amp;lt;? super E&amp;gt; c); 1.2 SynchronizedList SynchronizedList 类和 vector 类似，只不过是在方法内进行同步锁：
@@ -145,10 +145,10 @@ public E get(int index) { synchronized (mutex) {return list.get(index);}} public
     
     <item>
       <title>Java：初识多线程、原理及实现</title>
-      <link>https://nervousorange.github.io/2020/java-multi-thread/</link>
+      <link>https://hoffmanzheng.github.io/2020/java-multi-thread/</link>
       <pubDate>Sun, 12 Jan 2020 14:49:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/java-multi-thread/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/java-multi-thread/</guid>
       <description>多线程原理 1. 为什么需要多线程 1.1 Java 代码的执行是同步阻塞模型 Java 代码在执行的时候，是从 main 代码块开始逐行执行，但当当前代码耗时过长时，下一行的代码就必须等待当前任务执行完毕，代码才能继续往下执行。
 1.2 CPU的运算实在太快了 取主频为 3GHz CPU 为例，CPU 执行单个指令所需的时间约为 0.3ns；与之相对的，在内存中进行读取1MB大小文件所需时间大概为 250us，SSD随机读取耗时约为 1ms，HDD约为 20ms。（推荐阅读：我是一个CPU：这个世界慢！死！了！）
 相比与内存，硬盘，网络传输，CPU 的运算实在是太快了，但是由于阻塞模型，如若当前代码执行的是较为耗时的 IO 操作，线程中的下一个任务就必须等待当前任务结束才能继续执行。使得单线程的代码执行非常没有效率，另外也浪费了 CPU 的运算性能。
@@ -162,10 +162,10 @@ public E get(int index) { synchronized (mutex) {return list.get(index);}} public
     
     <item>
       <title>Java：Collection、Map 集合工具类</title>
-      <link>https://nervousorange.github.io/2020/java-collection/</link>
+      <link>https://hoffmanzheng.github.io/2020/java-collection/</link>
       <pubDate>Thu, 02 Jan 2020 16:11:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/java-collection/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/java-collection/</guid>
       <description>本篇介绍 Java 中集合类框架的基础知识，包括 List，Set，Map。此外，关于使用频率最高的容器 HashMap 则会在另一篇博文 Java：HashMap 源码解读 中详细分析；关于这些集合类的线程安全问题，会在 Java：多线程下的安全容器 中进行讲述。
 Collection 继承体系 1. 集合 Collection 介绍  为什么需要集合？  集合使 Java 可以处理多个同类型的对象（List / Set），亦或是多个键值对类型的数据（Map）。   集合的常用功能：  添加：add(Object obj)、addAll(Collection c)； 删除：clear()、remove(Object)、removeAll(Collection)； 判断包含：isEmpty()、contains(Object)、containsAll(Collection)；  contains 方法进行判定时，会调用 equals 方法，所以在用集合存储引用对象（非原生数据类型）时需要重写 equals 和 HashCode 方法。   遍历获取：Iteratoriterator()； 长度：size()； 交集：retainAll(Collection c)； 若有元素被移除，此操作会改变原有实例集合。   迭代器（Iterator）：  以内部类的方式遍历集合中的元素，有以下方法：  hasNext()； next()； remove()；   构造思路：  写一个 iterator() 方法返回一个自己的迭代器， 创建一个自己的迭代器继承 Iterator 接口，重写接口的三个方法。 使用时：用 iterator() 创建迭代器，再用迭代器去调用其中的三个方法。      2.</description>
     </item>

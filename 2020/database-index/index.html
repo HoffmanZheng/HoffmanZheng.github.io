@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="https://nervousorange.github.io/2020/jvm-architecture-memory/" />
-  <link rel="next" href="https://nervousorange.github.io/2020/database-optimize-sql/" />
-  <link rel="canonical" href="https://nervousorange.github.io/2020/database-index/" />
+  <link rel="prev" href="https://hoffmanzheng.github.io/2020/jvm-architecture-memory/" />
+  <link rel="next" href="https://hoffmanzheng.github.io/2020/database-optimize-sql/" />
+  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/database-index/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,7 +41,7 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "https:\/\/nervousorange.github.io\/"
+         "@id": "https:\/\/hoffmanzheng.github.io\/"
     },
     "articleSection" : "posts",
     "name" : "Database：高性能 MySQL - 索引",
@@ -56,7 +56,7 @@
     "copyrightYear" : "2020",
     "datePublished": "2020-12-10 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2020-12-10 13:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/nervousorange.github.io\/2020\/database-index\/",
+    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/database-index\/",
     "wordCount" : "1127",
     "keywords" : [ "Database", "人间一场大梦"]
 }
@@ -75,7 +75,7 @@
     
     <div class="container">
         <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a>
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
         </div>
         <div class="menu navbar-right">
                 
@@ -97,7 +97,7 @@
     
      <div class="container">
         <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a></div>
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
             </div>
@@ -124,14 +124,14 @@
     <header class="post-header">
         <h1 class="post-title" itemprop="name headline">Database：高性能 MySQL - 索引</h1>
         <div class="post-meta">
-                Written by <a itemprop="name" href="https://nervousorange.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
+                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
                 <span class="post-time">
                 on <time datetime=2020-12-10 itemprop="datePublished">December 10, 2020</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
+                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
                  <span class="post-word-count">,1127 words</span>
@@ -155,12 +155,12 @@
           
           
 
-          <p>在之前的博客 <a href="https://nervousorange.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 我已经介绍了自己对 MySQL 的一些基本认识，包括它的存储引擎、数据存储结构、索引及事务等，本篇及之后的一篇将着眼于 MySQL 的性能深入探究。</p>
+          <p>在之前的博客 <a href="https://hoffmanzheng.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 我已经介绍了自己对 MySQL 的一些基本认识，包括它的存储引擎、数据存储结构、索引及事务等，本篇及之后的一篇将着眼于 MySQL 的性能深入探究。</p>
 <p>索引是存储引擎用于快速找到记录的一种数据结构，它对良好的性能非常关键，它能让 MySQL 以最高效、扫描行数最少的方式找到需要的记录。本篇将结合 <a href="https://book.douban.com/subject/23008813/">《高性能 MySQL》</a> 第五章 创建高性能的索引 的内容深入分析，如何使用索引来提高 MySQL 数据库的查询性能。</p>
 <p>本篇使用和书本相同的 MySQL 5.5 版本，使用 <a href="https://github.com/datacharmer/test_db">官方提供的测试数据库</a> 作为示例，通过 <a href="https://dev.mysql.com/downloads/workbench/">MySQL Workbench</a> 导入 dump 数据。</p>
 <h1 id="索引的类型">索引的类型</h1>
 <h3 id="b-tree-索引">B-Tree 索引</h3>
-<p>在 <a href="https://nervousorange.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 我已经介绍过 B-Tree 索引了，这里谈下一个面试常问的问题：为什么 MySQL 的索引要使用 B+ 树而不是其他的树形结构，比如 B 树？</p>
+<p>在 <a href="https://hoffmanzheng.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 我已经介绍过 B-Tree 索引了，这里谈下一个面试常问的问题：为什么 MySQL 的索引要使用 B+ 树而不是其他的树形结构，比如 B 树？</p>
 <ul>
 <li>B 树是一颗多叉树，相比于二叉树在相等数据量的情况下，树的高度更低，可以减少查询时的 I/O 次数。</li>
 <li>B+ 树相比 B 树，只有叶子节点存放数据，非叶子节点只存储索引，这样就能在一张 16kb 的非叶子节点数据页中 <strong>存储更多的指针</strong>，降低树的高度，减少查询 I/O 次数，提高查询性能。</li>
@@ -444,7 +444,7 @@ id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=https://nervousorange.github.io/2020/database-index/>https://nervousorange.github.io/2020/database-index/</span>
+                    <a href=https://hoffmanzheng.github.io/2020/database-index/>https://hoffmanzheng.github.io/2020/database-index/</span>
             </p>
             
              
@@ -460,23 +460,23 @@ id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="https://nervousorange.github.io/tags/database/">
+            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/database/">
                     #Database</a></span>
             
             </section>
         
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://nervousorange.github.io/">home</a></span>
+                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
         </section>
     </div>
 
     <div class="post-nav">
         
-        <a href="https://nervousorange.github.io/2020/jvm-architecture-memory/" class="prev" rel="prev" title="JVM：体系结构与内存管理"><i class="iconfont icon-left"></i>&nbsp;JVM：体系结构与内存管理</a>
+        <a href="https://hoffmanzheng.github.io/2020/jvm-architecture-memory/" class="prev" rel="prev" title="JVM：体系结构与内存管理"><i class="iconfont icon-left"></i>&nbsp;JVM：体系结构与内存管理</a>
          
         
-        <a href="https://nervousorange.github.io/2020/database-optimize-sql/" class="next" rel="next" title="Database：高性能 MySQL - 优化查询">Database：高性能 MySQL - 优化查询&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="https://hoffmanzheng.github.io/2020/database-optimize-sql/" class="next" rel="next" title="Database：高性能 MySQL - 优化查询">Database：高性能 MySQL - 优化查询&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
@@ -498,7 +498,7 @@ id<span style="color:#f92672">|</span>select_type<span style="color:#f92672">|</
     	 <i class="iconfont icon-love"></i> 
          </span>
          
-            <span class="author" itemprop="copyrightHolder"><a href="https://nervousorange.github.io/">Chenghao.Zheng</a> | </span> 
+            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
          
 
          

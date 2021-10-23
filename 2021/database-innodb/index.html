@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="https://nervousorange.github.io/2020/advanced-git/" />
-  <link rel="next" href="https://nervousorange.github.io/2021/java-exception-log/" />
-  <link rel="canonical" href="https://nervousorange.github.io/2021/database-innodb/" />
+  <link rel="prev" href="https://hoffmanzheng.github.io/2020/advanced-git/" />
+  <link rel="next" href="https://hoffmanzheng.github.io/2021/java-exception-log/" />
+  <link rel="canonical" href="https://hoffmanzheng.github.io/2021/database-innodb/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,7 +41,7 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "https:\/\/nervousorange.github.io\/"
+         "@id": "https:\/\/hoffmanzheng.github.io\/"
     },
     "articleSection" : "posts",
     "name" : "Database：InnoDB 存储引擎",
@@ -56,7 +56,7 @@
     "copyrightYear" : "2021",
     "datePublished": "2021-01-07 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2021-01-07 13:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/nervousorange.github.io\/2021\/database-innodb\/",
+    "url" : "https:\/\/hoffmanzheng.github.io\/2021\/database-innodb\/",
     "wordCount" : "2909",
     "keywords" : [ "Database", "人间一场大梦"]
 }
@@ -75,7 +75,7 @@
     
     <div class="container">
         <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a>
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
         </div>
         <div class="menu navbar-right">
                 
@@ -97,7 +97,7 @@
     
      <div class="container">
         <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a></div>
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
             </div>
@@ -124,14 +124,14 @@
     <header class="post-header">
         <h1 class="post-title" itemprop="name headline">Database：InnoDB 存储引擎</h1>
         <div class="post-meta">
-                Written by <a itemprop="name" href="https://nervousorange.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
+                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
                 <span class="post-time">
                 on <time datetime=2021-01-07 itemprop="datePublished">January 7, 2021</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
+                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
                  <span class="post-word-count">,2909 words</span>
@@ -155,7 +155,7 @@
           
           
 
-          <p>在之前的博客 <a href="https://nervousorange.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 <a href="https://book.douban.com/subject/24708143/">《MySQL技术内幕：InnoDB存储引擎》</a> 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 <strong>核心实现和工作机制</strong>，主要内容有：缓冲池、后台线程工作机制、日志文件、锁、事务等。</p>
+          <p>在之前的博客 <a href="https://hoffmanzheng.github.io/2020/database-mysql/">Database：MySQL 数据库</a> 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 <a href="https://book.douban.com/subject/24708143/">《MySQL技术内幕：InnoDB存储引擎》</a> 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 <strong>核心实现和工作机制</strong>，主要内容有：缓冲池、后台线程工作机制、日志文件、锁、事务等。</p>
 <h3 id="mysql-存储引擎">MySQL 存储引擎</h3>
 <p>MySQL 数据库区别于其他数据库的最重要的一个特点就是其 <strong>插件式的表存储引擎</strong>（Pluggable Storage Engines），其提供了一系列标准的管理和服务支持，如 SQL 分析器和优化器等，这些标准与存储引擎本身无关，而存储引擎是底层物理结构的实现，每个存储引擎开发者可以按照自己的意愿来进行开发。 MySQL 数据库的体系结构如下图：</p>
 <p><img src="/images/mysql-architecture.png" alt=""></p>
@@ -1132,7 +1132,7 @@ SELECT * FROM t;    // <span style="color:#ae81ff">3</span>
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=https://nervousorange.github.io/2021/database-innodb/>https://nervousorange.github.io/2021/database-innodb/</span>
+                    <a href=https://hoffmanzheng.github.io/2021/database-innodb/>https://hoffmanzheng.github.io/2021/database-innodb/</span>
             </p>
             
              
@@ -1148,23 +1148,23 @@ SELECT * FROM t;    // <span style="color:#ae81ff">3</span>
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="https://nervousorange.github.io/tags/database/">
+            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/database/">
                     #Database</a></span>
             
             </section>
         
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://nervousorange.github.io/">home</a></span>
+                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
         </section>
     </div>
 
     <div class="post-nav">
         
-        <a href="https://nervousorange.github.io/2020/advanced-git/" class="prev" rel="prev" title="Git 进阶与 GitHub 协作详解"><i class="iconfont icon-left"></i>&nbsp;Git 进阶与 GitHub 协作详解</a>
+        <a href="https://hoffmanzheng.github.io/2020/advanced-git/" class="prev" rel="prev" title="Git 进阶与 GitHub 协作详解"><i class="iconfont icon-left"></i>&nbsp;Git 进阶与 GitHub 协作详解</a>
          
         
-        <a href="https://nervousorange.github.io/2021/java-exception-log/" class="next" rel="next" title="Java：异常处理与日志记录">Java：异常处理与日志记录&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="https://hoffmanzheng.github.io/2021/java-exception-log/" class="next" rel="next" title="Java：异常处理与日志记录">Java：异常处理与日志记录&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
@@ -1186,7 +1186,7 @@ SELECT * FROM t;    // <span style="color:#ae81ff">3</span>
     	 <i class="iconfont icon-love"></i> 
          </span>
          
-            <span class="author" itemprop="copyrightHolder"><a href="https://nervousorange.github.io/">Chenghao.Zheng</a> | </span> 
+            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
          
 
          

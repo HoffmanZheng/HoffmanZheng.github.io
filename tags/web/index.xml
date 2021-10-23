@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Web on 人间一场大梦</title>
-    <link>https://nervousorange.github.io/tags/web/</link>
+    <link>https://hoffmanzheng.github.io/tags/web/</link>
     <description>Recent content in Web on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 09 Feb 2020 09:19:47 +0100</lastBuildDate><atom:link href="https://nervousorange.github.io/tags/web/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 09 Feb 2020 09:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/web/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Web：浅析 URL</title>
-      <link>https://nervousorange.github.io/2020/web-url/</link>
+      <link>https://hoffmanzheng.github.io/2020/web-url/</link>
       <pubDate>Sun, 09 Feb 2020 09:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/web-url/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/web-url/</guid>
       <description>1990 年英国计算机科学家蒂姆·伯纳斯-李（Tim Berners-Lee）发明了万维网，并解决了其中三项关键技术： URL + HTML + HTTP。本篇讲述其中的一项，全球网络资源唯一认证的系统：URL 的基本知识。
 IP 与端口 1. IP 和端口的作用  IP（Internet Protocal）是定位互联网中一台设备的协议，它规定了如何封装数据报文，以跟互联网中的其他设备交流。只要你在互联网中，你就至少有一个独特的 IP。 端口（Port）是用来定位互联网中一台设备中的不同服务的。  2. 内网与外网 形象点描述，外网就好比我家的地址，内网就类似我在我家的位置。外网是实现互联网中设备间互相通信的基础，内网和外网之间使用路由器进行中转。
 2.1 外网 IP 当我们租用电信宽带，安装猫和路由器后，便拥有了自己的外网 IP（由运营商分配）。需要注意的是，你的所有设备都共享一个外网 IP；如果重启路由器，外网 IP 将会被重新分配。
@@ -28,10 +28,10 @@ IP 与端口 1. IP 和端口的作用  IP（Internet Protocal）是定位互联�
     
     <item>
       <title>Web：HTML 常用标签</title>
-      <link>https://nervousorange.github.io/2020/web-html/</link>
+      <link>https://hoffmanzheng.github.io/2020/web-html/</link>
       <pubDate>Sat, 08 Feb 2020 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/web-html/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/web-html/</guid>
       <description>HTML（Hyper Text Markup Language）超文本标记语言，是构建网站的基石。游览器通过解析 HTML 来将万维网中传输的 字节流 渲染成丰富多彩的可视化网页。
 由于我不是写前端的，就用在线 Web 调试工具 饥人谷 JsBin 和 代码沙盒 来进行 HTML 的编辑。更多参考资料：MDN HTML 文档。
 HTML 章节与内容标签 1. HTML 起手式 HTML 代码由许许多多不同的标签（tag）构成。下图为 HTML 的一个常规模版：

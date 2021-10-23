@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="https://nervousorange.github.io/2020/database-mysql/" />
-  <link rel="next" href="https://nervousorange.github.io/2020/deploy/" />
-  <link rel="canonical" href="https://nervousorange.github.io/2020/java-threadpool/" />
+  <link rel="prev" href="https://hoffmanzheng.github.io/2020/database-mysql/" />
+  <link rel="next" href="https://hoffmanzheng.github.io/2020/deploy/" />
+  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/java-threadpool/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,7 +41,7 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "https:\/\/nervousorange.github.io\/"
+         "@id": "https:\/\/hoffmanzheng.github.io\/"
     },
     "articleSection" : "posts",
     "name" : "Java：线程池原理、源码分析",
@@ -56,7 +56,7 @@
     "copyrightYear" : "2020",
     "datePublished": "2020-03-27 10:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2020-03-27 10:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/nervousorange.github.io\/2020\/java-threadpool\/",
+    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/java-threadpool\/",
     "wordCount" : "1575",
     "keywords" : [ "Java", "人间一场大梦"]
 }
@@ -75,7 +75,7 @@
     
     <div class="container">
         <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a>
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
         </div>
         <div class="menu navbar-right">
                 
@@ -97,7 +97,7 @@
     
      <div class="container">
         <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a></div>
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
             </div>
@@ -124,14 +124,14 @@
     <header class="post-header">
         <h1 class="post-title" itemprop="name headline">Java：线程池原理、源码分析</h1>
         <div class="post-meta">
-                Written by <a itemprop="name" href="https://nervousorange.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
+                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
                 <span class="post-time">
                 on <time datetime=2020-03-27 itemprop="datePublished">March 27, 2020</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="https://nervousorange.github.io/categories/study-notes/"> Study notes </a>
+                        <a href="https://hoffmanzheng.github.io/categories/study-notes/"> Study notes </a>
                         
                 </span>
                  <span class="post-word-count">,1575 words</span>
@@ -155,7 +155,7 @@
           
           
 
-          <p>本篇为 <a href="https://nervousorange.github.io/2020/java-multi-thread/">Java：初识多线程、原理及实现</a> 的续篇，介绍 Java 中的线程池，主要内容有：进程与线程、线程池化的意义、Executors 工具类、线程池工作流程、线程复用原理等。</p>
+          <p>本篇为 <a href="https://hoffmanzheng.github.io/2020/java-multi-thread/">Java：初识多线程、原理及实现</a> 的续篇，介绍 Java 中的线程池，主要内容有：进程与线程、线程池化的意义、Executors 工具类、线程池工作流程、线程复用原理等。</p>
 <h1 id="为什么需要线程池">为什么需要线程池</h1>
 <h3 id="进程与线程">进程与线程</h3>
 <h4 id="起源">起源</h4>
@@ -354,7 +354,7 @@
 <p>如果将 <strong>运行时间较长</strong> 的与运行时间较短的任务混合在一起，除非线程池很大，否则将可能造成 “拥塞”。执行时间较长的任务不仅会造成线程池堵塞，甚至还会增加执行时间较短任务的服务时间。如果线程池中的 <strong>线程数量远小于</strong> 在稳定状态下执行时间较长的任务数量，那么到最后可能所有的线程都会运行这些执行时间较长的任务，从而影响整体的响应性。</p>
 <p>有一项技术可以缓解执行时间较长任务造成的影响，即限定等待资源的时间，大多数可阻塞方法都提供了限时版本和无限时版本，如果 <strong>等待超时</strong> 就把任务标记为失败，这样就能将线程释放出来以执行一些能更快完成的任务。</p>
 <h4 id="线程池的配置与扩展">线程池的配置与扩展</h4>
-<p>在 <a href="https://nervousorange.github.io/2021/java-concurrency/">Java：并发编程实战</a> 中介绍了无限制地创建线程将导致系统的不稳定性。虽然可以通过使用固定大小的线程池来解决这个问题，然而在高负载下如果新请求的到达速率超过了线程池的处理速率，请求会 <strong>在队列中累计</strong> 起来，应用程序仍可能耗尽资源。</p>
+<p>在 <a href="https://hoffmanzheng.github.io/2021/java-concurrency/">Java：并发编程实战</a> 中介绍了无限制地创建线程将导致系统的不稳定性。虽然可以通过使用固定大小的线程池来解决这个问题，然而在高负载下如果新请求的到达速率超过了线程池的处理速率，请求会 <strong>在队列中累计</strong> 起来，应用程序仍可能耗尽资源。</p>
 <p>相比使用 newFixedThreadPool 和 newSingleThreadExecutor 默认的无界队列 <code>LinkedBlockingQueue</code>，使用有界队列如 <code>ArrayBlockingQueue</code> 可以有助于避免资源耗尽的情况发生。需要注意的是，只有当任务相互独立时，为线程池或工作队列设置界限才是合理的。如果任务之间存在依赖性，那么有界的线程池或队列就可能导致线程饥饿死锁问题。队列满后新到的任务将会根据饱和策略进行处理。有界队列的大小必须与线程池大小一起调节，如果线程池较小而队列较大，那么有助于减少内存使用量，降低 CPU 的使用率，同时还可以减少上下文切换，但付出的代价是可能会限制吞吐量。</p>
 <p>对于非常大或者无界的线程池（比如 newCachedThreadPool），可以通过使用 <code>SynchronousQueue</code> 来避免任务排队，它不是一个真正的队列（没有容量），而是一种在线程之间进行移交的机制。要将一个任务放入 SynchronousQueue 中，就必须有另一个线程正在等待这个任务，否则将会根据当前线程池的大小创建一个新的线程或者按照饱和策略拒绝掉这个任务。</p>
 <p>如果希望给线程池中的线程定制一些行为，例如指定一个 UncaughtExceptionHandler、给线程取一个更有意义的名称等，可以通过使用 <strong>定制的线程工厂</strong> 来实现：</p>
@@ -652,7 +652,7 @@
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=https://nervousorange.github.io/2020/java-threadpool/>https://nervousorange.github.io/2020/java-threadpool/</span>
+                    <a href=https://hoffmanzheng.github.io/2020/java-threadpool/>https://hoffmanzheng.github.io/2020/java-threadpool/</span>
             </p>
             
              
@@ -668,23 +668,23 @@
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="https://nervousorange.github.io/tags/java/">
+            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/java/">
                     #Java</a></span>
             
             </section>
         
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://nervousorange.github.io/">home</a></span>
+                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
         </section>
     </div>
 
     <div class="post-nav">
         
-        <a href="https://nervousorange.github.io/2020/database-mysql/" class="prev" rel="prev" title="Database：MySQL 数据库"><i class="iconfont icon-left"></i>&nbsp;Database：MySQL 数据库</a>
+        <a href="https://hoffmanzheng.github.io/2020/database-mysql/" class="prev" rel="prev" title="Database：MySQL 数据库"><i class="iconfont icon-left"></i>&nbsp;Database：MySQL 数据库</a>
          
         
-        <a href="https://nervousorange.github.io/2020/deploy/" class="next" rel="next" title="Java：程序的部署和 Nginx 负载均衡">Java：程序的部署和 Nginx 负载均衡&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="https://hoffmanzheng.github.io/2020/deploy/" class="next" rel="next" title="Java：程序的部署和 Nginx 负载均衡">Java：程序的部署和 Nginx 负载均衡&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
@@ -706,7 +706,7 @@
     	 <i class="iconfont icon-love"></i> 
          </span>
          
-            <span class="author" itemprop="copyrightHolder"><a href="https://nervousorange.github.io/">Chenghao.Zheng</a> | </span> 
+            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
          
 
          

@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Database on 人间一场大梦</title>
-    <link>https://nervousorange.github.io/tags/database/</link>
+    <link>https://hoffmanzheng.github.io/tags/database/</link>
     <description>Recent content in Database on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 08 May 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://nervousorange.github.io/tags/database/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 08 May 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/database/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Database：Redis 设计与实现</title>
-      <link>https://nervousorange.github.io/2021/database-redis/</link>
+      <link>https://hoffmanzheng.github.io/2021/database-redis/</link>
       <pubDate>Sat, 08 May 2021 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2021/database-redis/</guid>
+      <guid>https://hoffmanzheng.github.io/2021/database-redis/</guid>
       <description>Redis 是一个开源的，内存中的数据结构存储系统，它可以用作数据库、缓存和消息中间件，支持多种类型的数据结构和范围查询。 Redis 内置了复制（replication）、事务（transactions）和不同级别的磁盘持久化（persistence），并通过 Redis哨兵（Sentinel）和自动分区（Cluster）提供高可用性（high availability）。
 本篇将结合 《Redis 设计与实现》 讲解 Redis 的内部机制、单机特性以及多机特性。
 Redis 数据结构 Redis 有五种不同的 对象类型，包括字符串、列表、哈希、集合和有序集合，每种对象都用到了至少一种数据结构，这样就可以根据不同的使用场景，为对象设置不同的数据结构（内部编码）实现，从而优化对象在不同场景下的使用效率。
@@ -23,10 +23,10 @@ typedef struct redisObject { unsigned type : 4; // 类型 	unsigned encoding : 4
     
     <item>
       <title>Database：InnoDB 存储引擎</title>
-      <link>https://nervousorange.github.io/2021/database-innodb/</link>
+      <link>https://hoffmanzheng.github.io/2021/database-innodb/</link>
       <pubDate>Thu, 07 Jan 2021 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2021/database-innodb/</guid>
+      <guid>https://hoffmanzheng.github.io/2021/database-innodb/</guid>
       <description>在之前的博客 Database：MySQL 数据库 中笔者已经介绍了自己对于关系型数据库 MySQL 的些许认识，但终觉不够深刻，本篇将结合 《MySQL技术内幕：InnoDB存储引擎》 讲解作为 MySQL 企业级数据库应用的第一存储引擎 InnoDB 的 核心实现和工作机制，主要内容有：缓冲池、后台线程工作机制、日志文件、锁、事务等。
 MySQL 存储引擎 MySQL 数据库区别于其他数据库的最重要的一个特点就是其 插件式的表存储引擎（Pluggable Storage Engines），其提供了一系列标准的管理和服务支持，如 SQL 分析器和优化器等，这些标准与存储引擎本身无关，而存储引擎是底层物理结构的实现，每个存储引擎开发者可以按照自己的意愿来进行开发。 MySQL 数据库的体系结构如下图：
 需要注意的是，存储引擎是 基于表的，而不是数据库。每个存储引擎都有各自的特点，开发者应该根据具体的应用选择适合的存储引擎，以下是一些存储引擎的简单介绍：
@@ -39,10 +39,10 @@ Archive 只支持 INSERT SELECT 操作，支持索引，压缩比例 1：10，�
     
     <item>
       <title>Database：高性能 MySQL - 优化查询</title>
-      <link>https://nervousorange.github.io/2020/database-optimize-sql/</link>
+      <link>https://hoffmanzheng.github.io/2020/database-optimize-sql/</link>
       <pubDate>Tue, 22 Dec 2020 13:29:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/database-optimize-sql/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/database-optimize-sql/</guid>
       <description>一个 MySQL 的查询任务，可以看作是一系列子任务，每个子任务都会消耗一定的时间，包括：网络、CPU 计算、生成统计信息和执行计划、锁等待等。如果要优化查询，实际上要优化其子任务，消除其中的一些子任务，减少子任务的执行次数，让子任务运行得更快。因此，了解 查询的生命周期、清楚查询的时间消耗情况对于优化查询有很大的意义。
 在 Database：高性能 MySQL - 索引 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇基于 MySQL 5.5 版本，结合 《高性能 MySQL》 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何对各种类型的查询，比如子查询、关联查询、排序、分组、分页等，进行合理的设计。
 查询执行的基础 MySQL 客户端/服务器通信协议 一般来说不需要去理解 MySQL 通信协议的内部实现细节，只需要大致理解通信协议是如何工作的。MySQL 客户端和服务器之间的通信协议是 &amp;ldquo;半双工&amp;rdquo; 的，这意味着在任何一个时刻，要么是由服务器向客户端发送数据，要么是由客户端向服务器发送数据，这两个动作不能同时发生，无法也无须将一个消息切成小块独立来发送。
@@ -56,10 +56,10 @@ Server 层    阶段 职责     连接器 TCP 握手后服务器端验证登录�
     
     <item>
       <title>Database：高性能 MySQL - 索引</title>
-      <link>https://nervousorange.github.io/2020/database-index/</link>
+      <link>https://hoffmanzheng.github.io/2020/database-index/</link>
       <pubDate>Thu, 10 Dec 2020 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/database-index/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/database-index/</guid>
       <description>在之前的博客 Database：MySQL 数据库 我已经介绍了自己对 MySQL 的一些基本认识，包括它的存储引擎、数据存储结构、索引及事务等，本篇及之后的一篇将着眼于 MySQL 的性能深入探究。
 索引是存储引擎用于快速找到记录的一种数据结构，它对良好的性能非常关键，它能让 MySQL 以最高效、扫描行数最少的方式找到需要的记录。本篇将结合 《高性能 MySQL》 第五章 创建高性能的索引 的内容深入分析，如何使用索引来提高 MySQL 数据库的查询性能。
 本篇使用和书本相同的 MySQL 5.5 版本，使用 官方提供的测试数据库 作为示例，通过 MySQL Workbench 导入 dump 数据。
@@ -69,10 +69,10 @@ Server 层    阶段 职责     连接器 TCP 握手后服务器端验证登录�
     
     <item>
       <title>Database：MySQL 数据库</title>
-      <link>https://nervousorange.github.io/2020/database-mysql/</link>
+      <link>https://hoffmanzheng.github.io/2020/database-mysql/</link>
       <pubDate>Wed, 04 Mar 2020 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/database-mysql/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/database-mysql/</guid>
       <description>本篇介绍 MySQL 数据库，主要内容有：MySQL 常见的两种存储引擎（InnoDB 与 MyISAM）、数据库存储结构与索引原理以及数据库事务隔离级别、读写锁等。
 存储引擎 MyISAM 与 InnoDB 区别：   InnoDB 支持事务，MyISAM 不支持事务。这是 MySQL 将默认存储引擎从 MyISAM 变成 InnoDB 的重要原因之一；
   InnoDB 支持外键，而 MyISAM 不支持。对一个包含外键的 InnoDB 表转为 MYISAM 会失败；（主键是能确定一条记录的唯一标识，外键用于与另一张表的关联）

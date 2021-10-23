@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="https://nervousorange.github.io/2020/deploy/" />
-  <link rel="next" href="https://nervousorange.github.io/2020/java-io/" />
-  <link rel="canonical" href="https://nervousorange.github.io/2020/dns-cdn/" />
+  <link rel="prev" href="https://hoffmanzheng.github.io/2020/deploy/" />
+  <link rel="next" href="https://hoffmanzheng.github.io/2020/java-io/" />
+  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/dns-cdn/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,7 +41,7 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "https:\/\/nervousorange.github.io\/"
+         "@id": "https:\/\/hoffmanzheng.github.io\/"
     },
     "articleSection" : "posts",
     "name" : "深入 Web 请求过程",
@@ -56,7 +56,7 @@
     "copyrightYear" : "2020",
     "datePublished": "2020-07-26 09:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2020-07-26 09:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/nervousorange.github.io\/2020\/dns-cdn\/",
+    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/dns-cdn\/",
     "wordCount" : "272",
     "keywords" : [ "Net", "人间一场大梦"]
 }
@@ -75,7 +75,7 @@
     
     <div class="container">
         <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a>
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
         </div>
         <div class="menu navbar-right">
                 
@@ -97,7 +97,7 @@
     
      <div class="container">
         <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a></div>
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
             </div>
@@ -124,14 +124,14 @@
     <header class="post-header">
         <h1 class="post-title" itemprop="name headline">深入 Web 请求过程</h1>
         <div class="post-meta">
-                Written by <a itemprop="name" href="https://nervousorange.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
+                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
                 <span class="post-time">
                 on <time datetime=2020-07-26 itemprop="datePublished">July 26, 2020</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
+                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
                  <span class="post-word-count">,272 words</span>
@@ -164,7 +164,7 @@
 <h4 id="cache-control--pragma">Cache-Control / Pragma</h4>
 <p>我们在游览一个页面时发现有异常，通常考虑的就是是不是游览器做的缓存，这个时候可以按 <strong>Ctrl + F5</strong> 来重新请求到没有缓存的页面。这个组合键会直接向目标 URL 发送请求，而不会使用游览器缓存的数据；它会在 HTTP 的请求头中增加一些请求头，告诉服务器我们要获取最新的数据而不是缓存（以此也可以跳过前端部署的缓存服务器）。</p>
 <blockquote>
-<p>对 HTTP 请求头不太熟悉的同学可以先参考下我的计网学习笔记：<a href="https://nervousorange.github.io/2020/net-http-tcp/">Net：计算机网络读书笔记</a>。</p>
+<p>对 HTTP 请求头不太熟悉的同学可以先参考下我的计网学习笔记：<a href="https://hoffmanzheng.github.io/2020/net-http-tcp/">Net：计算机网络读书笔记</a>。</p>
 </blockquote>
 <p><img src="/images/%E6%B8%B8%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98.jpg" alt=""></p>
 <p>使用 Ctrl + F5 组合键后在 HTTP 请求头中增加了两项 <code>Pragma:no-cache</code> 和 <code>Cache-Control:no-cache</code>，其字段可选值如下表所示：</p>
@@ -215,7 +215,7 @@
 <h1 id="dns-域名解析">DNS 域名解析</h1>
 <p>我们通常使用 URL 域名来请求网络资源，它需要被解析成 IP 地址才能与远程主机建立连接，如何将域名解析成 IP 地址就属于 DNS 解析的工作范畴了。</p>
 <blockquote>
-<p>对 URL 域名仍不了解的同学可以先阅读下：<a href="https://nervousorange.github.io/2020/web-url/">Web：浅析 URL</a></p>
+<p>对 URL 域名仍不了解的同学可以先阅读下：<a href="https://hoffmanzheng.github.io/2020/web-url/">Web：浅析 URL</a></p>
 </blockquote>
 <h4 id="域名缓存">域名缓存</h4>
 <p>当用户在游览器中输入域名并按下回车键后，游览器会先检查缓存中有没有这个域名对应的解析过的 IP 地址，如果没有命中，则会去操作系统的缓存中查找是否有这个域名对应的 DNS 解析结果。用户也可以修改系统文件来修改域名对应的 IP，Windows 下为 <code>C:\\Windows\System32\drivers\etc\hosts</code>，Linux 下为 <code>/etc/hosts</code>，<strong>域名劫持</strong> 就是黑客修改把特定的域名解析到它指定的 IP 地址上，所以 Windows 7 中将 hosts 设置成了只读，防止这个文件被轻易修改。</p>
@@ -253,7 +253,7 @@
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=https://nervousorange.github.io/2020/dns-cdn/>https://nervousorange.github.io/2020/dns-cdn/</span>
+                    <a href=https://hoffmanzheng.github.io/2020/dns-cdn/>https://hoffmanzheng.github.io/2020/dns-cdn/</span>
             </p>
             
              
@@ -269,23 +269,23 @@
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="https://nervousorange.github.io/tags/net/">
+            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/net/">
                     #Net</a></span>
             
             </section>
         
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://nervousorange.github.io/">home</a></span>
+                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
         </section>
     </div>
 
     <div class="post-nav">
         
-        <a href="https://nervousorange.github.io/2020/deploy/" class="prev" rel="prev" title="Java：程序的部署和 Nginx 负载均衡"><i class="iconfont icon-left"></i>&nbsp;Java：程序的部署和 Nginx 负载均衡</a>
+        <a href="https://hoffmanzheng.github.io/2020/deploy/" class="prev" rel="prev" title="Java：程序的部署和 Nginx 负载均衡"><i class="iconfont icon-left"></i>&nbsp;Java：程序的部署和 Nginx 负载均衡</a>
          
         
-        <a href="https://nervousorange.github.io/2020/java-io/" class="next" rel="next" title="深入分析 Java I/O 的工作机制">深入分析 Java I/O 的工作机制&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="https://hoffmanzheng.github.io/2020/java-io/" class="next" rel="next" title="深入分析 Java I/O 的工作机制">深入分析 Java I/O 的工作机制&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
@@ -307,7 +307,7 @@
     	 <i class="iconfont icon-love"></i> 
          </span>
          
-            <span class="author" itemprop="copyrightHolder"><a href="https://nervousorange.github.io/">Chenghao.Zheng</a> | </span> 
+            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
          
 
          

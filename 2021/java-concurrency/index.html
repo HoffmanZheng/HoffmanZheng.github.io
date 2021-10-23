@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="https://nervousorange.github.io/2021/java-exception-log/" />
-  <link rel="next" href="https://nervousorange.github.io/2021/database-redis/" />
-  <link rel="canonical" href="https://nervousorange.github.io/2021/java-concurrency/" />
+  <link rel="prev" href="https://hoffmanzheng.github.io/2021/java-exception-log/" />
+  <link rel="next" href="https://hoffmanzheng.github.io/2021/database-redis/" />
+  <link rel="canonical" href="https://hoffmanzheng.github.io/2021/java-concurrency/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,7 +41,7 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "https:\/\/nervousorange.github.io\/"
+         "@id": "https:\/\/hoffmanzheng.github.io\/"
     },
     "articleSection" : "posts",
     "name" : "Java：并发编程实战",
@@ -56,7 +56,7 @@
     "copyrightYear" : "2021",
     "datePublished": "2021-04-02 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2021-04-02 13:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/nervousorange.github.io\/2021\/java-concurrency\/",
+    "url" : "https:\/\/hoffmanzheng.github.io\/2021\/java-concurrency\/",
     "wordCount" : "2463",
     "keywords" : [ "java", "人间一场大梦"]
 }
@@ -75,7 +75,7 @@
     
     <div class="container">
         <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a>
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
         </div>
         <div class="menu navbar-right">
                 
@@ -97,7 +97,7 @@
     
      <div class="container">
         <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a></div>
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
             </div>
@@ -124,14 +124,14 @@
     <header class="post-header">
         <h1 class="post-title" itemprop="name headline">Java：并发编程实战</h1>
         <div class="post-meta">
-                Written by <a itemprop="name" href="https://nervousorange.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
+                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
                 <span class="post-time">
                 on <time datetime=2021-04-02 itemprop="datePublished">April 2, 2021</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
+                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
                  <span class="post-word-count">,2463 words</span>
@@ -167,7 +167,7 @@
 </ul>
 <h3 id="executor-框架">Executor 框架</h3>
 <p>串行执行的问题在于其糟糕的响应性和吞吐量，而 “为每个任务分配一个线程” 却产生了复杂的 <strong>资源管理</strong> 问题。为此 Java 提供了 Executor 作为 Thread 的替代，它提供了一种标准的任务执行框架，可以将任务的提交过程与实际执行过程 <strong>解耦</strong> 开来，从而无须太大的困难就可以为某种类型的任务指定和修改 <strong>执行策略</strong>。</p>
-<p>笔者在 <a href="https://nervousorange.github.io/2020/java-threadpool/">Java：线程池原理、源码分析</a> 中已经介绍过线程池相关的内容，线程池通过对线程的统一分配、调优和监控等，实现了从 “为每个任务分配一个线程” 策略到基于线程池的策略的飞跃，服务器不会再创建数千个线程来争夺有限的 CPU 和内存资源，也不会再在高负载情况下失败了。</p>
+<p>笔者在 <a href="https://hoffmanzheng.github.io/2020/java-threadpool/">Java：线程池原理、源码分析</a> 中已经介绍过线程池相关的内容，线程池通过对线程的统一分配、调优和监控等，实现了从 “为每个任务分配一个线程” 策略到基于线程池的策略的飞跃，服务器不会再创建数千个线程来争夺有限的 CPU 和内存资源，也不会再在高负载情况下失败了。</p>
 <h4 id="处理非正常的线程中止">处理非正常的线程中止</h4>
 <p>在延迟任务及周期任务上，<code>java.util.Timer</code> 提供了基于绝对时间的调度机制， 但 Timer 在执行所有定时任务时只会创建一个线程，如果某个任务的执行时间过长，可能会影响后续的任务执行。此外如果 TimerTask 抛出一个 <strong>未检查异常</strong>，定时线程将会被 <strong>终止</strong>，Timer 也不会恢复线程的执行，而是会错误地认为整个 Timer 都被取消了。因此已经被调度但尚未执行的 TimerTask 将不会执行，新的任务也不能被调度，导致 <code>线程泄漏</code>。（推荐使用 DelauQueue 或者 ScheduledThreadPoolExecutor）</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">OutOfTime</span> <span style="color:#f92672">{</span>
@@ -361,7 +361,7 @@
     <span style="color:#75715e">// 将 ExecutorService 的其他方法委托给 exec
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 </code></pre></div><h1 id="活跃性问题与并发的性能">活跃性问题与并发的性能</h1>
-<p>我们使用加锁机制来确保线程安全，但如果过度使用加锁，则可能导致 <strong>锁顺序死锁</strong>。同样我们使用线程池和信号量来限制对资源的使用，但它们可能会导致资源死锁。在数据库系统的设计中提供了 <strong>主动监测死锁及从死锁中恢复</strong>（选择一个牺牲者放弃事务，释放它持有的资源，详见 <a href="https://nervousorange.github.io/2021/database-innodb/">Database：InnoDB 存储引擎</a>）的机制，但 Java 应用程序是 <strong>无法</strong> 从死锁中恢复过来的，因此在设计时就一定要排除可能导致死锁出现的条件。</p>
+<p>我们使用加锁机制来确保线程安全，但如果过度使用加锁，则可能导致 <strong>锁顺序死锁</strong>。同样我们使用线程池和信号量来限制对资源的使用，但它们可能会导致资源死锁。在数据库系统的设计中提供了 <strong>主动监测死锁及从死锁中恢复</strong>（选择一个牺牲者放弃事务，释放它持有的资源，详见 <a href="https://hoffmanzheng.github.io/2021/database-innodb/">Database：InnoDB 存储引擎</a>）的机制，但 Java 应用程序是 <strong>无法</strong> 从死锁中恢复过来的，因此在设计时就一定要排除可能导致死锁出现的条件。</p>
 <h3 id="避免活跃性危险">避免活跃性危险</h3>
 <h4 id="死锁">死锁</h4>
 <p>如果两个线程试图以 <strong>不同的顺序</strong> 来获得相同的锁，则可能会发生锁顺序死锁，如下图所示：</p>
@@ -851,7 +851,7 @@
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=https://nervousorange.github.io/2021/java-concurrency/>https://nervousorange.github.io/2021/java-concurrency/</span>
+                    <a href=https://hoffmanzheng.github.io/2021/java-concurrency/>https://hoffmanzheng.github.io/2021/java-concurrency/</span>
             </p>
             
              
@@ -867,23 +867,23 @@
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="https://nervousorange.github.io/tags/java/">
+            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/java/">
                     #java</a></span>
             
             </section>
         
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://nervousorange.github.io/">home</a></span>
+                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
         </section>
     </div>
 
     <div class="post-nav">
         
-        <a href="https://nervousorange.github.io/2021/java-exception-log/" class="prev" rel="prev" title="Java：异常处理与日志记录"><i class="iconfont icon-left"></i>&nbsp;Java：异常处理与日志记录</a>
+        <a href="https://hoffmanzheng.github.io/2021/java-exception-log/" class="prev" rel="prev" title="Java：异常处理与日志记录"><i class="iconfont icon-left"></i>&nbsp;Java：异常处理与日志记录</a>
          
         
-        <a href="https://nervousorange.github.io/2021/database-redis/" class="next" rel="next" title="Database：Redis 设计与实现">Database：Redis 设计与实现&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="https://hoffmanzheng.github.io/2021/database-redis/" class="next" rel="next" title="Database：Redis 设计与实现">Database：Redis 设计与实现&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
@@ -905,7 +905,7 @@
     	 <i class="iconfont icon-love"></i> 
          </span>
          
-            <span class="author" itemprop="copyrightHolder"><a href="https://nervousorange.github.io/">Chenghao.Zheng</a> | </span> 
+            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
          
 
          

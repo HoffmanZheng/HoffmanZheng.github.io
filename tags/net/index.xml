@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Net on 人间一场大梦</title>
-    <link>https://nervousorange.github.io/tags/net/</link>
+    <link>https://hoffmanzheng.github.io/tags/net/</link>
     <description>Recent content in Net on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Jul 2020 09:19:47 +0100</lastBuildDate><atom:link href="https://nervousorange.github.io/tags/net/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 26 Jul 2020 09:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/net/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>深入 Web 请求过程</title>
-      <link>https://nervousorange.github.io/2020/dns-cdn/</link>
+      <link>https://hoffmanzheng.github.io/2020/dns-cdn/</link>
       <pubDate>Sun, 26 Jul 2020 09:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/dns-cdn/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/dns-cdn/</guid>
       <description>由于之前找工作，刚来上海挺多事，些久没写博客；至此打算新开一个 “学习录” 系列（以读书笔记和实战心得为主），记录自己 Java 学习路上的收获，共勉。
 以 《深入分析 Java Web 技术内幕》 第一章 深入 Web 请求过程的内容为参考，此篇讲解游览器缓存、DNS 域名解析的过程和 CDN 工作机制。
 游览器缓存 缓存可以减少游览器向服务器请求资源的次数，减少网络延时，加快页面响应速度，减少服务器压力。下图中 size 不为 0 的请求就是没有使用缓存。
@@ -25,10 +25,10 @@ Cache-Control / Pragma 我们在游览一个页面时发现有异常，通常考
     
     <item>
       <title>Net：计算机网络读书笔记</title>
-      <link>https://nervousorange.github.io/2020/net-http-tcp/</link>
+      <link>https://hoffmanzheng.github.io/2020/net-http-tcp/</link>
       <pubDate>Thu, 27 Feb 2020 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/net-http-tcp/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/net-http-tcp/</guid>
       <description>本篇为 《计算机网络自顶向下方法》 的读书笔记，主要介绍：网络分层模型、HTTP 协议、非持续连接和持续连接、报文格式、cookie 与 session、 FTP 协议、HTTPS 协议、TCP 协议、流量控制、UDP 协议 等。
 网络协议分层模型 ISO 提出的计算机网络 OSI（Open System Interconnection Reference Model） 七层模型：
 TCP / IP 分层模型：

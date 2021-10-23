@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>jvm on 人间一场大梦</title>
-    <link>https://nervousorange.github.io/tags/jvm/</link>
+    <link>https://hoffmanzheng.github.io/tags/jvm/</link>
     <description>Recent content in jvm on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 06 Nov 2020 13:37:47 +0100</lastBuildDate><atom:link href="https://nervousorange.github.io/tags/jvm/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Nov 2020 13:37:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/jvm/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>JVM：体系结构与内存管理</title>
-      <link>https://nervousorange.github.io/2020/jvm-architecture-memory/</link>
+      <link>https://hoffmanzheng.github.io/2020/jvm-architecture-memory/</link>
       <pubDate>Fri, 06 Nov 2020 13:37:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2020/jvm-architecture-memory/</guid>
+      <guid>https://hoffmanzheng.github.io/2020/jvm-architecture-memory/</guid>
       <description>在之前的博客 Javac 编译原理与 class 文件结构 中，我有提及 Javac 编译器将 Java 源码编译成了机器可以接受的指令，解决了高级语言与底层硬件架构的耦合（现在的操作系统几乎完全向用户屏蔽了硬件，也就可以说编译器解决了高级语言与不同操作系统之间的耦合）。
 JVM 屏蔽了各个计算机平台相关的软件或者硬件之间的差异，使 Java 代码可以 全平台运行。本篇以 《深入分析 Java Web 技术内幕》 第七章 JVM 体系结构与工作方式 及第八章 JVM 内存管理 的内容为参考，讲解 JVM 的基本结构、工作方式、内存分配策略及垃圾回收策略等。
 JVM 体系结构 计算机与 Java 虚拟机 在了解 JVM 这台虚拟计算机之前，我们先看看一台真实的计算机的体系结构：

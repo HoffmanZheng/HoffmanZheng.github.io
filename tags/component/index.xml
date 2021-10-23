@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>component on 人间一场大梦</title>
-    <link>https://nervousorange.github.io/tags/component/</link>
+    <link>https://hoffmanzheng.github.io/tags/component/</link>
     <description>Recent content in component on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 26 Aug 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://nervousorange.github.io/tags/component/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 26 Aug 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/component/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>深入解析 Spring 架构与设计</title>
-      <link>https://nervousorange.github.io/2021/java-spring/</link>
+      <link>https://hoffmanzheng.github.io/2021/java-spring/</link>
       <pubDate>Thu, 26 Aug 2021 13:19:47 +0100</pubDate>
       
-      <guid>https://nervousorange.github.io/2021/java-spring/</guid>
+      <guid>https://hoffmanzheng.github.io/2021/java-spring/</guid>
       <description>Spring 在 Java 开发中，有着不可替代的作用和地位。Spring 的目标在于让 Java EE 的开发变得更容易，这也意味着 Spring 框架的使用也应该是容易的。相比与 EJB 模型引入的过度的复杂性，Spring 提供了 IoC 容器和 AOP 支持，来降低框架对应用的 侵入性。在处理与现有优秀解决方案的关系时，Spring 不会与这些第三方的解决方案发生竞争，而是致力于为应用提供使用优秀方案的集成平台，真正地把 Spring 定位在应用平台的地位，使得自己成为一个兼容并包的开放体系。
 本篇结合 《Spring技术内幕（第2版）》 从源代码的角度讲解 Spring 的各个主要功能模块的设计和实现原理。
 IoC 容器的实现 如果每个对象都需要靠自身实现去获取它所 依赖 的对象，会引起代码的高度耦合并且难以测试。很多对象并不会经常发生变化，它们之间的相互依赖关系也是比较稳定的，不会随着应用的 运行状态 的改变而改变，这些特性使得这些对象依赖关系的建立和维护可以交由容器来统一完成。

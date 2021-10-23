@@ -9,9 +9,9 @@
   
   
   
-  <link rel="prev" href="https://nervousorange.github.io/2020/database-index/" />
-  <link rel="next" href="https://nervousorange.github.io/2020/advanced-git/" />
-  <link rel="canonical" href="https://nervousorange.github.io/2020/database-optimize-sql/" />
+  <link rel="prev" href="https://hoffmanzheng.github.io/2020/database-index/" />
+  <link rel="next" href="https://hoffmanzheng.github.io/2020/advanced-git/" />
+  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/database-optimize-sql/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
@@ -41,7 +41,7 @@
     "@type" : "BlogPosting",
     "mainEntityOfPage": {
          "@type": "WebPage",
-         "@id": "https:\/\/nervousorange.github.io\/"
+         "@id": "https:\/\/hoffmanzheng.github.io\/"
     },
     "articleSection" : "posts",
     "name" : "Database：高性能 MySQL - 优化查询",
@@ -56,7 +56,7 @@
     "copyrightYear" : "2020",
     "datePublished": "2020-12-22 13:29:47 \u002b0100 \u002b0100",
     "dateModified" : "2020-12-22 13:29:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/nervousorange.github.io\/2020\/database-optimize-sql\/",
+    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/database-optimize-sql\/",
     "wordCount" : "1130",
     "keywords" : [ "Database", "人间一场大梦"]
 }
@@ -75,7 +75,7 @@
     
     <div class="container">
         <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a>
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
         </div>
         <div class="menu navbar-right">
                 
@@ -97,7 +97,7 @@
     
      <div class="container">
         <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://nervousorange.github.io/">人间一场大梦</a></div>
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
             <div class="menu-toggle">
                 <span></span><span></span><span></span>
             </div>
@@ -124,14 +124,14 @@
     <header class="post-header">
         <h1 class="post-title" itemprop="name headline">Database：高性能 MySQL - 优化查询</h1>
         <div class="post-meta">
-                Written by <a itemprop="name" href="https://nervousorange.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
+                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
                 <span class="post-time">
                 on <time datetime=2020-12-22 itemprop="datePublished">December 22, 2020</time>
                 </span>
                 in
                 <i class="iconfont icon-folder"></i>
                 <span class="post-category">
-                        <a href="https://nervousorange.github.io/categories/reading-notes/"> Reading notes </a>
+                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
                  <span class="post-word-count">,1130 words</span>
@@ -156,7 +156,7 @@
           
 
           <p>一个 MySQL 的查询任务，可以看作是一系列子任务，每个子任务都会消耗一定的时间，包括：网络、CPU 计算、生成统计信息和执行计划、锁等待等。如果要优化查询，实际上要优化其子任务，消除其中的一些子任务，减少子任务的执行次数，让子任务运行得更快。因此，了解 <strong>查询的生命周期</strong>、清楚查询的时间消耗情况对于优化查询有很大的意义。</p>
-<p>在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇基于 <strong>MySQL 5.5</strong> 版本，结合 <a href="https://book.douban.com/subject/23008813/">《高性能 MySQL》</a> 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何对各种类型的查询，比如子查询、关联查询、排序、分组、分页等，进行合理的设计。</p>
+<p>在 <a href="https://hoffmanzheng.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 篇笔者已经讲述了索引对良好的性能有着重要的影响，但如果查询写的很糟糕，即使库表结果再合理、索引再合适，也无法实现高性能。本篇基于 <strong>MySQL 5.5</strong> 版本，结合 <a href="https://book.douban.com/subject/23008813/">《高性能 MySQL》</a> 第六章 查询性能优化 的内容讲解 MySQL 如何真正地执行查询，查询高效和低效的原因何在，以及该如何对各种类型的查询，比如子查询、关联查询、排序、分组、分页等，进行合理的设计。</p>
 <h1 id="查询执行的基础">查询执行的基础</h1>
 <h3 id="mysql-客户端服务器通信协议">MySQL 客户端/服务器通信协议</h3>
 <p>一般来说不需要去理解 MySQL 通信协议的内部实现细节，只需要大致理解通信协议是如何工作的。MySQL 客户端和服务器之间的通信协议是 &ldquo;<strong>半双工</strong>&rdquo; 的，这意味着在任何一个时刻，要么是由服务器向客户端发送数据，要么是由客户端向服务器发送数据，这两个动作不能同时发生，无法也无须将一个消息切成小块独立来发送。</p>
@@ -253,7 +253,7 @@
 </ul>
 <h3 id="mysql-是否在扫描额外的记录">MySQL 是否在扫描额外的记录</h3>
 <p>在确定查询只返回需要的数据以后，接下来应该看看查询为了返回结果是否使用了预期之外的访问类型、扫描了过多的数据，即扫描的行数对返回的行数的比率较大。也就是说，查询在存储引擎层执行时 <strong>并不能</strong> 高效地找到需要的数据，导致需要扫描大量的数据返回给服务器层，<strong>在服务器层过滤数据</strong> 后才能取得需要的数据。</p>
-<p>在 explain 语句中的 <code>type</code> 列反应了查询的访问类型，从全表扫描 ALL, 到索引扫描 INDEX、范围扫描 RANGE、索引查询 REF、常数引用 CONST 等，它们的速度从慢到快，扫描的行数也是从大到小。如果查询没有办法使用合适的访问类型，最好的解决办法通常是增加一个合适的索引，这也是笔者在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 中所讲述的问题。</p>
+<p>在 explain 语句中的 <code>type</code> 列反应了查询的访问类型，从全表扫描 ALL, 到索引扫描 INDEX、范围扫描 RANGE、索引查询 REF、常数引用 CONST 等，它们的速度从慢到快，扫描的行数也是从大到小。如果查询没有办法使用合适的访问类型，最好的解决办法通常是增加一个合适的索引，这也是笔者在 <a href="https://hoffmanzheng.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 中所讲述的问题。</p>
 <p>好的索引可以让查询使用合适的访问类型，<strong>在存储引擎层就使用索引过滤不匹配的记录</strong>，尽可能地只扫描需要的数据行，减少 I/O 次数。但有些查询需要扫描大量的数据却只返回少数的行，比如使用聚合函数 <code>count() + group by</code> 分组的查询，对这些查询通常也可以尝试以下技巧去尝试优化：</p>
 <ul>
 <li>
@@ -412,7 +412,7 @@ end
 <span style="color:#66d9ef">inner</span> <span style="color:#66d9ef">join</span> sakila.film_actor <span style="color:#66d9ef">using</span>(film_id) <span style="color:#66d9ef">where</span> actor_id <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>
 </code></pre></div><p>对于关联子查询，一般会建议使用左外连接（LEFT OUTER JOIN）来重写，但并不是所有的关联子查询的性能都很差，比如对于需要产生临时中间表（使用了 DISTINCT 或 GROUP BY）的关联查询，用 EXISTS 子查询重写后却能得到更好的查询效率。仍需注意的是，MySQL 在 from 子句中遇到子查询时，先执行子查询并将其结果放到一个临时表中（<strong>MySQL 的临时表是没有任何索引的</strong>，在编写复杂的子查询和关联查询的时候需要注意这一点），然后将这个临时表当做一个普通表对待（派生表 derived）。</p>
 <h3 id="优化排序">优化排序</h3>
-<p>排序是一个成本很高的操作，从性能角度考虑应该尽可能避免排序或者尽可能 <strong>避免对大量数据进行排序</strong>。在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 已经介绍了 MySQL 如何通过索引进行排序，当不能使用索引生成排序结果时，MySQL 需要自己进行文件排序（filesort），如果数据量小则在内存中进行，如果数据量大（超过了排序缓冲区）则需要 <strong>使用磁盘</strong>，MySQL 会先将数据分块，对每个独立的块使用快速排序，并将各个块的排序结果放在磁盘上，最后合并返回。MySQL 有两种排序算法：</p>
+<p>排序是一个成本很高的操作，从性能角度考虑应该尽可能避免排序或者尽可能 <strong>避免对大量数据进行排序</strong>。在 <a href="https://hoffmanzheng.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 已经介绍了 MySQL 如何通过索引进行排序，当不能使用索引生成排序结果时，MySQL 需要自己进行文件排序（filesort），如果数据量小则在内存中进行，如果数据量大（超过了排序缓冲区）则需要 <strong>使用磁盘</strong>，MySQL 会先将数据分块，对每个独立的块使用快速排序，并将各个块的排序结果放在磁盘上，最后合并返回。MySQL 有两种排序算法：</p>
 <ul>
 <li>
 <p>两次传输排序（旧版本使用）</p>
@@ -436,7 +436,7 @@ end
 <p>如果没有通过 ORDER BY 子句显式地指定排序列，分组查询会自动按照分组的字段进行排序，如果不关心结果集的顺序，而这种默认排序又导致了需要文件排序，则可以使用 <code>order by null</code> 让 MySQL 不再进行文件排序。</p>
 <h3 id="优化-limit-分页">优化 LIMIT 分页</h3>
 <p>我们通常会使用 LIMIT 加上偏移量的方法实现分页，同时加上合适的 ORDER BY 子句，如果有对应的索引，通常效率应该不错。但在偏移量非常大的时候（翻页到非常后的页面），比如 <code>limit 10000, 20</code> 需要查询 10020 条记录然后只返回最后 20 条，前面的 10000 条记录都将被抛弃，这样查询的代价非常高。要优化这种大偏移量的 LIMIT 分页查询，要么是在页面中限制分页的数量，要么是优化大偏移量的性能。</p>
-<p>优化此类分页查询的一个最简单办法就是尽可能地使用索引覆盖扫描 <strong>延迟关联</strong>，这在 <a href="https://nervousorange.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 最后面的索引案例学习中的优化排序有具体的讲解。</p>
+<p>优化此类分页查询的一个最简单办法就是尽可能地使用索引覆盖扫描 <strong>延迟关联</strong>，这在 <a href="https://hoffmanzheng.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a> 最后面的索引案例学习中的优化排序有具体的讲解。</p>
 <p>LIMIT 和 OFFSET 的问题，其实是 OFFSET 的问题，它会导致 MySQL 扫描大量不需要的行然后再抛弃掉。如果可以使用书签记录上次取数据的位置，那么下次就可以直接从该书签记录的位置开始扫描，这样就可以 <strong>避免使用 OFFSET</strong>。比如前一次查询返回的主键是 16030 的租借记录，那么下一页的查询就可以从 16030 这个点开始：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-mysql" data-lang="mysql"><span style="color:#66d9ef">select</span> <span style="color:#f92672">*</span> <span style="color:#66d9ef">from</span> sakila.rental <span style="color:#66d9ef">where</span> rental_id <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">16030</span> 
 <span style="color:#66d9ef">order</span> <span style="color:#66d9ef">by</span> rental_id <span style="color:#66d9ef">desc</span> <span style="color:#66d9ef">limit</span> <span style="color:#ae81ff">20</span>
@@ -471,7 +471,7 @@ end
              
             <p class="copyright-item">
                     <span>Link:</span>
-                    <a href=https://nervousorange.github.io/2020/database-optimize-sql/>https://nervousorange.github.io/2020/database-optimize-sql/</span>
+                    <a href=https://hoffmanzheng.github.io/2020/database-optimize-sql/>https://hoffmanzheng.github.io/2020/database-optimize-sql/</span>
             </p>
             
              
@@ -487,23 +487,23 @@ end
             <section>
             <i class="iconfont icon-tag"></i>Tag(s): 
             
-            <span class="tag"><a href="https://nervousorange.github.io/tags/database/">
+            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/database/">
                     #Database</a></span>
             
             </section>
         
         <section>
                 <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://nervousorange.github.io/">home</a></span>
+                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
         </section>
     </div>
 
     <div class="post-nav">
         
-        <a href="https://nervousorange.github.io/2020/database-index/" class="prev" rel="prev" title="Database：高性能 MySQL - 索引"><i class="iconfont icon-left"></i>&nbsp;Database：高性能 MySQL - 索引</a>
+        <a href="https://hoffmanzheng.github.io/2020/database-index/" class="prev" rel="prev" title="Database：高性能 MySQL - 索引"><i class="iconfont icon-left"></i>&nbsp;Database：高性能 MySQL - 索引</a>
          
         
-        <a href="https://nervousorange.github.io/2020/advanced-git/" class="next" rel="next" title="Git 进阶与 GitHub 协作详解">Git 进阶与 GitHub 协作详解&nbsp;<i class="iconfont icon-right"></i></a>
+        <a href="https://hoffmanzheng.github.io/2020/advanced-git/" class="next" rel="next" title="Git 进阶与 GitHub 协作详解">Git 进阶与 GitHub 协作详解&nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 
@@ -525,7 +525,7 @@ end
     	 <i class="iconfont icon-love"></i> 
          </span>
          
-            <span class="author" itemprop="copyrightHolder"><a href="https://nervousorange.github.io/">Chenghao.Zheng</a> | </span> 
+            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
          
 
          
