@@ -6,11 +6,20 @@
     <description>Recent content in Tags on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 23 Oct 2021 03:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 19 Jan 2022 03:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Distributed</title>
+      <link>https://hoffmanzheng.github.io/tags/distributed/</link>
+      <pubDate>Wed, 19 Jan 2022 03:19:47 +0100</pubDate>
+      
+      <guid>https://hoffmanzheng.github.io/tags/distributed/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Ruby</title>
       <link>https://hoffmanzheng.github.io/tags/ruby/</link>
-      <pubDate>Sat, 23 Oct 2021 03:19:47 +0100</pubDate>
+      <pubDate>Sun, 10 Oct 2021 13:19:47 +0100</pubDate>
       
       <guid>https://hoffmanzheng.github.io/tags/ruby/</guid>
       <description></description>

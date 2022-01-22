@@ -162,7 +162,7 @@
 <p>无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。</p>
 <p><img src="/images/InputStream.jpg" alt=""></p>
 <p>需要明确的是，字节流从哪里读或是写入到哪里，操作数据的方式是可以组合使用的，如：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">OutputStream outputStream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedOutputStream<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FileOutputStream<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;pathName&#34;</span><span style="color:#f92672">)));</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">OutputStream outputStream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedOutputStream<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FileOutputStream<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;pathName&#34;</span><span style="color:#f92672">)));</span>
 </code></pre></div><h4 id="基于字符的-io-操作接口">基于字符的 I/O 操作接口</h4>
 <p>虽然 I/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。</p>
 <p>例如写字符的操作接口为 <code>void write(char[] cbuf, int off, int len)</code></p>
@@ -187,7 +187,7 @@
 </ol>
 <h4 id="java-访问磁盘文件">Java 访问磁盘文件</h4>
 <p>上文介绍了 Java 操作字节或字符的接口，但这些字节流最后写到何处，是如何持久化到物理磁盘的呢？</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileInputStream</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> FileNotFoundException <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileInputStream</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> FileNotFoundException <span style="color:#f92672">{</span>
         String name <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>file <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> file<span style="color:#f92672">.</span><span style="color:#a6e22e">getPath</span><span style="color:#f92672">()</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
         SecurityManager security <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">getSecurityManager</span><span style="color:#f92672">();</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>security <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -330,7 +330,7 @@
 </tbody>
 </table>
 <p>ByteBuffer 常用 API 如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ByteBuffer byteBuffer <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>10<span style="color:#f92672">);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ByteBuffer byteBuffer <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>10<span style="color:#f92672">);</span>
 System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;初始化一个长度为 10 的 Buffer: &#34;</span> <span style="color:#f92672">+</span> byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
 
 byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]{</span>2<span style="color:#f92672">,</span> 3<span style="color:#f92672">,</span> 3<span style="color:#f92672">});</span>
@@ -346,14 +346,14 @@ byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">get</s
 </span><span style="color:#75715e"></span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
 System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;读取后结果集数据: &#34;</span> <span style="color:#f92672">+</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span>bytes<span style="color:#f92672">));</span>
 </code></pre></div><p>输出结果如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">初始化一个长度为 <span style="color:#ae81ff">10</span> 的 Buffer: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">初始化一个长度为 <span style="color:#ae81ff">10</span> 的 Buffer: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
 往缓冲区写入三个字节: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
 切换到读模式: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
 读取前结果集数据: <span style="color:#f92672">[</span>0, 0, 0<span style="color:#f92672">]</span>
 java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
 读取后结果集数据: <span style="color:#f92672">[</span>2, 3, 3<span style="color:#f92672">]</span>
 </code></pre></div><p>在写模式下 limit 等于 capacity，表示最后能够写多少个字节的数据，使用 <code>flip()</code> 切换到读模式后， limit 代表最多能够读到多少数据，所以 flip 之后 limit 会被设置成写模式下的 position 值。如果读取超出 limit 的数据则会抛出 <code>java.nio.BufferUnderflowException</code>。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">flip</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">flip</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         limit <span style="color:#f92672">=</span> position<span style="color:#f92672">;</span>
         position <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
         mark <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
@@ -361,7 +361,7 @@ java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color
     <span style="color:#f92672">}</span>
 </code></pre></div><p>当想进行下一次写入时，调用 <code>clear()</code> 再次切换成写模式，然后重置 position、limit、mark 值，这样不会擦除缓冲数组中的数据，而是将数据 “遗忘”，准备好再次写入。</p>
 <p>如果 Buffer 中仍有未读的数据，且后续还需要这些数据，但是此时想要先先写些数据，那么使用 <code>compact()</code> 方法，compact 将所有 <strong>未读的数据拷贝到 Buffer 起始处</strong>，然后将 position设置到最后一个未读元素后面，limit 设置为 capacity，之后就可以写数据了，不会覆盖未读的数据。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">clear</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">clear</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         position <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
         limit <span style="color:#f92672">=</span> capacity<span style="color:#f92672">;</span>
         mark <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
@@ -376,7 +376,7 @@ java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 </code></pre></div><p>mark() 与 reset() 组合使用，mark 用来标记当前下次操作的 position 位置，reset 会将 mark 值重新赋给 position。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">mark</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">mark</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         mark <span style="color:#f92672">=</span> position<span style="color:#f92672">;</span>
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
@@ -394,7 +394,7 @@ java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color
 <p>NIO 作为非阻塞的 I/O 方式其实是在网络层次中理解的，对于 FileChannel 来说一样是阻塞的。NIO 采用了 <strong>多路复用的 I/O 模型</strong>，一个进程可以同时等待多个文件描述符，而这些文件描述符其中的任意一个进入读就绪状态，select 函数就可以返回。</p>
 <p><img src="/images/nio.png" alt=""></p>
 <p>Selector 就是一个 I/O 调度系统，它负责监控每个 Channel 的当前运行状态（需提前注册），当 Channel 中有数据时，就把数据分配到对应的 Buffer 中，我们可以控制 Buffer 的容量及扩容机制，典型的 NIO 代码如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">select</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">select</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
     ByteBuffer buffer <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>1024<span style="color:#f92672">);</span>
     Selector selector <span style="color:#f92672">=</span> Selector<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">();</span>
     ServerSocketChannel serverSocketChannel <span style="color:#f92672">=</span> ServerSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">();</span>
@@ -498,7 +498,7 @@ java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color
     <div class="copyright">
         &copy;
         
-        <span itemprop="copyrightYear">2019 - 2021</span>
+        <span itemprop="copyrightYear">2019 - 2022</span>
         
         <span class="with-love">
     	 <i class="iconfont icon-love"></i> 

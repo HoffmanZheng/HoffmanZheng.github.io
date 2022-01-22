@@ -224,7 +224,7 @@
 <li>Key 不能重复（是唯一的），每个 Key 最多只能映射到一个值，但多个 Key 可以引用相同的对象。</li>
 <li>Map 的常用方法有：</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">containsKey<span style="color:#f92672">();</span> containsValue<span style="color:#f92672">();</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">containsKey<span style="color:#f92672">();</span> containsValue<span style="color:#f92672">();</span>
 get<span style="color:#f92672">(</span>Key<span style="color:#f92672">);</span> put<span style="color:#f92672">(</span>K<span style="color:#f92672">,</span> V<span style="color:#f92672">);</span>
 keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返回所有的 key
 </span></code></pre></div><ul>
@@ -274,7 +274,7 @@ keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返�
 <h4 id="12-randomaccess-接口">1.2 RandomAccess 接口</h4>
 <p><code>RandomAccess</code> 接口声明了一个约定：实现这个接口的类具有随机访问功能。</p>
 <p><code>Collections.binarySearch</code> 方法中，会先判断 List 是否是 RandomAccess 的实例，然后调用不同的二分查找方法。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>
     <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">binarySearch</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> Comparable<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> T<span style="color:#f92672">&gt;&gt;</span> list<span style="color:#f92672">,</span> T key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>list <span style="color:#66d9ef">instanceof</span> RandomAccess <span style="color:#f92672">||</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()&lt;</span>BINARYSEARCH_THRESHOLD<span style="color:#f92672">)</span>
             <span style="color:#66d9ef">return</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">indexedBinarySearch</span><span style="color:#f92672">(</span>list<span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
@@ -307,7 +307,7 @@ keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返�
 <li>当调用 ArrayList 的 add 或者 addAll 方法的时候，会先进行判定现有容量是否足够 <code>ensureCapacity</code>，如果不够则会进行 <code>动态扩容</code> ，即新建一个更大容量（一般为之前容量的 1.5 倍）的 ArrayList，然后把原有的数据拷贝进去，最后赋值给之前的引用对象。</li>
 <li>如果要在指定位置 i 插入和删除元素的话 <code>add(int index, E element)</code>，会调用 <code>System.arraycopy</code> 来实现 i 位置及之后元素的移动；而在扩容时则调用了 <code>Arrays.copyOf</code> 方法</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">native</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">arraycopy</span><span style="color:#f92672">(</span>Object src<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> srcPos<span style="color:#f92672">,</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">native</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">arraycopy</span><span style="color:#f92672">(</span>Object src<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> srcPos<span style="color:#f92672">,</span>
                            Object dest<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> destPos<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> length<span style="color:#f92672">);</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">copyOf</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> original<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> newLength<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -405,14 +405,14 @@ keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返�
 </li>
 </ul>
 <h4 id="31-comparator定制排序">3.1 Comparator定制排序</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>arrayList<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;()</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>arrayList<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;()</span> <span style="color:#f92672">{</span>
 	<span style="color:#a6e22e">@Override</span>
 	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Integer o1<span style="color:#f92672">,</span> Integer o2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 		<span style="color:#66d9ef">return</span> o2<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>o1<span style="color:#f92672">);</span>    <span style="color:#75715e">// 从小到大排序，变成了从大到小。
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 <span style="color:#f92672">});</span>               <span style="color:#75715e">// 用匿名内部类 重写比较器，定制原生数据类型的比较方法。
 </span></code></pre></div><h4 id="32-重写-compareto-方法实现按年龄来排序">3.2 重写 compareTo 方法实现按年龄来排序</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span>  <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Person<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span>  <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Person<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> age<span style="color:#f92672">;</span>
 
@@ -501,7 +501,7 @@ keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返�
     <div class="copyright">
         &copy;
         
-        <span itemprop="copyrightYear">2019 - 2021</span>
+        <span itemprop="copyrightYear">2019 - 2022</span>
         
         <span class="with-love">
     	 <i class="iconfont icon-love"></i> 

@@ -160,7 +160,7 @@
 <h4 id="1-哈希表底层实现原理">1. 哈希表底层实现原理</h4>
 <p><img src="/images/hashmap%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84.png" alt=""></p>
 <p>哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 <code>Entry&lt;K, V&gt;</code> 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">transient</span> Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[]</span> table<span style="color:#f92672">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">transient</span> Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[]</span> table<span style="color:#f92672">;</span>
 <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span><span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> hash<span style="color:#f92672">;</span>
         <span style="color:#66d9ef">final</span> K key<span style="color:#f92672">;</span>
@@ -183,7 +183,7 @@
 <h4 id="2-为什么扩容是-2-的-n-次幂">2. 为什么扩容是 2 的 n 次幂</h4>
 <p>相比于 % 取模，哈希表选择 <code>(n - 1) &amp; hash</code> 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.. 而这样哈希桶的最大 index = 2^n -1，二进制就成了 01111.. 再与对象的哈希值做按位与运算，就能快速的计算出对应哈希桶 index 值，并且是分布均匀的。</p>
 <p>若在创建哈希表时给定初始容量，哈希表也会用 <code>roundUpToPowerOf2</code> / <code>tableSizeFor</code> 将其扩充为2的幂次方大小。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// Returns a power of two size for the given target capacity. 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// Returns a power of two size for the given target capacity. 
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">tableSizeFor</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> cap<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 	<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> cap <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
     n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 1<span style="color:#f92672">;</span>
@@ -198,7 +198,7 @@
 <ul>
 <li>只有高位不同的哈希值将会一直在哈希桶索引的运算中发生碰撞，比如连续整数的 float 键集。所以应用了一种变换来向下扩散高位哈希值在索引运算中的影响。这是一个在速度、实用性和位分散质量之间的权衡。因为大多数哈希集已经合理分布（无法从扩散中受益），并且由于我们使用树来处理容器中的大量冲突，我们以最廉价的移位 XOR 异或方式合并高位哈希值在索引运算中的影响，并减少系统损失，否则这些高位值会由于有限的哈希表容量而永远不会在索引运算中被使用。即：<strong>为了提高数据散裂性</strong>。</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">int</span> h<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">())</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 16<span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
@@ -210,7 +210,7 @@
 <li>put 方法的 <strong>返回值是 oldValue</strong>。</li>
 <li>Java 1.8 的哈希表在 put 插入新节点时是 <strong>将新节点直接插入在链表尾部</strong>（1.7 为插入链表头部），并用 binCount 计数当前链表长度 - 1，当超过树化阈值时执行链表树化操作。</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> V <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>K key<span style="color:#f92672">,</span> V value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> V <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>K key<span style="color:#f92672">,</span> V value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">return</span> putVal<span style="color:#f92672">(</span>hash<span style="color:#f92672">(</span>key<span style="color:#f92672">),</span> key<span style="color:#f92672">,</span> value<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
     	<span style="color:#75715e">// 对key的hashCode()做hash
 </span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
@@ -288,7 +288,7 @@
 <p>比较出名的有MurmurHash、MD4、MD5等等</p>
 <h4 id="4-字符串中-hashcode-的实现">4. 字符串中 hashCode 的实现</h4>
 <p><code>31 * i = 32 * i - i = (i &lt;&lt; 5) - i</code>，这种位移与减法结合的计算相比一般的运算快很多。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hashCode</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hashCode</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> hash<span style="color:#f92672">;</span>
     <span style="color:#75715e">// 若当前字符串已经计算过哈希值，则直接返回
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -305,7 +305,7 @@
 <h4 id="1-jdk-17-的-hashmap-存在的问题">1. JDK 1.7 的 HashMap 存在的问题</h4>
 <h5 id="11-hashmap-cve-安全隐患">1.1 HashMap CVE 安全隐患</h5>
 <p><code>Tomcat</code> 在 2011 年邮件中报道了哈希表可以通过精心构造的恶意 http 请求造成链表性能退化，并引发网站 DoS 拒绝服务攻击的现象。这个问题在之后的 JDK 7 中得到了解决：对传进来的字符串进行特殊的哈希运算 <code>stringHash32</code> ，来避免恶意的字符串传值造成的哈希表链表性能退化的情况。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 	<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>0 <span style="color:#f92672">!=</span> h <span style="color:#f92672">&amp;&amp;</span> k <span style="color:#66d9ef">instanceof</span> String<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 		<span style="color:#66d9ef">return</span> sun<span style="color:#f92672">.</span><span style="color:#a6e22e">misc</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Hashing</span><span style="color:#f92672">.</span><span style="color:#a6e22e">stringHash32</span><span style="color:#f92672">((</span>String<span style="color:#f92672">)</span> k<span style="color:#f92672">);</span>
 	<span style="color:#f92672">}</span>
@@ -319,7 +319,7 @@
 <ul>
 <li>扰动函数（减少哈希碰撞）</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/* 源码注释：对原有对象的哈希值进行一次补充的哈希运算得到结果值，
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/* 源码注释：对原有对象的哈希值进行一次补充的哈希运算得到结果值，
 </span><span style="color:#75715e">来防止低质量的哈希方程。这是非常重要的，
 </span><span style="color:#75715e">因为哈希表用2的幂用为哈希表的长度，在低位bits相同时就会发生哈希碰撞。*/</span>
 
@@ -342,7 +342,7 @@
 <li>新的哈希算法</li>
 </ul>
 <p>JDK 1.8 的 hash 方法相比于 JDK 1.7 hash 方法原理不变，但是减少了扰动次数，更加简化，并提高了运算性能。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/* 源码注释：将哈希值的较高位对低位进行异或运算，来避免低位相同、只有高位不同的哈希值发生的碰撞。
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/* 源码注释：将哈希值的较高位对低位进行异或运算，来避免低位相同、只有高位不同的哈希值发生的碰撞。
 </span><span style="color:#75715e">这是一种在速度、实用性和位扩展之间的权衡。因此我们用最便宜的方式，减少系统损失，以及合并高位哈希值
 </span><span style="color:#75715e">的影响，否则这些高位哈希值将由于哈希表长度范围的限制永远不会在索引计算中使用*/</span>
 
@@ -514,7 +514,7 @@
     <div class="copyright">
         &copy;
         
-        <span itemprop="copyrightYear">2019 - 2021</span>
+        <span itemprop="copyrightYear">2019 - 2022</span>
         
         <span class="with-love">
     	 <i class="iconfont icon-love"></i> 

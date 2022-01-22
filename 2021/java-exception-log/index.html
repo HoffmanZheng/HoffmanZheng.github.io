@@ -194,7 +194,7 @@
 <p>将错误码和异常信息封装在枚举中，这样就不用每一种异常都单独定义一个异常类了。</p>
 <p><img src="/images/exception-enum.jpg" alt=""></p>
 <p>最终的业务逻辑在判断处理异常时就会变得非常简洁了：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLIENT_INVALID_INPUT</span><span style="color:#f92672">.</span><span style="color:#a6e22e">assertNotNull</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLIENT_INVALID_INPUT</span><span style="color:#f92672">.</span><span style="color:#a6e22e">assertNotNull</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
 ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLIENT_INVALID_INPUT</span><span style="color:#f92672">.</span><span style="color:#a6e22e">assertNotNull</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Object<span style="color:#f92672">());</span>
 </code></pre></div><p>至于统一的异常处理，可以参考使用下 Spring 提供的 <code>@ExceptionHandler</code> 。</p>
 <h1 id="java-的日志记录">Java 的日志记录</h1>
@@ -285,7 +285,7 @@ ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLI
 </blockquote>
 <h4 id="日志的配置-1">日志的配置</h4>
 <p><a href="https://logging.apache.org/log4j/2.x/manual/configuration.html">Log4j 2.x 配置文档</a> 中详细地介绍了如何通过配置文件来管理日志行为。在项目启动的时候，Log4j 会在 classpath 中搜索配置文件，然后使用对应的配置工厂 <code>ConfigurationFactory</code> 来配置 Logger。如果没有找到配置文件，则将会使用默认的配置。与默认配置等效的配置文件会看起来像：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
 <span style="color:#f92672">&lt;Configuration</span> <span style="color:#a6e22e">status=</span><span style="color:#e6db74">&#34;WARN&#34;</span><span style="color:#f92672">&gt;</span>
   <span style="color:#f92672">&lt;Appenders&gt;</span>
     <span style="color:#f92672">&lt;Console</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Console&#34;</span> <span style="color:#a6e22e">target=</span><span style="color:#e6db74">&#34;SYSTEM_OUT&#34;</span><span style="color:#f92672">&gt;</span>   // 日志输出到 console
@@ -338,7 +338,7 @@ ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLI
 <ol>
 <li>使用门面接口定义日志对象，符合抽象编程思想方便切换。最好将日志对象定义为 <code>static final</code>，因为通过调用相同日志名称的 <code>getLogger</code> 将会返回相同的日志实例，但每次实例化一个新的日志对象是一个相当昂贵的操作</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> org.slf4j.Logger<span style="color:#f92672">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> org.slf4j.Logger<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> org.slf4j.LoggerFactory<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> Logger logger <span style="color:#f92672">=</span> LoggerFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">getLogger</span><span style="color:#f92672">({</span>ClassName<span style="color:#f92672">}.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
@@ -349,7 +349,7 @@ ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLI
 <ol start="3">
 <li>使用参数化形式 {} 占位，[] 进行参数隔离，可读性好。一看就知道 [] 里面是输出的动态参数。且不要在日志中调用对象的方法获取值，除非确保该对象肯定不为 null，否则很有可能会因为日志的问题而导致应用产生 <strong>空指针</strong> 异常。</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;invalid Param [{}]&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;\&#34;\&#34;&#34;</span><span style="color:#f92672">);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;invalid Param [{}]&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;\&#34;\&#34;&#34;</span><span style="color:#f92672">);</span>
 
 2021<span style="color:#f92672">-</span>03<span style="color:#f92672">-</span>25 16<span style="color:#f92672">:</span>38<span style="color:#f92672">:</span>03<span style="color:#f92672">,</span>408 DEBUG <span style="color:#f92672">[</span>StaffInfoService<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>520<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> invalid Param <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">]</span>
     
@@ -357,7 +357,7 @@ log<span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><s
 </span><span style="color:#75715e"></span>
 log<span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;load student (id=[{}]), student: [{}]&#34;</span><span style="color:#f92672">,</span> id<span style="color:#f92672">,</span> student<span style="color:#f92672">);</span>  <span style="color:#75715e">// 推荐
 </span></code></pre></div><p>如果使用了字符串拼接的方式输出日志，即使 DEBUG 级别的日志在生产环境中不会输出到文件中，也可能带来不小的开销，在 <a href="https://logging.apache.org/log4j/2.x/performance.html">Log4j 2.x 性能文档</a> 中就对比了字符串拼接和参数化信息两者的性能差异。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">log<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Entry number: [{}] is [{}]&#34;</span><span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> entry<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">log<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Entry number: [{}] is [{}]&#34;</span><span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> entry<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
 <span style="color:#75715e">// 完全格式化的信息字符串在 logger 的 DEBUG 级别没有启用时不会被构建
 </span><span style="color:#75715e"></span>
 <span style="color:#75715e">// 如果没有这个 API，就需要三行代码来实现同样的功能
@@ -376,14 +376,14 @@ log<span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><s
 <ol start="4">
 <li>禁用标准输出 <code>System.out.println</code> 和 <code>System.err.println</code> 记录日志。因为这个只会打印到控制台，而不会记录到日志文件中，不方便管理日志。此外，标准输出不会显示类名和行号信息，很难定位日志内容和打印的位置，根本无法排查问题。</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// e.printStackTrace() 其实也是通过 System.err 来进行输出的
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// e.printStackTrace() 其实也是通过 System.err 来进行输出的
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
     printStackTrace<span style="color:#f92672">(</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">err</span><span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><ol start="5">
 <li>建议记录下所有未被捕获的日志，其实抛出异常有开销，记录异常同样会带来一定的开销，主要原因是 <code>Throwable</code> 类的 <code>fillInStackTrace</code> 方法默认是同步的。一般使用 logger.error 都会打出异常的堆栈，如果对吞吐量有一定的要求，可以考虑覆盖该方法，去掉 <code>synchronized native</code>，直接返回实例本身。</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> Throwable <span style="color:#a6e22e">fillInStackTrace</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> Throwable <span style="color:#a6e22e">fillInStackTrace</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stackTrace <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span>
             backtrace <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#75715e">/* Out of protocol state */</span> <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             fillInStackTrace<span style="color:#f92672">(</span>0<span style="color:#f92672">);</span>
@@ -405,7 +405,7 @@ log<span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><s
 <li>调用第三方服务时，所有的出参、入参、遇到的异常都是必须记录的，因为 <strong>很难追溯第三方模块发生的问题</strong>。</li>
 <li>异常信息应该包括两类信息：案发现场信息和 <strong>异常堆栈信息</strong>。尽量通过异常的日志能还原当时的情景，比如当时受影响的是哪个用户、传入的变量是什么、处理哪些核心数据引发的异常等等。有些代码在编写时就知道很难被执行到或者 <strong>不希望被执行到</strong>、以及一些基本不会走到的 else 块，这些地方需要记录下核心日志</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">logger<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;inputParams:{} and errorMessage:{}&#34;</span><span style="color:#f92672">,</span> 各类参数或者对象 <span style="color:#a6e22e">toString</span><span style="color:#f92672">(),</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">getMessage</span><span style="color:#f92672">(),</span> e<span style="color:#f92672">);</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">logger<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;inputParams:{} and errorMessage:{}&#34;</span><span style="color:#f92672">,</span> 各类参数或者对象 <span style="color:#a6e22e">toString</span><span style="color:#f92672">(),</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">getMessage</span><span style="color:#f92672">(),</span> e<span style="color:#f92672">);</span>
 </code></pre></div>
     </div>
 
@@ -468,7 +468,7 @@ log<span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><s
     <div class="copyright">
         &copy;
         
-        <span itemprop="copyrightYear">2019 - 2021</span>
+        <span itemprop="copyrightYear">2019 - 2022</span>
         
         <span class="with-love">
     	 <i class="iconfont icon-love"></i> 

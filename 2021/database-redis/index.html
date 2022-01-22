@@ -162,7 +162,7 @@
 <p><img src="/images/redis-data-structure.jpg" alt=""></p>
 <p>如上图所示，可以看到每种数据结构都有 2 种以上的 <strong>内部编码实现</strong>，例如 String 数据结构就包含了 raw、int 和 embstr 三种内部编码。同时，有些内部编码可以作为多种外部数据结构的内部实现，例如 ziplist 就是 hash、list 和 zset 共有的内部编码，而 set 的内部编码可能是 hashtable 或者 intset。</p>
 <p>Redis 使用对象来表示数据库中的键和值，每次当我们在 Redis 数据库中新创建一个键值对时，我们至少会创建两个对象，一个键对象，一个值对象。每个对象都由一个 <code>redisObject</code> 结构表示：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> redisObject {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> redisObject {
 	<span style="color:#66d9ef">unsigned</span> type : <span style="color:#ae81ff">4</span>;        <span style="color:#75715e">// 类型
 </span><span style="color:#75715e"></span>	<span style="color:#66d9ef">unsigned</span> encoding : <span style="color:#ae81ff">4</span>;    <span style="color:#75715e">// 编码
 </span><span style="color:#75715e"></span>	<span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>ptr;                <span style="color:#75715e">// 指向底层实现数据结构的指针
@@ -171,7 +171,7 @@
 </code></pre></div><p>因为 C 语言并不具备自动内存回收功能，所以 Redis 在自己的对象系统中构建了一个 <strong>引用计数</strong> 技术实现的内存回收机制。对象的引用计数属性还带有 <strong>对象共享</strong> 的作用，不仅字符串键可以使用共享对象，那么在数据结构中嵌套了字符串对象的对象都可以使用这些共享对象。</p>
 <h4 id="字符串">字符串</h4>
 <p>Redis 中的字符串对象是 <strong>可以修改</strong> 的，称为 SDS <code>Simple Dynamic String</code>，简单动态字符串。它有三种不同的编码实现：int、raw、embstr。当一个 key 的 value 是整型时，Redis 就将其编码为 int 类型，这种编码类型节省了内存。Redis 默认会缓存 10000 个整型值（#define OBJSHAREDINTEGERS 10000），这就意味着，如果有 10 个不同的 KEY，其 value 都是 10000 以内的值，事实上全部都是 <strong>共享同一个对象</strong>。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">127.0.0.1:6379&gt; set msg <span style="color:#ae81ff">9999</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">127.0.0.1:6379&gt; set msg <span style="color:#ae81ff">9999</span>
 OK
 127.0.0.1:6379&gt; object encoding msg
 <span style="color:#e6db74">&#34;int&#34;</span>
@@ -187,7 +187,7 @@ OK
 <span style="color:#e6db74">&#34;raw&#34;</span>
 </code></pre></div><p><code>embstr</code> 和 raw 编码的长度界限是 39，长度超过 39 字节以后，就是 raw 编码类型。embstr 编码将创建字符串对象所需的 <strong>空间分配的次数</strong> 从 raw 编码的两次降低为一次。因为 embstr 编码的字符串对象的所有数据都保存在一块连续的内存里面，所以这种编码的字符串对象比起 raw 编码的字符串对象能更好地利用缓存带来的优势，并且释放 embstr 编码的字符串对象只需要调用一次内存释放函数，而释放 raw 编码对象的字符串对象需要调用两次内存释放函数。</p>
 <p>raw 编码的 SDS 数据结构如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="color:#66d9ef">struct</span> sdshdr {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="color:#66d9ef">struct</span> sdshdr {
  <span style="color:#66d9ef">int</span> len;    <span style="color:#75715e">// buf 数组中已使用的字节数量
 </span><span style="color:#75715e"></span> <span style="color:#66d9ef">int</span> free;   <span style="color:#75715e">// buf 数组中未使用的字节数量
 </span><span style="color:#75715e"></span> <span style="color:#66d9ef">char</span> buf[];
@@ -203,7 +203,7 @@ OK
 </ol>
 <h4 id="列表">列表</h4>
 <p>列表对象的编码可以是 ziplist 或者 linkedlist。<code>linkedlist</code> 就是我们非常熟悉的双向链表，特征有：双端、无环、带表头和表尾指针、带长度计数器、多态。当列表保存的所有字符串元素长度都小于 64 字节，并且列表长度小于 512 时，列表使用 <code>ziplist</code> 编码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">127.0.0.1:6379&gt; rpush numbers <span style="color:#ae81ff">1</span> three <span style="color:#ae81ff">5</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">127.0.0.1:6379&gt; rpush numbers <span style="color:#ae81ff">1</span> three <span style="color:#ae81ff">5</span>
 <span style="color:#f92672">(</span>integer<span style="color:#f92672">)</span> <span style="color:#ae81ff">3</span>
 127.0.0.1:6379&gt; type numbers
 list
@@ -355,7 +355,7 @@ list
 <li>如果处于集群模式，对集群进行定期同步和连接测试</li>
 </ul>
 <p>因为服务器中同时存在文件事件和时间事件两种事件类型，所以服务器必须对这两种事件进行 <strong>调度</strong>，决定何时应该处理文件事件，何时又应该处理时间事件，以及花多少时间来处理它们等等，其伪代码如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">def aeProcessEvents()<span style="color:#f92672">:</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">def aeProcessEvents()<span style="color:#f92672">:</span>
  <span style="color:#75715e">// 获取到达时间离当前时间最接近的时间事件
 </span><span style="color:#75715e"></span> time_event <span style="color:#f92672">=</span> aeSearchNearestTimer()
  
@@ -399,7 +399,7 @@ list
 <p>Sentinel 本质上只是一个运行在特殊模式下的 Redis 服务器，因为 Sentinel 执行的工作和普通 Redis 服务器执行的工作不同，所以 Sentinel 的初始化过程和普通 Redis 不尽相同。比如 Sentinel 在初始化时不会载入 RDB 或者 AOF 文件，启动 Sentinel 时会将一部分普通 Redis 服务器使用的代码替换成 Sentinel 的 <strong>专用代码</strong>，并载入 Sentinel <strong>专用的命令表</strong>。</p>
 <p>所有被 Sentinel 监视的主服务器的相关信息会被保存到 <code>sentinelState</code> 中的 masters 字典中，Sentinel 启动时会载入 Sentinel 的配置文件来初始化这个 masters 字典。随后 Sentinel 会创建两个连向主服务器的异步网络连接：一个是命令连接，专用用于向主服务器发送命令，并接收命令回复；另一个是订阅连接，专门用于订阅主服务器的 <code>\_sentinel\_:hello</code> 频道。如果在信息发送时，想要接收信息的客户端不在线或者断线，那么这个客户端就会 <strong>丢失</strong> 这条信息。为了不丢失 _sentinel_:hello 频道的任何信息，Sentinel 必须专门用一个 <strong>订阅连接</strong> 来接收该频道的信息。</p>
 <p>Sentinel 会默认 <strong>每十秒一次</strong> 的频率通过命令连接向被监视的主服务器发送 INFO 命令，通过分析回复来获取主服务器的当前信息，其得到的回复类似以下内容：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># Server</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e"># Server</span>
 ...
 run_id:7611c59dc3a29aa6fa0609f841bb6a1019008a9c
 ...
@@ -428,7 +428,7 @@ slave2:ip<span style="color:#f92672">=</span>127.0.0.1,port<span style="color:#f
 <p><img src="/images/redis-clusterState.jpg" alt=""></p>
 <p>Redis 集群通过分片的方式来保存数据库中的键值对，集群的整个数据库被分为 16384 个槽 slot，数据库的每个键都属于这 16384 个槽的其中一个。可以使用 <code>CLUSTER ADDSLOTS 0 1 2 3 4 ... 5000</code> 将槽指派给某个节点负责，当数据库中的 16384 个槽都有节点在处理时，集群处于上线状态，返回则处于下线 fail 状态。</p>
 <p>clusterNode 结构中的 slots 属性和 numslot 属性记录了节点负责处理哪些槽：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="color:#66d9ef">struct</span> clusterNode {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="color:#66d9ef">struct</span> clusterNode {
 	<span style="color:#75715e">// ...
 </span><span style="color:#75715e"></span>	<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span> slots[<span style="color:#ae81ff">15384</span><span style="color:#f92672">/</span><span style="color:#ae81ff">8</span>];
 	<span style="color:#66d9ef">int</span> numslot;
@@ -436,7 +436,7 @@ slave2:ip<span style="color:#f92672">=</span>127.0.0.1,port<span style="color:#f
 </span><span style="color:#75715e"></span>}
 </code></pre></div><p>slots 属性是一个二进制数组，长度为 16384/8 = 2048 个字节，共包含 16384 个二进制位。如果 slots 数组在索引 i 上的二进制位的值为 1，那么表示节点负责处理槽 i，否则就是不负责处理。因为取出和设置 slots 数组中任意一个二进制位的值复杂度仅为 0(1)，所以对于一个给定节点的 slots 数组来说，程序检查节点是否复杂处理某个槽，又或者将某个槽指派给节点复杂，这两个动作的复杂度都是 0(1)。</p>
 <p>此外，节点还会将自己的 slots 数组通过消息发给集群中的其他节点，以此来告知其他节点自己目前负责处理哪些槽。clusterState结构中的 slots 数组记录了集群中所有 16384 个槽的指派信息，如果 slots[i] 指向 NULL，表示槽 i 尚未指派给任何节点，如果指向一个 clusterNode 结构，那么表示槽 i 已经指派给了 clusterNode 结构所代表的节点。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> clusterState {
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C"><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">struct</span> clusterState {
 	<span style="color:#75715e">// ...
 </span><span style="color:#75715e"></span>	clusterNode <span style="color:#f92672">*</span>slots[<span style="color:#ae81ff">16384</span>];
 	<span style="color:#75715e">// ...
@@ -463,7 +463,7 @@ slave2:ip<span style="color:#f92672">=</span>127.0.0.1,port<span style="color:#f
 <p>当一个 Redis 客户端执行 <code>PUBLISH &lt;channel&gt; &lt;message&gt;</code> 命令将消息发送给频道时，服务器会将消息 message 发送给频道所有的订阅者，并发送给所有与 channel 匹配的模式的订阅者。PUBLISH 命令将在 pubsub_channels 字典中查找键为 channel 对应的链表值，然后遍历链表将消息发送给频道所有的订阅者。</p>
 <p>至于模式订阅者，PUBLISH 命令会遍历整个 pubsub_patterns 链表，查找那些与 channel 频道相匹配的模式，
 并将消息发送给订阅了这些模式的客户端，其伪代码如下所示：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">def pattern_public(channel, message) <span style="color:#f92672">:</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-C" data-lang="C">def pattern_public(channel, message) <span style="color:#f92672">:</span>
 
  <span style="color:#75715e"># 遍历所有模式订阅消息
 </span><span style="color:#75715e"></span> <span style="color:#66d9ef">for</span> pubsubPattern in server.pubsub_patterns:
@@ -475,7 +475,7 @@ slave2:ip<span style="color:#f92672">=</span>127.0.0.1,port<span style="color:#f
 </span><span style="color:#75715e"></span>   send_message(pubsubPattern.client, message)
 </code></pre></div><h3 id="事务">事务</h3>
 <p>Redis 事务提供了一种将多个命令请求打包，然后一次性、按顺序地执行多个命令的机制，并且在事务执行期间，服务器 <strong>不会中断事务</strong> 而改去执行其他客户端的命令请求，它会将事务中的所有命令都执行完毕，然后才去处理其他客户端的命令请求。以下是一个 Redis 事务执行的过程：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">redis&gt; MULTI
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">redis&gt; MULTI
 OK
 
 redis&gt; SET <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#e6db74">&#34;Practical Common Lisp&#34;</span>
@@ -570,7 +570,7 @@ redis&gt; EXEC
     <div class="copyright">
         &copy;
         
-        <span itemprop="copyrightYear">2019 - 2021</span>
+        <span itemprop="copyrightYear">2019 - 2022</span>
         
         <span class="with-love">
     	 <i class="iconfont icon-love"></i> 

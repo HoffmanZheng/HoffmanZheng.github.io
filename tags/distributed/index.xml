@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Distributed on 人间一场大梦</title>
+    <link>https://hoffmanzheng.github.io/tags/distributed/</link>
+    <description>Recent content in Distributed on 人间一场大梦</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 19 Jan 2022 03:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/distributed/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>分布式：[译] 基于 Redis 的分布式锁 </title>
+      <link>https://hoffmanzheng.github.io/2022/distribute-redlock/</link>
+      <pubDate>Wed, 19 Jan 2022 03:19:47 +0100</pubDate>
+      
+      <guid>https://hoffmanzheng.github.io/2022/distribute-redlock/</guid>
+      <description>原文地址：Distributed locks with Redis
+当不同的进程必须以互斥的方式操作共享的资源时，分布式锁是一个非常实用的原始功能。
+有很多组件库和博客都描述了如何去实现一个基于 Redis 的分布式锁管理器，但是每个库使用的实现方式不尽相同，其中许多库使用了一种简单的方式，它相比稍微复杂的设计只能提供更少的保障。
+本篇尝试提供一种更加规范的算法来实现基于 Redis 的分布式锁。我们提出了一种叫做 Redlock 的算法，它可以实现一个分布式锁管理器（我们相信它比普通的单实例方法更加安全）。我们希望社区将分析它，提供反馈，并且将它作为更复杂/替代设计的基础。
+实现 在描述这个算法之前，现在已经有一些可用的实现链接供参考：
+ Redlock-rb (Ruby 实现). 还有一个 Redlock-rb 的分支，它为了方便分发新增了一个 gem 包，也许还有其他的。 Redlock-py (Python 实现). Pottery (Python 实现). Aioredlock (Asyncio Python 实现). Redlock-php (PHP 实现). PHPRedisMutex (further PHP 实现) cheprasov/php-redis-lock (PHP 锁的库) rtckit/react-redlock (Async PHP 实现) Redsync (Go 实现). Redisson (Java 实现). Redis::DistLock (Perl 实现). Redlock-cpp (C++ 实现). Redlock-cs (C#/.NET 实现). RedLock.net (C#/.NET 实现). 包含异步和锁的扩展支持 ScarletLock (C# .NET 实现 可配置数据源) Redlock4Net (C# .</description>
+    </item>
+    
+  </channel>
+</rss>

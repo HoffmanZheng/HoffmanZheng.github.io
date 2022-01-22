@@ -170,7 +170,7 @@
 <p>笔者在 <a href="https://hoffmanzheng.github.io/2020/java-threadpool/">Java：线程池原理、源码分析</a> 中已经介绍过线程池相关的内容，线程池通过对线程的统一分配、调优和监控等，实现了从 “为每个任务分配一个线程” 策略到基于线程池的策略的飞跃，服务器不会再创建数千个线程来争夺有限的 CPU 和内存资源，也不会再在高负载情况下失败了。</p>
 <h4 id="处理非正常的线程中止">处理非正常的线程中止</h4>
 <p>在延迟任务及周期任务上，<code>java.util.Timer</code> 提供了基于绝对时间的调度机制， 但 Timer 在执行所有定时任务时只会创建一个线程，如果某个任务的执行时间过长，可能会影响后续的任务执行。此外如果 TimerTask 抛出一个 <strong>未检查异常</strong>，定时线程将会被 <strong>终止</strong>，Timer 也不会恢复线程的执行，而是会错误地认为整个 Timer 都被取消了。因此已经被调度但尚未执行的 TimerTask 将不会执行，新的任务也不能被调度，导致 <code>线程泄漏</code>。（推荐使用 DelauQueue 或者 ScheduledThreadPoolExecutor）</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">OutOfTime</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">OutOfTime</span> <span style="color:#f92672">{</span>
  <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Exception <span style="color:#f92672">{</span>
         Timer timer <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Timer<span style="color:#f92672">();</span>
         timer<span style="color:#f92672">.</span><span style="color:#a6e22e">schedule</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ThrowTask<span style="color:#f92672">(),</span> 1<span style="color:#f92672">);</span>
@@ -186,7 +186,7 @@
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>线程因未捕获异常而终止时，应用程序可能看起来仍然在工作，所以这个错误可能会被忽略。任何代码都可能抛出一个 RuntimeException，不要盲目地认为它一定会正常返回，因此线程应该在 <code>try-catch</code> 代码块中调用任务，捕获那些未检查的异常，也可以使用 <code>try-finally</code> 代码块来 <strong>确保框架能够知道</strong> 线程非正常退出的情况，并作出正确的响应。如以下展示了如何在线程池内部处理非受检异常：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
     Throwable thrown <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>isInterrupted<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
@@ -216,7 +216,7 @@
 </blockquote>
 <h4 id="取消任务">取消任务</h4>
 <p>如果通过在任务中设置 “已请求取消” <strong>标志位</strong> + 轮询的方式实现任务的取消，那么在请求取消的时刻和下一次检查标志位之间就会存在延迟，在与阻塞方法联合使用时可能会导致更严重的问题：任务可能 <strong>永远不会检查</strong> 取消标志。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BrokenPrimeProducer</span> <span style="color:#66d9ef">extends</span> Thread <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BrokenPrimeProducer</span> <span style="color:#66d9ef">extends</span> Thread <span style="color:#f92672">{</span>
  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> BlockingQueue<span style="color:#f92672">&lt;</span>BigInteger<span style="color:#f92672">&gt;</span> queue<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">volatile</span> <span style="color:#66d9ef">boolean</span> cancelled <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// 标志位
 </span><span style="color:#75715e"></span>    
@@ -232,7 +232,7 @@
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">cancel</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>cancelled <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>为此 Java 使用中断作为一种协作的方式去通知另一个线程 <strong>在合适的情况下</strong> 停止当前的工作。每个线程都有一个 boolean 类型的中断状态，在调用 interrupt() 方法后被设置，它并不会真正地去中断一个正在运行的线程，而只是发出中断请求，然后由线程在下一个合适的时刻中断自己。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Thread</span> <span style="color:#66d9ef">implements</span> Runable <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Thread</span> <span style="color:#66d9ef">implements</span> Runable <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">interrupt</span><span style="color:#f92672">()</span> <span style="color:#f92672">{...}</span>                <span style="color:#75715e">// 中断该线程
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isInterrupted</span><span style="color:#f92672">()</span> <span style="color:#f92672">{...}</span>         <span style="color:#75715e">// 判断当前线程是否被中断
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">interrupted</span><span style="color:#f92672">()</span> <span style="color:#f92672">{...}</span>    <span style="color:#75715e">// 测试这个线程是否被中断，清除中断状态，并返回它之前的值  -&gt; 除非想屏蔽这个中断，否则必须对它进行处理，抛出 InterruptedException 或者调用 interrupt
@@ -246,7 +246,7 @@
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">native</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sleep</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> millis<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>一些阻塞库中的方法，比如 Thread.sleep 和 Object.wait 等，都会检查线程何时中断，清除中断状态后抛出 <code>InterruptedException</code> ，因此上述通过标志位取消任务的机制可以优化为使用中断来实现：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BrokenPrimeProducer</span> <span style="color:#66d9ef">extends</span> Thread <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BrokenPrimeProducer</span> <span style="color:#66d9ef">extends</span> Thread <span style="color:#f92672">{</span>
  <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> BlockingQueue<span style="color:#f92672">&lt;</span>BigInteger<span style="color:#f92672">&gt;</span> queue<span style="color:#f92672">;</span>
     
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
@@ -264,7 +264,7 @@
 </code></pre></div><p>在响应中断方面，非线程所有者应该小心地 <strong>保存中断状态</strong>（传递 InterruptedException / 使用 interrupt 恢复中断状态），这样拥有线程的代码才能对中断做出响应。这也是大多数可阻塞的库函数都只是抛出 InterruptedException 作为中断响应的原因，它们的取消策略就是尽快退出执行流程，并把中断信息传递给调用者，从而使调用栈中的上层代码可以采取进一步的操作。</p>
 <p>如果代码不会调用可中断的阻塞方法，仍然可以通过在任务代码中选择合适的频率轮询当前线程的中断状态来响应中断。以 ThreadPoolExecutor 为例，它的工作者线程在检测到中断时，如果线程池正在关闭，它会在结束之前执行一些线程池清理工作，否则它可能创建一个新线程将线程池恢复到合理的规模。</p>
 <p>此外还可以使用 <code>future.cancel(boolean mayInterruptIfRunning)</code> 来实现取消，参数 mayInterruptIfRunning 表示能否中断运行中的任务。使用 AbstractExecutorService.newTaskFor + 实现 RunnableFuture 可以实现非标准的取消，定制的取消代码可以实现日志记录或者收集取消操作的统计信息，以及一些不响应中断的操作。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">timeRun</span> <span style="color:#f92672">(</span>Runnable r<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> timeout<span style="color:#f92672">,</span> TimeUnit unit<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">timeRun</span> <span style="color:#f92672">(</span>Runnable r<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> timeout<span style="color:#f92672">,</span> TimeUnit unit<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
     Future<span style="color:#f92672">&lt;?&gt;</span> task <span style="color:#f92672">=</span> taskExec<span style="color:#f92672">.</span><span style="color:#a6e22e">submit</span><span style="color:#f92672">(</span>r<span style="color:#f92672">);</span>
     <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
         task<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>timeout<span style="color:#f92672">,</span> unit<span style="color:#f92672">);</span>
@@ -283,7 +283,7 @@
 <ul>
 <li>比如日志服务，应用线程调用 log 方法将日志放入某个队列，由专门的日志线程负责写入，是一种多生产者单消费者的设计。如果直接关闭日志服务，就会 <strong>丢失</strong> 那些正在等待被写入到日志的信息，并且由于队列满了其他正在调用 log 的线程将会被阻塞。为此可以设置一个标志位，在日志放入队列前进行判断，但这样就存在 “先判断再运行” 的竞态条件问题。由于队列的 put 本身可以阻塞，可以以原子方式检查关闭请求，并递增一个计数器来保持提交消息的权利：</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LogService</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LogService</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> BlockingQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> queue<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> LoggerThread loggerThread<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> PrintWriter writer<span style="color:#f92672">;</span>
@@ -333,7 +333,7 @@
 <li>另一种关闭生产者-消费者服务的方式就是使用 “毒丸 Poison Pill” 对象。当从队列中获取到这个毒丸对象时就停止服务。在先进先出 FIFO 的队列中，毒丸对象能确保在关闭消费者之前能够完成队列中之前提交的所有工作，而生产者在提交毒丸对象后也不会再提交任务工作。 遗憾的是，毒丸对象只适用于生产者和消费者的数量都已知的情况。</li>
 <li>在调用 shutdownNow 关闭线程池时，除了想得到所有已提交但尚未开始的任务，还想获取所有已经开始但尚未结束的任务，可以通过 <strong>封装</strong> ExecutorService 并使得 execute 记录哪些任务是在线程池关闭后被取消的：</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrackingExecutor</span> <span style="color:#66d9ef">extends</span> AbstractExecutorService <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrackingExecutor</span> <span style="color:#66d9ef">extends</span> AbstractExecutorService <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> ExecutorService exec<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Set<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;</span> tasksCancelledAtShutdown <span style="color:#f92672">=</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">synchronizedSet</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span>Runnable<span style="color:#f92672">&gt;);</span>
     
@@ -367,7 +367,7 @@
 <p>如果两个线程试图以 <strong>不同的顺序</strong> 来获得相同的锁，则可能会发生锁顺序死锁，如下图所示：</p>
 <p><img src="/images/lock-ordering-deadlock.jpg" alt=""></p>
 <p>想要避免锁顺序死锁，需要对程序中的加锁行为进行全局分析，查看是否存在 <strong>嵌套的锁获取</strong> 操作。有时候看似能够控制锁顺序的代码依然没有避免死锁的发生，如下列的代码，如果一个线程从 X 向 Y 转账，另一个线程从 Y 向 X 转账，那么就有可能会发生死锁。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">transferMoney</span> <span style="color:#f92672">(</span>Account fromAccount<span style="color:#f92672">,</span> Account toAccount<span style="color:#f92672">,</span> DollarAmount amount<span style="color:#f92672">)</span> 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">transferMoney</span> <span style="color:#f92672">(</span>Account fromAccount<span style="color:#f92672">,</span> Account toAccount<span style="color:#f92672">,</span> DollarAmount amount<span style="color:#f92672">)</span> 
     <span style="color:#66d9ef">throws</span> InsufficientFundsException <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>fromAccount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>toAccount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>    <span style="color:#75715e">// 嵌套的锁获取操作
@@ -381,7 +381,7 @@
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>由于我们无法控制参数的顺序，因此必须在整个程序中定义锁的顺序，可以使用 <code>System.identityHashCode</code> 方法重新定义锁的顺序，来保证所有的线程 <strong>以固定的顺序</strong> 来获取锁：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> Object tieLock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Object<span style="color:#f92672">();</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> Object tieLock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Object<span style="color:#f92672">();</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">transferMoney</span> <span style="color:#f92672">(</span>Account fromAccount<span style="color:#f92672">,</span> Account toAccount<span style="color:#f92672">,</span> DollarAmount amount<span style="color:#f92672">)</span> 
     <span style="color:#66d9ef">throws</span> InsufficientFundsException <span style="color:#f92672">{</span>
@@ -426,7 +426,7 @@
 <h4 id="死锁的避免与诊断">死锁的避免与诊断</h4>
 <p>如果一个程序每次至多只能获得一个锁，那么就不会产生锁顺序死锁。如果必须获取多个锁，在设计时必须考虑锁的顺序：尽量减少潜在的加锁交互数量，将获取锁时需要遵循的协议写入正式文档并始终遵循这些协议。</p>
 <p>还有一项技术可以检测死锁和从死锁中恢复过来，即使用显示锁中的 <strong>定时 tryLock</strong> 或者可轮询的锁。如下列代码所示，使用 tryLock 来获取两个锁，如果不能同时获得，那么就回退并重新尝试。在休眠时间中加入随机部分，从而降低活锁的可能性。如果在指定时间内不能获得所有需要的锁，就返回一个失败状态，从而使该操作平缓地失败。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">transferMoney</span> <span style="color:#f92672">(</span>Account fromAccount<span style="color:#f92672">,</span> Account toAccount<span style="color:#f92672">,</span> 
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">transferMoney</span> <span style="color:#f92672">(</span>Account fromAccount<span style="color:#f92672">,</span> Account toAccount<span style="color:#f92672">,</span> 
                               DollarAmount amount<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> timeout<span style="color:#f92672">,</span> TimeUnit unit<span style="color:#f92672">)</span> 
     <span style="color:#66d9ef">throws</span> InsufficientFundsException<span style="color:#f92672">,</span> InterruptedException<span style="color:#f92672">{</span>
     <span style="color:#66d9ef">long</span> stopTime <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">nanoTime</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> unit<span style="color:#f92672">.</span><span style="color:#a6e22e">toNanos</span><span style="color:#f92672">(</span>timeout<span style="color:#f92672">);</span>
@@ -525,7 +525,7 @@
 </ol>
 <p>由于每个内置锁都只能有一个相关联的条件队列，而多个线程可能在同一个条件队列上 <strong>等待不同的条件谓词</strong>，使得无法满足在使用 notifyAll 时所有等待线程为同一类型的需求。如果想编写一个带有多个条件谓词的并发对象，可以使用更灵活的 <code>Condition</code>。正如 Lock 比内置锁提供了更为丰富的功能，Condition 同样比内置条件队列提供了更丰富的功能：在每个锁上可存在多个等待、条件等待可以是可中断的或不可中断的、基于时限的等待，以及公平的或非公平的队列操作。</p>
 <p>如下代码示例了使用显示的条件变量的有界缓存，分别用 notFull 和 notEmpty 表示 &ldquo;非满&rdquo; 与 &ldquo;非空&rdquo; 两个条件谓词。当缓存为空时，take 将阻塞并等待 notEmpty，此时 put 向 notEmpty 发送信号，可以解除任何在 take 中阻塞的线程。通过将两个条件谓词分开并放到两个等待线程集中，Condition 使其 <strong>更容易满足单次通知的需求</strong>。它能极大地减少在每次缓存操作中发生的上下文切换与锁请求的次数。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ConditionBoundedBuffer</span><span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ConditionBoundedBuffer</span><span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
 	<span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> Lock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReentrantLock<span style="color:#f92672">();</span>
 	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Condition notFull <span style="color:#f92672">=</span> lock<span style="color:#f92672">.</span><span style="color:#a6e22e">newCondition</span><span style="color:#f92672">();</span>  <span style="color:#75715e">// 条件谓词：count &lt; items.length
 </span><span style="color:#75715e"></span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Condition notEmpty <span style="color:#f92672">=</span> lock<span style="color:#f92672">.</span><span style="color:#a6e22e">newCondition</span><span style="color:#f92672">();</span>  <span style="color:#75715e">// 条件谓词：count &gt; 0
@@ -568,7 +568,7 @@
 <p><code>AbstractQueuedSynchronizer</code> 抽象的队列式同步器，是许多同步类共同的基类，是一个用于 <strong>构建锁和同步器的框架</strong>，使用 AQS 可以简单且高效地构造出许多同步器，比如 ReentrantLock、CountDownLatch、Semaphore 等。AQS 解决了在实现同步器时涉及的大量细节问题，基于 AQS 构建同步器可以极大地 <strong>减少实现工作</strong>，而且也不必处理在多个位置上发生的竞争问题。</p>
 <p><img src="/images/AQS.png" alt=""></p>
 <p>AQS 负责管理同步器类中的状态 <code>state</code>，它是一个整数类型的状态信息，可以用于表示 <strong>任意状态</strong>。例如，ReentrantLock 用它来表示所有者线程已经重复获取该锁的次数，Semaphone 用它表示剩余的许可数量，FutureTask 用它来表示任务的状态（尚未开始、正在运行、已完成以及已取消）。在同步器类中还可以自行管理一些额外的状态变量，比如 ReentrantLock 保存了锁的当前所有者信息，这样就能区分某个获取操作是重入的还是竞争的。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// The synchronization state.  使用 volatile 保证线程可见性
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// The synchronization state.  使用 volatile 保证线程可见性
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">volatile</span> <span style="color:#66d9ef">int</span> state<span style="color:#f92672">;</span>
 
 <span style="color:#75715e">// 返回当前的同步状态
@@ -584,7 +584,7 @@
 <span style="color:#f92672">}</span>
 </code></pre></div><h4 id="独占访问">独占访问</h4>
 <p>同时只能允许一个线程执行，例如 ReentrantLock，它的内部类分别实现了以公平（<code>FairSync</code>）或者非公平（<code>NonfairSync</code>）获取锁的方式：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 公平锁的同步对象
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 公平锁的同步对象
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FairSync</span> <span style="color:#66d9ef">extends</span> Sync <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> serialVersionUID <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>3000897897090466540L<span style="color:#f92672">;</span>
 
@@ -612,7 +612,7 @@
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 非公平锁的同步对象
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// 非公平锁的同步对象
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NonfairSync</span> <span style="color:#66d9ef">extends</span> Sync <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">long</span> serialVersionUID <span style="color:#f92672">=</span> 7316153563782823691L<span style="color:#f92672">;</span>
 
@@ -679,7 +679,7 @@
 <h4 id="非阻塞算法">非阻塞算法</h4>
 <p>如果在某种算法中，一个线程的失败或挂起不会导致其他线程也失败或挂起，那么这种算法就被称为非阻塞算法。如果在算法的每个步骤中都存在某个线程能够执行下去，那么这种算法也被称为 <strong>无锁算法</strong>。在非阻塞算法中通常不会出现死锁和优先级反转问题（但可能会出现饥饿和活锁问题，因为在算法中会反复地重试）。</p>
 <p>在实现相同功能的前提下，非阻塞算法通常比基于锁的算法更为复杂。创建非阻塞算法的关键在于，如何 <strong>将原子修改的范围缩小到单个变量上</strong>，同时还要维护数据的一致性。栈是最简单的链式数据结构：每个元素仅指向一个元素，并且每个元素也只被一个元素引用。下列代码示例了如何通过原子引用构建线程安全的 ConcurrentStack，可以看出非阻塞算法的特性：如果某项工作的完成具有不确定性，必须重新执行。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ConcurrentStack</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ConcurrentStack</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
 	AtomicReference<span style="color:#f92672">&lt;</span>Node<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;&gt;</span> top <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> AtomicReference<span style="color:#f92672">&lt;</span>Node<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;&gt;();</span> 
 
 	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span> <span style="color:#f92672">(</span>E item<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -715,7 +715,7 @@
 	<span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>非阻塞算法在栈中的实现很容易，但对于一些更复杂的数据结构，例如队列、散列表或数，则要复杂得多。下列代码展示了 Michael-Scott 提出的非阻塞链表算法（ConcurrentLinkedQueue 中使用的正是该算法），在初始化时就将头节点和尾节点都指向哑节点，当插入一个新的元素时，<strong>需要更新两个指针</strong>。首先更新当前最后一个元素的 next 指针，将新节点链接到列表队尾，然后更新尾节点，将其指向这个新元素。如果第一个 CAS 成功，但第二个 CAS 失败，那么链表将处于不一致的状态，即使这两个 CAS 都成功了，仍有可能有另外一个线程在两个操作之间访问这个链表。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LinkedQueue</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LinkedQueue</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
 	<span style="color:#75715e">// 非阻塞链表算法中的插入算法
 </span><span style="color:#75715e"></span>	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
  		<span style="color:#66d9ef">final</span> E item<span style="color:#f92672">;</span>
@@ -763,7 +763,7 @@
 <p>这些底层技术可以提高程序的执行速度，在单线程环境中不会产生其他影响。在多线程环境中，当多个线程要共享数据时，必须协调它们之间的操作。JVM 依赖程序通过同步操作来找出这些协调操作将在何时发生，并导致很大的性能开销。JMM 规定了 JVM 必须遵守一组<strong>最小保证</strong>，这组保证规定了对变量的写入操作在何时将对于其他线程可见。JMM 在设计时就在可预测性和程序的易于开发性之间进行了权衡，从而在各种主流的处理器体系架构上能实现高性能的 JVM。</p>
 <p>在大多数时间里，是没有必要确保每个处理器能够知道其他处理器正在进行的工作，因此处理器会适当放宽存储一致性保证，以换取性能的提升。在架构定义的内存模型中将告诉应用程序可以从内存系统中获得怎样的保证，此外还定义了一些特殊的指令（称为 <strong>内存栅栏</strong>），当需要共享数据时，这些指令就能实现额外的存储协调保证。为了使 Java 开发人员无须关心不同架构上内存模型之间的差异，Java 还提供了自己的内存模型，并且 JVM 通过在适当的位置上插入内存栅栏来屏蔽在 JMM 与底层平台内存模型之间的差异。</p>
 <p>调度器可能会采用不恰当的方式来交替执行不同线程的操作，JMM 还使得不同线程看到的操作执行顺序是不同的，各种使操作延迟或者看似乱序执行的不同原因，都可以归为 <strong>重排序</strong>。在没有正确同步的情况下，即使要推断最简单的并发程序的行为也很困难。比如下列的 <code>PossibleReordering</code> 可能会输出 （1，0）或（0，1）或（1，1）：线程 B 可以在线程 A 开始之前执行完成，线程 A 也可以在线程 B 开始之前就执行完成，或者二者的操作交替执行。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PossibleReordering</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PossibleReordering</span> <span style="color:#f92672">{</span>
 	<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> y <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 	<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> b <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
  
@@ -803,7 +803,7 @@
 <p>当两个线程使用同一个锁进行同步时，它们之间的 Happens-Before 关系如下图所示。由于 A 释放了锁 M，并且 B 随后获得了锁 M，因此 A 中所有在释放锁之前的操作，也就位于 B 中请求锁之后的所有操作之前。如果这两个线程是在 <strong>不同的锁</strong> 上进行同步的，那么久不能推断它们之间的动作顺序，因为在这两个线程的操作之间并不存在 Happens-Before 关系。</p>
 <p><img src="/images/happens-before.jpg" alt=""></p>
 <p>由于 Happens-Before 的排序功能很强大，因此有时候可以 &ldquo;<strong>借助</strong>&rdquo; 现有同步机制的可见性属性。在 FutureTask 中就说明了如何使用这种 &ldquo;借助&rdquo; 技术，它自己维护了计算的结果，当一个线程调用 set 来保存结果并且另一个线程调用 get 来获取该结果时，这两个线程最好按照 Happens-Before 进行排序。这可以通过将执行结果的引用声明为 volatile 类型来实现，但利用现有的同步机制可以更容易地实现相同的功能。下列为保存和获取 result 时调用的 innerGet 与 innerSet 方法：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Sync</span> <span style="color:#66d9ef">extends</span> AbstractQueuedSynchronizer <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Sync</span> <span style="color:#66d9ef">extends</span> AbstractQueuedSynchronizer <span style="color:#f92672">{</span>
 	<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> RUNNING <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> RAN <span style="color:#f92672">=</span>2<span style="color:#f92672">,</span> CANCELLED <span style="color:#f92672">=</span> 4<span style="color:#f92672">;</span>
 	<span style="color:#66d9ef">private</span> V result<span style="color:#f92672">;</span>
 	<span style="color:#66d9ef">private</span> Exception exception<span style="color:#f92672">;</span>
@@ -899,7 +899,7 @@
     <div class="copyright">
         &copy;
         
-        <span itemprop="copyrightYear">2019 - 2021</span>
+        <span itemprop="copyrightYear">2019 - 2022</span>
         
         <span class="with-love">
     	 <i class="iconfont icon-love"></i> 
