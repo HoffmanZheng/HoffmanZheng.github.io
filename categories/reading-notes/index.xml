@@ -6,7 +6,33 @@
     <description>Recent content in Reading notes on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 26 Aug 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/categories/reading-notes/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Feb 2022 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/categories/reading-notes/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Couchbase: Blazing Fast. Surprisingly Affordable.</title>
+      <link>https://hoffmanzheng.github.io/2022/database-couchbase/</link>
+      <pubDate>Mon, 21 Feb 2022 13:19:47 +0100</pubDate>
+      
+      <guid>https://hoffmanzheng.github.io/2022/database-couchbase/</guid>
+      <description>Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。
+本篇根据 Couchbase 官网文档 介绍其数据模型、集群可用性特点等。
+概览 数据 Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。
+{ &amp;#34;a1&amp;#34; : number, &amp;#34;a2&amp;#34; : &amp;#34;string&amp;#34;, &amp;#34;a3&amp;#34; : { // nested array  &amp;#34;b1&amp;#34; : [ number, number, number ] }, &amp;#34;a4&amp;#34; : [ // array contains objects  { &amp;#34;c1&amp;#34; : &amp;#34;string&amp;#34;, &amp;#34;c2&amp;#34; : number }, { &amp;#34;c1&amp;#34; : &amp;#34;string&amp;#34;, &amp;#34;c2&amp;#34; : number } ] } 数据模型 JSON 提供了快速的序列化与反序列化，并且是大多数 REST API 的返回类型。文档通常被认为等效于关系型数据库中的行记录，但它可以存储嵌套文档或数组，提供了更多的灵活性。</description>
+    </item>
+    
+    <item>
+      <title>分布式：[译] 基于 Redis 的分布式锁 </title>
+      <link>https://hoffmanzheng.github.io/2022/distribute-redlock/</link>
+      <pubDate>Wed, 19 Jan 2022 03:19:47 +0100</pubDate>
+      
+      <guid>https://hoffmanzheng.github.io/2022/distribute-redlock/</guid>
+      <description>原文地址：Distributed locks with Redis
+当不同的进程必须以互斥的方式操作共享的资源时，分布式锁是一个非常实用的原始功能。
+有很多组件库和博客都描述了如何去实现一个基于 Redis 的分布式锁管理器，但是每个库使用的实现方式不尽相同，其中许多库使用了一种简单的方式，它相比稍微复杂的设计只能提供更少的保障。
+本篇尝试提供一种更加规范的算法来实现基于 Redis 的分布式锁。我们提出了一种叫做 Redlock 的算法，它可以实现一个分布式锁管理器（我们相信它比普通的单实例方法更加安全）。我们希望社区将分析它，提供反馈，并且将它作为更复杂/替代设计的基础。
+实现 在描述这个算法之前，现在已经有一些可用的实现链接供参考：
+ Redlock-rb (Ruby 实现). 还有一个 Redlock-rb 的分支，它为了方便分发新增了一个 gem 包，也许还有其他的。 Redlock-py (Python 实现). Pottery (Python 实现). Aioredlock (Asyncio Python 实现). Redlock-php (PHP 实现). PHPRedisMutex (further PHP 实现) cheprasov/php-redis-lock (PHP 锁的库) rtckit/react-redlock (Async PHP 实现) Redsync (Go 实现). Redisson (Java 实现). Redis::DistLock (Perl 实现). Redlock-cpp (C++ 实现). Redlock-cs (C#/.NET 实现). RedLock.net (C#/.NET 实现). 包含异步和锁的扩展支持 ScarletLock (C# .NET 实现 可配置数据源) Redlock4Net (C# .</description>
+    </item>
+    
     <item>
       <title>深入解析 Spring 架构与设计</title>
       <link>https://hoffmanzheng.github.io/2021/java-spring/</link>
