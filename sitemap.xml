@@ -4,9 +4,6 @@
     <url>
       <loc>https://hoffmanzheng.github.io/categories/</loc>
       
-<<<<<<< HEAD
-      <lastmod>2022-02-21T13:19:47+01:00</lastmod>
-=======
       <lastmod>2022-01-19T03:19:47+01:00</lastmod>
       
       
@@ -18,7 +15,6 @@
       <loc>https://hoffmanzheng.github.io/tags/distributed/</loc>
       
       <lastmod>2022-01-19T03:19:47+01:00</lastmod>
->>>>>>> a295a6b158a707a2def5a581f30b26c33b917efc
       
       
       
@@ -26,13 +22,9 @@
     </url>
   
     <url>
-      <loc>https://hoffmanzheng.github.io/2022/database-couchbase/</loc>
+      <loc>https://hoffmanzheng.github.io/posts/</loc>
       
-<<<<<<< HEAD
-      <lastmod>2022-02-21T13:19:47+01:00</lastmod>
-=======
       <lastmod>2022-01-19T03:19:47+01:00</lastmod>
->>>>>>> a295a6b158a707a2def5a581f30b26c33b917efc
       
       
       
@@ -40,15 +32,9 @@
     </url>
   
     <url>
-<<<<<<< HEAD
-      <loc>https://hoffmanzheng.github.io/tags/database/</loc>
-      
-      <lastmod>2022-02-21T13:19:47+01:00</lastmod>
-=======
       <loc>https://hoffmanzheng.github.io/categories/reading-notes/</loc>
       
       <lastmod>2022-01-19T03:19:47+01:00</lastmod>
->>>>>>> a295a6b158a707a2def5a581f30b26c33b917efc
       
       
       
@@ -56,15 +42,9 @@
     </url>
   
     <url>
-<<<<<<< HEAD
-      <loc>https://hoffmanzheng.github.io/posts/</loc>
-      
-      <lastmod>2022-02-21T13:19:47+01:00</lastmod>
-=======
       <loc>https://hoffmanzheng.github.io/tags/</loc>
       
       <lastmod>2022-01-19T03:19:47+01:00</lastmod>
->>>>>>> a295a6b158a707a2def5a581f30b26c33b917efc
       
       
       
@@ -72,53 +52,9 @@
     </url>
   
     <url>
-<<<<<<< HEAD
-      <loc>https://hoffmanzheng.github.io/categories/reading-notes/</loc>
-      
-      <lastmod>2022-02-21T13:19:47+01:00</lastmod>
-=======
       <loc>https://hoffmanzheng.github.io/</loc>
       
       <lastmod>2022-01-19T03:19:47+01:00</lastmod>
->>>>>>> a295a6b158a707a2def5a581f30b26c33b917efc
-      
-      
-      
-      
-    </url>
-  
-    <url>
-      <loc>https://hoffmanzheng.github.io/2022/distribute-redlock/</loc>
-      
-<<<<<<< HEAD
-      <lastmod>2022-02-21T13:19:47+01:00</lastmod>
-=======
-      <lastmod>2022-01-19T03:19:47+01:00</lastmod>
->>>>>>> a295a6b158a707a2def5a581f30b26c33b917efc
-      
-      
-      
-      
-    </url>
-  
-    <url>
-      <loc>https://hoffmanzheng.github.io/tags/ruby/</loc>
-      
-<<<<<<< HEAD
-      <lastmod>2022-02-21T13:19:47+01:00</lastmod>
-=======
-      <lastmod>2021-10-10T13:19:47+01:00</lastmod>
->>>>>>> a295a6b158a707a2def5a581f30b26c33b917efc
-      
-      
-      
-      
-    </url>
-  
-    <url>
-      <loc>https://hoffmanzheng.github.io/tags/distributed/</loc>
-      
-      <lastmod>2022-01-19T03:19:47+01:00</lastmod>
       
       
       
@@ -146,11 +82,7 @@
     </url>
   
     <url>
-<<<<<<< HEAD
       <loc>https://hoffmanzheng.github.io/2021/ruby-bundler/</loc>
-=======
-      <loc>https://hoffmanzheng.github.io/categories/study-notes/</loc>
->>>>>>> a295a6b158a707a2def5a581f30b26c33b917efc
       
       <lastmod>2021-10-10T13:19:47+01:00</lastmod>
       
@@ -160,11 +92,7 @@
     </url>
   
     <url>
-<<<<<<< HEAD
       <loc>https://hoffmanzheng.github.io/categories/study-notes/</loc>
-=======
-      <loc>https://hoffmanzheng.github.io/tags/component/</loc>
->>>>>>> a295a6b158a707a2def5a581f30b26c33b917efc
       
       <lastmod>2021-10-10T13:19:47+01:00</lastmod>
       
@@ -187,6 +115,16 @@
       <loc>https://hoffmanzheng.github.io/2021/java-spring/</loc>
       
       <lastmod>2021-08-26T13:19:47+01:00</lastmod>
+      
+      
+      
+      
+    </url>
+  
+    <url>
+      <loc>https://hoffmanzheng.github.io/tags/database/</loc>
+      
+      <lastmod>2021-05-08T13:19:47+01:00</lastmod>
       
       
       
