@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="https://hoffmanzheng.github.io/2022/distribute-redlock/" />
+  
+  <link rel="canonical" href="https://hoffmanzheng.github.io/2022/database-couchbase/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Couchbase: Blazing Fast. Surprisingly Affordable. | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Couchbase: Blazing Fast. Surprisingly Affordable. | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/hoffmanzheng.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Couchbase: Blazing Fast. Surprisingly Affordable.",
+    "headline" : "Couchbase: Blazing Fast. Surprisingly Affordable.",
+    "description" : "Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。\n本篇根据 Couchbase 官网文档 介绍其数据模型、集群可用性特点等。\n概览 数据 Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本\/复杂的数据类型)。\n{ \u0026#34;a1\u0026#34; : number, \u0026#34;a2\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;a3\u0026#34; : { \/\/ nested array  \u0026#34;b1\u0026#34; : [ number, number, number ] }, \u0026#34;a4\u0026#34; : [ \/\/ array contains objects  { \u0026#34;c1\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;c2\u0026#34; : number }, { \u0026#34;c1\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;c2\u0026#34; : number } ] } 数据模型 JSON 提供了快速的序列化与反序列化，并且是大多数 REST API 的返回类型。文档通常被认为等效于关系型数据库中的行记录，但它可以存储嵌套文档或数组，提供了更多的灵活性。",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2022",
+    "datePublished": "2022-02-21 13:19:47 \u002b0100 \u002b0100",
+    "dateModified" : "2022-02-21 13:19:47 \u002b0100 \u002b0100",
+    "url" : "https:\/\/hoffmanzheng.github.io\/2022\/database-couchbase\/",
+    "wordCount" : "249",
+    "keywords" : [ "Database", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Couchbase: Blazing Fast. Surprisingly Affordable.</h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2022-02-21 itemprop="datePublished">February 21, 2022</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,249 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p><a href="https://www.couchbase.com/">Couchbase</a> 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。</p>
+<p>本篇根据 <a href="https://docs.couchbase.com/home/server.html">Couchbase 官网文档</a> 介绍其数据模型、集群可用性特点等。</p>
+<h3 id="概览">概览</h3>
+<h3 id="数据">数据</h3>
+<p>Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{
+  <span style="color:#e6db74">&#34;a1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span>,
+  <span style="color:#e6db74">&#34;a2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>,
+  <span style="color:#e6db74">&#34;a3&#34;</span> <span style="color:#f92672">:</span> {   <span style="color:#75715e">// nested array
+</span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#34;b1&#34;</span> <span style="color:#f92672">:</span> [ <span style="color:#a6e22e">number</span>, <span style="color:#a6e22e">number</span>, <span style="color:#a6e22e">number</span> ]
+    },
+  <span style="color:#e6db74">&#34;a4&#34;</span> <span style="color:#f92672">:</span> [   <span style="color:#75715e">// array contains objects
+</span><span style="color:#75715e"></span>    { <span style="color:#e6db74">&#34;c1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>, <span style="color:#e6db74">&#34;c2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span> },
+    { <span style="color:#e6db74">&#34;c1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>, <span style="color:#e6db74">&#34;c2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span> }
+  ]
+}
+</code></pre></div><h4 id="数据模型">数据模型</h4>
+<p>JSON 提供了快速的序列化与反序列化，并且是大多数 REST API 的返回类型。文档通常被认为等效于关系型数据库中的行记录，但它可以存储嵌套文档或数组，提供了更多的灵活性。</p>
+<p>文档可以包含嵌套结构，这让开发者可以在不使用引用或连接表的情况下表达多对多的数据关系，并自然地展示分层数据。一个支持用户根据日期检索的在线航班预订应用，它的关系模型需要多张表 —— 航班、航线、日程，如下图所示：</p>
+<p><img src="/images/couchbase-relationalDataModel.png" alt=""></p>
+<p>相对地，文档模型却只需要一个嵌套了所有航班日程的文档：</p>
+<p><img src="/images/couchbase-jsonDataModel.png" alt=""></p>
+<p>因此在文档模型中，每个文档都可以 <strong>高度自包含</strong>。这将支持应用需求的快速实现，并且对可扩展性和延迟都具有重要意义：可以在不访问其他文档的情况下原子地复制或更改一个文档；消除了负责的节点间协调需求，并减少了征用。</p>
+<p>在文档模型中，schema 是应用结构化文档数据的结果，它完全由应用定义和管理。Couchbase 并 <strong>不强求一致性</strong>，文档结构可以在文档间存有差异，这允许数据以一种高效的方式被呈现。schema 也可以逐渐被应用进化：属性和结构可以被添加到文档，而无需同时更新其它文档（这个灵活性对于大型长期应用是一个特别的优势）。</p>
+<p>Couchbase 对文档操作提供了原子性、一致性、隔离性和持久性。单个写操作被保证为完全成功或失败，操作不会导致文档处于部分更新的状态。在 <strong>设计文档结构</strong> 时需要考虑性能和可扩展性：</p>
+<ul>
+<li>有的时候定义较少嵌套复杂信息的富文档比较合适，这允许信息在单个操作中被读取/写入。因为独立的对象间只有较少的关联，可扩展性也因此被加强。这也使分组属性较为容易的维持在一个相互一致的状态。</li>
+<li>当访问模式可预测且数据量较少时，定义大量相互引用的文档可能较为合适，可以减少网络带宽的消耗。文件可以通过 key 相互引用。</li>
+</ul>
+<h4 id="n1ql">N1QL</h4>
+<p>在关系型数据库中，数据以一致的结构存储在表中，并通过主键相互关联。相比之下，N1QL 将数据作为格式自由的文档处理，数据被聚集在一个称作 <code>keyspaces</code> 的大集合中。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">(<span style="color:#a6e22e">HRData</span> <span style="color:#a6e22e">keyspace</span>)
+ {
+     <span style="color:#e6db74">&#39;Name&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Jamie&#39;</span>
+     <span style="color:#e6db74">&#39;SSN&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">234</span>
+     <span style="color:#e6db74">&#39;Wage&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">123</span>
+     <span style="color:#e6db74">&#39;History&#39;</span><span style="color:#f92672">:</span>   <span style="color:#75715e">// 在关系型数据库中，这数组会存在另一个关联表中
+</span><span style="color:#75715e"></span>      [
+       [<span style="color:#e6db74">&#39;Yahoo&#39;</span>, <span style="color:#ae81ff">2005</span>, <span style="color:#ae81ff">2006</span>],
+       [<span style="color:#e6db74">&#39;Oracle&#39;</span>, <span style="color:#ae81ff">2006</span>, <span style="color:#ae81ff">2012</span>],
+     ]
+ },
+
+ {
+     <span style="color:#e6db74">&#39;Name&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Steve</span>
+     <span style="color:#e6db74">&#39;SSN&#39;</span><span style="color:#f92672">:</span>  <span style="color:#ae81ff">123</span>,
+     <span style="color:#e6db74">&#39;Wage&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">456</span>,
+ }
+</code></pre></div><p>N1QL 中的 <code>FROM</code> 被用来在不同的数据源 keyspaces 中检索。同样每个文档也会视自身为一个数据源，并在其嵌套元素中执行查询。嵌套元素可以通过点操作符 <code>.</code> 进入，数组元素通过中括号 <code>[]</code> 来索引。检索出的属性可以通过 <code>AS</code> 操作符来重命名：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">SELECT firstjob FROM HRData.History<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> AS firstjob
+<span style="color:#f92672">{</span>
+     <span style="color:#e6db74">&#39;firstjob&#39;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#39;Yahoo&#39;</span>, 2005, 2006<span style="color:#f92672">]</span>
+<span style="color:#f92672">}</span>
+
+SELECT firstjob<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span> FROM HRData.History<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> AS firstjob
+<span style="color:#f92672">{</span>
+     <span style="color:#e6db74">&#39;firstjob[2]&#39;</span>: <span style="color:#ae81ff">2006</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="buckets-内存与存储">Buckets, 内存与存储</h3>
+<p>Couchbase 将数据保存在 Bucket 中，Couchbase buckets 在内存和硬盘中都有，而 Ephemeral bucket 作为暂时 bucket 只存在于内存中。bucket 可以设置以 <strong>压缩</strong> 形式存储数据来最大化资源效率，文档也可以（像 Redis 那样）设置一个过期时间。</p>
+<p>Couchbase 使用内存来保证高性能和可扩展性：内存中会存放经常被请求的数据，最近没被使用的数据会被从内存中驱逐出去。多线程的读取和写入提供了数据的同时读取和写入，来保证交高的吞吐量。</p>
+<h4 id="buckets">Buckets</h4>
+<p>Bucket 是在逻辑上用来分组键值对的集合，共有三种 bucket 类型：</p>
+<ul>
+<li>Couchbase bucket
+<ul>
+<li>持久存储数据，且存在于内存中。</li>
+<li>允许数据被自动复制来保证高可用，可以通过跨数据中心复制 XDCR 在集群中动态扩容。</li>
+</ul>
+</li>
+<li>Ephemeral bucket
+<ul>
+<li>当数据持久性不被要求时可作为 Couchbase buchet 的候选，用于在硬盘高度负载时提供高度一致的内存性能；也可用于更快的节点重平衡/重启</li>
+<li>当 bucket 的内存限额被超过时，会根据创建时的配置拒绝接收新的数据，或者逐出老数据。因为 Ephemeral bucket 中的数据只存在内存中，被逐出的数据将不能被再次检索</li>
+</ul>
+</li>
+<li>Memcached bucket
+<ul>
+<li>通过缓存常用数据来减少数据服务必须执行的请求数量，并不会持久化到磁盘上。</li>
+</ul>
+</li>
+</ul>
+<p><code>vBuckets</code> （有时也被称作分片 <code>shards</code>）是集群中高效分散数据的虚拟 buckets，并且支持在多个节点间复制。Couchbase / Ephemeral bucket 都实现了 vBuckets，每个 bucket 拥有 1024 个 vBuckets 均分集群的内存和存储。写入操作会在 active vBuckets 中执行，大多数读取操作也会在 active vBuckets 中执行，当必要时数据可以从 replica vBuckets 中读取。</p>
+<p>对象在写入或检索时会先根据它的 key 用 <code>CRC32</code> 哈希算法计算出对象存储的 vBuckets 下标值，再通过 vBuckets map 在集群中找到映射的单个节点，最后在那个服务节点上执行操作，其结构关系如下图所示：</p>
+<p><img src="/images/couchbase-vbucketToNodeMapping.png" alt=""></p>
+<h4 id="内存">内存</h4>
+<p>Couchbase 服务器完全集成了缓冲层，提供高速数据访问。需要写入 Couchbase bucket 中的数据，会先进去缓冲层，然后同时放入磁盘队列和复制队列（示意如下图），因此 replica bucket 可以被更新。由于配置了内存限额，缓冲层中不常用的对象会被写入磁盘，然后从内存中被移出来释放空间，这个异步过程被称为 <code>ejection</code>。</p>
+<p><img src="/images/couchbase-createDocSequence3.png" alt=""></p>
+<h4 id="存储">存储</h4>
+<h3 id="服务与索引">服务与索引</h3>
+<h3 id="集群与可用性">集群与可用性</h3>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://hoffmanzheng.github.io/2022/database-couchbase/>https://hoffmanzheng.github.io/2022/database-couchbase/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/database/">
+                    #Database</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://hoffmanzheng.github.io/2022/distribute-redlock/" class="prev" rel="prev" title="分布式：[译] 基于 Redis 的分布式锁 "><i class="iconfont icon-left"></i>&nbsp;分布式：[译] 基于 Redis 的分布式锁 </a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2022</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

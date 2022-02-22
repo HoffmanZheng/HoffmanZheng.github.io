@@ -6,7 +6,19 @@
     <description>Recent content in Database on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 08 May 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/database/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Feb 2022 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/database/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Couchbase: Blazing Fast. Surprisingly Affordable.</title>
+      <link>https://hoffmanzheng.github.io/2022/database-couchbase/</link>
+      <pubDate>Mon, 21 Feb 2022 13:19:47 +0100</pubDate>
+      
+      <guid>https://hoffmanzheng.github.io/2022/database-couchbase/</guid>
+      <description>Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。
+本篇根据 Couchbase 官网文档 介绍其数据模型、集群可用性特点等。
+概览 数据 Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。
+{ &amp;#34;a1&amp;#34; : number, &amp;#34;a2&amp;#34; : &amp;#34;string&amp;#34;, &amp;#34;a3&amp;#34; : { // nested array  &amp;#34;b1&amp;#34; : [ number, number, number ] }, &amp;#34;a4&amp;#34; : [ // array contains objects  { &amp;#34;c1&amp;#34; : &amp;#34;string&amp;#34;, &amp;#34;c2&amp;#34; : number }, { &amp;#34;c1&amp;#34; : &amp;#34;string&amp;#34;, &amp;#34;c2&amp;#34; : number } ] } 数据模型 JSON 提供了快速的序列化与反序列化，并且是大多数 REST API 的返回类型。文档通常被认为等效于关系型数据库中的行记录，但它可以存储嵌套文档或数组，提供了更多的灵活性。</description>
+    </item>
+    
     <item>
       <title>Database：Redis 设计与实现</title>
       <link>https://hoffmanzheng.github.io/2021/database-redis/</link>
