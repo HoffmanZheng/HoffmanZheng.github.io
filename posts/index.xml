@@ -6,6 +6,7 @@
     <description>Recent content in Posts on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+<<<<<<< HEAD
     <lastBuildDate>Mon, 21 Feb 2022 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Couchbase: Blazing Fast. Surprisingly Affordable.</title>
@@ -24,6 +25,14 @@
       <link>https://hoffmanzheng.github.io/2022/distribute-redlock/</link>
       <pubDate>Wed, 19 Jan 2022 03:19:47 +0100</pubDate>
       
+=======
+    <lastBuildDate>Wed, 19 Jan 2022 03:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>分布式：[译] 基于 Redis 的分布式锁 </title>
+      <link>https://hoffmanzheng.github.io/2022/distribute-redlock/</link>
+      <pubDate>Wed, 19 Jan 2022 03:19:47 +0100</pubDate>
+      
+>>>>>>> a295a6b158a707a2def5a581f30b26c33b917efc
       <guid>https://hoffmanzheng.github.io/2022/distribute-redlock/</guid>
       <description>原文地址：Distributed locks with Redis
 当不同的进程必须以互斥的方式操作共享的资源时，分布式锁是一个非常实用的原始功能。
