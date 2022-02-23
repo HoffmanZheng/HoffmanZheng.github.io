@@ -164,7 +164,7 @@
 <p>以 BeanFactory 的实现类 <code>XmlBeanFactory</code> 为例，它继承了 DefaultListableBeanFactory 并在其基础上增加了功能，从名字上可以猜到，它是一个可以读取以 XML 文件方式定义的 <code>BeanDefinition</code>（管理了对象之间的相互依赖关系） 的 IoC 容器。</p>
 <p><img src="/images/XmlBeanFactory.png" alt=""></p>
 <p><code>DefaultListableBeanFactory</code> 是一个很重要的 IoC 实现，其他的 IoC 容器比如 ApplicationContext，也是通过持有或者扩展 DefaultListableBeanFactory 来获得基本的 IoC 容器的功能的。BeanDefinition 的信息来源被封装在 <code>Resource</code> 中，对 XML 文件定义信息的具体处理又委托给了 <code>XmlBeanDefinitionReader</code> 来实现。它们间相互关系的伪代码如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ClassPathResource res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassPathResource<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;beans.xml&#34;</span><span style="color:#f92672">);</span>    <span style="color:#75715e">// IoC 配置文件的抽象资源
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ClassPathResource res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassPathResource<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;beans.xml&#34;</span><span style="color:#f92672">);</span>    <span style="color:#75715e">// IoC 配置文件的抽象资源
 </span><span style="color:#75715e"></span>DefaultListableBeanFactory factory <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DefaultListableBeanFactory<span style="color:#f92672">();</span>
 XmlBeanDefinitionReader reader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> XmlBeanDefinitionReader<span style="color:#f92672">(</span>factory<span style="color:#f92672">);</span>  <span style="color:#75715e">// BeanDefinition 读取器
 </span><span style="color:#75715e"></span>reader<span style="color:#f92672">.</span><span style="color:#a6e22e">loadBeanDefinitions</span><span style="color:#f92672">(</span>res<span style="color:#f92672">);</span>  <span style="color:#75715e">// 载入和注册 Bean
@@ -172,7 +172,7 @@ XmlBeanDefinitionReader reader <span style="color:#f92672">=</span> <span style=
 <h4 id="ioc-容器的初始化">IoC 容器的初始化</h4>
 <p>IoC 容器的初始化（一般不包含 Bean 依赖注入的实现）包括 BeanDefinition 的 Resouce 定位、载入和注册这三个基本的过程。值得注意的是，Spring在实现中是把这三个过程分开并使用不同的模块来完成的，这样可以让用户更加灵活地对这三个过程进行剪裁和扩展。</p>
 <p>以 <code>ClassPathXmlApplicationContext</code> 为例，它通过继承 DefaultResourceLoader 具备了读入 Resource 的能力，在构造函数中通过 <code>refresh</code> 来启动 IoC 容器的初始化：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ClassPathXmlApplicationContext</span> <span style="color:#66d9ef">extends</span> AbstractXmlApplicationContext <span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ClassPathXmlApplicationContext</span> <span style="color:#66d9ef">extends</span> AbstractXmlApplicationContext <span style="color:#f92672">{</span>
     <span style="color:#f92672">...</span>
     <span style="color:#75715e">// configLocations 支持一个或多个 BeanDefinition 所在的文件路径
 </span><span style="color:#75715e"></span>    <span style="color:#75715e">// 还允许指定自己的双亲 IoC 容器
@@ -203,7 +203,7 @@ XmlBeanDefinitionReader reader <span style="color:#f92672">=</span> <span style=
 </code></pre></div><p>AbstractApplicationContext 中的 refresh 函数会触发整个 BeanDefinition 的载入过程，然后调用  AbstractRefreshableApplicationContext 实现的 <code>refreshBeanFactory</code> ，最后委托给 XmlBeanDefinitionReader 执行 <code>loadBeanDefinitions</code>，具体的流程见下图：</p>
 <p><img src="/images/spring-refreshBeanFactory.png" alt=""></p>
 <p>通过代码看一下容器初始化的具体实现：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// AbstractRefreshableApplicationContext
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// AbstractRefreshableApplicationContext
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">refreshBeanFactory</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> BeansException <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>hasBeanFactory<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// shutting down the previous bean factory (if any)
 </span><span style="color:#75715e"></span>        destroyBeans<span style="color:#f92672">();</span>
@@ -269,8 +269,8 @@ XmlBeanDefinitionReader reader <span style="color:#f92672">=</span> <span style=
 <p>依赖注入的过程通常是用户第一次向 IoC 容器索要 Bean 时触发的，也就是 BeanFactory 的 getBean
 接口，其具体实现在 AbstractBeanFactory 中：</p>
 <p><img src="/images/spring-getBean.png" alt=""></p>
-<p>对于 IoC 容器的使用，Spring 提供了许多参数的配置，每一个参数配置实际上代表了一个 IoC 
-容器的实现特性，这些特性的实现很多都需要在依赖注入的过程中或者对 Bean 
+<p>对于 IoC 容器的使用，Spring 提供了许多参数的配置，每一个参数配置实际上代表了一个 IoC
+容器的实现特性，这些特性的实现很多都需要在依赖注入的过程中或者对 Bean
 进行生命周期管理的过程中来完成</p>
 <p>createBean 不但生成了需要的 Bean，还对 Bean 初始化进行了处理，比如实现了在 BeanDefinition
 中的 init-method 属性定义，Bean 后置处理器的实现，等等</p>

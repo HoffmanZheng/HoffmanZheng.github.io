@@ -185,7 +185,7 @@
 <p><img src="/images/web%E4%B8%AD%E7%9A%84%E7%BC%96%E7%A0%81.jpg" alt=""></p>
 <h4 id="url-的编解码">URL 的编解码</h4>
 <p>当在百度中搜索 &ldquo;技术内幕&rdquo; 时，我们得到的 URL 是这样的：<code>https://www.baidu.com/s?ie=UTF-8&amp;wd=%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95</code>，显然游览器对其中的中文字符进行了 UTF-8 编码，并以十六进制表示了出来。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String string <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;技术内幕&#34;</span><span style="color:#f92672">;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">String string <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;技术内幕&#34;</span><span style="color:#f92672">;</span>
 <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> utf <span style="color:#f92672">=</span> string<span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;UTF-8&#34;</span><span style="color:#f92672">);</span>
 StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>
 <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">byte</span> b <span style="color:#f92672">:</span> utf<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -206,7 +206,7 @@ System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span>
 <h3 id="常见编解码问题分析">常见编解码问题分析</h3>
 <h4 id="中文变成西欧字符">中文变成西欧字符</h4>
 <p>例如字符串 “技术内幕” 变成了 “¼¼ÊõÄÚÄ»”，中文字符变成了奇怪的西欧字符，且是一个汉字字符变成两个乱码字符，用代码复现其编码解码过程如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    String string <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;技术内幕&#34;</span><span style="color:#f92672">;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    String string <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;技术内幕&#34;</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> chars <span style="color:#f92672">=</span> string<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">();</span>
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> cha <span style="color:#f92672">:</span> chars<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">print</span><span style="color:#f92672">(</span>Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">toHexString</span><span style="color:#f92672">(</span>cha<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">);</span>
