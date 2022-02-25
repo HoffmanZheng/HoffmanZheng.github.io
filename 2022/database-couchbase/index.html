@@ -46,7 +46,7 @@
     "articleSection" : "posts",
     "name" : "Couchbase: Blazing Fast. Surprisingly Affordable.",
     "headline" : "Couchbase: Blazing Fast. Surprisingly Affordable.",
-    "description" : "Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。\n本篇根据 Couchbase 官网文档 介绍其数据模型、内存存储、各种服务、集群可用性等。\n概览 数据 Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本\/复杂的数据类型)。\n{ \u0026#34;a1\u0026#34; : number, \u0026#34;a2\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;a3\u0026#34; : { \/\/ nested array  \u0026#34;b1\u0026#34; : [ number, number, number ] }, \u0026#34;a4\u0026#34; : [ \/\/ array contains objects  { \u0026#34;c1\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;c2\u0026#34; : number }, { \u0026#34;c1\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;c2\u0026#34; : number } ] } 数据模型 JSON 提供了快速的序列化与反序列化，并且是大多数 REST API 的返回类型。文档通常被认为等效于关系型数据库中的行记录，但它可以存储嵌套文档或数组，提供了更多的灵活性。",
+    "description" : "Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。\n本篇基于 Couchbase 官网文档 介绍其数据模型、内存存储、服务与搜索、集群可用性等。\n数据 Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本\/复杂的数据类型)。\n{ \u0026#34;a1\u0026#34; : number, \u0026#34;a2\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;a3\u0026#34; : { \/\/ nested array  \u0026#34;b1\u0026#34; : [ number, number, number ] }, \u0026#34;a4\u0026#34; : [ \/\/ array contains objects  { \u0026#34;c1\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;c2\u0026#34; : number }, { \u0026#34;c1\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;c2\u0026#34; : number } ] } 数据模型 JSON 提供了快速的序列化与反序列化，并且是大多数 REST API 的返回类型。文档通常被认为等效于关系型数据库中的行记录，但它可以存储嵌套文档或数组，提供了更多的灵活性。",
     "inLanguage" : "en-us",
     "author" : "Chenghao Zheng",
     "creator" : "Chenghao Zheng",
@@ -57,7 +57,7 @@
     "datePublished": "2022-02-21 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2022-02-21 13:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/hoffmanzheng.github.io\/2022\/database-couchbase\/",
-    "wordCount" : "448",
+    "wordCount" : "512",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,448 words</span>
+                 <span class="post-word-count">,512 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -156,8 +156,7 @@
           
 
           <p><a href="https://www.couchbase.com/">Couchbase</a> 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。</p>
-<p>本篇根据 <a href="https://docs.couchbase.com/home/server.html">Couchbase 官网文档</a> 介绍其数据模型、内存存储、各种服务、集群可用性等。</p>
-<h3 id="概览">概览</h3>
+<p>本篇基于 <a href="https://docs.couchbase.com/home/server.html">Couchbase 官网文档</a> 介绍其数据模型、内存存储、服务与搜索、集群可用性等。</p>
 <h3 id="数据">数据</h3>
 <p>Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{
@@ -264,7 +263,27 @@ SELECT firstjob<span style="color:#f92672">[</span>2<span style="color:#f92672">
 <p>应用和数据库驱动会将 N1QL 查询提交到集群中其中一个可用的查询节点，查询节点会分析语句，规划出最优的执行计划。根据执行计划将查询递交给索引节点或数据节点来执行，其流程如下图所示：</p>
 <p><img src="/images/couchbase-query_execution.png" alt=""></p>
 <p>有关索引对查询性能的优化可以参考另一篇博文：<a href="https://hoffmanzheng.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a></p>
-<h3 id="集群与可用性">集群与可用性</h3>
+<h4 id="全文搜索">全文搜索</h4>
+<p>Couchbase 使用基于 <a href="http://blevesearch.com/">Bleve</a> 的全文搜索，首先要在执行搜索的 bucket 上创建全文索引，默认的 <code>default</code> 的 Type Mappings 指可以对 bucket 内的所有文档进行搜索，如下图所示：</p>
+<p><img src="/images/couchbase-defaultFullTextIndex.png" alt=""></p>
+<p>当然也可以只索引 bucket 中某个类型的文档，这样有助于减少空间和内存使用。例如指定文档 ID 下划线前的字符串为类型，hotel 为类型映射，然后将 default type mappings 取消即可，如下图所示：</p>
+<p><img src="/images/couchbase-typeMapping.png" alt=""></p>
+<p>此外还可以仅索引文档中的某个字段，如下图所示：</p>
+<p><img src="/images/couchbase-searchField.png" alt=""></p>
+<p>在网页管理员控制台测试搜索功能后，就可以用 REST API 来实现搜索：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">curl</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">u</span> <span style="color:#a6e22e">Administrator</span><span style="color:#f92672">:</span><span style="color:#a6e22e">password</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">X</span> <span style="color:#a6e22e">POST</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">H</span> <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> <span style="color:#f92672">\</span>
+<span style="color:#a6e22e">http</span><span style="color:#f92672">:</span><span style="color:#75715e">//localhost:8094/api/index/travel-FTS/query \
+</span><span style="color:#75715e"></span><span style="color:#f92672">-</span><span style="color:#a6e22e">d</span> <span style="color:#e6db74">&#39;{
+</span><span style="color:#e6db74">  &#34;explain&#34;: true,
+</span><span style="color:#e6db74">  &#34;fields&#34;: [
+</span><span style="color:#e6db74">    &#34;*&#34;
+</span><span style="color:#e6db74">  ],
+</span><span style="color:#e6db74">  &#34;highlight&#34;: {},
+</span><span style="color:#e6db74">  &#34;query&#34;: {
+</span><span style="color:#e6db74">    &#34;query&#34;: &#34;hotel&#34;
+</span><span style="color:#e6db74">  }
+</span><span style="color:#e6db74">}&#39;</span>
+</code></pre></div><h3 id="集群与可用性">集群与可用性</h3>
 <p>Couchbase 集群包含一个或多个 Couchbase 服务器的实例，每个实例都运行在一个独立的节点上，数据和服务在集群中被共享。当一个 Couchbase 服务器被配置到一个节点上时，它可以被指定为一个新的集群或者作为一个已有集群的参与者。Couchbase 集群管理员运行在集群的每个节点上，并在节点间通信，保证所有节点的健康。</p>
 <p>数据会在不影响应用的情况下自动分散在集群中。每个 bucket 会被数据服务存储为 1024 个 vBuckets（虚拟 bucket），并平均分散在所有可用的数据服务节点。vBuckets 可以被跨集群间复制，并将其副本存于其他的节点。Couchbase 会在保证没有数据丢失的前提下自动处理节点的新增、删除和失效。在监测到配置变化时，vBuckets 和它的副本会在可用的节点上进行重新分配。跨数据中心复制 XDCR 可以将数据选择性地复制到一个远端节点，以此实现高可用性。</p>
 <h4 id="新增移除节点">新增/移除节点</h4>
@@ -293,6 +312,11 @@ SELECT firstjob<span style="color:#f92672">[</span>2<span style="color:#f92672">
 <p><img src="/images/couchbase-unidirectional-xdcr.png" alt=""></p>
 <p><code>Bidirectionally</code> 双向复制：源 bucket 中的数据可以被复制到目标 bucket，相反地，目标 bucket 中的数据也可以被复制回源 bucket。这让两个 buckets 都可以提供数据服务，在不同地区提供更快的数据访问。需要注意的是，XDCR 只提供了基础的单向复制机制，双向复制是通过实施两个相反的单向复制来实现的。</p>
 <p><img src="/images/couchbase-bidirectional-xdcr.png" alt=""></p>
+<p>当双向复制的数据被不同地区的应用所修改时，可能会引起 <strong>XDCR 冲突</strong>，即文档数据在同一时刻或多或少被不同地修改了。XDCR 提供了基于序列号或时间戳的冲突解决方法：</p>
+<ul>
+<li>序列号是每个文档都会维护，并随着每一次文档更新而递增的。冲突时会比较源文档与目标文档的序列号，文档修订数较多的胜出。比如一个网站的点击计数，在冲突时，拥有更多计数的文档更能反应真实的计数值，在这种情况下就可以选择基于序列号的冲突解决。</li>
+<li>文档最后一次写入的时间戳也可以被用来在冲突时比较，拥有最近更新时间戳的文档胜出。如果新的值持续地被写入到同一个 key，且我们更关注 &ldquo;当前值&rdquo; 时，就应该使用基于时间戳的冲突解决，它保证了文档拥有最新的版本。</li>
+</ul>
 
     </div>
 
