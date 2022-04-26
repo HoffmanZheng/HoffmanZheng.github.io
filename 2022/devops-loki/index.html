@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noodp"/>
+  <meta name="author" content="Chenghao.Zheng">
+  
+  
+  
+  <link rel="prev" href="https://hoffmanzheng.github.io/2022/database-couchbase/" />
+  
+  <link rel="canonical" href="https://hoffmanzheng.github.io/2022/devops-loki/" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+  <meta name="msapplication-TileColor" content="#da532c">
+  <meta name="theme-color" content="#ffffff">
+  <title>
+       
+       
+           Devops：[译] 日志聚合系统 Grafana Loki  | 人间一场大梦
+       
+  </title>
+  <meta name="title" content="Devops：[译] 日志聚合系统 Grafana Loki  | 人间一场大梦">
+    
+  
+  <link rel="stylesheet" href="/font/iconfont.css">
+  <link rel="stylesheet" href="/css/main.min.css">
+
+
+  
+  
+ 
+
+<script type="application/ld+json">
+ "@context" : "http://schema.org",
+    "@type" : "BlogPosting",
+    "mainEntityOfPage": {
+         "@type": "WebPage",
+         "@id": "https:\/\/hoffmanzheng.github.io\/"
+    },
+    "articleSection" : "posts",
+    "name" : "Devops：[译] 日志聚合系统 Grafana Loki ",
+    "headline" : "Devops：[译] 日志聚合系统 Grafana Loki ",
+    "description" : "原文地址：The original design doc of Loki\n本篇旨在解释 Grafana Loki 服务的动机和设计。本文档并不试图深入描述设计的每一个可能的细节，但希望能解释关键点，并让我们提前发现任何明显的错误。本文档不仅回答我们如何打算构建它的问题，而且还回答我们为什么构建它，它将用来做什么，以及谁将使用它的问题。\n背景与动机 事件响应 \u0026amp; 上下文切换 虽然 Metrics 和 Alerts 可以在时间序列上预警发生的事件，但它们只能用来暴露预先定义好的行为。为了得到事件的全貌，工程师通常通过日志来获取更多的细节信息。\n通常事件发生时会首先引起警报，并伴随着仪表盘出现特定的表象。在定位异常来源的具体服务或实例前，工程师会尝试在服务\/实例的日志中寻找其根本原因。而现状是，Metrics 和 logs 被存储在两个分离的系统中，工程师需要将查询从一种语言和接口转换到另一个。因此设计 Loki 的第一个设想是减少在 logs 和 metrics 之间切换上下文的开销，来更快地响应事件而改善用户体验。\n现存的解决方案 日志聚合并不是一个新的概念，就像时序监控一样，有许多 SaaS 供应商和开源项目都在竞争这个市场。几乎所有的现存方案都使用了全文搜索系统来索引日志，乍一看，这似乎是显而易见的解决方案，具有丰富而强大的功能集，允许进行复杂的查询。\n而这些现存方案因太过复杂而难以扩展，资源占用高，操作困难。如上所述，一种越来越普遍的模式是结合使用时间序列监控和日志聚合——因此查询工具提供的灵活性和复杂性通常 没有 被使用； 大多数查询只关注时间范围和一些简单的参数（主机、服务等）。 使用这些系统进行日志聚合类似于使用大锤来敲开坚果。\n现有系统的挑战和运营开销已导致许多买家落入 SaaS 运营商手中。 因此，设计 Loki 的第二个设想是，可以在易于操作和查询语言的复杂性之间进行不同的权衡，并且使其便于操作。\n成本效益 随着向 SaaS 日志聚合的迁移，此类系统的过高成本越发突显。 这种成本不仅来自用于实现全文搜索的技术 —— 对倒排索引进行扩展和分片也很困难； 要么写入触及的每个分片，要么必须从每个分片读取；此外操作也具有一定的复杂性。\n买家寻求日志聚合系统的的一个常见经验是，在收到超出他们预算的基于现有日志负载的初始报价后，转向工程师并要求他们减少日志记录。 由于日志记录的存在是为了覆盖意外的错误（见上文），工程师的典型反应是难以置信 —— “如果我必须知道我该记录什么，那么记录日志又有什么意义？”。\n最近出现的一些系统在这点上提供了不同的权衡。 Peter Bourgon 的开源 OKLOG 项目（现已存档）避开了基于时间的所有形式的索引，并采用最终一致的基于网格的分发策略。 这两个设计决策提供了巨大的成本节约和从根本上更简单的操作，但我们认为不符合我们的其他设计要求 —— 查询不够表现力且过于昂贵。 然而，我们确实认识到这是一个有吸引力的本地解决方案。\n因此第三个设想是，一个显着更具成本效益的解决方案，具有稍微不同的索引权衡，将是一个非常大的问题\u0026hellip;\u0026hellip;\nKubernetes 一个有趣的需要考虑的问题是日志记录如何适用于现代云原生\/微服务\/容器化的工作负载中。 现在的标准模式是应用程序只需将日志写入 STDOUT 或 STDERR。 Kubernetes 和 Docker 等平台以此为基础提供有限的日志聚合功能； 日志被存储在本地节点上，可以使用标签选择器按需获取和聚合。",
+    "inLanguage" : "en-us",
+    "author" : "Chenghao Zheng",
+    "creator" : "Chenghao Zheng",
+    "publisher": "Chenghao Zheng",
+    "accountablePerson" : "Chenghao Zheng",
+    "copyrightHolder" : "Chenghao Zheng",
+    "copyrightYear" : "2022",
+    "datePublished": "2022-04-21 03:19:47 \u002b0100 \u002b0100",
+    "dateModified" : "2022-04-21 03:19:47 \u002b0100 \u002b0100",
+    "url" : "https:\/\/hoffmanzheng.github.io\/2022\/devops-loki\/",
+    "wordCount" : "245",
+    "keywords" : [ "Distributed", "人间一场大梦"]
+}
+</script>
+
+</head>
+
+  
+
+
+  <body class="">
+    <div class="wrapper">
+        <nav class="navbar">
+    
+        <div class="top-scroll-bar"></div>
+    
+    <div class="container">
+        <div class="navbar-header header-logo">
+        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
+        </div>
+        <div class="menu navbar-right">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+<nav class="navbar-mobile" id="nav-mobile" style="display: none">
+    
+        <div class="top-scroll-bar"></div>
+    
+     <div class="container">
+        <div class="navbar-header">
+            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
+            <div class="menu-toggle">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+     
+          <div class="menu" id="mobile-menu">
+                
+                
+                <a class="menu-item" href="/posts/" title="">Blog</a>
+                
+                <a class="menu-item" href="/categories/" title="">Categories</a>
+                
+                <a class="menu-item" href="/tags/" title="">Tags</a>
+                
+                <a class="menu-item" href="/about/" title="">About</a>
+                
+        </div>
+    </div>
+</nav>
+    	 <main class="main">
+          <div class="container">
+      		
+<article class="post-warp" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Devops：[译] 日志聚合系统 Grafana Loki </h1>
+        <div class="post-meta">
+                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
+                <span class="post-time">
+                on <time datetime=2022-04-21 itemprop="datePublished">April 21, 2022</time>
+                </span>
+                in
+                <i class="iconfont icon-folder"></i>
+                <span class="post-category">
+                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
+                        
+                </span>
+                 <span class="post-word-count">,245 words</span>
+        </div>
+    </header>
+    <div class="post-content">
+        
+
+        
+            
+        
+
+        
+        
+     
+          
+          
+          
+
+          
+          
+          
+
+          <p>原文地址：<a href="https://docs.google.com/document/d/11tjK_lvp1-SVsFZjgOTr1vV3-q6vBAsZYIQ5ZeYBkyM/view">The original design doc of Loki</a></p>
+<p>本篇旨在解释 Grafana Loki 服务的动机和设计。本文档并不试图深入描述设计的每一个可能的细节，但希望能解释关键点，并让我们提前发现任何明显的错误。本文档不仅回答我们如何打算构建它的问题，而且还回答我们为什么构建它，它将用来做什么，以及谁将使用它的问题。</p>
+<h3 id="背景与动机">背景与动机</h3>
+<h4 id="事件响应--上下文切换">事件响应 &amp; 上下文切换</h4>
+<p>虽然 <a href="https://grafana.com/metrics/">Metrics</a> 和 Alerts 可以在时间序列上预警发生的事件，但它们只能用来暴露预先定义好的行为。为了得到事件的全貌，工程师通常通过日志来获取更多的细节信息。</p>
+<p><img src="/images/loki-incident-response.png" alt=""></p>
+<p>通常事件发生时会首先引起警报，并伴随着仪表盘出现特定的表象。在定位异常来源的具体服务或实例前，工程师会尝试在服务/实例的日志中寻找其根本原因。而现状是，Metrics 和 logs 被存储在两个分离的系统中，工程师需要将查询从一种语言和接口转换到另一个。因此设计 Loki 的第一个设想是减少在 logs 和 metrics 之间切换上下文的开销，来更快地响应事件而改善用户体验。</p>
+<h4 id="现存的解决方案">现存的解决方案</h4>
+<p>日志聚合并不是一个新的概念，就像时序监控一样，有许多 SaaS 供应商和开源项目都在竞争这个市场。几乎所有的现存方案都使用了全文搜索系统来索引日志，乍一看，这似乎是显而易见的解决方案，具有丰富而强大的功能集，允许进行复杂的查询。</p>
+<p>而这些现存方案因太过复杂而难以扩展，资源占用高，操作困难。如上所述，一种越来越普遍的模式是结合使用时间序列监控和日志聚合——因此查询工具提供的灵活性和复杂性通常 <strong>没有</strong> 被使用； 大多数查询只关注时间范围和一些简单的参数（主机、服务等）。 使用这些系统进行日志聚合类似于使用大锤来敲开坚果。</p>
+<p><img src="/images/loki-existing-solution.png" alt=""></p>
+<p>现有系统的挑战和运营开销已导致许多买家落入 SaaS 运营商手中。 因此，设计 Loki 的第二个设想是，可以在易于操作和查询语言的复杂性之间进行不同的权衡，并且使其便于操作。</p>
+<h4 id="成本效益">成本效益</h4>
+<p>随着向 SaaS 日志聚合的迁移，此类系统的过高成本越发突显。 这种成本不仅来自用于实现全文搜索的技术 —— 对倒排索引进行扩展和分片也很困难； 要么写入触及的每个分片，要么必须从每个分片读取；此外操作也具有一定的复杂性。</p>
+<p>买家寻求日志聚合系统的的一个常见经验是，在收到超出他们预算的基于现有日志负载的初始报价后，转向工程师并要求他们减少日志记录。 由于日志记录的存在是为了覆盖意外的错误（见上文），工程师的典型反应是难以置信 —— “如果我必须知道我该记录什么，那么记录日志又有什么意义？”。</p>
+<p>最近出现的一些系统在这点上提供了不同的权衡。 Peter Bourgon 的开源 <a href="https://github.com/oklog/oklog">OKLOG 项目</a>（现已存档）避开了基于时间的所有形式的索引，并采用最终一致的基于网格的分发策略。 这两个设计决策提供了巨大的成本节约和从根本上更简单的操作，但我们认为不符合我们的其他设计要求 —— 查询不够表现力且过于昂贵。 然而，我们确实认识到这是一个有吸引力的本地解决方案。</p>
+<p>因此第三个设想是，一个显着更具成本效益的解决方案，具有稍微不同的索引权衡，将是一个非常大的问题&hellip;&hellip;</p>
+<h4 id="kubernetes">Kubernetes</h4>
+<p>一个有趣的需要考虑的问题是日志记录如何适用于现代云原生/微服务/容器化的工作负载中。 现在的标准模式是应用程序只需将日志写入 <code>STDOUT</code> 或 <code>STDERR</code>。 Kubernetes 和 Docker 等平台以此为基础提供有限的日志聚合功能； 日志被存储在本地节点上，可以使用标签选择器按需获取和聚合。</p>
+<p>但是对于这些简单的系统，当 pod 或节点消失时，日志通常会 <strong>丢失</strong>。 这通常是买家意识到他们需要日志聚合的触发因素之一 —— 一个 pod 或节点神秘地死亡，并且没有可用的日志来诊断原因。</p>
+<h4 id="prometheus-and-cortex">Prometheus and Cortex</h4>
+<p>最后值得一提的是普罗米修斯是如何融入的。 Prometheus 是一个以时间序列数据库为中心的监控系统。 TSDB 使用一组键值对索引样本集合（时间序列）。 可以通过指定这些标签的子集（匹配器）来查询这些时间序列，返回与这些标签匹配的所有时间序列。其与传统 Graphite 分层标签之类的区别是，可以对新的或变化的标签的存在与否进行查询。</p>
+<p>在 Prometheus（和 Cortex）中，这些标签存储在倒排索引中，使针对这些标签的查询更快速。Cortex 中的这种倒排索引存在于内存中以存储最近的数据，并存在于分布式 KV 存储（BigTable、DynamoDB 或 Cassandra）中以存储历史数据。 Cortex 索引能够根据余量和吞吐量线性扩展，但其会在设计上受限于给定标签的基数。</p>
+<p>Prometheus 系统包含许多组件，但值得在本次讨论中注意的一个组件是 mtail (<a href="https://github.com/google/mtail">https://github.com/google/mtail</a>)。 Mtail 允许您“从应用程序日志中提取白盒监控数据以收集到时间序列数据库中”。 这允许您为不公开任何本机指标的应用程序构建时间序列监控和警报。</p>
+<h3 id="提出方案">提出方案</h3>
+<p>我们将构建一个托管的日志聚合系统，它索引与这些日志流相关的 <strong>元数据</strong>，而不是索引日志流本身的内容。 该元数据将采用 Prometheus 风格的多维标签。 这些标签将与从任务中提取的时间序列/指标相关联的标签一致，以便可以使用相同的标签从任务中查找日志，也可以用于从所述任务中查找时间序列，从而在用户界面实现快速的上下文切换。</p>
+<p>该系统并不会解决许多通常与日志聚合相关的复杂分布式系统和存储挑战，而是会将它们转移给现有的分布式数据库和对象存储系统中。 这将通过让大多数系统服务成为无状态和短暂的，并允许系统操作员使用云供应商提供的托管服务来降低操作复杂性。</p>
+<p>通过 <strong>仅索引</strong> 与日志流相关的元数据，系统将索引负载减少多个数量级 —— 我预计 100MB 的日志数据有大约 1KB 的元数据。实际的日志数据将存储在托管对象存储服务（S3、GCS 等）中，由于供应商之间的竞争，这些服务面临着巨大的成本下行压力。 我们将通过转嫁这些成本，并以比竞争对手低几个数量级的价格提供该系统。 例如，GCS 的成本为 0.026 美元/GB/月，而 Loggly 的成本约为 100 美元/GB/月。</p>
+<p>由于这是一个托管系统，因此在客户端主机或 pod 故障后，也很容易获得日志。代理将部署到客户端系统中的每个节点，以将日志发送到我们的服务，并确保元数据与指标一致。</p>
+<h3 id="架构">架构</h3>
+<h4 id="代理">代理</h4>
+<p>第一个挑战是获取与时间序列/指标相关的元数据一致的可靠元数据。为了实现这一点，我们将使用与 Prometheus 相同的服务发现和标签重新标记库。这将被打包在一个守护进程中，其发现目标、生成元数据标签并跟踪日志文件以生成日志流，这些日志会暂时缓冲在客户端，然后被发送到服务。鉴于对节点故障时的最新日志的要求，它可以执行的批处理量有一个基本限制。（这个组件已经存在，叫做 <a href="https://github.com/grafana/loki/tree/main/clients/pkg/promtail">Promtail</a>）</p>
+<h4 id="写入请求的一生">写入请求的一生</h4>
+<p>写入路径上的服务器端组件镜像了 Cortex 架构：</p>
+<ul>
+<li>写入将首先命中分发器，分发器负责将写入分发和复制到摄取者。因为日志流没有方便的指标名称，我们将使用 Cortex 一致性的哈希环；将基于（包括用户 ID 的）整个元数据的散列来分配写入。</li>
+<li>接着写入将命中一个“日志摄取器”，它将内存中相同流的写入批处理成“日志块”。当块达到预定义的大小或年龄时，它们会定期刷新到 Cortex 块存储。</li>
+<li>Cortex 块存储将被更新以减少在读写路径上块数据的复制，并添加对写入 GCS 块的支持。</li>
+</ul>
+<h4 id="日志块">日志块</h4>
+<p>块的格式对系统的成本和性能很重要。 块是给定标签集在特定时期内的所有日志。块必须支持追加、查找和流式读取。假设一个节点平均每天将产生 10 GB 的日志，并且平均运行 30 个容器，那么每个日志流将以 4 KB/s 的速度写入。日志数据的预期压缩率应该是 10 倍左右。</p>
+<p>在选择最佳的块大小时，我们需要考虑：</p>
+<ul>
+<li>每次操作的成本与存储成本；当块对象较小时，每次操作的成本占主导地位，并且将它们存储在数据库（例如 Bigtable）中更便宜。</li>
+<li>每个块索引的负载 —— 每个块都需要索引其中的条目；运行 Cortex 的经验告诉我们，这是运行系统的最大成本组件，但考虑到更大的块大小，我怀疑这里不会出现这种情况。</li>
+<li>构建块的内存成本和丢失风险。这可能是限制因素。我们应该期望能够为每台机器处理 1000 台主机的流，以便能够经济高效地运行服务；如果每个流需要 1MB 的内存并且每个主机需要 30 个流，这意味着每个摄取者需要 30GB 的内存（WAL 类似）。1000 台主机也意味着 130MB/s 的入站和出站带宽以及入站压缩，这是一种推动。</li>
+<li>压缩效率 —— 在非常小的尺寸（10s 字节）下，压缩是无效的；日志行将需要一起批处理以实现更接近最佳压缩。（<a href="https://docs.google.com/spreadsheets/d/1zTtln0kKspSWsHtwmamZzSnsHspHQigd-1jotZ8l9gc/edit#gid=0">在示例日志数据上尝试的各种压缩方案和块大小</a>）</li>
+</ul>
+<p>例如，12 小时的日志数据将产生约 100 MB 未压缩和约 10 MB 压缩的块。12 小时也是我们在 Cortex 中使用的块长度的上限。考虑到构建这些的内存要求，接近 1 MB（压缩）的块大小看起来更有可能。</p>
+<p>该提议是由一系列块 blocks 组成的块 chunk；第一个块是 gorilla 风格的时间索引，随后的块包含压缩的日志数据。一旦产生了足够多的块 blocks 以形成足够大的块 chunk，它们将被附加在一起以形成一个块。需要进行一些实验才能找到正确的块格式，欢迎在此处输入。</p>
+<h4 id="查询请求的一生">查询请求的一生</h4>
+<p>由于块比 Prometheus/Cortex 块大许多数量级（Cortex 块的大小最大为 1KB），因此无法加载它们并对其进行整体解压缩。 因此，我们需要支持流式传输和遍历它们，只解压缩我们需要的部分。 同样，这里有很多细节需要解决，但我怀疑积极使用 gRPC 流和堆将是有序的（请参阅新的 Cortex 遍历查询 PR）。</p>
+<h3 id="未来的设想">未来的设想</h3>
+<ul>
+<li>我们可能在摄取时从日志中提取额外的元数据，以包含在索引中，例如日志级别。我们需要留心基数爆炸。</li>
+<li>我想在特定服务/实例上应用实时的日志流，以便更熟悉它的行为方式或检查假设。 这可能适用于刚刚上线的新实例，也可能来自已经运行的实例。</li>
+</ul>
+
+    </div>
+
+    <div class="post-copyright">
+             
+            <p class="copyright-item">
+                <span>Author:</span>
+                <span>Chenghao.Zheng </span>
+                </p>
+            
+           
+             
+            <p class="copyright-item">
+                    <span>Link:</span>
+                    <a href=https://hoffmanzheng.github.io/2022/devops-loki/>https://hoffmanzheng.github.io/2022/devops-loki/</span>
+            </p>
+            
+             
+            <p class="copyright-item lincese">
+                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
+            </p>
+            
+    </div>
+
+  
+    <div class="post-tags">
+        
+            <section>
+            <i class="iconfont icon-tag"></i>Tag(s): 
+            
+            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/distributed/">
+                    #Distributed</a></span>
+            
+            </section>
+        
+        <section>
+                <a href="javascript:window.history.back();">back</a></span> · 
+                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
+        </section>
+    </div>
+
+    <div class="post-nav">
+        
+        <a href="https://hoffmanzheng.github.io/2022/database-couchbase/" class="prev" rel="prev" title="Couchbase: Blazing Fast. Surprisingly Affordable."><i class="iconfont icon-left"></i>&nbsp;Couchbase: Blazing Fast. Surprisingly Affordable.</a>
+         
+        
+    </div>
+
+    <div class="post-comment">
+          
+                 
+          
+    </div>
+</article>
+          </div>
+		   </main>
+      <footer class="footer">
+    <div class="copyright">
+        &copy;
+        
+        <span itemprop="copyrightYear">2019 - 2022</span>
+        
+        <span class="with-love">
+    	 <i class="iconfont icon-love"></i> 
+         </span>
+         
+            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
+         
+
+         
+		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
+    </div>
+</footer>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
+      
+     <script src="/js/vendor_gallery.min.js" async="" ></script>
+    
+  
+
+
+
+     </div>
+  </body>
+</html>

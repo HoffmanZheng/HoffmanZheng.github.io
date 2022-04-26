@@ -6,7 +6,27 @@
     <description>Recent content in Posts on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 21 Feb 2022 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 21 Apr 2022 03:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Devops：[译] 日志聚合系统 Grafana Loki </title>
+      <link>https://hoffmanzheng.github.io/2022/devops-loki/</link>
+      <pubDate>Thu, 21 Apr 2022 03:19:47 +0100</pubDate>
+      
+      <guid>https://hoffmanzheng.github.io/2022/devops-loki/</guid>
+      <description>原文地址：The original design doc of Loki
+本篇旨在解释 Grafana Loki 服务的动机和设计。本文档并不试图深入描述设计的每一个可能的细节，但希望能解释关键点，并让我们提前发现任何明显的错误。本文档不仅回答我们如何打算构建它的问题，而且还回答我们为什么构建它，它将用来做什么，以及谁将使用它的问题。
+背景与动机 事件响应 &amp;amp; 上下文切换 虽然 Metrics 和 Alerts 可以在时间序列上预警发生的事件，但它们只能用来暴露预先定义好的行为。为了得到事件的全貌，工程师通常通过日志来获取更多的细节信息。
+通常事件发生时会首先引起警报，并伴随着仪表盘出现特定的表象。在定位异常来源的具体服务或实例前，工程师会尝试在服务/实例的日志中寻找其根本原因。而现状是，Metrics 和 logs 被存储在两个分离的系统中，工程师需要将查询从一种语言和接口转换到另一个。因此设计 Loki 的第一个设想是减少在 logs 和 metrics 之间切换上下文的开销，来更快地响应事件而改善用户体验。
+现存的解决方案 日志聚合并不是一个新的概念，就像时序监控一样，有许多 SaaS 供应商和开源项目都在竞争这个市场。几乎所有的现存方案都使用了全文搜索系统来索引日志，乍一看，这似乎是显而易见的解决方案，具有丰富而强大的功能集，允许进行复杂的查询。
+而这些现存方案因太过复杂而难以扩展，资源占用高，操作困难。如上所述，一种越来越普遍的模式是结合使用时间序列监控和日志聚合——因此查询工具提供的灵活性和复杂性通常 没有 被使用； 大多数查询只关注时间范围和一些简单的参数（主机、服务等）。 使用这些系统进行日志聚合类似于使用大锤来敲开坚果。
+现有系统的挑战和运营开销已导致许多买家落入 SaaS 运营商手中。 因此，设计 Loki 的第二个设想是，可以在易于操作和查询语言的复杂性之间进行不同的权衡，并且使其便于操作。
+成本效益 随着向 SaaS 日志聚合的迁移，此类系统的过高成本越发突显。 这种成本不仅来自用于实现全文搜索的技术 —— 对倒排索引进行扩展和分片也很困难； 要么写入触及的每个分片，要么必须从每个分片读取；此外操作也具有一定的复杂性。
+买家寻求日志聚合系统的的一个常见经验是，在收到超出他们预算的基于现有日志负载的初始报价后，转向工程师并要求他们减少日志记录。 由于日志记录的存在是为了覆盖意外的错误（见上文），工程师的典型反应是难以置信 —— “如果我必须知道我该记录什么，那么记录日志又有什么意义？”。
+最近出现的一些系统在这点上提供了不同的权衡。 Peter Bourgon 的开源 OKLOG 项目（现已存档）避开了基于时间的所有形式的索引，并采用最终一致的基于网格的分发策略。 这两个设计决策提供了巨大的成本节约和从根本上更简单的操作，但我们认为不符合我们的其他设计要求 —— 查询不够表现力且过于昂贵。 然而，我们确实认识到这是一个有吸引力的本地解决方案。
+因此第三个设想是，一个显着更具成本效益的解决方案，具有稍微不同的索引权衡，将是一个非常大的问题&amp;hellip;&amp;hellip;
+Kubernetes 一个有趣的需要考虑的问题是日志记录如何适用于现代云原生/微服务/容器化的工作负载中。 现在的标准模式是应用程序只需将日志写入 STDOUT 或 STDERR。 Kubernetes 和 Docker 等平台以此为基础提供有限的日志聚合功能； 日志被存储在本地节点上，可以使用标签选择器按需获取和聚合。</description>
+    </item>
+    
     <item>
       <title>Couchbase: Blazing Fast. Surprisingly Affordable.</title>
       <link>https://hoffmanzheng.github.io/2022/database-couchbase/</link>
