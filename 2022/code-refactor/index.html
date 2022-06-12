@@ -57,7 +57,7 @@
     "datePublished": "2022-05-02 03:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2022-05-02 03:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/hoffmanzheng.github.io\/2022\/code-refactor\/",
-    "wordCount" : "894",
+    "wordCount" : "1098",
     "keywords" : [ "code", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,894 words</span>
+                 <span class="post-word-count">,1098 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -422,7 +422,84 @@
   }
 }
 </code></pre></div><h3 id="改善继承关系">改善继承关系</h3>
+<p>继承作为 OOP 里最为人熟知的特性十分实用，却也经常被误用，而且常得等到你用上一段时间，才能察觉到误用所在。超类中会处理所有的通用逻辑，如果某个函数/字段在各个子类中都相同，就可以通过函数/字段上移将它上升到超类中。同样地，如果超类中的某个函数/字段只与一个（或少数几个）子类有关，那么最好将其从超类中挪走，放到真正关心它的子类中去。</p>
+<p>如果一个字段仅仅作为 <strong>类型码</strong> 使用，根据其值来触发不同的行为，那么可以通过以子类取代类型码来重构，如此就可以用多态来处理条件逻辑。例如员工类已经有 &ldquo;全职员工&rdquo; 和 &ldquo;兼职员工&rdquo; 两个子类了，无法根据员工类别再创建不同的子类，就可以使用间接继承的方式：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">Class</span> <span style="color:#a6e22e">Employee</span> {
+  <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">type</span>) {
+    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">validateType</span>(<span style="color:#a6e22e">type</span>);
+    <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">name</span>;
+    <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">type</span>;
+  }
+  <span style="color:#a6e22e">validateType</span>(<span style="color:#a6e22e">arg</span>) {
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>[<span style="color:#e6db74">&#34;engineer&#34;</span>, <span style="color:#e6db74">&#34;manager&#34;</span>, <span style="color:#e6db74">&#34;salesman&#34;</span>].<span style="color:#a6e22e">includes</span>(<span style="color:#a6e22e">arg</span>)) 
+      <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">`Employee cannot be of type </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">arg</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+  }
+  <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">type</span>() {<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span>};
+  <span style="color:#a6e22e">set</span> <span style="color:#a6e22e">type</span>(<span style="color:#a6e22e">arg</span>) {<span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">arg</span>};
+  <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">capitalizedType</span>() {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span>.<span style="color:#a6e22e">chatAt</span>(<span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">toUpperCase</span>() <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span>.<span style="color:#a6e22e">substr</span>(<span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">toLowerCase</span>();
+  }
+  <span style="color:#a6e22e">toString</span>() {
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">capitalizedType</span><span style="color:#e6db74">}</span><span style="color:#e6db74">)`</span>;
+  }
+}
+</code></pre></div><p>我们可以用对象取代基本类型，使用类 EmployeeType 来取代 Employ 中的 type 属性。然后使用以子类取代类型码，把员工类别代码变成子类：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EmployeeType</span> {
+  <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">aString</span>) {
+    <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">aString</span>;
+  }
+  <span style="color:#a6e22e">toString</span>() {<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">value</span>;}
+}
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Engineer</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">EmployType</span> {
+  <span style="color:#a6e22e">toString</span>() {<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;emgineer&#34;</span>;}
+}
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Manager</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">EmployType</span> {
+  <span style="color:#a6e22e">toString</span>() {<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;manager&#34;</span>;}
+}
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Salesman</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">EmployeeType</span> {
+  <span style="color:#a6e22e">toString</span>() {<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;salesman&#34;</span>;}
+}
 
+<span style="color:#75715e">// 在原先的员工类中使用工厂方法
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Employee</span> {
+  ...
+  <span style="color:#a6e22e">set</span> <span style="color:#a6e22e">type</span>(<span style="color:#a6e22e">arg</span>) {<span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Employee</span>.<span style="color:#a6e22e">createEmployeeType</span>(<span style="color:#a6e22e">arg</span>);}
+    <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">createEmployeeType</span>(<span style="color:#a6e22e">aString</span>) {
+      <span style="color:#66d9ef">switch</span>(<span style="color:#a6e22e">aString</span>) {
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;engineer&#34;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Engineer</span>();
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;manager&#34;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Manager</span>();
+        <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;salesman&#34;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Salesman</span>();
+        <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">`Employee cannot be of type </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">aString</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
+      }
+    }
+  ...
+}
+</code></pre></div><p>虽然继承在面向对象的语言中很容易实现，但继承也有短板。其一是继承这张牌只能打一次，只能用于处理超类在一个方向上的变化。其二是继承给类之间引入了非常紧密的关系，任何在超类上的修改，都可能破坏子类。这两个问题用 <strong>委托</strong> 都能解决，对于不同的变化原因，我们可以委托给不同的类。与继承相比，使用委托关系时接口更清晰、耦合更少。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Order</span> {
+  <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">daysToShip</span>() {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">warehouse</span>.<span style="color:#a6e22e">daysToShip</span>;
+  }
+}
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PriorityOrder</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Order</span> {
+  <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">daysToShip</span>() {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">priorityPlan</span>.<span style="color:#a6e22e">daysToShip</span>;
+  }
+}
+
+<span style="color:#75715e">// 使用委托后
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Order</span> {
+  <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">daysToShip</span>() {
+    <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">priorityDelegate</span>) 
+      <span style="color:#f92672">?</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">prorityDelegate</span>.<span style="color:#a6e22e">daysToShip</span>
+      <span style="color:#f92672">:</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">warehouse</span>.<span style="color:#a6e22e">daysToShip</span>;
+  }
+}
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PriorityOrderDelegate</span> {
+  <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">daysToShip</span>() {
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">priorityPlan</span>.<span style="color:#a6e22e">daysToShip</span>;
+  }
+}
+</code></pre></div>
     </div>
 
     <div class="post-copyright">
