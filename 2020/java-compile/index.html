@@ -191,7 +191,7 @@
 <p>从 <a href="https://injdk.cn">Java I tell you-爪哇我话你知</a> 上选择 AdoptOpenJDK 下载后，即可得到含 sun 包源码的 OpenJDK，词法相关的类大多在 <code>com.sun.tools.javac.parser</code> 包下，类结构如下图所示。两个由 Factory 生成的实现类 Scanner 和 JavacParser 负责整个词法分析的过程控制。<code>JavacParser</code> 规定了哪些词是符合 Java 语言规范的，而具体的读取和归类不同词法的操作由 <code>Scanner</code> 完成，它会逐个读取 Java 源文件的单个字符，然后解析出符合 Java 语言规范的 Token 序列。<code>Token</code> 规定了所有 Java 语言的合法关键词，<code>Names</code> 用来存储和表示解析后的词法。</p>
 <p><img src="/images/javacScanner.png" alt=""></p>
 <p>词法分析过程是在 JavacParser 的 parseCompilationUnit 方法中完成的，源码如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> JCTree<span style="color:#f92672">.</span><span style="color:#a6e22e">JCCompilationUnit</span> <span style="color:#a6e22e">parseCompilationUnit</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> JCTree<span style="color:#f92672">.</span><span style="color:#a6e22e">JCCompilationUnit</span> <span style="color:#a6e22e">parseCompilationUnit</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
     Token firstToken <span style="color:#f92672">=</span> token<span style="color:#f92672">;</span>
     JCExpression pid <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     JCModifiers mods <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
@@ -257,7 +257,7 @@
 <span style="color:#f92672">}</span>
 </code></pre></div><p>可以看到，词法分析器会把这个类中的所有关键词都匹配到 Token 类中的某一项，如 PACKAGE、SEMI、PUBLIC 等，除了在 Java 语言规范中定义的保留关键词，还有一个特殊的词 <code>Token.IDENTIFIER</code>，这个用于表示用户定义的名称，如类名、包名、变量名、方法名等。</p>
 <p>以解析 PACKAGE 为例看下 Token 是如何被分辨的：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> JCExpression <span style="color:#a6e22e">qualident</span><span style="color:#f92672">(</span><span style="color:#66d9ef">boolean</span> allowAnnos<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> JCExpression <span style="color:#a6e22e">qualident</span><span style="color:#f92672">(</span><span style="color:#66d9ef">boolean</span> allowAnnos<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     JCExpression t <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">).</span><span style="color:#a6e22e">Ident</span><span style="color:#f92672">(</span>ident<span style="color:#f92672">()));</span>  <span style="color:#75715e">// 构建一个 JCIdent 语法节点
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> DOT<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">// 如果下一个 Token 是 . 则继续循环读取
 </span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">;</span>
@@ -275,7 +275,7 @@
 <span style="color:#f92672">}</span>
 </code></pre></div><p>JavacParser 会根据 Java 语言规范来控制 Token 应该以什么顺序、在什么地方出现。当 Scanner 读取第一个 Token 判断为 PACKAGE 后，会读取一个 IDENTIFIER 类型的 Token，<strong>构建一个 JCIdent 语法节点</strong>，判断下一个 Token 是否是 <code>.</code> ，是的话就再读取下一个 INDENTIFIER 类型的 Token，反复直到该过程读取完成。<code>accept(SEMI)</code> 判断下一个 Token 是不是 <code>;</code> 这样整个 package 语法就解析完成了。</p>
 <p>在读取每个 Token 时都会有一个转换过程，Tokens 负责将 Java 源码中的所有字符集合都在其内部类 TokenKind 中找到对应的类型，形成一个 Token 集合 <code>key</code>。每个字符集合都会是一个 Name 对象，所有的 Name 对象都存储在 Name.Table 这个内部类中，Tokens 会根据 Token.name 将集合中的 Token 先转化成 Name 对象，然后建立 Name 对象和 Token 的对应关系，保存到数组中。对于不属于 Token 定义的所有字符集合，都会被对应到 Token.IDENTIFIER 类型。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Create a new token given a name; if the name corresponds to a token name,
 </span><span style="color:#75715e"> * a new token of the corresponding kind is returned; otherwise, an
 </span><span style="color:#75715e"> * identifier token is returned.
@@ -314,7 +314,7 @@ TokenKind <span style="color:#a6e22e">lookupKind</span><span style="color:#f9267
 <p><img src="/images/JCTree.png" alt=""></p>
 <p>在 package 的词法分析中有这么一行 <code>JCExpression t = toP(F.at(token.pos).Ident(ident()));</code> 它会调用 TreeMarker 根据 Name 来构建一个 JCIdent 对象。</p>
 <p>以 JavacParser 中的 importDeclaration() 为例看下语法树的构建过程：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/** ImportDeclaration = IMPORT [ STATIC ] Ident { &#34;.&#34; Ident } [ &#34;.&#34; &#34;*&#34; ] &#34;;&#34;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/** ImportDeclaration = IMPORT [ STATIC ] Ident { &#34;.&#34; Ident } [ &#34;.&#34; &#34;*&#34; ] &#34;;&#34;
 </span><span style="color:#75715e">     */</span>
     JCTree <span style="color:#a6e22e">importDeclaration</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">;</span>
@@ -383,7 +383,7 @@ TokenKind <span style="color:#a6e22e">lookupKind</span><span style="color:#f9267
 <p>通过 Github上的 <a href="https://github.com/ymasory/programming-for-the-jvm">programming-for-the-jvm</a>，运行 <code>COM.sootNsmoke.oolong.Gnoloo</code> 类，参数为需要转化的 class 文件路径，就可以将我们编译出的二进制 class 文件先转化成能够理解的汇编语言 Oolong，在当前目录下生成一个 ClassName.j 文件，如下所示：</p>
 <p><img src="/images/oolong.png" alt=""></p>
 <p>还可以通过 JDK 自带的 Javap 来生成 class 文件格式：<code>javap -verbose +class 文件路径</code> ，生成的 class 结构如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Classfile /C:/Users/zch69/recipes/temp/programming-for-the-jvm-master/target/classes/COM/sootNsmoke/ClassFileStructure.class
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Classfile /C:/Users/zch69/recipes/temp/programming-for-the-jvm-master/target/classes/COM/sootNsmoke/ClassFileStructure.class
   Last modified 2020-9-22; size <span style="color:#ae81ff">588</span> bytes
   MD5 checksum 61944717f8416e375dc796bcf2c47b72
   Compiled from <span style="color:#e6db74">&#34;ClassFileStructure.java&#34;</span>

@@ -6,7 +6,22 @@
     <description>Recent content in Net on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 26 Jul 2020 09:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/net/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Nov 2022 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/net/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>HTTP/2：漫谈 RFC 7540</title>
+      <link>https://hoffmanzheng.github.io/2022/net-http-2/</link>
+      <pubDate>Wed, 09 Nov 2022 13:19:47 +0100</pubDate>
+      
+      <guid>https://hoffmanzheng.github.io/2022/net-http-2/</guid>
+      <description>HTTP/2 在引入头部字段压缩和允许单连接并发交换后，使更加高效的网络资源使用和更低的接收延迟成为可能。同时也引入了从服务端到客户端的主动推送。本篇结合 RFC 7540 谈谈 HTTP version 2。
+前言 超文本传输协议是一个大获成功的协议，尽管如此，HTTP/1.1 使用的基础传输却有着会对当下的 应用性能 造成不利影响的特性。具体地讲，HTTP/1.0 只允许在单个 TCP 连接中处理一个请求，在 HTTP/1.1 新增请求管道后，也只实现了部分的并发请求，并仍遭受着头部阻塞。因此，HTTP/1.0 和 HTTP/1.1 的客户端为了实现并发并降低延迟，需要使用多个与服务端的连接来发送多个请求。此外，HTTP 头部字段经常是重复且冗余的，导致了不必要的网络流量，且拥塞窗口会被快速填充。这将在单个 TCP 连接处理多个请求时导致过度的延迟。
+HTTP/2 通过在基础连接中定义一个更优的 HTTP 语义映射来处理这些问题。具体地，它允许在同个连接中多个请求和响应消息的交织，并对 HTTP 头部字段采用了高效的编码。它还支持请求的优先级，让一些更重要的请求能够更快地完成，以此来提升性能。生成的协议对网络更加友好，因为相比 HTTP/1.x 只需使用更少的连接。这也意味着与其他流和长连接之间更少的竞争，反过来能更好地利用可用的网络容量。
+HTTP 2 协议概览 HTTP/2 给 HTTP 语义提供了一个改良的传输，它支持 HTTP/1.1 的所有核心特征，但旨在某些方面变得更加高效。HTTP/2 的基础协议单元是一个框架 frame，每个框架类型服务一个不同的目的。例如，HEADERS 和 DATA 框架组成了 HTTP 请求和响应的基础，其他框架类型如 SETTINGS、WINDOW_UPDATE 和 PUSH_PROMISE 被用来支持 HTTP/2 的其他特性。
+请求的多路复用通过让每个 HTTP 请求/响应与它自己的流交换来实现。流是各自独立的，因此一个被阻塞的请求或响应不会阻止其他流的进程。流的控制和优先级使使用多路的流成为可能。流的控制保证了被接收者使用的数据被传输了。优先级保证了有限的资源能被首先引导至更重要的流上。
+HTTP/2 增加了一个新的交互模式，借此一个服务可以向客户端推送响应。服务推送允许一个服务在权衡网络使用和潜在的延迟收益后，向客户端任意的发送（预计它将会需要的）数据。服务端通过合成一个发送 PUSH_PROMISE 框架的请求来完成这个。随后服务端就能在一个独立的流中给这个合成的请求发送一个响应。因为在连接中使用的 HTTP 头部字段可能包含了大量多余的数据，包含它们的框架可以被压缩。这对通常情况下的请求大小有着特殊的优势，且允许许多请求被压缩在一个包里。
+HTTP 2 连接 </description>
+    </item>
+    
     <item>
       <title>深入 Web 请求过程</title>
       <link>https://hoffmanzheng.github.io/2020/dns-cdn/</link>
@@ -37,6 +52,38 @@ TCP / IP 分层模型：
 应用层协议定义了：
  换的报文类型，例如请求报文和响应报文 。 各种报文类型的语法，如报文中的各个字段及这些字段是如何描述的 。 字段的语义，即这些字段中包含的信息的含义 。 一个进程何时以及如何发送报文，对报文进行响应的规则。  HTTP 协议 Web 的应用层协议是超文本传输协议 (HyperText Transfer Protocol , HTTP) ，客户端和服务器端通过交换 HTTP 报文进行会话，HTTP 定义了这些报文的结构以及客户和服务器进行报文交换的方式。
 HTTP 定义了 Web 客户向 Web 服务器请求 Web 页面的方式，以及服务器向客户传送 Web 页面的方式。HTTP 使用 TCP 作为它的支撑运输协议，TCP 为 HTTP 提供可靠数据传输服务。</description>
+    </item>
+    
+    <item>
+      <title>Web：浅析 URL</title>
+      <link>https://hoffmanzheng.github.io/2020/net-url/</link>
+      <pubDate>Sun, 09 Feb 2020 09:19:47 +0100</pubDate>
+      
+      <guid>https://hoffmanzheng.github.io/2020/net-url/</guid>
+      <description>1990 年英国计算机科学家蒂姆·伯纳斯-李（Tim Berners-Lee）发明了万维网，并解决了其中三项关键技术： URL + HTML + HTTP。本篇讲述其中的一项，全球网络资源唯一认证的系统：URL 的基本知识。
+IP 与端口 1. IP 和端口的作用  IP（Internet Protocal）是定位互联网中一台设备的协议，它规定了如何封装数据报文，以跟互联网中的其他设备交流。只要你在互联网中，你就至少有一个独特的 IP。 端口（Port）是用来定位互联网中一台设备中的不同服务的。  2. 内网与外网 形象点描述，外网就好比我家的地址，内网就类似我在我家的位置。外网是实现互联网中设备间互相通信的基础，内网和外网之间使用路由器进行中转。
+2.1 外网 IP 当我们租用电信宽带，安装猫和路由器后，便拥有了自己的外网 IP（由运营商分配）。需要注意的是，你的所有设备都共享一个外网 IP；如果重启路由器，外网 IP 将会被重新分配。
+可以通过 ipconfig 或访问 IP 138.com 来查看自己的外网 IP。
+2.2 内网 IP 内网 IP 一般以 192.168.x.x 形式出现，内网中的设备可以互相访问，但想访问外网需要通过路由器中转；同样地，外网设备要把数据内容送到内网也必须通过路由器。
+路由器可以说是内网和外网这两个隔绝空间之间的唯一连通点，故也被称为网关。
+2.3 几个特殊的 IP localhost 表示本地
+127.0.0.1 表示自己
+0.0.0.0 不表示任何设备
+3. 端口的约定 当数据内容通过外网及内网 IP 唯一定位到用户设备后，需要通过端口传输给指定的服务。常用的服务有：端口列表
+ HTTP 服务：80 端口 HTTPS 服务：443 端口 FTP 服务：21 端口  关于端口有几个约定：</description>
+    </item>
+    
+    <item>
+      <title>Web：HTML 常用标签</title>
+      <link>https://hoffmanzheng.github.io/2020/net-html/</link>
+      <pubDate>Sat, 08 Feb 2020 13:19:47 +0100</pubDate>
+      
+      <guid>https://hoffmanzheng.github.io/2020/net-html/</guid>
+      <description>HTML（Hyper Text Markup Language）超文本标记语言，是构建网站的基石。游览器通过解析 HTML 来将万维网中传输的 字节流 渲染成丰富多彩的可视化网页。
+由于我不是写前端的，就用在线 Web 调试工具 饥人谷 JsBin 和 代码沙盒 来进行 HTML 的编辑。更多参考资料：MDN HTML 文档。
+HTML 章节与内容标签 1. HTML 起手式 HTML 代码由许许多多不同的标签（tag）构成。下图为 HTML 的一个常规模版：
+ &amp;lt;head&amp;gt; 里面一般放一些看不见的元素，如编码方式、全文样式 &amp;lt;style&amp;gt; 、标题、JS等 &amp;lt;body&amp;gt; 里面写网页的具体内容 模版中的内容只需要改 title 和语言，其他暂时都不变。 有个输入标签的快捷键，打出标签单词后按键盘上的 Tab 键就可以快速补全代码了。  2. HTML 章节标签 章节标签用于划分网页 / 文章的层级，使页面结构清晰，也便于添加 CSS 样式
+ 标题：&amp;lt;h1~h6&amp;gt; 字体从大到小，h1 一个页面最多一个，不能为了调整字体大小而使用 章节：&amp;lt;section&amp;gt; 开始了一个新的章节，里面一般用 h2，h3；章节里面可以再套章节 文章：&amp;lt;article&amp;gt; 段落：&amp;lt;p&amp;gt; 头部：&amp;lt;header&amp;gt; 放置顶的广告 脚部：&amp;lt;footer&amp;gt; 最下面的版权声明等，&amp;amp;copy;打出版权的符号 主要内容：&amp;lt;main&amp;gt; 里面是标题+章节 旁支内容：&amp;lt;aside&amp;gt; 可以写导航，或在 main 的下面写个参考资料 划分：&amp;lt;div&amp;gt; 用于划分页面结构，使结构更加清晰  3.</description>
     </item>
     
   </channel>

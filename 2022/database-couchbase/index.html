@@ -10,7 +10,7 @@
   
   
   <link rel="prev" href="https://hoffmanzheng.github.io/2022/distribute-redlock/" />
-  
+  <link rel="next" href="https://hoffmanzheng.github.io/2022/devops-loki/" />
   <link rel="canonical" href="https://hoffmanzheng.github.io/2022/database-couchbase/" />
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
@@ -159,7 +159,7 @@
 <p>本篇基于 <a href="https://docs.couchbase.com/home/server.html">Couchbase 官网文档</a> 介绍其数据模型、内存存储、服务与搜索、集群可用性等。</p>
 <h3 id="数据">数据</h3>
 <p>Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{
   <span style="color:#e6db74">&#34;a1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span>,
   <span style="color:#e6db74">&#34;a2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>,
   <span style="color:#e6db74">&#34;a3&#34;</span> <span style="color:#f92672">:</span> {   <span style="color:#75715e">// nested array
@@ -185,7 +185,7 @@
 </ul>
 <h4 id="n1ql">N1QL</h4>
 <p>在关系型数据库中，数据以一致的结构存储在表中，并通过主键相互关联。相比之下，Couchbase 使用 JSON 这种更灵活的数据模式，以及针对 JSON 增强的 SQL N1QL。N1QL 将数据作为格式自由的文档处理，并将数据聚集在一个称作 <code>keyspaces</code> 的大集合中。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">(<span style="color:#a6e22e">HRData</span> <span style="color:#a6e22e">keyspace</span>)
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">(<span style="color:#a6e22e">HRData</span> <span style="color:#a6e22e">keyspace</span>)
  {
      <span style="color:#e6db74">&#39;Name&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Jamie&#39;</span>
      <span style="color:#e6db74">&#39;SSN&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">234</span>
@@ -203,7 +203,7 @@
      <span style="color:#e6db74">&#39;Wage&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">456</span>,
  }
 </code></pre></div><p>N1QL 中的 <code>FROM</code> 被用来在不同的数据源 keyspaces 中检索。同样每个文档也会视自身为一个数据源，并在其嵌套元素中执行查询。嵌套元素可以通过点操作符 <code>.</code> 进入，数组元素通过中括号 <code>[]</code> 来索引。检索出的属性可以通过 <code>AS</code> 操作符来重命名：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">SELECT firstjob FROM HRData.History<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> AS firstjob
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">SELECT firstjob FROM HRData.History<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> AS firstjob
 <span style="color:#f92672">{</span>
      <span style="color:#e6db74">&#39;firstjob&#39;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#39;Yahoo&#39;</span>, 2005, 2006<span style="color:#f92672">]</span>
 <span style="color:#f92672">}</span>
@@ -271,7 +271,7 @@ SELECT firstjob<span style="color:#f92672">[</span>2<span style="color:#f92672">
 <p>此外还可以仅索引文档中的某个字段，如下图所示：</p>
 <p><img src="/images/couchbase-searchField.png" alt=""></p>
 <p>在网页管理员控制台测试搜索功能后，就可以用 REST API 来实现搜索：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">curl</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">u</span> <span style="color:#a6e22e">Administrator</span><span style="color:#f92672">:</span><span style="color:#a6e22e">password</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">X</span> <span style="color:#a6e22e">POST</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">H</span> <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> <span style="color:#f92672">\</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">curl</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">u</span> <span style="color:#a6e22e">Administrator</span><span style="color:#f92672">:</span><span style="color:#a6e22e">password</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">X</span> <span style="color:#a6e22e">POST</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">H</span> <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> <span style="color:#f92672">\</span>
 <span style="color:#a6e22e">http</span><span style="color:#f92672">:</span><span style="color:#75715e">//localhost:8094/api/index/travel-FTS/query \
 </span><span style="color:#75715e"></span><span style="color:#f92672">-</span><span style="color:#a6e22e">d</span> <span style="color:#e6db74">&#39;{
 </span><span style="color:#e6db74">  &#34;explain&#34;: true,
@@ -362,6 +362,8 @@ SELECT firstjob<span style="color:#f92672">[</span>2<span style="color:#f92672">
         
         <a href="https://hoffmanzheng.github.io/2022/distribute-redlock/" class="prev" rel="prev" title="分布式：[译] 基于 Redis 的分布式锁 "><i class="iconfont icon-left"></i>&nbsp;分布式：[译] 基于 Redis 的分布式锁 </a>
          
+        
+        <a href="https://hoffmanzheng.github.io/2022/devops-loki/" class="next" rel="next" title="Devops：[译] 日志聚合系统 Grafana Loki ">Devops：[译] 日志聚合系统 Grafana Loki &nbsp;<i class="iconfont icon-right"></i></a>
         
     </div>
 

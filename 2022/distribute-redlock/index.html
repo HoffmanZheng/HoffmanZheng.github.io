@@ -200,10 +200,10 @@
 <h3 id="单实例的正确实现">单实例的正确实现</h3>
 <p>在突破上文描述的单实例限制之前，让我们看看在这个简单的情况下该如何正确地做。因为这对于可以接受时不时出现竞态条件的应用实际上是一个可行的解决方案，并且着眼于单实例也是我们讨论分布式算法的基础。</p>
 <p>下述是一个获取锁的方法：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">SET resource_name my_random_value NX PX <span style="color:#ae81ff">30000</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">SET resource_name my_random_value NX PX <span style="color:#ae81ff">30000</span>
 </code></pre></div><p>这个命令将会在 key 不存在时（NX 选项）设置这个 key，伴随着 30000 毫秒的过期时间（PX 选项）。这个键的值将被设置为随机值，并且在所有的客户端和锁请求中保持唯一性。</p>
 <p>本质上随机值是用来安全地释放锁的，伴随着脚本告诉 Redis：只有当键存在并且它的值与存储的值相符时才移除这个键。通过下述的 Lua 脚本来实现：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#66d9ef">if</span> redis.call<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;get&#34;</span>,KEYS<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">==</span> ARGV<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#66d9ef">then</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#66d9ef">if</span> redis.call<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;get&#34;</span>,KEYS<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">==</span> ARGV<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#66d9ef">then</span>
     <span style="color:#66d9ef">return</span> redis.call<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;del&#34;</span>,KEYS<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span>
 <span style="color:#66d9ef">else</span>
     <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>
