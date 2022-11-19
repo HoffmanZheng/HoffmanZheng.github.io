@@ -1077,8 +1077,8 @@ INSERT INTO t VALUES<span style="color:#f92672">(</span>1<span style="color:#f92
 </li>
 <li>
 <p>InnoDB 存储引擎层将日志写入重做日志文件</p>
-<p>​	a）修改内存中事务对应的信息，并且将日志写入重做日志缓冲</p>
-<p>​	b）调用 fsync 确保日志都从重做日志缓冲写入磁盘</p>
+<p>​    a）修改内存中事务对应的信息，并且将日志写入重做日志缓冲</p>
+<p>​    b）调用 fsync 确保日志都从重做日志缓冲写入磁盘</p>
 </li>
 </ol>
 <p><img src="/images/innodb-group-commit.jpg" alt=""></p>

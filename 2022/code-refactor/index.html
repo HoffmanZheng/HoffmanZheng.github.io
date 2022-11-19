@@ -172,16 +172,16 @@
   <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;***********************&#34;</span>);
   <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;**** Customer Owes ****&#34;</span>);
   <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;***********************&#34;</span>);
-	
+
   <span style="color:#75715e">// calculate outstanding
 </span><span style="color:#75715e"></span>  <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">const</span> <span style="color:#a6e22e">o</span> <span style="color:#66d9ef">of</span> <span style="color:#a6e22e">invoice</span>.<span style="color:#a6e22e">orders</span>) {
-  	<span style="color:#a6e22e">outstanding</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">amount</span>;
+      <span style="color:#a6e22e">outstanding</span> <span style="color:#f92672">+=</span> <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">amount</span>;
   }
-  
+
   <span style="color:#75715e">// record due date
 </span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">today</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Clock</span>.<span style="color:#a6e22e">today</span>;
   <span style="color:#a6e22e">invoice</span>.<span style="color:#a6e22e">dueDate</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date(<span style="color:#a6e22e">today</span>.<span style="color:#a6e22e">getFullYear</span>(), <span style="color:#a6e22e">today</span>.<span style="color:#a6e22e">getMonth</span>(), <span style="color:#a6e22e">today</span>.<span style="color:#a6e22e">getDate</span>() <span style="color:#f92672">+</span> <span style="color:#ae81ff">30</span>);
-  
+
   <span style="color:#75715e">// print details
 </span><span style="color:#75715e"></span>  <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`name: </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">invoice</span>.<span style="color:#a6e22e">customer</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
   <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`amount: </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">outstanding</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
@@ -243,18 +243,18 @@
   <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">result</span>;
   <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">deliveryTime</span>;
   <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">anOrder</span>.<span style="color:#a6e22e">deliveryState</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;MA&#34;</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">anOrder</span>.<span style="color:#a6e22e">deliveryState</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;CT&#34;</span>) {
-  	<span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">isRush</span> <span style="color:#f92672">?</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>;
+      <span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">isRush</span> <span style="color:#f92672">?</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">2</span>;
   } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">anOrder</span>.<span style="color:#a6e22e">deliveryState</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;NY&#34;</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">anOrder</span>.<span style="color:#a6e22e">deliveryState</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;NH&#34;</span>) {
-  	<span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
+      <span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
     <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">anOrder</span>.<span style="color:#a6e22e">deliveryState</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;NH&#34;</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span><span style="color:#a6e22e">isRush</span>) {
-    	<span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+        <span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
     }
   } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">isRush</span>) {
-  	<span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+      <span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
   } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">anOrder</span>.<span style="color:#a6e22e">deliveryState</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;ME&#34;</span>) {
-  	<span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
+      <span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">3</span>;
   } <span style="color:#66d9ef">else</span> {
-  	<span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>;
+      <span style="color:#a6e22e">deliveryTime</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">4</span>;
   }
   <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">anOrder</span>.<span style="color:#a6e22e">placedOn</span>.<span style="color:#a6e22e">plusDays</span>(<span style="color:#ae81ff">2</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">deliveryTime</span>);
   <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">isRush</span>) <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">result</span>.<span style="color:#a6e22e">minusDays</span>(<span style="color:#ae81ff">1</span>);
@@ -264,10 +264,10 @@
 <span style="color:#75715e">// 针对 isRush 标志位，可以在 deliveryDate 上添加两个函数
 </span><span style="color:#75715e">// 替换调用后，限制原函数的可见性，让人一见即知不应直接使用这个函数
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">rushDeliveryDate</span>(<span style="color:#a6e22e">anOrder</span>) {
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">deliveryDate</span>(<span style="color:#a6e22e">anOrder</span>, <span style="color:#66d9ef">true</span>);
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">deliveryDate</span>(<span style="color:#a6e22e">anOrder</span>, <span style="color:#66d9ef">true</span>);
 }
 <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">regularDeliveryDate</span>(<span style="color:#a6e22e">anOrder</span>) {
-	<span style="color:#66d9ef">return</span> <span style="color:#a6e22e">deliveryDate</span>(<span style="color:#a6e22e">anOrder</span>, <span style="color:#66d9ef">false</span>);
+    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">deliveryDate</span>(<span style="color:#a6e22e">anOrder</span>, <span style="color:#66d9ef">false</span>);
 }
 </code></pre></div><h3 id="再谈谈封装">再谈谈封装</h3>
 <p>上文有提到通过引入参数对象来减小函数的参数列表，而记录型结构有两种类型：一种需要声明合法的字段名，另一种可以随便用任何字段名。后者有哈希表、字典、数组等，使用这类结构时虽然方便但也有缺陷，那就是一条记录上 <strong>持有什么字段</strong> 往往不够直观。只能通过查看它的创建点和使用点来获取其维护的字段，如果这种记录只在程序的一个小范围里使用，那问题还不大，但如果其使用范围变宽，数据结构不直观就会造成更多的困扰。</p>
@@ -291,14 +291,14 @@
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">payAmount</span>(<span style="color:#a6e22e">employee</span>) {
   <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">result</span>;
   <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">employee</span>.<span style="color:#a6e22e">isSeparated</span>) {
-  	<span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> {<span style="color:#a6e22e">amount</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">reasonCode</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;SEP&#34;</span>};
+      <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> {<span style="color:#a6e22e">amount</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">reasonCode</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;SEP&#34;</span>};
   }
   <span style="color:#66d9ef">else</span> {
     <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">employee</span>.<span style="color:#a6e22e">isRetired</span>) {
-    	<span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> {<span style="color:#a6e22e">amount</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">reasonCode</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;RET&#34;</span>};
+        <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> {<span style="color:#a6e22e">amount</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">reasonCode</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;RET&#34;</span>};
     }
     <span style="color:#66d9ef">else</span> {
-    	<span style="color:#75715e">// logic to compute amount
+        <span style="color:#75715e">// logic to compute amount
 </span><span style="color:#75715e"></span>      <span style="color:#a6e22e">lorem</span>.<span style="color:#a6e22e">ipsum</span>(<span style="color:#a6e22e">dolor</span>.<span style="color:#a6e22e">sitAmet</span>);
       <span style="color:#a6e22e">consectetur</span>(<span style="color:#a6e22e">adipiscing</span>).<span style="color:#a6e22e">elit</span>();
       <span style="color:#a6e22e">sed</span>.<span style="color:#66d9ef">do</span>.<span style="color:#a6e22e">eiusmod</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">tempor</span>.<span style="color:#a6e22e">incididunt</span>.<span style="color:#a6e22e">ut</span>(<span style="color:#a6e22e">labore</span>) <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">dolore</span>(<span style="color:#a6e22e">magna</span>.<span style="color:#a6e22e">aliqua</span>);
@@ -391,7 +391,7 @@
     <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>;
     <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">voyage</span>.<span style="color:#a6e22e">zone</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;china&#34;</span>) <span style="color:#a6e22e">result</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
     <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">voyage</span>.<span style="color:#a6e22e">zone</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;east-indies&#34;</span>) <span style="color:#a6e22e">result</span> <span style="color:#f92672">+=</span> <span style="color:#ae81ff">1</span>;
-   	<span style="color:#a6e22e">result</span> <span style="color:#f92672">+=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">historyLengthFactor</span>;
+       <span style="color:#a6e22e">result</span> <span style="color:#f92672">+=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">historyLengthFactor</span>;
     <span style="color:#a6e22e">result</span> <span style="color:#f92672">+=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">voyageLengthFactor</span>;
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>;
   }
@@ -415,7 +415,7 @@
     <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>;
   }
   <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">historyLengthFactor</span>() {
-  	<span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">history</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">10</span>) <span style="color:#f92672">?</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
+      <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">history</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">10</span>) <span style="color:#f92672">?</span> <span style="color:#ae81ff">1</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>;
   }
   <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">voyageProfitFactor</span>() {
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">voyageProfitFactor</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">3</span>;

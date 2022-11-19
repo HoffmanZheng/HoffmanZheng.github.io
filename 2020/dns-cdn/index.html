@@ -215,7 +215,7 @@
 <h1 id="dns-域名解析">DNS 域名解析</h1>
 <p>我们通常使用 URL 域名来请求网络资源，它需要被解析成 IP 地址才能与远程主机建立连接，如何将域名解析成 IP 地址就属于 DNS 解析的工作范畴了。</p>
 <blockquote>
-<p>对 URL 域名仍不了解的同学可以先阅读下：<a href="https://hoffmanzheng.github.io/2020/web-url/">Web：浅析 URL</a></p>
+<p>对 URL 域名仍不了解的同学可以先阅读下：<a href="https://hoffmanzheng.github.io/2020/net-url/">Web：浅析 URL</a></p>
 </blockquote>
 <h4 id="域名缓存">域名缓存</h4>
 <p>当用户在游览器中输入域名并按下回车键后，游览器会先检查缓存中有没有这个域名对应的解析过的 IP 地址，如果没有命中，则会去操作系统的缓存中查找是否有这个域名对应的 DNS 解析结果。用户也可以修改系统文件来修改域名对应的 IP，Windows 下为 <code>C:\\Windows\System32\drivers\etc\hosts</code>，Linux 下为 <code>/etc/hosts</code>，<strong>域名劫持</strong> 就是黑客修改把特定的域名解析到它指定的 IP 地址上，所以 Windows 7 中将 hosts 设置成了只读，防止这个文件被轻易修改。</p>
