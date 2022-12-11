@@ -254,7 +254,7 @@
 </ol>
 <h4 id="bisect-学习案例">bisect 学习案例</h4>
 <p>使用 git bisect 在 <a href="https://github.com/apache/maven">Maven</a> 找出在 3.6.0 和 3.6.1 版本之间导致 <a href="https://issues.apache.org/jira/browse/MNG-6700">MNG-6700</a> 的提交记录，可以使用 <a href="https://github.com/hcsp/maven-issue-reproduction">MNG-6700 BUG Reproduction</a> 复现这个问题。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">/** clone maven 项目到本地，切换版本，然后打包，解压包后就可以找到 mvn */
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">/** clone maven 项目到本地，切换版本，然后打包，解压包后就可以找到 mvn */
 git clone https://github.com/apache/maven.git
 git checkout maven-3.6.0
 mvn clean package -Dmaven.test.skip<span style="color:#f92672">=</span>true -Drat.skip<span style="color:#f92672">=</span>true
@@ -300,7 +300,7 @@ HEAD detached at 2928dc6b6
 You are currently bisecting, started from branch <span style="color:#e6db74">&#39;d66c9c0b3&#39;</span>.
   <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git bisect reset&#34;</span> to get back to the original branch<span style="color:#f92672">)</span>
 </code></pre></div><p>之后手动重复以上过程就可以找到导致这个问题的提交记录，但完全可以用脚本来 <strong>自动化</strong> 这个过程：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#!/bin/sh
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#!/bin/sh
 </span><span style="color:#75715e"></span>
 VERSION<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>mvn help:evaluate -Dexpression<span style="color:#f92672">=</span>project.version -q -DforceStdout<span style="color:#66d9ef">)</span> 
 rm -rf apache-maven-*
@@ -308,7 +308,7 @@ mvn clean package -Dmaven.test.skip<span style="color:#f92672">=</span>true -Dra
 unzip apache-maven/target/apache-maven-$VERSION-bin.zip -d .
 apache-maven-$VERSION/bin/mvn -f ../maven-issue-reproduction/pom.xml compile
 </code></pre></div><p>运行 <code>git bisect run ./run.sh</code> 后就可以等着最后的结果了：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">8b7055fe3ff3696b821409a6904ff4d69aa3ff6b is the first bad commit
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">8b7055fe3ff3696b821409a6904ff4d69aa3ff6b is the first bad commit
 commit 8b7055fe3ff3696b821409a6904ff4d69aa3ff6b
 Author: Mickael Istria &lt;mistria@redhat.com&gt;
 Date:   Thu Nov <span style="color:#ae81ff">29</span> 22:21:29 <span style="color:#ae81ff">2018</span> +0100
@@ -329,7 +329,7 @@ bisect run success
 <h3 id="github-协作方式">GitHub 协作方式</h3>
 <p>GitHub 的出现，一改之前项目协作的困难，使得任何人发现了 BUG 都可以来帮助修改。但不能把主分支的 <strong>写权限</strong> 随便给外面的人，以免用户滥用把仓库搞乱。所以就出现了 <code>fork</code> 方式的协同合作：</p>
 <p><img src="/images/github-fork-process.png" alt=""></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">// fork 后的仓库并不会自动地随着上游仓库而更新，需要手动 sync a fork
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">// fork 后的仓库并不会自动地随着上游仓库而更新，需要手动 sync a fork
 git remote add upstream https://github.com/apache/maven.git   // 添加上游仓库
 git fetch upstream  // 获取上游仓库的提交历史
 git merge upstream/master   // 获取更新

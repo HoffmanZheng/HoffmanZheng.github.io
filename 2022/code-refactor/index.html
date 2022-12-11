@@ -166,7 +166,7 @@
 <p>往往活得长的程序，其中的函数都比较短。可能初学者会觉得小函数的程序满是无穷无尽的委托调用，但和这种程序共处一段时间后，就能体会到它带来的好处 —— 更好的阐释力、且更易于分享。小函数让人易于理解的关键在于良好的命名，使代码的阅读者可以通过名字快速了解函数的作用。</p>
 <p>每当感觉需要用 <strong>注释</strong> 来说明点什么的时候，我们也可以把需要说明的东西写进一个独立函数中，并以其用途（而非实现手法）命名。注释通常能指出代码用途和实现手法之间的语义差异。如果代码前方有一行注释，可能就是在提醒你：可以将这段代码替换成一个函数，并在注释的基础上给这个函数命名。</p>
 <p>有的开发者会在代码复用时使用提炼函数，但更为合理的是，我们可以用提炼函数将代码的 <strong>意图</strong> 与实现分开。如果一段代码需要花一段时间游览才能弄明白它到底在干什么，就应该将其提炼到一个函数中，并根据它所做的事为其命名。提炼函数的示例代码如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">printOwing</span>(<span style="color:#a6e22e">invoice</span>) {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">printOwing</span>(<span style="color:#a6e22e">invoice</span>) {
   <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">outstanding</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
 
   <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">&#34;***********************&#34;</span>);
@@ -188,7 +188,7 @@
   <span style="color:#a6e22e">console</span>.<span style="color:#a6e22e">log</span>(<span style="color:#e6db74">`due: </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">invoice</span>.<span style="color:#a6e22e">dueDate</span>.<span style="color:#a6e22e">toLocaleDateString</span>()<span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
 }
 </code></pre></div><p>通过提炼代码，可以得到以下代码，代码的可读性得到的显著提高：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">printOwing</span>(<span style="color:#a6e22e">invoice</span>) {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">printOwing</span>(<span style="color:#a6e22e">invoice</span>) {
   <span style="color:#a6e22e">printBanner</span>();
   <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">outstanding</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">calculateOutstanding</span>(<span style="color:#a6e22e">invoice</span>);
   <span style="color:#a6e22e">recordDueDate</span>(<span style="color:#a6e22e">invoice</span>);
@@ -222,14 +222,14 @@
 </code></pre></div><h4 id="函数变量改名">函数/变量改名</h4>
 <p>命名可以说是编程中最难的事之一了，好的名字能让函数、模块、变量和类清晰地表名自己的功能和用法。很多开发者经常不愿意给程序元素改名，觉得不值得费这个劲，但好的名字能节省未来用来 <strong>猜谜</strong> 上的大把时间。如果想不到一个好名字，说明背后很可能潜藏着更深的设计问题。</p>
 <p>比如有以下一段看起来不是很好理解的代码：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">price</span>(<span style="color:#a6e22e">order</span>) {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">price</span>(<span style="color:#a6e22e">order</span>) {
   <span style="color:#75715e">// price is base price - quantity discount + shipping
 </span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">order</span>.<span style="color:#a6e22e">quantity</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">order</span>.<span style="color:#a6e22e">itemPrice</span> <span style="color:#f92672">-</span>
     Math.<span style="color:#a6e22e">max</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">order</span>.<span style="color:#a6e22e">quantity</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">500</span>) <span style="color:#f92672">*</span> <span style="color:#a6e22e">order</span>.<span style="color:#a6e22e">itemPrice</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.05</span> <span style="color:#f92672">+</span> 
     Math.<span style="color:#a6e22e">min</span>(<span style="color:#a6e22e">order</span>.<span style="color:#a6e22e">quantity</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">order</span>.<span style="color:#a6e22e">itemPrice</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span>, <span style="color:#ae81ff">100</span>);
 }
 </code></pre></div><p>对其使用提炼变量就能使代码更容易理解，同时注释也就不需要了：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">price</span>(<span style="color:#a6e22e">order</span>) {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">price</span>(<span style="color:#a6e22e">order</span>) {
   <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">basePrice</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">order</span>.<span style="color:#a6e22e">quantity</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">order</span>.<span style="color:#a6e22e">itemPrice</span>;
   <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">quantityDiscount</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">max</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">order</span>.<span style="color:#a6e22e">quantity</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">500</span>) <span style="color:#f92672">*</span> <span style="color:#a6e22e">order</span>.<span style="color:#a6e22e">itemPrice</span> <span style="color:#f92672">*</span><span style="color:#ae81ff">0.05</span>;
   <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">shipping</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">min</span>(<span style="color:#a6e22e">basePrice</span> <span style="color:#f92672">*</span> <span style="color:#ae81ff">0.1</span>, <span style="color:#ae81ff">100</span>);
@@ -239,7 +239,7 @@
 <h4 id="过长的参数列表">过长的参数列表</h4>
 <p>有时候我们可以在代码中看到一些带着很多参数的函数，<strong>过长的参数列表</strong> 显然并不是一个好的工程实践，通常也会困扰代码的阅读者。如果一组数据项总是结伴同行，出没于一个又一个函数，我们可以将其组织成新的数据对象，这样既可以缩短函数的参数列表，也能使所有使用该数据对象的函数都使用同样的名字来访问其中的元素，提升代码的一致性。如果可以通过查询获取另一个参数的值，也可以使用以查询取代参数来减少参数的个数。</p>
 <p>有时我们会使用标志位 <code>flag</code> 来区分函数的行为，标记参数会影响函数内部的控制流，但它却通常无法清晰地传达自己的含义，对此可以使用移除标记参数。如果明确用一个函数来完成一项单独的任务，其含义就会清晰得多（见下述代码）。如果一个函数有多个标记参数，说明这个函数可能做得太多，应该考虑是否能用更简单的函数来组合出完整的逻辑。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">deliveryDate</span>(<span style="color:#a6e22e">anOrder</span>, <span style="color:#a6e22e">isRush</span>) {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">deliveryDate</span>(<span style="color:#a6e22e">anOrder</span>, <span style="color:#a6e22e">isRush</span>) {
   <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">result</span>;
   <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">deliveryTime</span>;
   <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">anOrder</span>.<span style="color:#a6e22e">deliveryState</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;MA&#34;</span> <span style="color:#f92672">||</span> <span style="color:#a6e22e">anOrder</span>.<span style="color:#a6e22e">deliveryState</span> <span style="color:#f92672">===</span> <span style="color:#e6db74">&#34;CT&#34;</span>) {
@@ -288,7 +288,7 @@
 <h3 id="优化条件逻辑">优化条件逻辑</h3>
 <p>条件逻辑可以提升程序的威力，同时也会引入一定的复杂度。复杂的条件逻辑是编程中最难理解的东西之一，我们可以用以卫语句取代嵌套条件表达式来清晰表达 &ldquo;在主要处理逻辑之前先做检查&rdquo; 的意图，也可以用以多态取代条件表达式来处理 switch 的多种情况。</p>
 <p>条件表达式中，如果两个条件分支都属于正常行为，就应该使用形如 if&hellip;else&hellip; 的条件表达式，来表现出对两个分支同等的重视。但如果一个分支是正常行为，另一个分支是罕见或者异常的行为，就应该单独检查该条件，并在该条件为真时立刻从函数中返回，这样的单独检查常常被称为 &ldquo;卫语句&rdquo; <code>guard clauses</code>。卫语句可以告诉代码的阅读者，这种情况不是本函数的核心逻辑，如果它真发生了，请做一些必要的整理工作，然后退出。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">payAmount</span>(<span style="color:#a6e22e">employee</span>) {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">payAmount</span>(<span style="color:#a6e22e">employee</span>) {
   <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">result</span>;
   <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">employee</span>.<span style="color:#a6e22e">isSeparated</span>) {
       <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> {<span style="color:#a6e22e">amount</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">reasonCode</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;SEP&#34;</span>};
@@ -321,7 +321,7 @@
   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">someFinalComputation</span>();
 }
 </code></pre></div><p>虽然使用条件逻辑本身的结构就足以表达不同的场景，但使用类和 <strong>多态</strong> 能把逻辑的拆分表述得更清晰。比如针对 switch 语句中的每种分支逻辑创建一个类，用多态来承载各个类型特有的行为，从而去除重复的分支逻辑。下面有这样一个例子，有一家评级机构，要根据航程本身的特征和船长过往的航行历史，对远洋航船的航行进行投资评级。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">rating</span>(<span style="color:#a6e22e">voyage</span>, <span style="color:#a6e22e">history</span>) {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">function</span> <span style="color:#a6e22e">rating</span>(<span style="color:#a6e22e">voyage</span>, <span style="color:#a6e22e">history</span>) {
   <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">vpf</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">voyageProfitFactor</span>(<span style="color:#a6e22e">voyage</span>, <span style="color:#a6e22e">history</span>);
   <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">vr</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">voyageRisk</span>(<span style="color:#a6e22e">voyage</span>);
   <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">chr</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">captainHistoryRisk</span>(<span style="color:#a6e22e">voyage</span>, <span style="color:#a6e22e">history</span>);
@@ -362,7 +362,7 @@
   <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">result</span>;
 }
 </code></pre></div><p>代码中有两处同样的条件逻辑，都在询问 &ldquo;是否有到中国的航程&rdquo; 以及 &ldquo;船长是否曾去过中国&rdquo;，我们可以使用继承和多态将处理 &ldquo;中国因素&rdquo;（会混淆视听）的逻辑从基础逻辑中分离出来。在重构后可以得到一个基本的 Rating 类，其中放着基础逻辑，不考虑与 &ldquo;中国经验&rdquo; 相关的复杂性：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rating</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Rating</span> {
   <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">voyage</span>, <span style="color:#a6e22e">history</span>) {
     <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">voyage</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">voyage</span>;
     <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">history</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">history</span>;
@@ -403,7 +403,7 @@
   }
 }
 </code></pre></div><p>与 &ldquo;中国经验&rdquo; 相关的代码则清晰表述出在基本逻辑之上的一系列变体逻辑：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExperienceChinaRating</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Rating</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ExperienceChinaRating</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Rating</span> {
   <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">captainHistoryRisk</span>() {
     <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">super</span>.<span style="color:#a6e22e">captainHistoryRisk</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">2</span>;
     <span style="color:#66d9ef">return</span> Math.<span style="color:#a6e22e">max</span>(<span style="color:#a6e22e">result</span>, <span style="color:#ae81ff">0</span>);
@@ -424,31 +424,31 @@
 </code></pre></div><h3 id="改善继承关系">改善继承关系</h3>
 <p>继承作为 OOP 里最为人熟知的特性十分实用，却也经常被误用，而且常得等到你用上一段时间，才能察觉到误用所在。超类中会处理所有的通用逻辑，如果某个函数/字段在各个子类中都相同，就可以通过函数/字段上移将它上升到超类中。同样地，如果超类中的某个函数/字段只与一个（或少数几个）子类有关，那么最好将其从超类中挪走，放到真正关心它的子类中去。</p>
 <p>如果一个字段仅仅作为 <strong>类型码</strong> 使用，根据其值来触发不同的行为，那么可以通过以子类取代类型码来重构，如此就可以用多态来处理条件逻辑。例如员工类已经有 &ldquo;全职员工&rdquo; 和 &ldquo;兼职员工&rdquo; 两个子类了，无法根据员工类别再创建不同的子类，就可以使用间接继承的方式：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">Class</span> <span style="color:#a6e22e">Employee</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#a6e22e">Class</span> <span style="color:#a6e22e">Employee</span> {
   <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">type</span>) {
     <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">validateType</span>(<span style="color:#a6e22e">type</span>);
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_name</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">name</span>;
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">type</span>;
+    <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">name</span>;
+    <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">type</span>;
   }
   <span style="color:#a6e22e">validateType</span>(<span style="color:#a6e22e">arg</span>) {
     <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>[<span style="color:#e6db74">&#34;engineer&#34;</span>, <span style="color:#e6db74">&#34;manager&#34;</span>, <span style="color:#e6db74">&#34;salesman&#34;</span>].<span style="color:#a6e22e">includes</span>(<span style="color:#a6e22e">arg</span>)) 
       <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> Error(<span style="color:#e6db74">`Employee cannot be of type </span><span style="color:#e6db74">${</span><span style="color:#a6e22e">arg</span><span style="color:#e6db74">}</span><span style="color:#e6db74">`</span>);
   }
-  <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">type</span>() {<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_type</span>};
-  <span style="color:#a6e22e">set</span> <span style="color:#a6e22e">type</span>(<span style="color:#a6e22e">arg</span>) {<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">arg</span>};
+  <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">type</span>() {<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span>};
+  <span style="color:#a6e22e">set</span> <span style="color:#a6e22e">type</span>(<span style="color:#a6e22e">arg</span>) {<span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">arg</span>};
   <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">capitalizedType</span>() {
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_type</span>.<span style="color:#a6e22e">chatAt</span>(<span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">toUpperCase</span>() <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_type</span>.<span style="color:#a6e22e">substr</span>(<span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">toLowerCase</span>();
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span>.<span style="color:#a6e22e">chatAt</span>(<span style="color:#ae81ff">0</span>).<span style="color:#a6e22e">toUpperCase</span>() <span style="color:#f92672">+</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span>.<span style="color:#a6e22e">substr</span>(<span style="color:#ae81ff">1</span>).<span style="color:#a6e22e">toLowerCase</span>();
   }
   <span style="color:#a6e22e">toString</span>() {
-    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">capitalizedType</span><span style="color:#e6db74">}</span><span style="color:#e6db74">)`</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">name</span><span style="color:#e6db74">}</span><span style="color:#e6db74"> (</span><span style="color:#e6db74">${</span><span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">capitalizedType</span><span style="color:#e6db74">}</span><span style="color:#e6db74">)`</span>;
   }
 }
 </code></pre></div><p>我们可以用对象取代基本类型，使用类 EmployeeType 来取代 Employ 中的 type 属性。然后使用以子类取代类型码，把员工类别代码变成子类：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EmployeeType</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EmployeeType</span> {
   <span style="color:#a6e22e">constructor</span>(<span style="color:#a6e22e">aString</span>) {
-    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_value</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">aString</span>;
+    <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">aString</span>;
   }
-  <span style="color:#a6e22e">toString</span>() {<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_value</span>;}
+  <span style="color:#a6e22e">toString</span>() {<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">value</span>;}
 }
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Engineer</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">EmployType</span> {
   <span style="color:#a6e22e">toString</span>() {<span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;emgineer&#34;</span>;}
@@ -463,7 +463,7 @@
 <span style="color:#75715e">// 在原先的员工类中使用工厂方法
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Employee</span> {
   ...
-  <span style="color:#a6e22e">set</span> <span style="color:#a6e22e">type</span>(<span style="color:#a6e22e">arg</span>) {<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Employee</span>.<span style="color:#a6e22e">createEmployeeType</span>(<span style="color:#a6e22e">arg</span>);}
+  <span style="color:#a6e22e">set</span> <span style="color:#a6e22e">type</span>(<span style="color:#a6e22e">arg</span>) {<span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">type</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">Employee</span>.<span style="color:#a6e22e">createEmployeeType</span>(<span style="color:#a6e22e">arg</span>);}
     <span style="color:#66d9ef">static</span> <span style="color:#a6e22e">createEmployeeType</span>(<span style="color:#a6e22e">aString</span>) {
       <span style="color:#66d9ef">switch</span>(<span style="color:#a6e22e">aString</span>) {
         <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#34;engineer&#34;</span><span style="color:#f92672">:</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#a6e22e">Engineer</span>();
@@ -475,14 +475,14 @@
   ...
 }
 </code></pre></div><p>虽然继承在面向对象的语言中很容易实现，但继承也有短板。其一是继承这张牌只能打一次，只能用于处理超类在一个方向上的变化。其二是继承给类之间引入了非常紧密的关系，任何在超类上的修改，都可能破坏子类。这两个问题用 <strong>委托</strong> 都能解决，对于不同的变化原因，我们可以委托给不同的类。与继承相比，使用委托关系时接口更清晰、耦合更少。</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Order</span> {
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-javascript" data-lang="javascript"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Order</span> {
   <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">daysToShip</span>() {
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_warehouse</span>.<span style="color:#a6e22e">daysToShip</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">warehouse</span>.<span style="color:#a6e22e">daysToShip</span>;
   }
 }
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PriorityOrder</span> <span style="color:#66d9ef">extends</span> <span style="color:#a6e22e">Order</span> {
   <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">daysToShip</span>() {
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_priorityPlan</span>.<span style="color:#a6e22e">daysToShip</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">priorityPlan</span>.<span style="color:#a6e22e">daysToShip</span>;
   }
 }
 
@@ -490,13 +490,13 @@
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Order</span> {
   <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">daysToShip</span>() {
     <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">priorityDelegate</span>) 
-      <span style="color:#f92672">?</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_prorityDelegate</span>.<span style="color:#a6e22e">daysToShip</span>
-      <span style="color:#f92672">:</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_warehouse</span>.<span style="color:#a6e22e">daysToShip</span>;
+      <span style="color:#f92672">?</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">prorityDelegate</span>.<span style="color:#a6e22e">daysToShip</span>
+      <span style="color:#f92672">:</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">warehouse</span>.<span style="color:#a6e22e">daysToShip</span>;
   }
 }
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PriorityOrderDelegate</span> {
   <span style="color:#a6e22e">get</span> <span style="color:#a6e22e">daysToShip</span>() {
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">_priorityPlan</span>.<span style="color:#a6e22e">daysToShip</span>;
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>.<span style="color:#ae81ff">_</span><span style="color:#a6e22e">priorityPlan</span>.<span style="color:#a6e22e">daysToShip</span>;
   }
 }
 </code></pre></div>
