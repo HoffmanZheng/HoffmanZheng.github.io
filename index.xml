@@ -5,8 +5,17 @@
     <description>Recent content in 人间一场大梦 on 人间一场大梦</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 09 Nov 2022 13:19:47 +0100</lastBuildDate>
+    <lastBuildDate>Mon, 19 Dec 2022 13:19:47 +0100</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Drafts</title>
+      <link>https://hoffmanzheng.github.io/draft/</link>
+      <pubDate>Mon, 19 Dec 2022 13:19:47 +0100</pubDate>
+      
+      <guid>https://hoffmanzheng.github.io/draft/</guid>
+      <description></description>
+    </item>
     
     <item>
       <title>Posts</title>

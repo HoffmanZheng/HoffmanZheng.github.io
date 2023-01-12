@@ -57,7 +57,7 @@
     "datePublished": "2022-02-21 13:19:47 \u002b0100 \u002b0100",
     "dateModified" : "2022-02-21 13:19:47 \u002b0100 \u002b0100",
     "url" : "https:\/\/hoffmanzheng.github.io\/2022\/database-couchbase\/",
-    "wordCount" : "512",
+    "wordCount" : "535",
     "keywords" : [ "Database", "人间一场大梦"]
 }
 </script>
@@ -134,7 +134,7 @@
                         <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
                         
                 </span>
-                 <span class="post-word-count">,512 words</span>
+                 <span class="post-word-count">,535 words</span>
         </div>
     </header>
     <div class="post-content">
@@ -212,7 +212,13 @@ SELECT firstjob<span style="color:#f92672">[</span>2<span style="color:#f92672">
 <span style="color:#f92672">{</span>
      <span style="color:#e6db74">&#39;firstjob[2]&#39;</span>: <span style="color:#ae81ff">2006</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="buckets-内存与存储">Buckets, 内存与存储</h3>
+</code></pre></div><p>此外，N1QL 在实现多表关联时有不同的实现方式，它只支持 loopup doc 主键形式 left-to-right 关联，关联的左表需要能够生成右表文档的主键：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">SELECT &lt;select_list&gt;
+FROM Table_A A
+LEFT JOIN Table_B B
+ON KEYS &lt;keys-clause<span style="color:#f92672">(</span>A<span style="color:#f92672">)</span>&gt;
+</code></pre></div><p>参考：<a href="https://dzone.com/articles/visually-explaining-n1ql-joins">Visually Explaining N1QL JOINs</a></p>
+<h3 id="buckets-内存与存储">Buckets, 内存与存储</h3>
 <p>Couchbase 将数据保存在 Bucket 中，Couchbase buckets 在内存和硬盘中都有，而 Ephemeral bucket 作为暂时 bucket 只存在于内存中。bucket 可以设置以 <strong>压缩</strong> 形式存储数据来最大化资源效率，文档也可以（像 Redis 那样）设置一个过期时间。</p>
 <p>Couchbase 使用内存来保证高性能和可扩展性：内存中会存放经常被请求的数据，最近没被使用的数据会被从内存中驱逐出去。多线程的读取和写入提供了数据的同时读取和写入，来保证交高的吞吐量。</p>
 <h4 id="buckets">Buckets</h4>
@@ -379,7 +385,7 @@ SELECT firstjob<span style="color:#f92672">[</span>2<span style="color:#f92672">
     <div class="copyright">
         &copy;
         
-        <span itemprop="copyrightYear">2019 - 2022</span>
+        <span itemprop="copyrightYear">2019 - 2023</span>
         
         <span class="with-love">
     	 <i class="iconfont icon-love"></i> 
