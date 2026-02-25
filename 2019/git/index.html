@@ -1,259 +1,265 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  
-  <link rel="next" href="https://hoffmanzheng.github.io/2019/maven/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2019/git/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           Git 与 GitHub 使用指北 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="Git 与 GitHub 使用指北 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Git 与 GitHub 使用指北 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="本篇介绍实用的工具 Git 及 GitHub 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。
+Git 本地仓库 Git 工作流程：
+"><meta name="keywords" content='Tools'>
+  <meta itemprop="name" content="Git 与 GitHub 使用指北">
+  <meta itemprop="description" content="本篇介绍实用的工具 Git 及 GitHub 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。
+Git 本地仓库 Git 工作流程：">
+  <meta itemprop="datePublished" content="2019-12-26T21:49:47+01:00">
+  <meta itemprop="dateModified" content="2019-12-26T21:49:47+01:00">
+  <meta itemprop="wordCount" content="598">
+  <meta itemprop="keywords" content="Tools"><meta property="og:url" content="https://hoffmanzheng.github.io/2019/git/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="Git 与 GitHub 使用指北">
+  <meta property="og:description" content="本篇介绍实用的工具 Git 及 GitHub 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。
+Git 本地仓库 Git 工作流程：">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2019-12-26T21:49:47+01:00">
+    <meta property="article:modified_time" content="2019-12-26T21:49:47+01:00">
+    <meta property="article:tag" content="Tools">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Git 与 GitHub 使用指北">
+  <meta name="twitter:description" content="本篇介绍实用的工具 Git 及 GitHub 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。
+Git 本地仓库 Git 工作流程：">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2019/git/" title="Git 与 GitHub 使用指北 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/about/" title="" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2019/maven/" title="Maven：生命周期、插件及包管理" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Git 与 GitHub 使用指北",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "Git 与 GitHub 使用指北",
-    "headline" : "Git 与 GitHub 使用指北",
-    "description" : "本篇介绍实用的工具 Git 及 GitHub 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。\nGit 本地仓库 Git 工作流程：\n0. 应用场景  代码版本管理 \/ 多版本代码开发 \/ 多版本代码合并  1. 安装 Git 参考伯克利课程 CS61b 中的教程安装 Git\n2. 配置 Git git config --global user.name \u002b 你的英文名 git config --global user.email \u002b 你的邮箱 git config --global push.default simple git config --global core.quotepath false \/\/ 不会对0×80以上的字符进行quote，中文显示正常。 git config --global core.editor \u0026#34;vim\u0026#34; git config --global core.autocrlf input git config --global --list \/\/ 查看当前配置列表 vi ~\/.gitconfig \/\/ 编辑配置文件 3.",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2019",
-    "datePublished": "2019-12-26 21:49:47 \u002b0100 \u002b0100",
-    "dateModified" : "2019-12-26 21:49:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2019\/git\/",
-    "wordCount" : "610",
-    "keywords" : [ "Tools", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2019\/git\/"
+    },"genre": "posts","keywords": "Tools","wordcount":  598 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2019\/git\/","datePublished": "2019-12-26T21:49:47+01:00","dateModified": "2019-12-26T21:49:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Git 与 GitHub 使用指北</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/study-notes/" class="post-category" title="Category - Study Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Study Notes</a></span></div><div class="post-meta-line"><span title="published on 2019-12-26 21:49:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2019-12-26">2019-12-26</time></span>&nbsp;<span title="598 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 600 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>3 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Git 与 GitHub 使用指北</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2019-12-26 itemprop="datePublished">December 26, 2019</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/study-notes/"> Study notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,610 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#0-应用场景">0. 应用场景</a></li>
+        <li><a href="#1-安装-git">1. 安装 Git</a></li>
+        <li><a href="#2-配置-git">2. 配置 Git</a></li>
+        <li><a href="#3-git-本地仓库">3. Git 本地仓库</a></li>
+        <li><a href="#4-git-分支管理">4. Git 分支管理</a></li>
+        <li><a href="#5-git-合并分支">5. Git 合并分支</a></li>
+        <li><a href="#6-其他操作">6. 其他操作</a></li>
+      </ul>
+    </li>
+  </ul>
 
-        
-            
-        
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#0-应用场景-1">0. 应用场景</a></li>
+        <li><a href="#1-ssh-key-验证身份关联github账号">1. SSH key 验证身份（关联GitHub账号）</a></li>
+        <li><a href="#2-远程仓库操作">2. 远程仓库操作</a></li>
+        <li><a href="#3-github-团队协作">3. GitHub 团队协作</a></li>
+      </ul>
+    </li>
+  </ul>
 
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>本篇介绍实用的工具 Git 及 GitHub 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。</p>
-<h1 id="git-本地仓库">Git 本地仓库</h1>
-<p>Git 工作流程：</p>
-<p><img src="/images/work_process_git.png" alt="git工作流程"></p>
-<h3 id="0-应用场景">0. 应用场景</h3>
-<ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-快捷键设置">1. 快捷键设置</a></li>
+        <li><a href="#2-简化-commit-提交历史">2. 简化 commit 提交历史</a></li>
+        <li><a href="#3-使用-rebase-优化-commit-提交历史">3. 使用 rebase 优化 commit 提交历史</a></li>
+        <li><a href="#4-三种不同的-merge-pull-request-操作">4. 三种不同的 merge pull request 操作</a></li>
+        <li><a href="#5-推荐阅读">5. 推荐阅读</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>本篇介绍实用的工具 Git 及 GitHub 的常用功能及其操作，如：代码的版本控制，远程备份，团队项目协作等。</p>
+<h1 class="heading-element" id="git-本地仓库"><span>Git 本地仓库</span>
+  <a href="#git-%e6%9c%ac%e5%9c%b0%e4%bb%93%e5%ba%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>Git 工作流程：</p>
+<p><img loading="lazy" src='/images/work_process_git.png' alt="git工作流程"></p>
+<h3 class="heading-element" id="0-应用场景"><span>0. 应用场景</span>
+  <a href="#0-%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
 <li>代码版本管理 / 多版本代码开发 / 多版本代码合并</li>
 </ul>
-<h3 id="1-安装-git">1. 安装 Git</h3>
-<p><a href="https://sp18.datastructur.es/materials/lab/lab1setup/windows.html">参考伯克利课程 CS61b 中的教程安装 Git</a></p>
-<h3 id="2-配置-git">2. 配置 Git</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">git config --global user.name + 你的英文名
-git config --global user.email + 你的邮箱
-git config --global push.<span style="color:#66d9ef">default</span> simple
-git config --global core.quotepath false   // 不会对0<span style="color:#960050;background-color:#1e0010">×</span>80以上的字符进行quote<span style="color:#960050;background-color:#1e0010">，</span>中文显示正常<span style="color:#960050;background-color:#1e0010">。</span>
-git config --global core.editor <span style="color:#e6db74">&#34;vim&#34;</span>
-git config --global core.autocrlf input
-git config --global --list                 // 查看当前配置列表
-vi ~/.gitconfig                            // 编辑配置文件
-</code></pre></div><h3 id="3-git-本地仓库">3. Git 本地仓库</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">cd + 目标路径
-git init                              // 初始化，当前目录创建 .git 文件夹
-git add + 文件 / 文件夹 / .            // 选择要提交的内容
-git commit -m <span style="color:#e6db74">&#34;版本信息 / 更新日志&#34;</span>     // 写更新日志，提交代码快照
-git commit                            // 进入默认编辑器vim更新日志
-git log 
-git reflog                            // 查看所有备份记录
-git status
-git reset --hard XXXXXX               // 版本回溯 写commit号前6位
-git reset --hard HEAD^                // 回到上一个版本，可以多加^回到之前的版本。
-</code></pre></div><p>注：</p>
+<h3 class="heading-element" id="1-安装-git"><span>1. 安装 Git</span>
+  <a href="#1-%e5%ae%89%e8%a3%85-git" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://sp18.datastructur.es/materials/lab/lab1setup/windows.html" target="_blank" rel="external nofollow noopener noreferrer">参考伯克利课程 CS61b 中的教程安装 Git</a></p>
+<h3 class="heading-element" id="2-配置-git"><span>2. 配置 Git</span>
+  <a href="#2-%e9%85%8d%e7%bd%ae-git" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>git config --global user.name + 你的英文名
+</span></span><span style="display:flex;"><span>git config --global user.email + 你的邮箱
+</span></span><span style="display:flex;"><span>git config --global push.<span style="color:#66d9ef">default</span> simple
+</span></span><span style="display:flex;"><span>git config --global core.quotepath false   // 不会对0<span style="color:#960050;background-color:#1e0010">×</span>80以上的字符进行quote<span style="color:#960050;background-color:#1e0010">，</span>中文显示正常<span style="color:#960050;background-color:#1e0010">。</span>
+</span></span><span style="display:flex;"><span>git config --global core.editor <span style="color:#e6db74">&#34;vim&#34;</span>
+</span></span><span style="display:flex;"><span>git config --global core.autocrlf input
+</span></span><span style="display:flex;"><span>git config --global --list                 // 查看当前配置列表
+</span></span><span style="display:flex;"><span>vi ~/.gitconfig                            // 编辑配置文件</span></span></code></pre></div><h3 class="heading-element" id="3-git-本地仓库"><span>3. Git 本地仓库</span>
+  <a href="#3-git-%e6%9c%ac%e5%9c%b0%e4%bb%93%e5%ba%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>cd + 目标路径
+</span></span><span style="display:flex;"><span>git init                              // 初始化，当前目录创建 .git 文件夹
+</span></span><span style="display:flex;"><span>git add + 文件 / 文件夹 / .            // 选择要提交的内容
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;版本信息 / 更新日志&#34;</span>     // 写更新日志，提交代码快照
+</span></span><span style="display:flex;"><span>git commit                            // 进入默认编辑器vim更新日志
+</span></span><span style="display:flex;"><span>git log 
+</span></span><span style="display:flex;"><span>git reflog                            // 查看所有备份记录
+</span></span><span style="display:flex;"><span>git status
+</span></span><span style="display:flex;"><span>git reset --hard XXXXXX               // 版本回溯 写commit号前6位
+</span></span><span style="display:flex;"><span>git reset --hard HEAD^                // 回到上一个版本，可以多加^回到之前的版本。</span></span></code></pre></div><p>注：</p>
 <ul>
 <li>可以在目录下新建个 <code>.gitignore</code> 文件，把不需要 Ｇit 管理的文件/文件夹路径写进去。常见的有<code>.idea</code> <code>.vscode</code> <code>out</code> <code>*.iml</code> <code>target/</code> <code>build/</code> <code>.gradle/</code>  等。</li>
 <li>在使用 <code>git reset</code> 回溯版本之前，一定要 <strong>确保当前代码已经 commit 过了</strong>，因为这个操作会使当前没有 commit 的变动消失。</li>
 </ul>
-<h3 id="4-git-分支管理">4. Git 分支管理</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git branch                               // 查看现在存在的分支
-git branch + newBranchName               // 新建分支，把当前代码快照复制到该分支
-git checkout branchName / master         // 切换分支
-history                                  // 查看所有操作记录
-</code></pre></div><h3 id="5-git-合并分支">5. Git 合并分支</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git checkout branchName / master        // 进入要保留的分支
-git merge brachName                     // 将brach合并至当前分支
-git add --&gt; git commit
-git branch -d branchName                // 删除分支
-</code></pre></div><p>注：</p>
+<h3 class="heading-element" id="4-git-分支管理"><span>4. Git 分支管理</span>
+  <a href="#4-git-%e5%88%86%e6%94%af%e7%ae%a1%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git branch                               // 查看现在存在的分支
+</span></span><span style="display:flex;"><span>git branch + newBranchName               // 新建分支，把当前代码快照复制到该分支
+</span></span><span style="display:flex;"><span>git checkout branchName / master         // 切换分支
+</span></span><span style="display:flex;"><span>history                                  // 查看所有操作记录</span></span></code></pre></div><h3 class="heading-element" id="5-git-合并分支"><span>5. Git 合并分支</span>
+  <a href="#5-git-%e5%90%88%e5%b9%b6%e5%88%86%e6%94%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git checkout branchName / master        // 进入要保留的分支
+</span></span><span style="display:flex;"><span>git merge brachName                     // 将brach合并至当前分支
+</span></span><span style="display:flex;"><span>git add --&gt; git commit
+</span></span><span style="display:flex;"><span>git branch -d branchName                // 删除分支</span></span></code></pre></div><p>注：</p>
 <ul>
 <li>合并分支时会检查代码是否有冲突，有冲突的话需要解决冲突，搜索 <code>====</code> 选择要保留的代码，再次合并。</li>
 </ul>
-<h3 id="6-其他操作">6. 其他操作</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">start .                               // 在资源管理器打开当前文件夹
-subl <span style="color:#f92672">(</span>文件 / 文件夹<span style="color:#f92672">)</span>                   // 快速打开sublime
-git rm -r --cached + filename         // 删除add的路径
-git add fileName --&gt; git stash        // 暂时不像提交代码（通灵术）
-git stash pop
-</code></pre></div><h1 id="github-远程仓库">GitHub 远程仓库</h1>
-<h3 id="0-应用场景-1">0. 应用场景</h3>
-<ul>
+<h3 class="heading-element" id="6-其他操作"><span>6. 其他操作</span>
+  <a href="#6-%e5%85%b6%e4%bb%96%e6%93%8d%e4%bd%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>start .                               // 在资源管理器打开当前文件夹
+</span></span><span style="display:flex;"><span>subl <span style="color:#f92672">(</span>文件 / 文件夹<span style="color:#f92672">)</span>                   // 快速打开sublime
+</span></span><span style="display:flex;"><span>git rm -r --cached + filename         // 删除add的路径
+</span></span><span style="display:flex;"><span>git add fileName --&gt; git stash        // 暂时不像提交代码（通灵术）
+</span></span><span style="display:flex;"><span>git stash pop</span></span></code></pre></div><h1 class="heading-element" id="github-远程仓库"><span>GitHub 远程仓库</span>
+  <a href="#github-%e8%bf%9c%e7%a8%8b%e4%bb%93%e5%ba%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="0-应用场景-1"><span>0. 应用场景</span>
+  <a href="#0-%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
 <li>代码云端备份 / 代码多地共享 / 团队协作</li>
 </ul>
-<h3 id="1-ssh-key-验证身份关联github账号">1. SSH key 验证身份（关联GitHub账号）</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C + 你的邮箱           // 生成公钥文件
-cat ~/.ssh/id_rsa.pub                          // 打开生成的公钥文件，复制公钥到网页
-ssh -T git@github.com                          // 测试配对成功
-</code></pre></div><p>注：</p>
+<h3 class="heading-element" id="1-ssh-key-验证身份关联github账号"><span>1. SSH key 验证身份（关联GitHub账号）</span>
+  <a href="#1-ssh-key-%e9%aa%8c%e8%af%81%e8%ba%ab%e4%bb%bd%e5%85%b3%e8%81%94github%e8%b4%a6%e5%8f%b7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C + 你的邮箱           // 生成公钥文件
+</span></span><span style="display:flex;"><span>cat ~/.ssh/id_rsa.pub                          // 打开生成的公钥文件，复制公钥到网页
+</span></span><span style="display:flex;"><span>ssh -T git@github.com                          // 测试配对成功</span></span></code></pre></div><p>注：</p>
 <ul>
 <li>此操作旨在将本地 Git 与 GitHub 账号建立连接，在本地创建 <code>ssh key</code> 来创建连接，生成公钥、私钥，复制粘贴公钥到 GitHub上，<code>$cat id_rsa.pub</code> 显示出公钥复制粘贴到 GitHub 上，<code>头像-&gt; setting-&gt; SSH and GPG keys-&gt; new ssh key</code>，这样就建立好了远程仓库和本地仓库的连接。</li>
 <li>存在远程仓库，如何与本地建立连接：克隆该仓库的 ssh 地址。</li>
 <li>存在本地项目，如何与远程仓库建立连接：初始化本地仓库 &mdash;&gt; <code>git remote add + 远程仓库ssh地址</code></li>
 </ul>
-<h3 id="2-远程仓库操作">2. 远程仓库操作</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git remote add origin git@xxxxxxx（ssh）       
-git push -u origin master                      // 推送本地master分支到远程master分支
-git pull                                       // 从远程同步到本地
-// 上传其他分支
-git push origin branchName:branchName
-git checkout branchName --&gt; git push -u origin branchName
-git clone git@xxxxxx                           // 下载别人的代码，只能用 https
-git remote -v                                  // 查看链接的远程仓库
-git remote remove brachName                    // 删除仓库
-git remote set-url &lt;name&gt; https：//xx          // 重置，如果之前弄错了 origin
-</code></pre></div><p>想要删除远程仓库文件夹，可以这么操作：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git rm -r --cached + &lt;filename&gt;
-git commit -m <span style="color:#e6db74">&#34;delete remote file xx&#34;</span>
-git push -u origin master      // 然后把该文件路径加到 .gitignore 中去
-</code></pre></div><p>注：</p>
+<h3 class="heading-element" id="2-远程仓库操作"><span>2. 远程仓库操作</span>
+  <a href="#2-%e8%bf%9c%e7%a8%8b%e4%bb%93%e5%ba%93%e6%93%8d%e4%bd%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git remote add origin git@xxxxxxx（ssh）       
+</span></span><span style="display:flex;"><span>git push -u origin master                      // 推送本地master分支到远程master分支
+</span></span><span style="display:flex;"><span>git pull                                       // 从远程同步到本地
+</span></span><span style="display:flex;"><span>// 上传其他分支
+</span></span><span style="display:flex;"><span>git push origin branchName:branchName
+</span></span><span style="display:flex;"><span>git checkout branchName --&gt; git push -u origin branchName
+</span></span><span style="display:flex;"><span>git clone git@xxxxxx                           // 下载别人的代码，只能用 https
+</span></span><span style="display:flex;"><span>git remote -v                                  // 查看链接的远程仓库
+</span></span><span style="display:flex;"><span>git remote remove brachName                    // 删除仓库
+</span></span><span style="display:flex;"><span>git remote set-url &lt;name&gt; https：//xx          // 重置，如果之前弄错了 origin</span></span></code></pre></div><p>想要删除远程仓库文件夹，可以这么操作：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git rm -r --cached + &lt;filename&gt;
+</span></span><span style="display:flex;"><span>git commit -m <span style="color:#e6db74">&#34;delete remote file xx&#34;</span>
+</span></span><span style="display:flex;"><span>git push -u origin master      // 然后把该文件路径加到 .gitignore 中去</span></span></code></pre></div><p>注：</p>
 <ul>
 <li>origin为远程仓库的名字，可以更改但不推荐。</li>
-<li><a href="https://github.com/sun-shadow/Surf_the_Internet/blob/master/%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%AF%87.md">clone下载速度很慢怎么办？</a></li>
+<li><a href="https://github.com/sun-shadow/Surf_the_Internet/blob/master/%E5%91%BD%E4%BB%A4%E8%A1%8C%E7%AF%87.md" target="_blank" rel="external nofollow noopener noreferrer">clone下载速度很慢怎么办？</a></li>
 <li>GitHub国内的替代品有：
 <ul>
-<li><a href="https://dev.tencent.com/">腾讯云开发者平台</a></li>
-<li><a href="https://gitee.com/">码云Gitee</a></li>
-<li><a href="https://about.gitlab.com/">Gitlab</a></li>
+<li><a href="https://dev.tencent.com/" target="_blank" rel="external nofollow noopener noreferrer">腾讯云开发者平台</a></li>
+<li><a href="https://gitee.com/" target="_blank" rel="external nofollow noopener noreferrer">码云Gitee</a></li>
+<li><a href="https://about.gitlab.com/" target="_blank" rel="external nofollow noopener noreferrer">Gitlab</a></li>
 </ul>
 </li>
 </ul>
-<h3 id="3-github-团队协作">3. GitHub 团队协作</h3>
-<ul>
+<h3 class="heading-element" id="3-github-团队协作"><span>3. GitHub 团队协作</span>
+  <a href="#3-github-%e5%9b%a2%e9%98%9f%e5%8d%8f%e4%bd%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
 <li>在拥有对方仓库 读/写 权限的情况下</li>
 </ul>
 <p>将对方仓库 <code>clone</code> 到本地进行修改，在对方仓库在新建 branch 进行 commit、push 操作，随后提交 <code>pull request</code> ，备注修改内容及意见。</p>
@@ -282,35 +288,46 @@ git push -u origin master      // 然后把该文件路径加到 .gitignore 中�
 </ul>
 </li>
 </ul>
-<h1 id="实用-git-技巧">实用 Git 技巧</h1>
-<h3 id="1-快捷键设置">1. 快捷键设置</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">vi ~/.bash_profile
-alias ga<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git add&#34;</span>
-alias gc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git commit -v&#34;</span>
-alias gp<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git push&#34;</span>
-alias gst<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git status&#34;</span>
-alias gco<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git checkout&#34;</span>
-alias glog<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset&#39; --abbrev-commit --date=relative&#34;</span> 
-// 美化git log输出为漂亮的单行形式
-alias glo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git log --oneline&#34;</span>
-source ~/.bash_profile                                    // 让它生效
-</code></pre></div><h3 id="2-简化-commit-提交历史">2. 简化 commit 提交历史</h3>
-<p>在使用 Git 备份的时候，常常会遇到本次的修改对上一次的改动并不大，如果按照正常的 commit 流程的话，就会造成 commit 提交历史过多，扰乱思路难以选择的情况。因此，对于改动不大的提交，可以使用 ——amend 命令</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git commit --amend
-</code></pre></div><p>这将对上一次的 commit 做出修改并合并，是用新的 commit 替换掉原来的 commit，commit ID 会发生变化，有助于简化 commit 提交历史。</p>
+<h1 class="heading-element" id="实用-git-技巧"><span>实用 Git 技巧</span>
+  <a href="#%e5%ae%9e%e7%94%a8-git-%e6%8a%80%e5%b7%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="1-快捷键设置"><span>1. 快捷键设置</span>
+  <a href="#1-%e5%bf%ab%e6%8d%b7%e9%94%ae%e8%ae%be%e7%bd%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vi ~/.bash_profile
+</span></span><span style="display:flex;"><span>alias ga<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git add&#34;</span>
+</span></span><span style="display:flex;"><span>alias gc<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git commit -v&#34;</span>
+</span></span><span style="display:flex;"><span>alias gp<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git push&#34;</span>
+</span></span><span style="display:flex;"><span>alias gst<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git status&#34;</span>
+</span></span><span style="display:flex;"><span>alias gco<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git checkout&#34;</span>
+</span></span><span style="display:flex;"><span>alias glog<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset&#39; --abbrev-commit --date=relative&#34;</span> 
+</span></span><span style="display:flex;"><span>// 美化git log输出为漂亮的单行形式
+</span></span><span style="display:flex;"><span>alias glo<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;git log --oneline&#34;</span>
+</span></span><span style="display:flex;"><span>source ~/.bash_profile                                    // 让它生效</span></span></code></pre></div><h3 class="heading-element" id="2-简化-commit-提交历史"><span>2. 简化 commit 提交历史</span>
+  <a href="#2-%e7%ae%80%e5%8c%96-commit-%e6%8f%90%e4%ba%a4%e5%8e%86%e5%8f%b2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在使用 Git 备份的时候，常常会遇到本次的修改对上一次的改动并不大，如果按照正常的 commit 流程的话，就会造成 commit 提交历史过多，扰乱思路难以选择的情况。因此，对于改动不大的提交，可以使用 ——amend 命令</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git commit --amend</span></span></code></pre></div><p>这将对上一次的 commit 做出修改并合并，是用新的 commit 替换掉原来的 commit，commit ID 会发生变化，有助于简化 commit 提交历史。</p>
 <p>注意：不要修改已经 push 的 commit，除非是在自己的分支。</p>
-<h3 id="3-使用-rebase-优化-commit-提交历史">3. 使用 rebase 优化 commit 提交历史</h3>
-<p>对于已经提交的，杂乱无章的 commit，可以使用 rebase 来进行整理及优化。由于 rebase 操作较为危险，推荐先将主分支内容复制到新的分支进行操作。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git rebase -i HEAD~11        // interactive，修改当前commit前11个提交
-</code></pre></div><p>进入 rebase 交互界面后，提交历史的顺序会倒置，最新的提交在最下面，个人常用的优化选项为 fixup 和 edit，将左侧 pick 更改为相应的优化选项，保存退出后就进入优化流程。</p>
-<p><img src="/images/rebase%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C.png" alt=""></p>
+<h3 class="heading-element" id="3-使用-rebase-优化-commit-提交历史"><span>3. 使用 rebase 优化 commit 提交历史</span>
+  <a href="#3-%e4%bd%bf%e7%94%a8-rebase-%e4%bc%98%e5%8c%96-commit-%e6%8f%90%e4%ba%a4%e5%8e%86%e5%8f%b2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>对于已经提交的，杂乱无章的 commit，可以使用 rebase 来进行整理及优化。由于 rebase 操作较为危险，推荐先将主分支内容复制到新的分支进行操作。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git rebase -i HEAD~11        // interactive，修改当前commit前11个提交</span></span></code></pre></div><p>进入 rebase 交互界面后，提交历史的顺序会倒置，最新的提交在最下面，个人常用的优化选项为 fixup 和 edit，将左侧 pick 更改为相应的优化选项，保存退出后就进入优化流程。</p>
+<p><img loading="lazy" src='/images/rebase具体操作.png' alt="/images/rebase具体操作.png"></p>
 <p>进入优化流程后，分条修改 commit 内容，之后 continue 继续，直到走完全部的 rebase 流程。</p>
-<p><img src="/images/rebase%E6%B5%81%E7%A8%8B.png" alt=""></p>
+<p><img loading="lazy" src='/images/rebase流程.png' alt="/images/rebase流程.png"></p>
 <p>将优化后的 commit push 到 GitHub：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">git push -f rebaseOptimizeCommit:master
-</code></pre></div><h3 id="4-三种不同的-merge-pull-request-操作">4. 三种不同的 merge pull request 操作</h3>
-<p>在提交的 pull request 通过测试后，会进入选择 Merge pull request 的界面选择具体的合并方式：</p>
-<p><img src="/images/%E4%B8%89%E7%A7%8Dmerge2.png" alt="三种不同的 merge pull request"></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>git push -f rebaseOptimizeCommit:master</span></span></code></pre></div><h3 class="heading-element" id="4-三种不同的-merge-pull-request-操作"><span>4. 三种不同的 merge pull request 操作</span>
+  <a href="#4-%e4%b8%89%e7%a7%8d%e4%b8%8d%e5%90%8c%e7%9a%84-merge-pull-request-%e6%93%8d%e4%bd%9c" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在提交的 pull request 通过测试后，会进入选择 Merge pull request 的界面选择具体的合并方式：</p>
+<p><img loading="lazy" src='/images/三种merge2.png' alt="三种不同的 merge pull request"></p>
 <ul>
 <li>
 <p><code>Create a merge commit</code>：会保留该 pull request 中的所有 commit 合并至主干，并额外产生一个 merge commit，之后在 git 的提交历史中可以看到所有的 commit 历史记录。</p>
@@ -323,103 +340,85 @@ source ~/.bash_profile                                    // 让它生效
 <p><code>Rebase and merge</code>：可手动选择需要 合并 / 保留 的 commit，并保留提交者的作者信息。直接把提交的几个 commit 平移到主分支上来。</p>
 </li>
 </ul>
-<h3 id="5-推荐阅读">5. 推荐阅读</h3>
-<p><a href="https://mp.weixin.qq.com/s/XGwAZ-o4WT5FxN_PYXFEXw">Git 如何优雅地回退代码</a></p>
+<h3 class="heading-element" id="5-推荐阅读"><span>5. 推荐阅读</span>
+  <a href="#5-%e6%8e%a8%e8%8d%90%e9%98%85%e8%af%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://mp.weixin.qq.com/s/XGwAZ-o4WT5FxN_PYXFEXw" target="_blank" rel="external nofollow noopener noreferrer">Git 如何优雅地回退代码</a></p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2019-12-26 21:49:47">Updated on 2019-12-26&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2019/git/" data-title="Git 与 GitHub 使用指北" data-hashtags="Tools"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2019/git/" data-hashtag="Tools"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2019/git/" data-title="Git 与 GitHub 使用指北"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2019/git/>https://hoffmanzheng.github.io/2019/git/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/tools/">
-                    #Tools</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-         
-        
-        <a href="https://hoffmanzheng.github.io/2019/maven/" class="next" rel="next" title="Maven：生命周期、插件及包管理">Maven：生命周期、插件及包管理&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/tools/" class="post-tag" title="Tags - Tools">Tools</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2019/maven/" class="post-nav-item" rel="next" title="Maven：生命周期、插件及包管理">Maven：生命周期、插件及包管理<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#0-应用场景">0. 应用场景</a></li>
+        <li><a href="#1-安装-git">1. 安装 Git</a></li>
+        <li><a href="#2-配置-git">2. 配置 Git</a></li>
+        <li><a href="#3-git-本地仓库">3. Git 本地仓库</a></li>
+        <li><a href="#4-git-分支管理">4. Git 分支管理</a></li>
+        <li><a href="#5-git-合并分支">5. Git 合并分支</a></li>
+        <li><a href="#6-其他操作">6. 其他操作</a></li>
+      </ul>
+    </li>
+  </ul>
 
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#0-应用场景-1">0. 应用场景</a></li>
+        <li><a href="#1-ssh-key-验证身份关联github账号">1. SSH key 验证身份（关联GitHub账号）</a></li>
+        <li><a href="#2-远程仓库操作">2. 远程仓库操作</a></li>
+        <li><a href="#3-github-团队协作">3. GitHub 团队协作</a></li>
+      </ul>
+    </li>
+  </ul>
 
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-快捷键设置">1. 快捷键设置</a></li>
+        <li><a href="#2-简化-commit-提交历史">2. 简化 commit 提交历史</a></li>
+        <li><a href="#3-使用-rebase-优化-commit-提交历史">3. 使用 rebase 优化 commit 提交历史</a></li>
+        <li><a href="#4-三种不同的-merge-pull-request-操作">4. 三种不同的 merge pull request 操作</a></li>
+        <li><a href="#5-推荐阅读">5. 推荐阅读</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/539f1640a56b4567558f0231450c7688.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

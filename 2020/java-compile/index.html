@@ -1,561 +1,478 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2020/java-encode/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2020/java-classloader/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/java-compile/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           Javac 编译原理与 class 文件结构 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="Javac 编译原理与 class 文件结构 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Javac 编译原理与 Class 文件结构 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="JVM 让 Java 成为了一次编译，到处运行，具有平台无关性的高级语言。要让 Java 代码跑在 JVM 中少不了 Javac 编译器，它把人类能理解的 Java 源代码语言翻译成 JVM 容易理解的字节码（将 .java 文件转换成 .class 文件）。某种意义上来说，Javac 编译器的存在使 Java 语言向开发者屏蔽了很多与机器相关的细节，JVM 使 Java 语言的执行和平台无关，这才成就了 Java 的繁荣。
+本篇以 《深入分析 Java Web 技术内幕》 第四章 Javac 编译原理 及第五章 深入 class 文件结构 的内容为参考，讲解 Javac 编译器的基本结构，Javac 的工作原理，class 文件结构等。
+Javac 编译器的基本结构 "><meta name="keywords" content='Java'>
+  <meta itemprop="name" content="Javac 编译原理与 class 文件结构">
+  <meta itemprop="description" content="JVM 让 Java 成为了一次编译，到处运行，具有平台无关性的高级语言。要让 Java 代码跑在 JVM 中少不了 Javac 编译器，它把人类能理解的 Java 源代码语言翻译成 JVM 容易理解的字节码（将 .java 文件转换成 .class 文件）。某种意义上来说，Javac 编译器的存在使 Java 语言向开发者屏蔽了很多与机器相关的细节，JVM 使 Java 语言的执行和平台无关，这才成就了 Java 的繁荣。
+本篇以 《深入分析 Java Web 技术内幕》 第四章 Javac 编译原理 及第五章 深入 class 文件结构 的内容为参考，讲解 Javac 编译器的基本结构，Javac 的工作原理，class 文件结构等。
+Javac 编译器的基本结构">
+  <meta itemprop="datePublished" content="2020-09-05T09:19:47+01:00">
+  <meta itemprop="dateModified" content="2020-09-05T09:19:47+01:00">
+  <meta itemprop="wordCount" content="1063">
+  <meta itemprop="keywords" content="Java"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/java-compile/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="Javac 编译原理与 class 文件结构">
+  <meta property="og:description" content="JVM 让 Java 成为了一次编译，到处运行，具有平台无关性的高级语言。要让 Java 代码跑在 JVM 中少不了 Javac 编译器，它把人类能理解的 Java 源代码语言翻译成 JVM 容易理解的字节码（将 .java 文件转换成 .class 文件）。某种意义上来说，Javac 编译器的存在使 Java 语言向开发者屏蔽了很多与机器相关的细节，JVM 使 Java 语言的执行和平台无关，这才成就了 Java 的繁荣。
+本篇以 《深入分析 Java Web 技术内幕》 第四章 Javac 编译原理 及第五章 深入 class 文件结构 的内容为参考，讲解 Javac 编译器的基本结构，Javac 的工作原理，class 文件结构等。
+Javac 编译器的基本结构">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-09-05T09:19:47+01:00">
+    <meta property="article:modified_time" content="2020-09-05T09:19:47+01:00">
+    <meta property="article:tag" content="Java">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Javac 编译原理与 class 文件结构">
+  <meta name="twitter:description" content="JVM 让 Java 成为了一次编译，到处运行，具有平台无关性的高级语言。要让 Java 代码跑在 JVM 中少不了 Javac 编译器，它把人类能理解的 Java 源代码语言翻译成 JVM 容易理解的字节码（将 .java 文件转换成 .class 文件）。某种意义上来说，Javac 编译器的存在使 Java 语言向开发者屏蔽了很多与机器相关的细节，JVM 使 Java 语言的执行和平台无关，这才成就了 Java 的繁荣。
+本篇以 《深入分析 Java Web 技术内幕》 第四章 Javac 编译原理 及第五章 深入 class 文件结构 的内容为参考，讲解 Javac 编译器的基本结构，Javac 的工作原理，class 文件结构等。
+Javac 编译器的基本结构">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/java-compile/" title="Javac 编译原理与 class 文件结构 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2020/java-encode/" title="深入分析 Java Web 中的中文编码问题" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/java-classloader/" title="深入分析 ClassLoader 工作机制" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Javac 编译原理与 class 文件结构",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "Javac 编译原理与 class 文件结构",
-    "headline" : "Javac 编译原理与 class 文件结构",
-    "description" : "JVM 让 Java 成为了一次编译，到处运行，具有平台无关性的高级语言。要让 Java 代码跑在 JVM 中少不了 Javac 编译器，它把人类能理解的 Java 源代码语言翻译成 JVM 容易理解的字节码（将 .java 文件转换成 .class 文件）。某种意义上来说，Javac 编译器的存在使 Java 语言向开发者屏蔽了很多与机器相关的细节，JVM 使 Java 语言的执行和平台无关，这才成就了 Java 的繁荣。\n本篇以 《深入分析 Java Web 技术内幕》 第四章 Javac 编译原理 及第五章 深入 class 文件结构 的内容为参考，讲解 Javac 编译器的基本结构，Javac 的工作原理，class 文件结构等。\nJavac 编译器的基本结构 Javac 编译器的作用就是将符合 Java 语言规范的源代码转化成符合 Java 虚拟机规范的 Java 字节码，是从一个语言规范到另一个语言规范的转化，这大概需要以下几个步骤：\n   编译过程 步骤     词法分析过程 识别源代码中的语法关键词，形成 Token 流   语法分析过程 检查关键词组合是否符合 Java 语言规范，形成一个抽象语法树   语义分析过程 把一些难懂的、复杂的语法转化成更加简单的语法，形成一个注解过后的抽象语法树   字节码生成 根据注解过后的抽象语法树生成字节码    词法分析过程 在 Javac 编译一个类之前，会先一个字节一个字节地读取源代码，找出其中的语法关键词，如 if、else、for、while 等，最后形成一些规范化的 Token 流，就像在人类语言中，分辨一句话中的动词、名词、标点符号等。",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2020",
-    "datePublished": "2020-09-05 09:19:47 \u002b0100 \u002b0100",
-    "dateModified" : "2020-09-05 09:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/java-compile\/",
-    "wordCount" : "1057",
-    "keywords" : [ "Java", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/java-compile\/"
+    },"genre": "posts","keywords": "Java","wordcount":  1063 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2020\/java-compile\/","datePublished": "2020-09-05T09:19:47+01:00","dateModified": "2020-09-05T09:19:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Javac 编译原理与 Class 文件结构</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/reading-notes/" class="post-category" title="Category - Reading Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Reading Notes</a></span></div><div class="post-meta-line"><span title="published on 2020-09-05 09:19:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2020-09-05">2020-09-05</time></span>&nbsp;<span title="1063 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 1100 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>5 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Javac 编译原理与 class 文件结构</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2020-09-05 itemprop="datePublished">September 5, 2020</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,1057 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
-
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>JVM 让 Java 成为了一次编译，到处运行，具有平台无关性的高级语言。要让 Java 代码跑在 JVM 中少不了 Javac 编译器，它把人类能理解的 Java 源代码语言翻译成 JVM 容易理解的字节码（将 .java 文件转换成 .class 文件）。某种意义上来说，Javac 编译器的存在使 Java 语言向开发者屏蔽了很多与机器相关的细节，JVM 使 Java 语言的执行和平台无关，这才成就了 Java 的繁荣。</p>
-<p>本篇以 <a href="https://book.douban.com/subject/25953851/">《深入分析 Java Web 技术内幕》</a> 第四章 Javac 编译原理 及第五章 深入 class 文件结构 的内容为参考，讲解 Javac 编译器的基本结构，Javac 的工作原理，class 文件结构等。</p>
-<h3 id="javac-编译器的基本结构">Javac 编译器的基本结构</h3>
-<p><img src="/images/compile.jpg" alt=""></p>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#javac-编译器的基本结构">Javac 编译器的基本结构</a></li>
+        <li><a href="#词法分析过程">词法分析过程</a></li>
+        <li><a href="#语法分析过程">语法分析过程</a></li>
+        <li><a href="#语义分析过程">语义分析过程</a></li>
+        <li><a href="#class-文件结构">Class 文件结构</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>JVM 让 Java 成为了一次编译，到处运行，具有平台无关性的高级语言。要让 Java 代码跑在 JVM 中少不了 Javac 编译器，它把人类能理解的 Java 源代码语言翻译成 JVM 容易理解的字节码（将 .java 文件转换成 .class 文件）。某种意义上来说，Javac 编译器的存在使 Java 语言向开发者屏蔽了很多与机器相关的细节，JVM 使 Java 语言的执行和平台无关，这才成就了 Java 的繁荣。</p>
+<p>本篇以 <a href="https://book.douban.com/subject/25953851/" target="_blank" rel="external nofollow noopener noreferrer">《深入分析 Java Web 技术内幕》</a> 第四章 Javac 编译原理 及第五章 深入 class 文件结构 的内容为参考，讲解 Javac 编译器的基本结构，Javac 的工作原理，class 文件结构等。</p>
+<h3 class="heading-element" id="javac-编译器的基本结构"><span>Javac 编译器的基本结构</span>
+  <a href="#javac-%e7%bc%96%e8%af%91%e5%99%a8%e7%9a%84%e5%9f%ba%e6%9c%ac%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><img loading="lazy" src='/images/compile.jpg' alt="/images/compile.jpg"></p>
 <p>Javac 编译器的作用就是将符合 Java 语言规范的源代码转化成符合 Java 虚拟机规范的 Java 字节码，是从一个语言规范到另一个语言规范的转化，这大概需要以下几个步骤：</p>
-<table>
-<thead>
-<tr>
-<th>编译过程</th>
-<th>步骤</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>词法分析过程</td>
-<td>识别源代码中的语法关键词，形成 Token 流</td>
-</tr>
-<tr>
-<td>语法分析过程</td>
-<td>检查关键词组合是否符合 Java 语言规范，形成一个抽象语法树</td>
-</tr>
-<tr>
-<td>语义分析过程</td>
-<td>把一些难懂的、复杂的语法转化成更加简单的语法，形成一个注解过后的抽象语法树</td>
-</tr>
-<tr>
-<td>字节码生成</td>
-<td>根据注解过后的抽象语法树生成字节码</td>
-</tr>
-</tbody>
-</table>
-<h3 id="词法分析过程">词法分析过程</h3>
-<p>在 Javac 编译一个类之前，会先一个字节一个字节地读取源代码，找出其中的语法关键词，如 if、else、for、while 等，最后形成一些规范化的 Token 流，就像在人类语言中，分辨一句话中的动词、名词、标点符号等。</p>
-<p>从 <a href="https://injdk.cn">Java I tell you-爪哇我话你知</a> 上选择 AdoptOpenJDK 下载后，即可得到含 sun 包源码的 OpenJDK，词法相关的类大多在 <code>com.sun.tools.javac.parser</code> 包下，类结构如下图所示。两个由 Factory 生成的实现类 Scanner 和 JavacParser 负责整个词法分析的过程控制。<code>JavacParser</code> 规定了哪些词是符合 Java 语言规范的，而具体的读取和归类不同词法的操作由 <code>Scanner</code> 完成，它会逐个读取 Java 源文件的单个字符，然后解析出符合 Java 语言规范的 Token 序列。<code>Token</code> 规定了所有 Java 语言的合法关键词，<code>Names</code> 用来存储和表示解析后的词法。</p>
-<p><img src="/images/javacScanner.png" alt=""></p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>编译过程</th>
+            <th>步骤</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>词法分析过程</td>
+            <td>识别源代码中的语法关键词，形成 Token 流</td>
+        </tr>
+        <tr>
+            <td>语法分析过程</td>
+            <td>检查关键词组合是否符合 Java 语言规范，形成一个抽象语法树</td>
+        </tr>
+        <tr>
+            <td>语义分析过程</td>
+            <td>把一些难懂的、复杂的语法转化成更加简单的语法，形成一个注解过后的抽象语法树</td>
+        </tr>
+        <tr>
+            <td>字节码生成</td>
+            <td>根据注解过后的抽象语法树生成字节码</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 class="heading-element" id="词法分析过程"><span>词法分析过程</span>
+  <a href="#%e8%af%8d%e6%b3%95%e5%88%86%e6%9e%90%e8%bf%87%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>在 Javac 编译一个类之前，会先一个字节一个字节地读取源代码，找出其中的语法关键词，如 if、else、for、while 等，最后形成一些规范化的 Token 流，就像在人类语言中，分辨一句话中的动词、名词、标点符号等。</p>
+<p>从 <a href="https://injdk.cn" target="_blank" rel="external nofollow noopener noreferrer">Java I tell you-爪哇我话你知</a> 上选择 AdoptOpenJDK 下载后，即可得到含 sun 包源码的 OpenJDK，词法相关的类大多在 <code>com.sun.tools.javac.parser</code> 包下，类结构如下图所示。两个由 Factory 生成的实现类 Scanner 和 JavacParser 负责整个词法分析的过程控制。<code>JavacParser</code> 规定了哪些词是符合 Java 语言规范的，而具体的读取和归类不同词法的操作由 <code>Scanner</code> 完成，它会逐个读取 Java 源文件的单个字符，然后解析出符合 Java 语言规范的 Token 序列。<code>Token</code> 规定了所有 Java 语言的合法关键词，<code>Names</code> 用来存储和表示解析后的词法。</p>
+<p><img loading="lazy" src='/images/javacScanner.png' alt="/images/javacScanner.png"></p>
 <p>词法分析过程是在 JavacParser 的 parseCompilationUnit 方法中完成的，源码如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> JCTree<span style="color:#f92672">.</span><span style="color:#a6e22e">JCCompilationUnit</span> <span style="color:#a6e22e">parseCompilationUnit</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-    Token firstToken <span style="color:#f92672">=</span> token<span style="color:#f92672">;</span>
-    JCExpression pid <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-    JCModifiers mods <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">boolean</span> consumedToplevelDoc <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">boolean</span> seenImport <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">boolean</span> seenPackage <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    List<span style="color:#f92672">&lt;</span>JCAnnotation<span style="color:#f92672">&gt;</span> packageAnnotations <span style="color:#f92672">=</span> List<span style="color:#f92672">.</span><span style="color:#a6e22e">nil</span><span style="color:#f92672">();</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> MONKEYS_AT<span style="color:#f92672">)</span>  <span style="color:#75715e">// 解析注解 @
-</span><span style="color:#75715e"></span>    	mods <span style="color:#f92672">=</span> modifiersOpt<span style="color:#f92672">();</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> PACKAGE<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">// 解析 package 声明
-</span><span style="color:#75715e"></span>        seenPackage <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mods <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            checkNoMods<span style="color:#f92672">(</span>mods<span style="color:#f92672">.</span><span style="color:#a6e22e">flags</span><span style="color:#f92672">);</span>
-            packageAnnotations <span style="color:#f92672">=</span> mods<span style="color:#f92672">.</span><span style="color:#a6e22e">annotations</span><span style="color:#f92672">;</span>
-            mods <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-    	<span style="color:#f92672">}</span>
-        nextToken<span style="color:#f92672">();</span>
-        pid <span style="color:#f92672">=</span> qualident<span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
-        accept<span style="color:#f92672">(</span>SEMI<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-    ListBuffer<span style="color:#f92672">&lt;</span>JCTree<span style="color:#f92672">&gt;</span> defs <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListBuffer<span style="color:#f92672">&lt;</span>JCTree<span style="color:#f92672">&gt;();</span>
-    <span style="color:#66d9ef">boolean</span> checkForImports <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">boolean</span> firstTypeDecl <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">!=</span> EOF<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span> <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span> <span style="color:#f92672">&lt;=</span> endPosTable<span style="color:#f92672">.</span><span style="color:#a6e22e">errorEndPos</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#75715e">// error recovery
-</span><span style="color:#75715e"></span>            skip<span style="color:#f92672">(</span>checkForImports<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>  <span style="color:#75715e">// 跳过错误字符
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> EOF<span style="color:#f92672">)</span>
-            	<span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-    	<span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>checkForImports <span style="color:#f92672">&amp;&amp;</span> mods <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> IMPORT<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// 解析 import 声明
-</span><span style="color:#75715e"></span>            seenImport <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-            defs<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>importDeclaration<span style="color:#f92672">());</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            Comment docComment <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">comment</span><span style="color:#f92672">(</span>CommentStyle<span style="color:#f92672">.</span><span style="color:#a6e22e">JAVADOC</span><span style="color:#f92672">);</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>firstTypeDecl <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>seenImport <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>seenPackage<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                docComment <span style="color:#f92672">=</span> firstToken<span style="color:#f92672">.</span><span style="color:#a6e22e">comment</span><span style="color:#f92672">(</span>CommentStyle<span style="color:#f92672">.</span><span style="color:#a6e22e">JAVADOC</span><span style="color:#f92672">);</span>
-                consumedToplevelDoc <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-        	<span style="color:#f92672">}</span>
-            JCTree def <span style="color:#f92672">=</span> typeDeclaration<span style="color:#f92672">(</span>mods<span style="color:#f92672">,</span> docComment<span style="color:#f92672">);</span>  <span style="color:#75715e">// 解析 class 类主体
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>def <span style="color:#66d9ef">instanceof</span> JCExpressionStatement<span style="color:#f92672">)</span>
-                def <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>JCExpressionStatement<span style="color:#f92672">)</span>def<span style="color:#f92672">).</span><span style="color:#a6e22e">expr</span><span style="color:#f92672">;</span>
-                defs<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>def<span style="color:#f92672">);</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>def <span style="color:#66d9ef">instanceof</span> JCClassDecl<span style="color:#f92672">)</span>
-                checkForImports <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-            mods <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-            firstTypeDecl <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    JCTree<span style="color:#f92672">.</span><span style="color:#a6e22e">JCCompilationUnit</span> toplevel <span style="color:#f92672">=</span> F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>firstToken<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">).</span><span style="color:#a6e22e">TopLevel</span><span style="color:#f92672">(</span>packageAnnotations<span style="color:#f92672">,</span> pid<span style="color:#f92672">,</span> defs<span style="color:#f92672">.</span><span style="color:#a6e22e">toList</span><span style="color:#f92672">());</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>consumedToplevelDoc<span style="color:#f92672">)</span>
-    	attach<span style="color:#f92672">(</span>toplevel<span style="color:#f92672">,</span> firstToken<span style="color:#f92672">.</span><span style="color:#a6e22e">comment</span><span style="color:#f92672">(</span>CommentStyle<span style="color:#f92672">.</span><span style="color:#a6e22e">JAVADOC</span><span style="color:#f92672">));</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>defs<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span>
-    	storeEnd<span style="color:#f92672">(</span>toplevel<span style="color:#f92672">,</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">prevToken</span><span style="color:#f92672">().</span><span style="color:#a6e22e">endPos</span><span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>keepDocComments<span style="color:#f92672">)</span>
-    	toplevel<span style="color:#f92672">.</span><span style="color:#a6e22e">docComments</span> <span style="color:#f92672">=</span> docComments<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>keepLineMap<span style="color:#f92672">)</span>
-    	toplevel<span style="color:#f92672">.</span><span style="color:#a6e22e">lineMap</span> <span style="color:#f92672">=</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">getLineMap</span><span style="color:#f92672">();</span>
-    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">endPosTable</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setParser</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span> <span style="color:#75715e">// remove reference to parser
-</span><span style="color:#75715e"></span>    toplevel<span style="color:#f92672">.</span><span style="color:#a6e22e">endPositions</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">endPosTable</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">return</span> toplevel<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>可以看到，词法分析器会把这个类中的所有关键词都匹配到 Token 类中的某一项，如 PACKAGE、SEMI、PUBLIC 等，除了在 Java 语言规范中定义的保留关键词，还有一个特殊的词 <code>Token.IDENTIFIER</code>，这个用于表示用户定义的名称，如类名、包名、变量名、方法名等。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> JCTree.<span style="color:#a6e22e">JCCompilationUnit</span> <span style="color:#a6e22e">parseCompilationUnit</span>() {
+</span></span><span style="display:flex;"><span>    Token firstToken <span style="color:#f92672">=</span> token;
+</span></span><span style="display:flex;"><span>    JCExpression pid <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>    JCModifiers mods <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> consumedToplevelDoc <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> seenImport <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> seenPackage <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>JCAnnotation<span style="color:#f92672">&gt;</span> packageAnnotations <span style="color:#f92672">=</span> List.<span style="color:#a6e22e">nil</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (token.<span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> MONKEYS_AT)  <span style="color:#75715e">// 解析注解 @</span>
+</span></span><span style="display:flex;"><span>    	mods <span style="color:#f92672">=</span> modifiersOpt();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (token.<span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> PACKAGE) {   <span style="color:#75715e">// 解析 package 声明</span>
+</span></span><span style="display:flex;"><span>        seenPackage <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (mods <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            checkNoMods(mods.<span style="color:#a6e22e">flags</span>);
+</span></span><span style="display:flex;"><span>            packageAnnotations <span style="color:#f92672">=</span> mods.<span style="color:#a6e22e">annotations</span>;
+</span></span><span style="display:flex;"><span>            mods <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>    	}
+</span></span><span style="display:flex;"><span>        nextToken();
+</span></span><span style="display:flex;"><span>        pid <span style="color:#f92672">=</span> qualident(<span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>        accept(SEMI);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    ListBuffer<span style="color:#f92672">&lt;</span>JCTree<span style="color:#f92672">&gt;</span> defs <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListBuffer<span style="color:#f92672">&lt;</span>JCTree<span style="color:#f92672">&gt;</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> checkForImports <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> firstTypeDecl <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (token.<span style="color:#a6e22e">kind</span> <span style="color:#f92672">!=</span> EOF) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (token.<span style="color:#a6e22e">pos</span> <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> token.<span style="color:#a6e22e">pos</span> <span style="color:#f92672">&lt;=</span> endPosTable.<span style="color:#a6e22e">errorEndPos</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// error recovery</span>
+</span></span><span style="display:flex;"><span>            skip(checkForImports, <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">false</span>);  <span style="color:#75715e">// 跳过错误字符</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (token.<span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> EOF)
+</span></span><span style="display:flex;"><span>            	<span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>    	}
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (checkForImports <span style="color:#f92672">&amp;&amp;</span> mods <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> token.<span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> IMPORT) { <span style="color:#75715e">// 解析 import 声明</span>
+</span></span><span style="display:flex;"><span>            seenImport <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>            defs.<span style="color:#a6e22e">append</span>(importDeclaration());
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            Comment docComment <span style="color:#f92672">=</span> token.<span style="color:#a6e22e">comment</span>(CommentStyle.<span style="color:#a6e22e">JAVADOC</span>);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (firstTypeDecl <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>seenImport <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>seenPackage) {
+</span></span><span style="display:flex;"><span>                docComment <span style="color:#f92672">=</span> firstToken.<span style="color:#a6e22e">comment</span>(CommentStyle.<span style="color:#a6e22e">JAVADOC</span>);
+</span></span><span style="display:flex;"><span>                consumedToplevelDoc <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        	}
+</span></span><span style="display:flex;"><span>            JCTree def <span style="color:#f92672">=</span> typeDeclaration(mods, docComment);  <span style="color:#75715e">// 解析 class 类主体</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (def <span style="color:#66d9ef">instanceof</span> JCExpressionStatement)
+</span></span><span style="display:flex;"><span>                def <span style="color:#f92672">=</span> ((JCExpressionStatement)def).<span style="color:#a6e22e">expr</span>;
+</span></span><span style="display:flex;"><span>                defs.<span style="color:#a6e22e">append</span>(def);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (def <span style="color:#66d9ef">instanceof</span> JCClassDecl)
+</span></span><span style="display:flex;"><span>                checkForImports <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>            mods <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>            firstTypeDecl <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    JCTree.<span style="color:#a6e22e">JCCompilationUnit</span> toplevel <span style="color:#f92672">=</span> F.<span style="color:#a6e22e">at</span>(firstToken.<span style="color:#a6e22e">pos</span>).<span style="color:#a6e22e">TopLevel</span>(packageAnnotations, pid, defs.<span style="color:#a6e22e">toList</span>());
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>consumedToplevelDoc)
+</span></span><span style="display:flex;"><span>    	attach(toplevel, firstToken.<span style="color:#a6e22e">comment</span>(CommentStyle.<span style="color:#a6e22e">JAVADOC</span>));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (defs.<span style="color:#a6e22e">isEmpty</span>())
+</span></span><span style="display:flex;"><span>    	storeEnd(toplevel, S.<span style="color:#a6e22e">prevToken</span>().<span style="color:#a6e22e">endPos</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (keepDocComments)
+</span></span><span style="display:flex;"><span>    	toplevel.<span style="color:#a6e22e">docComments</span> <span style="color:#f92672">=</span> docComments;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (keepLineMap)
+</span></span><span style="display:flex;"><span>    	toplevel.<span style="color:#a6e22e">lineMap</span> <span style="color:#f92672">=</span> S.<span style="color:#a6e22e">getLineMap</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">endPosTable</span>.<span style="color:#a6e22e">setParser</span>(<span style="color:#66d9ef">null</span>); <span style="color:#75715e">// remove reference to parser</span>
+</span></span><span style="display:flex;"><span>    toplevel.<span style="color:#a6e22e">endPositions</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">endPosTable</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> toplevel;
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>可以看到，词法分析器会把这个类中的所有关键词都匹配到 Token 类中的某一项，如 PACKAGE、SEMI、PUBLIC 等，除了在 Java 语言规范中定义的保留关键词，还有一个特殊的词 <code>Token.IDENTIFIER</code>，这个用于表示用户定义的名称，如类名、包名、变量名、方法名等。</p>
 <p>以解析 PACKAGE 为例看下 Token 是如何被分辨的：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> JCExpression <span style="color:#a6e22e">qualident</span><span style="color:#f92672">(</span><span style="color:#66d9ef">boolean</span> allowAnnos<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    JCExpression t <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">).</span><span style="color:#a6e22e">Ident</span><span style="color:#f92672">(</span>ident<span style="color:#f92672">()));</span>  <span style="color:#75715e">// 构建一个 JCIdent 语法节点
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> DOT<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">// 如果下一个 Token 是 . 则继续循环读取
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">;</span>
-        nextToken<span style="color:#f92672">();</span>
-        List<span style="color:#f92672">&lt;</span>JCAnnotation<span style="color:#f92672">&gt;</span> tyannos <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>allowAnnos<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            tyannos <span style="color:#f92672">=</span> typeAnnotationsOpt<span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-        t <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos<span style="color:#f92672">).</span><span style="color:#a6e22e">Select</span><span style="color:#f92672">(</span>t<span style="color:#f92672">,</span> ident<span style="color:#f92672">()));</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tyannos <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> tyannos<span style="color:#f92672">.</span><span style="color:#a6e22e">nonEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-            t <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>tyannos<span style="color:#f92672">.</span><span style="color:#a6e22e">head</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">).</span><span style="color:#a6e22e">AnnotatedType</span><span style="color:#f92672">(</span>tyannos<span style="color:#f92672">,</span> t<span style="color:#f92672">));</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> t<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>JavacParser 会根据 Java 语言规范来控制 Token 应该以什么顺序、在什么地方出现。当 Scanner 读取第一个 Token 判断为 PACKAGE 后，会读取一个 IDENTIFIER 类型的 Token，<strong>构建一个 JCIdent 语法节点</strong>，判断下一个 Token 是否是 <code>.</code> ，是的话就再读取下一个 INDENTIFIER 类型的 Token，反复直到该过程读取完成。<code>accept(SEMI)</code> 判断下一个 Token 是不是 <code>;</code> 这样整个 package 语法就解析完成了。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> JCExpression <span style="color:#a6e22e">qualident</span>(<span style="color:#66d9ef">boolean</span> allowAnnos) {
+</span></span><span style="display:flex;"><span>    JCExpression t <span style="color:#f92672">=</span> toP(F.<span style="color:#a6e22e">at</span>(token.<span style="color:#a6e22e">pos</span>).<span style="color:#a6e22e">Ident</span>(ident()));  <span style="color:#75715e">// 构建一个 JCIdent 语法节点</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (token.<span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> DOT) {   <span style="color:#75715e">// 如果下一个 Token 是 . 则继续循环读取</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> token.<span style="color:#a6e22e">pos</span>;
+</span></span><span style="display:flex;"><span>        nextToken();
+</span></span><span style="display:flex;"><span>        List<span style="color:#f92672">&lt;</span>JCAnnotation<span style="color:#f92672">&gt;</span> tyannos <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (allowAnnos) {
+</span></span><span style="display:flex;"><span>            tyannos <span style="color:#f92672">=</span> typeAnnotationsOpt();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        t <span style="color:#f92672">=</span> toP(F.<span style="color:#a6e22e">at</span>(pos).<span style="color:#a6e22e">Select</span>(t, ident()));
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (tyannos <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> tyannos.<span style="color:#a6e22e">nonEmpty</span>()) {
+</span></span><span style="display:flex;"><span>            t <span style="color:#f92672">=</span> toP(F.<span style="color:#a6e22e">at</span>(tyannos.<span style="color:#a6e22e">head</span>.<span style="color:#a6e22e">pos</span>).<span style="color:#a6e22e">AnnotatedType</span>(tyannos, t));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> t;
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>JavacParser 会根据 Java 语言规范来控制 Token 应该以什么顺序、在什么地方出现。当 Scanner 读取第一个 Token 判断为 PACKAGE 后，会读取一个 IDENTIFIER 类型的 Token，<strong>构建一个 JCIdent 语法节点</strong>，判断下一个 Token 是否是 <code>.</code> ，是的话就再读取下一个 INDENTIFIER 类型的 Token，反复直到该过程读取完成。<code>accept(SEMI)</code> 判断下一个 Token 是不是 <code>;</code> 这样整个 package 语法就解析完成了。</p>
 <p>在读取每个 Token 时都会有一个转换过程，Tokens 负责将 Java 源码中的所有字符集合都在其内部类 TokenKind 中找到对应的类型，形成一个 Token 集合 <code>key</code>。每个字符集合都会是一个 Name 对象，所有的 Name 对象都存储在 Name.Table 这个内部类中，Tokens 会根据 Token.name 将集合中的 Token 先转化成 Name 对象，然后建立 Name 对象和 Token 的对应关系，保存到数组中。对于不属于 Token 定义的所有字符集合，都会被对应到 Token.IDENTIFIER 类型。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Create a new token given a name; if the name corresponds to a token name,
-</span><span style="color:#75715e"> * a new token of the corresponding kind is returned; otherwise, an
-</span><span style="color:#75715e"> * identifier token is returned.
-</span><span style="color:#75715e"> */</span>
-TokenKind <span style="color:#a6e22e">lookupKind</span><span style="color:#f92672">(</span>Name name<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>name<span style="color:#f92672">.</span><span style="color:#a6e22e">getIndex</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> maxKey<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> TokenKind<span style="color:#f92672">.</span><span style="color:#a6e22e">IDENTIFIER</span> <span style="color:#f92672">:</span> key<span style="color:#f92672">[</span>name<span style="color:#f92672">.</span><span style="color:#a6e22e">getIndex</span><span style="color:#f92672">()];</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>可以看出，<strong>读取 Token 流的顺序</strong> 是由 JavacParser 类规定的，每次读取下一个 Token 刚好就是所需要的一个关键词，这是因为我们在写 Java 代码时遵守的规则：package 语法、import 语法、类定义、field 定义等，除了这些规则规定的一些 Java 语法关键词，也就只有用户自定义的变量名称了。最终形成如下图所示的一个 Token 流。</p>
-<p><img src="/images/tokenStream.jpg" alt=""></p>
-<h3 id="语法分析过程">语法分析过程</h3>
-<p>词法分析器的作用是将 Java 源文件的字符流转变成对应的 Token 流，而语法分析器则将这个 Token 流组建成更加结构化的语法树，也就是将一个个单词组装成一个完整的语句。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Create a new token given a name; if the name corresponds to a token name,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * a new token of the corresponding kind is returned; otherwise, an
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * identifier token is returned.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span>TokenKind <span style="color:#a6e22e">lookupKind</span>(Name name) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (name.<span style="color:#a6e22e">getIndex</span>() <span style="color:#f92672">&gt;</span> maxKey) <span style="color:#f92672">?</span> TokenKind.<span style="color:#a6e22e">IDENTIFIER</span> : key<span style="color:#f92672">[</span>name.<span style="color:#a6e22e">getIndex</span>()<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>可以看出，<strong>读取 Token 流的顺序</strong> 是由 JavacParser 类规定的，每次读取下一个 Token 刚好就是所需要的一个关键词，这是因为我们在写 Java 代码时遵守的规则：package 语法、import 语法、类定义、field 定义等，除了这些规则规定的一些 Java 语法关键词，也就只有用户自定义的变量名称了。最终形成如下图所示的一个 Token 流。</p>
+<p><img loading="lazy" src='/images/tokenStream.jpg' alt="/images/tokenStream.jpg"></p>
+<h3 class="heading-element" id="语法分析过程"><span>语法分析过程</span>
+  <a href="#%e8%af%ad%e6%b3%95%e5%88%86%e6%9e%90%e8%bf%87%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>词法分析器的作用是将 Java 源文件的字符流转变成对应的 Token 流，而语法分析器则将这个 Token 流组建成更加结构化的语法树，也就是将一个个单词组装成一个完整的语句。</p>
 <p>语法树 JCTree 有三个重要的属性：</p>
-<table>
-<thead>
-<tr>
-<th>属性</th>
-<th>含义</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>tag</td>
-<td>用整数表明语法树的类型</td>
-</tr>
-<tr>
-<td>pos</td>
-<td>存储语法节点在源代码中的起始位置</td>
-</tr>
-<tr>
-<td>type</td>
-<td>表明这个节点的 Java 类型，如 int float String</td>
-</tr>
-</tbody>
-</table>
-<p>每个语法树上的节点都是  JCTree 的一个实例（内部类），他们都会实现一个接口 xxxTree，实现类又都是 JCTree 的子类，同时又是它的内部类。</p>
-<p><img src="/images/JCTree.png" alt=""></p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>属性</th>
+            <th>含义</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>tag</td>
+            <td>用整数表明语法树的类型</td>
+        </tr>
+        <tr>
+            <td>pos</td>
+            <td>存储语法节点在源代码中的起始位置</td>
+        </tr>
+        <tr>
+            <td>type</td>
+            <td>表明这个节点的 Java 类型，如 int float String</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>每个语法树上的节点都是  JCTree 的一个实例（内部类），他们都会实现一个接口 xxxTree，实现类又都是 JCTree 的子类，同时又是它的内部类。</p>
+<p><img loading="lazy" src='/images/JCTree.png' alt="/images/JCTree.png"></p>
 <p>在 package 的词法分析中有这么一行 <code>JCExpression t = toP(F.at(token.pos).Ident(ident()));</code> 它会调用 TreeMarker 根据 Name 来构建一个 JCIdent 对象。</p>
 <p>以 JavacParser 中的 importDeclaration() 为例看下语法树的构建过程：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/** ImportDeclaration = IMPORT [ STATIC ] Ident { &#34;.&#34; Ident } [ &#34;.&#34; &#34;*&#34; ] &#34;;&#34;
-</span><span style="color:#75715e">     */</span>
-    JCTree <span style="color:#a6e22e">importDeclaration</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">;</span>
-        nextToken<span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">boolean</span> importStatic <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> STATIC<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">//  检查是否有 static 关键词
-</span><span style="color:#75715e"></span>            checkStaticImports<span style="color:#f92672">();</span>
-            importStatic <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-            nextToken<span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-        JCExpression pid <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">).</span><span style="color:#a6e22e">Ident</span><span style="color:#f92672">(</span>ident<span style="color:#f92672">()));</span>
-        <span style="color:#66d9ef">do</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">int</span> pos1 <span style="color:#f92672">=</span> token<span style="color:#f92672">.</span><span style="color:#a6e22e">pos</span><span style="color:#f92672">;</span>
-            accept<span style="color:#f92672">(</span>DOT<span style="color:#f92672">);</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> STAR<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 如果最后一个 Token 是 *，则命名 Token 为 asterisk
-</span><span style="color:#75715e"></span>                pid <span style="color:#f92672">=</span> to<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos1<span style="color:#f92672">).</span><span style="color:#a6e22e">Select</span><span style="color:#f92672">(</span>pid<span style="color:#f92672">,</span> names<span style="color:#f92672">.</span><span style="color:#a6e22e">asterisk</span><span style="color:#f92672">));</span>
-                nextToken<span style="color:#f92672">();</span>
-                <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                pid <span style="color:#f92672">=</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos1<span style="color:#f92672">).</span><span style="color:#a6e22e">Select</span><span style="color:#f92672">(</span>pid<span style="color:#f92672">,</span> ident<span style="color:#f92672">()));</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>token<span style="color:#f92672">.</span><span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> DOT<span style="color:#f92672">);</span>
-        accept<span style="color:#f92672">(</span>SEMI<span style="color:#f92672">);</span>    <span style="color:#75715e">// ; import 解析完成
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> toP<span style="color:#f92672">(</span>F<span style="color:#f92672">.</span><span style="color:#a6e22e">at</span><span style="color:#f92672">(</span>pos<span style="color:#f92672">).</span><span style="color:#a6e22e">Import</span><span style="color:#f92672">(</span>pid<span style="color:#f92672">,</span> importStatic<span style="color:#f92672">));</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>如果是多级目录，则继续读取下一个 Token 并构造 JCFieldAccess 节点。所有的语法节点的生成都是在 <code>TreeMaker</code> 类中完成的，TreeMaker 实现了再 JCTree.Factory 接口定义的所有节点的构成方法。对一个类形成的抽象语法树大概是下图这个样子：</p>
-<p><img src="/images/%E6%8A%BD%E8%B1%A1%E8%AF%AD%E6%B3%95%E6%A0%91.jpg" alt=""></p>
-<h3 id="语义分析过程">语义分析过程</h3>
-<p>经过语法分析器生成的抽象语法树还是太 <strong>粗糙</strong> 了，离目标 Java 字节码还有点差距，语义分析过程就是在这个语法树上进一步做一些处理，主要有：</p>
-<table>
-<thead>
-<tr>
-<th>源码类</th>
-<th>语义分析功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>com.sun.tools.javqac.comp.Enter</td>
-<td>给类添加默认的构造函数</td>
-</tr>
-<tr>
-<td>com.sun.tools.javac.processing.JavacProcessingEnvironment</td>
-<td>处理注解</td>
-</tr>
-<tr>
-<td>com.sun.tools.javac.comp.Attr</td>
-<td>检查语义的合法性：<!-- raw HTML omitted --> 1. 变量的类型是否匹配<!-- raw HTML omitted --> 2. 变量在使用前时候已经初始化<!-- raw HTML omitted --> 3. 字符串常量的合并</td>
-</tr>
-<tr>
-<td>com.sun.tools.javac.comp.Check</td>
-<td>检查语法树中的变量类型是否正确，方法返回的类型是否与接收的引用值类型匹配</td>
-</tr>
-<tr>
-<td>com.sun.tools.javac.comp.Flow</td>
-<td>完成数据流分析<!-- raw HTML omitted --> 1. 检查变量在使用前时候都已经被正确赋值<!-- raw HTML omitted --> 2. 保证 final 修饰的变量不会被重复赋值<!-- raw HTML omitted --> 3. 确定方法的返回值类型，检查接收方法返回值的引用类型是否匹配<!-- raw HTML omitted --> 4. 检查受检异常是否已经捕获或抛出<!-- raw HTML omitted --> 5. 检查 return 后面是否仍有可执行语句</td>
-</tr>
-<tr>
-<td></td>
-<td>消除一些无用的代码：<!-- raw HTML omitted --> 1. 去除永不真的条件判断<!-- raw HTML omitted --> 2. 解除一些语法糖，如将 foreach 解析成标准的 for 循环形式、Assert 语法转化成 if 判断等<!-- raw HTML omitted --> 3. 装箱拆箱的自动转换</td>
-</tr>
-</tbody>
-</table>
-<h3 id="class-文件结构">Class 文件结构</h3>
-<p>经过语义分析器完成的语法树已经非常完善了，接下来 Javac 会调用 com.sun.tools.javac.jvm.Gen 类遍历语法树，生成最终的 Java 字节码。</p>
-<p>通过 Github上的 <a href="https://github.com/ymasory/programming-for-the-jvm">programming-for-the-jvm</a>，运行 <code>COM.sootNsmoke.oolong.Gnoloo</code> 类，参数为需要转化的 class 文件路径，就可以将我们编译出的二进制 class 文件先转化成能够理解的汇编语言 Oolong，在当前目录下生成一个 ClassName.j 文件，如下所示：</p>
-<p><img src="/images/oolong.png" alt=""></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/** ImportDeclaration = IMPORT [ STATIC ] Ident { &#34;.&#34; Ident } [ &#34;.&#34; &#34;*&#34; ] &#34;;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    JCTree <span style="color:#a6e22e">importDeclaration</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> token.<span style="color:#a6e22e">pos</span>;
+</span></span><span style="display:flex;"><span>        nextToken();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">boolean</span> importStatic <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (token.<span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> STATIC) {   <span style="color:#75715e">//  检查是否有 static 关键词</span>
+</span></span><span style="display:flex;"><span>            checkStaticImports();
+</span></span><span style="display:flex;"><span>            importStatic <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>            nextToken();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        JCExpression pid <span style="color:#f92672">=</span> toP(F.<span style="color:#a6e22e">at</span>(token.<span style="color:#a6e22e">pos</span>).<span style="color:#a6e22e">Ident</span>(ident()));
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">do</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> pos1 <span style="color:#f92672">=</span> token.<span style="color:#a6e22e">pos</span>;
+</span></span><span style="display:flex;"><span>            accept(DOT);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (token.<span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> STAR) {  <span style="color:#75715e">// 如果最后一个 Token 是 *，则命名 Token 为 asterisk</span>
+</span></span><span style="display:flex;"><span>                pid <span style="color:#f92672">=</span> to(F.<span style="color:#a6e22e">at</span>(pos1).<span style="color:#a6e22e">Select</span>(pid, names.<span style="color:#a6e22e">asterisk</span>));
+</span></span><span style="display:flex;"><span>                nextToken();
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                pid <span style="color:#f92672">=</span> toP(F.<span style="color:#a6e22e">at</span>(pos1).<span style="color:#a6e22e">Select</span>(pid, ident()));
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">while</span> (token.<span style="color:#a6e22e">kind</span> <span style="color:#f92672">==</span> DOT);
+</span></span><span style="display:flex;"><span>        accept(SEMI);    <span style="color:#75715e">// ; import 解析完成</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> toP(F.<span style="color:#a6e22e">at</span>(pos).<span style="color:#a6e22e">Import</span>(pid, importStatic));
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><p>如果是多级目录，则继续读取下一个 Token 并构造 JCFieldAccess 节点。所有的语法节点的生成都是在 <code>TreeMaker</code> 类中完成的，TreeMaker 实现了再 JCTree.Factory 接口定义的所有节点的构成方法。对一个类形成的抽象语法树大概是下图这个样子：</p>
+<p><img loading="lazy" src='/images/抽象语法树.jpg' alt="/images/抽象语法树.jpg"></p>
+<h3 class="heading-element" id="语义分析过程"><span>语义分析过程</span>
+  <a href="#%e8%af%ad%e4%b9%89%e5%88%86%e6%9e%90%e8%bf%87%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>经过语法分析器生成的抽象语法树还是太 <strong>粗糙</strong> 了，离目标 Java 字节码还有点差距，语义分析过程就是在这个语法树上进一步做一些处理，主要有：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>源码类</th>
+            <th>语义分析功能</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>com.sun.tools.javqac.comp.Enter</td>
+            <td>给类添加默认的构造函数</td>
+        </tr>
+        <tr>
+            <td>com.sun.tools.javac.processing.JavacProcessingEnvironment</td>
+            <td>处理注解</td>
+        </tr>
+        <tr>
+            <td>com.sun.tools.javac.comp.Attr</td>
+            <td>检查语义的合法性：<!-- raw HTML omitted --> 1. 变量的类型是否匹配<!-- raw HTML omitted --> 2. 变量在使用前时候已经初始化<!-- raw HTML omitted --> 3. 字符串常量的合并</td>
+        </tr>
+        <tr>
+            <td>com.sun.tools.javac.comp.Check</td>
+            <td>检查语法树中的变量类型是否正确，方法返回的类型是否与接收的引用值类型匹配</td>
+        </tr>
+        <tr>
+            <td>com.sun.tools.javac.comp.Flow</td>
+            <td>完成数据流分析<!-- raw HTML omitted --> 1. 检查变量在使用前时候都已经被正确赋值<!-- raw HTML omitted --> 2. 保证 final 修饰的变量不会被重复赋值<!-- raw HTML omitted --> 3. 确定方法的返回值类型，检查接收方法返回值的引用类型是否匹配<!-- raw HTML omitted --> 4. 检查受检异常是否已经捕获或抛出<!-- raw HTML omitted --> 5. 检查 return 后面是否仍有可执行语句</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>消除一些无用的代码：<!-- raw HTML omitted --> 1. 去除永不真的条件判断<!-- raw HTML omitted --> 2. 解除一些语法糖，如将 foreach 解析成标准的 for 循环形式、Assert 语法转化成 if 判断等<!-- raw HTML omitted --> 3. 装箱拆箱的自动转换</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 class="heading-element" id="class-文件结构"><span>Class 文件结构</span>
+  <a href="#class-%e6%96%87%e4%bb%b6%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>经过语义分析器完成的语法树已经非常完善了，接下来 Javac 会调用 com.sun.tools.javac.jvm.Gen 类遍历语法树，生成最终的 Java 字节码。</p>
+<p>通过 Github上的 <a href="https://github.com/ymasory/programming-for-the-jvm" target="_blank" rel="external nofollow noopener noreferrer">programming-for-the-jvm</a>，运行 <code>COM.sootNsmoke.oolong.Gnoloo</code> 类，参数为需要转化的 class 文件路径，就可以将我们编译出的二进制 class 文件先转化成能够理解的汇编语言 Oolong，在当前目录下生成一个 ClassName.j 文件，如下所示：</p>
+<p><img loading="lazy" src='/images/oolong.png' alt="/images/oolong.png"></p>
 <p>还可以通过 JDK 自带的 Javap 来生成 class 文件格式：<code>javap -verbose +class 文件路径</code> ，生成的 class 结构如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Classfile /C:/Users/zch69/recipes/temp/programming-for-the-jvm-master/target/classes/COM/sootNsmoke/ClassFileStructure.class
-  Last modified 2020-9-22; size <span style="color:#ae81ff">588</span> bytes
-  MD5 checksum 61944717f8416e375dc796bcf2c47b72
-  Compiled from <span style="color:#e6db74">&#34;ClassFileStructure.java&#34;</span>
-public class COM.sootNsmoke.ClassFileStructure
-  minor version: <span style="color:#ae81ff">0</span>
-  major version: <span style="color:#ae81ff">52</span>
-  flags: ACC_PUBLIC, ACC_SUPER
-Constant pool:
-   <span style="color:#75715e">#1 = Methodref          #6.#20         // java/lang/Object.&#34;&lt;init&gt;&#34;:()V</span>
-   <span style="color:#75715e">#2 = Fieldref           #21.#22        // java/lang/System.out:Ljava/io/PrintStream;</span>
-   <span style="color:#75715e">#3 = String             #23            // hello world!</span>
-   <span style="color:#75715e">#4 = Methodref          #24.#25        // java/io/PrintStream.println:(Ljava/lang/String;)V</span>
-   <span style="color:#75715e">#5 = Class              #26            // COM/sootNsmoke/ClassFileStructure</span>
-   <span style="color:#75715e">#6 = Class              #27            // java/lang/Object</span>
-   <span style="color:#75715e">#7 = Utf8               &lt;init&gt;</span>
-   <span style="color:#75715e">#8 = Utf8               ()V</span>
-   <span style="color:#75715e">#9 = Utf8               Code</span>
-  <span style="color:#75715e">#10 = Utf8               LineNumberTable</span>
-  <span style="color:#75715e">#11 = Utf8               LocalVariableTable</span>
-  <span style="color:#75715e">#12 = Utf8               this</span>
-  <span style="color:#75715e">#13 = Utf8               LCOM/sootNsmoke/ClassFileStructure;</span>
-  <span style="color:#75715e">#14 = Utf8               main</span>
-  <span style="color:#75715e">#15 = Utf8               ([Ljava/lang/String;)V</span>
-  <span style="color:#75715e">#16 = Utf8               args</span>
-  <span style="color:#75715e">#17 = Utf8               [Ljava/lang/String;</span>
-  <span style="color:#75715e">#18 = Utf8               SourceFile</span>
-  <span style="color:#75715e">#19 = Utf8               ClassFileStructure.java</span>
-  <span style="color:#75715e">#20 = NameAndType        #7:#8          // &#34;&lt;init&gt;&#34;:()V</span>
-  <span style="color:#75715e">#21 = Class              #28            // java/lang/System</span>
-  <span style="color:#75715e">#22 = NameAndType        #29:#30        // out:Ljava/io/PrintStream;</span>
-  <span style="color:#75715e">#23 = Utf8               hello world!</span>
-  <span style="color:#75715e">#24 = Class              #31            // java/io/PrintStream</span>
-  <span style="color:#75715e">#25 = NameAndType        #32:#33        // println:(Ljava/lang/String;)V</span>
-  <span style="color:#75715e">#26 = Utf8               COM/sootNsmoke/ClassFileStructure</span>
-  <span style="color:#75715e">#27 = Utf8               java/lang/Object</span>
-  <span style="color:#75715e">#28 = Utf8               java/lang/System</span>
-  <span style="color:#75715e">#29 = Utf8               out</span>
-  <span style="color:#75715e">#30 = Utf8               Ljava/io/PrintStream;</span>
-  <span style="color:#75715e">#31 = Utf8               java/io/PrintStream</span>
-  <span style="color:#75715e">#32 = Utf8               println</span>
-  <span style="color:#75715e">#33 = Utf8               (Ljava/lang/String;)V</span>
-<span style="color:#f92672">{</span>
-  public COM.sootNsmoke.ClassFileStructure<span style="color:#f92672">()</span>;
-    descriptor: <span style="color:#f92672">()</span>V
-    flags: ACC_PUBLIC
-    Code:
-      stack<span style="color:#f92672">=</span>1, locals<span style="color:#f92672">=</span>1, args_size<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
-         0: aload_0
-         1: invokespecial <span style="color:#75715e">#1                  // Method java/lang/Object.&#34;&lt;init&gt;&#34;:()V</span>
-         4: <span style="color:#66d9ef">return</span>
-      LineNumberTable:
-        line 3: <span style="color:#ae81ff">0</span>
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            <span style="color:#ae81ff">0</span>       <span style="color:#ae81ff">5</span>     <span style="color:#ae81ff">0</span>  this   LCOM/sootNsmoke/ClassFileStructure;
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Classfile /C:/Users/zch69/recipes/temp/programming-for-the-jvm-master/target/classes/COM/sootNsmoke/ClassFileStructure.class
+</span></span><span style="display:flex;"><span>  Last modified 2020-9-22; size <span style="color:#ae81ff">588</span> bytes
+</span></span><span style="display:flex;"><span>  MD5 checksum 61944717f8416e375dc796bcf2c47b72
+</span></span><span style="display:flex;"><span>  Compiled from <span style="color:#e6db74">&#34;ClassFileStructure.java&#34;</span>
+</span></span><span style="display:flex;"><span>public class COM.sootNsmoke.ClassFileStructure
+</span></span><span style="display:flex;"><span>  minor version: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>  major version: <span style="color:#ae81ff">52</span>
+</span></span><span style="display:flex;"><span>  flags: ACC_PUBLIC, ACC_SUPER
+</span></span><span style="display:flex;"><span>Constant pool:
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#1 = Methodref          #6.#20         // java/lang/Object.&#34;&lt;init&gt;&#34;:()V</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#2 = Fieldref           #21.#22        // java/lang/System.out:Ljava/io/PrintStream;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#3 = String             #23            // hello world!</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#4 = Methodref          #24.#25        // java/io/PrintStream.println:(Ljava/lang/String;)V</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#5 = Class              #26            // COM/sootNsmoke/ClassFileStructure</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#6 = Class              #27            // java/lang/Object</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#7 = Utf8               &lt;init&gt;</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#8 = Utf8               ()V</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">#9 = Utf8               Code</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#10 = Utf8               LineNumberTable</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#11 = Utf8               LocalVariableTable</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#12 = Utf8               this</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#13 = Utf8               LCOM/sootNsmoke/ClassFileStructure;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#14 = Utf8               main</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#15 = Utf8               ([Ljava/lang/String;)V</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#16 = Utf8               args</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#17 = Utf8               [Ljava/lang/String;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#18 = Utf8               SourceFile</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#19 = Utf8               ClassFileStructure.java</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#20 = NameAndType        #7:#8          // &#34;&lt;init&gt;&#34;:()V</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#21 = Class              #28            // java/lang/System</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#22 = NameAndType        #29:#30        // out:Ljava/io/PrintStream;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#23 = Utf8               hello world!</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#24 = Class              #31            // java/io/PrintStream</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#25 = NameAndType        #32:#33        // println:(Ljava/lang/String;)V</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#26 = Utf8               COM/sootNsmoke/ClassFileStructure</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#27 = Utf8               java/lang/Object</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#28 = Utf8               java/lang/System</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#29 = Utf8               out</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#30 = Utf8               Ljava/io/PrintStream;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#31 = Utf8               java/io/PrintStream</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#32 = Utf8               println</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#33 = Utf8               (Ljava/lang/String;)V</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  public COM.sootNsmoke.ClassFileStructure<span style="color:#f92672">()</span>;
+</span></span><span style="display:flex;"><span>    descriptor: <span style="color:#f92672">()</span>V
+</span></span><span style="display:flex;"><span>    flags: ACC_PUBLIC
+</span></span><span style="display:flex;"><span>    Code:
+</span></span><span style="display:flex;"><span>      stack<span style="color:#f92672">=</span>1, locals<span style="color:#f92672">=</span>1, args_size<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>         0: aload_0
+</span></span><span style="display:flex;"><span>         1: invokespecial <span style="color:#75715e">#1                  // Method java/lang/Object.&#34;&lt;init&gt;&#34;:()V</span>
+</span></span><span style="display:flex;"><span>         4: <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>      LineNumberTable:
+</span></span><span style="display:flex;"><span>        line 3: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>      LocalVariableTable:
+</span></span><span style="display:flex;"><span>        Start  Length  Slot  Name   Signature
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">0</span>       <span style="color:#ae81ff">5</span>     <span style="color:#ae81ff">0</span>  this   LCOM/sootNsmoke/ClassFileStructure;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>  public static void main<span style="color:#f92672">(</span>java.lang.String<span style="color:#f92672">[])</span>;
+</span></span><span style="display:flex;"><span>    descriptor: <span style="color:#f92672">([</span>Ljava/lang/String;<span style="color:#f92672">)</span>V
+</span></span><span style="display:flex;"><span>    flags: ACC_PUBLIC, ACC_STATIC
+</span></span><span style="display:flex;"><span>    Code:
+</span></span><span style="display:flex;"><span>      stack<span style="color:#f92672">=</span>2, locals<span style="color:#f92672">=</span>1, args_size<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>         0: getstatic     <span style="color:#75715e">#2                  // Field java/lang/System.out:Ljava/io/PrintStream;</span>
+</span></span><span style="display:flex;"><span>         3: ldc           <span style="color:#75715e">#3                  // String hello world!</span>
+</span></span><span style="display:flex;"><span>         5: invokevirtual <span style="color:#75715e">#4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V</span>
+</span></span><span style="display:flex;"><span>         8: <span style="color:#66d9ef">return</span>
+</span></span><span style="display:flex;"><span>      LineNumberTable:
+</span></span><span style="display:flex;"><span>        line 5: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>        line 6: <span style="color:#ae81ff">8</span>
+</span></span><span style="display:flex;"><span>      LocalVariableTable:
+</span></span><span style="display:flex;"><span>        Start  Length  Slot  Name   Signature
+</span></span><span style="display:flex;"><span>            <span style="color:#ae81ff">0</span>       <span style="color:#ae81ff">9</span>     <span style="color:#ae81ff">0</span>  args   <span style="color:#f92672">[</span>Ljava/lang/String;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>SourceFile: <span style="color:#e6db74">&#34;ClassFileStructure.java&#34;</span></span></span></code></pre></div><p>具体的 jvm 指令可以参考 <a href="https://docs.oracle.com/javase/specs/index.html" target="_blank" rel="external nofollow noopener noreferrer">oracle:Java Language and Virtual Machine Specifications</a> 或者 <a href="https://book.douban.com/subject/34907497/" target="_blank" rel="external nofollow noopener noreferrer">《深入理解 Java 虚拟机》</a>，在此不做讲解。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2020-09-05 09:19:47">Updated on 2020-09-05&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/java-compile/" data-title="Javac 编译原理与 Class 文件结构" data-hashtags="Java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/java-compile/" data-hashtag="Java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/java-compile/" data-title="Javac 编译原理与 Class 文件结构"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-  public static void main<span style="color:#f92672">(</span>java.lang.String<span style="color:#f92672">[])</span>;
-    descriptor: <span style="color:#f92672">([</span>Ljava/lang/String;<span style="color:#f92672">)</span>V
-    flags: ACC_PUBLIC, ACC_STATIC
-    Code:
-      stack<span style="color:#f92672">=</span>2, locals<span style="color:#f92672">=</span>1, args_size<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>
-         0: getstatic     <span style="color:#75715e">#2                  // Field java/lang/System.out:Ljava/io/PrintStream;</span>
-         3: ldc           <span style="color:#75715e">#3                  // String hello world!</span>
-         5: invokevirtual <span style="color:#75715e">#4                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V</span>
-         8: <span style="color:#66d9ef">return</span>
-      LineNumberTable:
-        line 5: <span style="color:#ae81ff">0</span>
-        line 6: <span style="color:#ae81ff">8</span>
-      LocalVariableTable:
-        Start  Length  Slot  Name   Signature
-            <span style="color:#ae81ff">0</span>       <span style="color:#ae81ff">9</span>     <span style="color:#ae81ff">0</span>  args   <span style="color:#f92672">[</span>Ljava/lang/String;
-<span style="color:#f92672">}</span>
-SourceFile: <span style="color:#e6db74">&#34;ClassFileStructure.java&#34;</span>
-
-</code></pre></div><p>具体的 jvm 指令可以参考 <a href="https://docs.oracle.com/javase/specs/index.html">oracle:Java Language and Virtual Machine Specifications</a> 或者 <a href="https://book.douban.com/subject/34907497/">《深入理解 Java 虚拟机》</a>，在此不做讲解。</p>
-
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2020/java-compile/>https://hoffmanzheng.github.io/2020/java-compile/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/java/">
-                    #Java</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2020/java-encode/" class="prev" rel="prev" title="深入分析 Java Web 中的中文编码问题"><i class="iconfont icon-left"></i>&nbsp;深入分析 Java Web 中的中文编码问题</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2020/java-classloader/" class="next" rel="next" title="深入分析 ClassLoader 工作机制">深入分析 ClassLoader 工作机制&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/java/" class="post-tag" title="Tags - Java">Java</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2020/java-encode/" class="post-nav-item" rel="prev" title="深入分析 Java Web 中的中文编码问题"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>深入分析 Java Web 中的中文编码问题</a><a href="/2020/java-classloader/" class="post-nav-item" rel="next" title="深入分析 ClassLoader 工作机制">深入分析 ClassLoader 工作机制<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#javac-编译器的基本结构">Javac 编译器的基本结构</a></li>
+        <li><a href="#词法分析过程">词法分析过程</a></li>
+        <li><a href="#语法分析过程">语法分析过程</a></li>
+        <li><a href="#语义分析过程">语义分析过程</a></li>
+        <li><a href="#class-文件结构">Class 文件结构</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/541913d139fbec7d046739ecb352a785.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

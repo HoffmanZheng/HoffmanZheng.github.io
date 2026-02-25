@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ruby on 人间一场大梦</title>
+    <title>Ruby - Tag - 人间一场大梦</title>
     <link>https://hoffmanzheng.github.io/tags/ruby/</link>
-    <description>Recent content in Ruby on 人间一场大梦</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>人间一场大梦</description>
+    <generator>Hugo 0.156.0 &amp; FixIt v0.4.3-20260130042349-e23a50d7</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 Oct 2021 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/ruby/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 23 Oct 2023 03:19:47 +0100</lastBuildDate>
+    <atom:link href="https://hoffmanzheng.github.io/tags/ruby/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ruby：JWT 的原理及实现</title>
+      <link>https://hoffmanzheng.github.io/draft/ruby-jwt/</link>
+      <pubDate>Mon, 23 Oct 2023 03:19:47 +0100</pubDate>
+      <guid>https://hoffmanzheng.github.io/draft/ruby-jwt/</guid>
+      <category domain="https://hoffmanzheng.github.io/categories/study-notes/">Study Notes</category>
+      <description>&lt;p&gt;本篇结合 &lt;a href=&#34;https://auth0.com/resources/ebooks/jwt-handbook&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;JWT Handbook&lt;/a&gt; 讲解针对 &lt;a href=&#34;https://en.wikipedia.org/wiki/Stateless_protocol&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;无状态的 HTTP 协议&lt;/a&gt; 目前主流的一种用户认证方式 Token ，并使用 Ruby 动手实现 JWT 机制来维持用户的登录状态。&lt;/p&gt;&#xA;&lt;h1 class=&#34;heading-element&#34; id=&#34;json-web-token&#34;&gt;&lt;span&gt;JSON Web Token&lt;/span&gt;&#xA;  &lt;a href=&#34;#json-web-token&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;p&gt;JSON Web Token 是一个在有限空间中安全传递凭证的事实标准。JWT 主要应用于登录系统，包括但不限于鉴权、验权、联合身份和客户端 session 等，其由三个部分组成：header、payload 和签名/加密数据，前两部分都是特定结构的 JSON 对象，第三部分依赖于签名/加密的算法（可以在 &lt;a href=&#34;https://jwt.io/&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;jwt.io&lt;/a&gt; 中编辑各部分体会 JWT 的变化）&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Ruby：版本管理 RVM、Gem 与 Bundler</title>
       <link>https://hoffmanzheng.github.io/2021/ruby-bundler/</link>
       <pubDate>Sun, 10 Oct 2021 13:19:47 +0100</pubDate>
-      
       <guid>https://hoffmanzheng.github.io/2021/ruby-bundler/</guid>
-      <description>本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 RubyGems 管理 Ruby 的组件，使用 Bundler 来解决项目中 gem 组件的依赖问题，使用 RVM 管理不同版本的 Ruby 环境等。
-推荐阅读：
- Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾) Ruby Gemfile 详解  RubyGems Ruby 主要通过 require 函数来引入外部的库文件，参数可以传文件名，相对路径或是绝对路径。当参数是文件名时，Ruby 会去 $LOAD_PATH 这个全局变量定义的路径中搜索库文件。
-$ ruby -e &amp;#34;puts $:&amp;#34; /usr/local/lib/ruby/site_ruby/2.7.0 /usr/local/lib/ruby/site_ruby/2.7.0/x86_64-darwin20 /usr/local/lib/ruby/site_ruby /usr/local/lib/ruby/vendor_ruby/2.7.0 /usr/local/lib/ruby/vendor_ruby/2.7.0/x86_64-darwin20 /usr/local/lib/ruby/vendor_ruby /usr/local/Cellar/ruby@2.7/2.7.4/lib/ruby/2.7.0 /usr/local/Cellar/ruby@2.7/2.7.4/lib/ruby/2.7.0/x86_64-darwin20 $LOAD_PATH 是一个数组变量，里面存放依赖路径字符串，可以看到其中的目录可以分成三大类：
- site_ruby 默认优先级最高，安装本机相关库 vendor_ruby 操作系统供应商进行定制用的，一般为空 2.7.4 ruby 标准库目录，比如 date, csv 库  require 会按照 $LOAD_PATH 数组里面的路径顺序进行查找，找到了就不继续往下找了。
-RubyGems 是用来寻找并管理 Ruby 组件的工具，让你可以轻松下载别人的代码，它重写了 require 函数的实现，并将 gem 安装到和 site_ruby 平级的 gems 目录下。gem 工具允许你用一个单一命令完成下载以及安装，允许你一键卸载，并且中心化管理所有安装了的库。</description>
+      <category domain="https://hoffmanzheng.github.io/categories/study-notes/">Study Notes</category>
+      <description>&lt;p&gt;本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 &lt;a href=&#34;https://rubygems.org/&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;RubyGems&lt;/a&gt; 管理 Ruby 的组件，使用 &lt;a href=&#34;https://bundler.io/&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;Bundler&lt;/a&gt; 来解决项目中 gem 组件的依赖问题，使用 &lt;a href=&#34;https://rvm.io/&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;RVM&lt;/a&gt; 管理不同版本的 Ruby 环境等。&lt;/p&gt;&#xA;&lt;p&gt;推荐阅读：&lt;/p&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://ruby-china.org/topics/28453&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾)&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://ruby-china.org/topics/26655&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;Ruby Gemfile 详解&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ol&gt;&#xA;&lt;h3 class=&#34;heading-element&#34; id=&#34;rubygems&#34;&gt;&lt;span&gt;RubyGems&lt;/span&gt;&#xA;  &lt;a href=&#34;#rubygems&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h3&gt;&lt;p&gt;Ruby 主要通过 &lt;code&gt;require&lt;/code&gt; 函数来引入外部的库文件，参数可以传文件名，相对路径或是绝对路径。当参数是文件名时，Ruby 会去 &lt;code&gt;$LOAD_PATH&lt;/code&gt; 这个全局变量定义的路径中搜索库文件。&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

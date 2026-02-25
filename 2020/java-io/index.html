@@ -1,212 +1,211 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2020/dns-cdn/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2020/java-encode/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/java-io/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           深入分析 Java I/O 的工作机制 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="深入分析 Java I/O 的工作机制 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>深入分析 Java I/O 的工作机制 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="I/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I/O 瓶颈。
+本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I/O 的工作机制 的内容为参考，讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。
+Java I/O 类库的基本架构 基于字节的 I/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。
+"><meta name="keywords" content='Java'>
+  <meta itemprop="name" content="深入分析 Java I/O 的工作机制">
+  <meta itemprop="description" content="I/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I/O 瓶颈。
+本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I/O 的工作机制 的内容为参考，讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。
+Java I/O 类库的基本架构 基于字节的 I/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。">
+  <meta itemprop="datePublished" content="2020-08-17T09:19:47+01:00">
+  <meta itemprop="dateModified" content="2020-08-17T09:19:47+01:00">
+  <meta itemprop="wordCount" content="860">
+  <meta itemprop="keywords" content="Java"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/java-io/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="深入分析 Java I/O 的工作机制">
+  <meta property="og:description" content="I/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I/O 瓶颈。
+本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I/O 的工作机制 的内容为参考，讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。
+Java I/O 类库的基本架构 基于字节的 I/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-08-17T09:19:47+01:00">
+    <meta property="article:modified_time" content="2020-08-17T09:19:47+01:00">
+    <meta property="article:tag" content="Java">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="深入分析 Java I/O 的工作机制">
+  <meta name="twitter:description" content="I/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I/O 瓶颈。
+本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I/O 的工作机制 的内容为参考，讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。
+Java I/O 类库的基本架构 基于字节的 I/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/java-io/" title="深入分析 Java I/O 的工作机制 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2020/dns-cdn/" title="深入 Web 请求过程" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/java-encode/" title="深入分析 Java Web 中的中文编码问题" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "深入分析 Java I/O 的工作机制",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "深入分析 Java I\/O 的工作机制",
-    "headline" : "深入分析 Java I\/O 的工作机制",
-    "description" : "I\/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I\/O 瓶颈。\n本篇以 《深入分析 Java Web 技术内幕》 第二章 深入分析 Java I\/O 的工作机制 的内容为参考，讲解 Java I\/O 类库、磁盘 I\/O、网络 I\/O、NIO 工作机制等。\nJava I\/O 类库的基本架构 基于字节的 I\/O 操作接口 无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I\/O 操作的都是字节而不是字符，Java 中基于字节的 I\/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。\n需要明确的是，字节流从哪里读或是写入到哪里，操作数据的方式是可以组合使用的，如：\nOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(new File(\u0026#34;pathName\u0026#34;))); 基于字符的 I\/O 操作接口 虽然 I\/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I\/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。\n例如写字符的操作接口为 void write(char[] cbuf, int off, int len)\n字节与字符的转化接口 字符在写入文件持久化或者网络传输之前，都需要先经过编码转换，下图中 InputStreamReader 就是从字节到字符的转化桥梁，在初始化时需要指定编码字符集，否则会采用操作系统默认的字符集，很可能出现乱码问题。具体的编码解码过程可以查看：深入分析 Java Web 中的中文编码问题",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2020",
-    "datePublished": "2020-08-17 09:19:47 \u002b0100 \u002b0100",
-    "dateModified" : "2020-08-17 09:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/java-io\/",
-    "wordCount" : "868",
-    "keywords" : [ "Java", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/java-io\/"
+    },"genre": "posts","keywords": "Java","wordcount":  860 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2020\/java-io\/","datePublished": "2020-08-17T09:19:47+01:00","dateModified": "2020-08-17T09:19:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>深入分析 Java I/O 的工作机制</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/reading-notes/" class="post-category" title="Category - Reading Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Reading Notes</a></span></div><div class="post-meta-line"><span title="published on 2020-08-17 09:19:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2020-08-17">2020-08-17</time></span>&nbsp;<span title="860 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 900 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>5 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">深入分析 Java I/O 的工作机制</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2020-08-17 itemprop="datePublished">August 17, 2020</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,868 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
-
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>I/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I/O 瓶颈。</p>
-<p>本篇以 <a href="https://book.douban.com/subject/25953851/">《深入分析 Java Web 技术内幕》</a> 第二章 深入分析 Java I/O 的工作机制 的内容为参考，讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。</p>
-<h3 id="java-io-类库的基本架构">Java I/O 类库的基本架构</h3>
-<h4 id="基于字节的-io-操作接口">基于字节的 I/O 操作接口</h4>
-<p>无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。</p>
-<p><img src="/images/InputStream.jpg" alt=""></p>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#java-io-类库的基本架构">Java I/O 类库的基本架构</a>
+          <ul>
+            <li><a href="#基于字节的-io-操作接口">基于字节的 I/O 操作接口</a></li>
+            <li><a href="#基于字符的-io-操作接口">基于字符的 I/O 操作接口</a></li>
+            <li><a href="#字节与字符的转化接口">字节与字符的转化接口</a></li>
+          </ul>
+        </li>
+        <li><a href="#磁盘-io-工作机制">磁盘 I/O 工作机制</a>
+          <ul>
+            <li><a href="#几种访问文件的方式">几种访问文件的方式</a></li>
+            <li><a href="#java-访问磁盘文件">Java 访问磁盘文件</a></li>
+            <li><a href="#磁盘-io-优化">磁盘 I/O 优化</a></li>
+          </ul>
+        </li>
+        <li><a href="#网络-io-工作机制">网络 I/O 工作机制</a>
+          <ul>
+            <li><a href="#socket-通信链路">Socket 通信链路</a></li>
+            <li><a href="#数据传输与影响因素">数据传输与影响因素</a></li>
+            <li><a href="#网络-io-优化">网络 I/O 优化</a></li>
+          </ul>
+        </li>
+        <li><a href="#nio-的工作方式">NIO 的工作方式</a>
+          <ul>
+            <li><a href="#bio-与-nio">BIO 与 NIO</a></li>
+            <li><a href="#buffer-的工作方式">Buffer 的工作方式</a></li>
+            <li><a href="#nio-的工作机制">NIO 的工作机制</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>I/O 是任何编程语言都无法回避的问题，它是人机交互中机器获取和交换信息的主要渠道，可以说大部分 Web 应用系统的瓶颈都是 I/O 瓶颈。</p>
+<p>本篇以 <a href="https://book.douban.com/subject/25953851/" target="_blank" rel="external nofollow noopener noreferrer">《深入分析 Java Web 技术内幕》</a> 第二章 深入分析 Java I/O 的工作机制 的内容为参考，讲解 Java I/O 类库、磁盘 I/O、网络 I/O、NIO 工作机制等。</p>
+<h3 class="heading-element" id="java-io-类库的基本架构"><span>Java I/O 类库的基本架构</span>
+  <a href="#java-io-%e7%b1%bb%e5%ba%93%e7%9a%84%e5%9f%ba%e6%9c%ac%e6%9e%b6%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="基于字节的-io-操作接口"><span>基于字节的 I/O 操作接口</span>
+  <a href="#%e5%9f%ba%e4%ba%8e%e5%ad%97%e8%8a%82%e7%9a%84-io-%e6%93%8d%e4%bd%9c%e6%8e%a5%e5%8f%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>无论是磁盘还是网络传输，最小的存储单元都是字节，而不是字符，所以 I/O 操作的都是字节而不是字符，Java 中基于字节的 I/O 操作接口输入和输出分别是 InputStream 和 OutputStream，其类层次关系如下图所示。</p>
+<p><img loading="lazy" src='/images/InputStream.jpg' alt="/images/InputStream.jpg"></p>
 <p>需要明确的是，字节流从哪里读或是写入到哪里，操作数据的方式是可以组合使用的，如：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">OutputStream outputStream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedOutputStream<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FileOutputStream<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;pathName&#34;</span><span style="color:#f92672">)));</span>
-</code></pre></div><h4 id="基于字符的-io-操作接口">基于字符的 I/O 操作接口</h4>
-<p>虽然 I/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>OutputStream outputStream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedOutputStream(<span style="color:#66d9ef">new</span> FileOutputStream(<span style="color:#66d9ef">new</span> File(<span style="color:#e6db74">&#34;pathName&#34;</span>)));</span></span></code></pre></div><h4 class="heading-element" id="基于字符的-io-操作接口"><span>基于字符的 I/O 操作接口</span>
+  <a href="#%e5%9f%ba%e4%ba%8e%e5%ad%97%e7%ac%a6%e7%9a%84-io-%e6%93%8d%e4%bd%9c%e6%8e%a5%e5%8f%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>虽然 I/O 操作的都是字节，但我们在程序中通常都是操作字符，为了方便 JDK 也提供了一个直接写字符的 I/O 接口 Reader 和 Writer，这样我们就可以直接将字符写入到文件或者网络流去。</p>
 <p>例如写字符的操作接口为 <code>void write(char[] cbuf, int off, int len)</code></p>
-<p><img src="/images/Writer.jpg" alt=""></p>
-<h4 id="字节与字符的转化接口">字节与字符的转化接口</h4>
-<p>字符在写入文件持久化或者网络传输之前，都需要先经过编码转换，下图中 InputStreamReader 就是从字节到字符的转化桥梁，在初始化时需要指定编码字符集，否则会采用操作系统默认的字符集，很可能出现乱码问题。具体的编码解码过程可以查看：<a href="https://hoffmanzheng.github.io/2020/java-encode/">深入分析 Java Web 中的中文编码问题</a></p>
-<p><img src="/images/Charset.png" alt=""></p>
-<h3 id="磁盘-io-工作机制">磁盘 I/O 工作机制</h3>
-<p>读取和写入文件 I/O 都需要 <a href="https://baike.baidu.com/item/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8">系统调用</a> 才能实现，那么就肯定存在内存用户空间和内核空间的切换。</p>
+<p><img loading="lazy" src='/images/Writer.jpg' alt="/images/Writer.jpg"></p>
+<h4 class="heading-element" id="字节与字符的转化接口"><span>字节与字符的转化接口</span>
+  <a href="#%e5%ad%97%e8%8a%82%e4%b8%8e%e5%ad%97%e7%ac%a6%e7%9a%84%e8%bd%ac%e5%8c%96%e6%8e%a5%e5%8f%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>字符在写入文件持久化或者网络传输之前，都需要先经过编码转换，下图中 InputStreamReader 就是从字节到字符的转化桥梁，在初始化时需要指定编码字符集，否则会采用操作系统默认的字符集，很可能出现乱码问题。具体的编码解码过程可以查看：<a href="https://hoffmanzheng.github.io/2020/java-encode/" target="_blank" rel="external nofollow noopener noreferrer">深入分析 Java Web 中的中文编码问题</a></p>
+<p><img loading="lazy" src='/images/Charset.png' alt="/images/Charset.png"></p>
+<h3 class="heading-element" id="磁盘-io-工作机制"><span>磁盘 I/O 工作机制</span>
+  <a href="#%e7%a3%81%e7%9b%98-io-%e5%b7%a5%e4%bd%9c%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>读取和写入文件 I/O 都需要 <a href="https://baike.baidu.com/item/%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8" target="_blank" rel="external nofollow noopener noreferrer">系统调用</a> 才能实现，那么就肯定存在内存用户空间和内核空间的切换。</p>
 <blockquote>
-<p>对用户态和内核态不熟悉的可以先去我之前的博客 <a href="https://hoffmanzheng.github.io/2020/java-threadpool/">Java：线程池原理、源码分析</a> 再温习一下。</p>
+<p>对用户态和内核态不熟悉的可以先去我之前的博客 <a href="https://hoffmanzheng.github.io/2020/java-threadpool/" target="_blank" rel="external nofollow noopener noreferrer">Java：线程池原理、源码分析</a> 再温习一下。</p>
 </blockquote>
 <p>操作系统将用户内存空间和内核空间隔离开，虽然保障了内核程序运行的安全性，但使磁盘 I/O 多了一步从内核空间往用户空间复制的过程，使 I/O 成为了非常耗时的操作。为此，操作系统也是在内核空间做了缓存机制，如果用户程序访问的是缓存中的数据，就会从内核缓存中直接取出返回，以此减少 I/O 的响应时间。</p>
-<p><img src="/images/%E7%A3%81%E7%9B%98IO.png" alt=""></p>
-<h4 id="几种访问文件的方式">几种访问文件的方式</h4>
-<ol>
+<p><img loading="lazy" src='/images/磁盘IO.png' alt="/images/磁盘IO.png"></p>
+<h4 class="heading-element" id="几种访问文件的方式"><span>几种访问文件的方式</span>
+  <a href="#%e5%87%a0%e7%a7%8d%e8%ae%bf%e9%97%ae%e6%96%87%e4%bb%b6%e7%9a%84%e6%96%b9%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
 <li>标准访问：写入时将数据从用户空间复制到 <strong>内核空间的缓存</strong> 中即完成操作，写入磁盘操作由操作系统 sync 同步来完成。</li>
 <li>直接 I/O：不使用内核空间的缓存，而使用用户程序的应用缓存，实现对 <strong>热点数据</strong> 的管理，可以减少一次数据从内核缓存区到用户空间的复制，加速数据的访问效率。但如果应用缓存没有命中，程序会直接访问磁盘，加载会非常慢。</li>
 <li>同步访问：只有当数据被成功写到磁盘时才返回给应用程序成功的标志，性能较差，适合于对数据安全性较高的场景。</li>
 <li>异步访问：线程在发出 I/O 请求后不会阻塞等待，而是接着处理别的事，如此可以提高应用程序的效率，但不会改变访问文件的效率。</li>
 <li>内存映射：将磁盘中的文件与操作系统内存的某一块区域关联起来，减少数据从内核空间缓存到用户空间缓存的复制操作，提高效率。</li>
 </ol>
-<h4 id="java-访问磁盘文件">Java 访问磁盘文件</h4>
-<p>上文介绍了 Java 操作字节或字符的接口，但这些字节流最后写到何处，是如何持久化到物理磁盘的呢？</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileInputStream</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> FileNotFoundException <span style="color:#f92672">{</span>
-        String name <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>file <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> file<span style="color:#f92672">.</span><span style="color:#a6e22e">getPath</span><span style="color:#f92672">()</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
-        SecurityManager security <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">getSecurityManager</span><span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>security <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            security<span style="color:#f92672">.</span><span style="color:#a6e22e">checkRead</span><span style="color:#f92672">(</span>name<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>name <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NullPointerException<span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">isInvalid</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> FileNotFoundException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Invalid file path&#34;</span><span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-        fd <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileDescriptor<span style="color:#f92672">();</span>
-        fd<span style="color:#f92672">.</span><span style="color:#a6e22e">attach</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
-        path <span style="color:#f92672">=</span> name<span style="color:#f92672">;</span>
-        open<span style="color:#f92672">(</span>name<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>数据在磁盘中的最小描述是文件，文件也是操作系统和磁盘驱动器交互的最小单元，但 Java 中的 <code>File</code> 并不代表一个真实的文件对象，而是代表这个路径的 <strong>虚拟对象</strong>， 只有当创建 FileInputStream 实例时才会去真正检查文件存不存在（不存在的话会抛出 FileNotFoundException），创建一个 <code>FileDescriptor</code> 对象，这个对象是真正代表一个存在的文件对象的描述，通过它可以直接控制这个磁盘文件。此外，可以调用 FileDescriptor.sync() 将操作系统缓存中的数据强制刷新到物理磁盘中。</p>
-<h4 id="磁盘-io-优化">磁盘 I/O 优化</h4>
-<p>我们可以在 Linux 下通过 <code>iostat</code> 来查看机器的 I/O 性能是否已经成为程序的性能瓶颈，在有 4 个 CPU 的情况下，I/O wait 参数不应该超过 25%。</p>
+<h4 class="heading-element" id="java-访问磁盘文件"><span>Java 访问磁盘文件</span>
+  <a href="#java-%e8%ae%bf%e9%97%ae%e7%a3%81%e7%9b%98%e6%96%87%e4%bb%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>上文介绍了 Java 操作字节或字符的接口，但这些字节流最后写到何处，是如何持久化到物理磁盘的呢？</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">FileInputStream</span>(File file) <span style="color:#66d9ef">throws</span> FileNotFoundException {
+</span></span><span style="display:flex;"><span>        String name <span style="color:#f92672">=</span> (file <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> file.<span style="color:#a6e22e">getPath</span>() : <span style="color:#66d9ef">null</span>);
+</span></span><span style="display:flex;"><span>        SecurityManager security <span style="color:#f92672">=</span> System.<span style="color:#a6e22e">getSecurityManager</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (security <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            security.<span style="color:#a6e22e">checkRead</span>(name);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (name <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NullPointerException();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (file.<span style="color:#a6e22e">isInvalid</span>()) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> FileNotFoundException(<span style="color:#e6db74">&#34;Invalid file path&#34;</span>);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        fd <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> FileDescriptor();
+</span></span><span style="display:flex;"><span>        fd.<span style="color:#a6e22e">attach</span>(<span style="color:#66d9ef">this</span>);
+</span></span><span style="display:flex;"><span>        path <span style="color:#f92672">=</span> name;
+</span></span><span style="display:flex;"><span>        open(name);
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><p>数据在磁盘中的最小描述是文件，文件也是操作系统和磁盘驱动器交互的最小单元，但 Java 中的 <code>File</code> 并不代表一个真实的文件对象，而是代表这个路径的 <strong>虚拟对象</strong>， 只有当创建 FileInputStream 实例时才会去真正检查文件存不存在（不存在的话会抛出 FileNotFoundException），创建一个 <code>FileDescriptor</code> 对象，这个对象是真正代表一个存在的文件对象的描述，通过它可以直接控制这个磁盘文件。此外，可以调用 FileDescriptor.sync() 将操作系统缓存中的数据强制刷新到物理磁盘中。</p>
+<h4 class="heading-element" id="磁盘-io-优化"><span>磁盘 I/O 优化</span>
+  <a href="#%e7%a3%81%e7%9b%98-io-%e4%bc%98%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>我们可以在 Linux 下通过 <code>iostat</code> 来查看机器的 I/O 性能是否已经成为程序的性能瓶颈，在有 4 个 CPU 的情况下，I/O wait 参数不应该超过 25%。</p>
 <p>此外 IOPS（每秒读写次数）也是衡量磁盘 I/O 性能的一个参数，通常与磁盘转速和数据块大小有关，可以与应用程序所需要的最低的 IOPS 对比看是否能够满足性能要求。</p>
 <p>通常提升磁盘 I/O 性能的方法有：</p>
 <ul>
@@ -215,50 +214,69 @@
 <li>采用异步非阻塞的访问方式</li>
 <li>采用 RAID 技术，实现并行读写，提升 IOPS</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>磁盘阵列</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RAID 0</td>
-<td>数据被平均写到多个磁盘阵列中，实现并行读写，性能最高，100% 空间利用率，但不提供数据冗余保护，一旦数据损坏将无法恢复</td>
-</tr>
-<tr>
-<td>RAID 1</td>
-<td>将数据复制到镜像磁盘阵列中，进行备份提高数据的安全性，空间利用率 50%</td>
-</tr>
-<tr>
-<td>RAID 5</td>
-<td>前两种的折中，往一个磁盘中写入数据的奇偶校验信息，磁盘损坏时可以用其他数据块和对应的校验数据来恢复损坏的数据</td>
-</tr>
-</tbody>
-</table>
-<h3 id="网络-io-工作机制">网络 I/O 工作机制</h3>
-<p>数据从一台主机发送到网络中的另一台主机需要先确认有相互沟通的意向和能力，有关如何建立和关闭一个 TCP 连接可以参考我的 <a href="https://hoffmanzheng.github.io/2020/net-http-tcp/">Net：计算机网络读书笔记</a> 中的可靠数据传输章节。</p>
-<h4 id="socket-通信链路">Socket 通信链路</h4>
-<p>主机之间的程序通信必须通过 Socket（套接字）来建立连接，套接字上联应用进程，下联网络协议栈，提供了应用层进程利用网络协议交换数据的机制。</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>磁盘阵列</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>RAID 0</td>
+            <td>数据被平均写到多个磁盘阵列中，实现并行读写，性能最高，100% 空间利用率，但不提供数据冗余保护，一旦数据损坏将无法恢复</td>
+        </tr>
+        <tr>
+            <td>RAID 1</td>
+            <td>将数据复制到镜像磁盘阵列中，进行备份提高数据的安全性，空间利用率 50%</td>
+        </tr>
+        <tr>
+            <td>RAID 5</td>
+            <td>前两种的折中，往一个磁盘中写入数据的奇偶校验信息，磁盘损坏时可以用其他数据块和对应的校验数据来恢复损坏的数据</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 class="heading-element" id="网络-io-工作机制"><span>网络 I/O 工作机制</span>
+  <a href="#%e7%bd%91%e7%bb%9c-io-%e5%b7%a5%e4%bd%9c%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>数据从一台主机发送到网络中的另一台主机需要先确认有相互沟通的意向和能力，有关如何建立和关闭一个 TCP 连接可以参考我的 <a href="https://hoffmanzheng.github.io/2020/net-http-tcp/" target="_blank" rel="external nofollow noopener noreferrer">Net：计算机网络读书笔记</a> 中的可靠数据传输章节。</p>
+<h4 class="heading-element" id="socket-通信链路"><span>Socket 通信链路</span>
+  <a href="#socket-%e9%80%9a%e4%bf%a1%e9%93%be%e8%b7%af" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>主机之间的程序通信必须通过 Socket（套接字）来建立连接，套接字上联应用进程，下联网络协议栈，提供了应用层进程利用网络协议交换数据的机制。</p>
 <p>大部分情况下我们使用的都是基于 <code>TCP/IP</code> 的流套接字，建立 TCP 连接后需要底层 IP 来寻址网络中的主机，但是一台主机上可能同时运行着多个应用程序，如何才能与指定的应用程序通讯就要通过 <code>端口号</code> 来执行，这样就可以通过一个 Socket 实例来唯一代表一个主机上的应用程序的通信链路了。</p>
-<p><img src="/images/socket.jpg" alt=""></p>
+<p><img loading="lazy" src='/images/socket.jpg' alt="/images/socket.jpg"></p>
 <p>服务端会创建一个 ServerSocket 实例，只要指定的端口号没有被占用一般都会创建成功，操作系统会为该实例创建一个底层数据结构，包含指定监听的端口号和监听地址的通配符，通常是 <code>*</code> 即监听所有地址，进入阻塞等待状态，等待客户端的请求。</p>
 <p>当有请求到来时，会为这个连接创建一个新的 Socket 数据结构，包含请求源地址和端口，并加入到 ServerSocket 实例的未完成连接的数据结构列表中，服务端与之对应的 Socket 实例会在完成与客户端的三次握手后创建返回，并将该数据结构移到已完成列表中，所以与 ServerSocket 所关联的列表中的每个数据结构都代表一个与客户端建立的 TCP 连接。</p>
-<h4 id="数据传输与影响因素">数据传输与影响因素</h4>
-<p>当连接成功建立后，服务端和客户端都会拥有一个 Socket 实例，实例通过 InputStream 和 OutputStream 来传输字节流。它们都有一个一定大小的缓存区，写入端将数据写到 OutputStream 的 SendQ 队列中，当队列满时，数据将被转移到另一端 InputStream 的 RecvQ 队列中，如果这时 RecvQ 已经满了，OutputStream 的 <code>write</code> 方法将会 <strong>阻塞</strong>，直到 RecvQ 队列中有足够的空间容纳 SendQ 发送的数据。</p>
+<h4 class="heading-element" id="数据传输与影响因素"><span>数据传输与影响因素</span>
+  <a href="#%e6%95%b0%e6%8d%ae%e4%bc%a0%e8%be%93%e4%b8%8e%e5%bd%b1%e5%93%8d%e5%9b%a0%e7%b4%a0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>当连接成功建立后，服务端和客户端都会拥有一个 Socket 实例，实例通过 InputStream 和 OutputStream 来传输字节流。它们都有一个一定大小的缓存区，写入端将数据写到 OutputStream 的 SendQ 队列中，当队列满时，数据将被转移到另一端 InputStream 的 RecvQ 队列中，如果这时 RecvQ 已经满了，OutputStream 的 <code>write</code> 方法将会 <strong>阻塞</strong>，直到 RecvQ 队列中有足够的空间容纳 SendQ 发送的数据。</p>
 <p>这个缓存区的大小及写入端和读取端的速度将会很大程度上影响这个连接的数据传输效率，因此 TCP 拥塞控制需要一个最优的缓存区大小，这个窗口大小（BDP，Bandwidth Delay Product）等于带宽乘以RTT（Round-Trip Time，响应时间）。此外，如果两边同时传送数据可能会产生 <strong>死锁</strong>，这个问题在 NIO 中得到了解决。</p>
-<h4 id="网络-io-优化">网络 I/O 优化</h4>
-<ol>
+<h4 class="heading-element" id="网络-io-优化"><span>网络 I/O 优化</span>
+  <a href="#%e7%bd%91%e7%bb%9c-io-%e4%bc%98%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
 <li>高并发下注意系统可用的端口数，可用端口有限的情况下会有大量请求等待建立连接，可以增大端口范围，或设置 <code>/proc/sys/net/ipv4/tcp_fin_timeout</code> 为更小的值来快速释放请求。</li>
 <li>减少网络交互的次数，在两端设置缓存，减少对数据库的访问；<strong>合并访问请求</strong>，比如可以将多个 JS 文件合并在一个 HTTP 链接中，每个文件用逗号隔开，然后发送给后端 Web 服务器，根据 URL 再拆分为各个文件，最后一起打包一并返回给前端游览器。、</li>
 <li>减少网络传输数据量的大小，通常的做法是将数据压缩后再传输。在设计代理程序时，尽量避免要读取整个通信数据才能取得需要的信息。</li>
 <li>尽量减少编码，从字符到字节需要编码，但这个编码过程是比较耗时，减少转化过程可以提高 I/O 效率。</li>
 <li>根据应用场景选择合适的交互方式，网络长连接同时传输数据不是很多的情况下可以使用 <strong>同步非阻塞</strong> 的方式，用额外的 CPU 消耗来提升 I/O 性能；分布式数据库写备份记录通常采用异步阻塞的方式，集群之间的消息同步则可以使用异步非阻塞的方式。</li>
 </ol>
-<h3 id="nio-的工作方式">NIO 的工作方式</h3>
-<h4 id="bio-与-nio">BIO 与 NIO</h4>
-<p>采用 BIO（Blocking IO）线程在数据写入 OutputStream 或者从 InputStream 读取时都有可能会阻塞，一旦阻塞线程将会 <strong>失去 CPU 的使用权</strong>，这在大规模访问和高性能要求下是不能被接受的。</p>
+<h3 class="heading-element" id="nio-的工作方式"><span>NIO 的工作方式</span>
+  <a href="#nio-%e7%9a%84%e5%b7%a5%e4%bd%9c%e6%96%b9%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="bio-与-nio"><span>BIO 与 NIO</span>
+  <a href="#bio-%e4%b8%8e-nio" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>采用 BIO（Blocking IO）线程在数据写入 OutputStream 或者从 InputStream 读取时都有可能会阻塞，一旦阻塞线程将会 <strong>失去 CPU 的使用权</strong>，这在大规模访问和高性能要求下是不能被接受的。</p>
 <p>虽然我们可以采用一个客户端对应一个处理线程的方式，让出现阻塞的线程不影响其他线程的工作，加以使用线程池来减少线程创建和回收的成本，但仍有一些使用场景无法适用，比如服务器需要同时保持大量的 HTTP 长连接，或是想给某些客户端更高的优先级。为此我们需要一种新的 I/O 操作方式。</p>
 <p>传统多线程 + BIO 存在的问题：</p>
 <ol>
@@ -268,7 +286,7 @@
 <li>容易造成锯齿状的系统负载。因为系统负载是用活动线程数或CPU核心数，一旦线程数量高但外部网络环境不是很稳定，就很容易造成大量请求的结果同时返回，激活大量阻塞线程从而使系统负载压力过大。</li>
 <li>当面对十万甚至百万级连接的时候，传统的 BIO 模型是无能为力的。随着移动端应用的兴起和各种网络游戏的盛行，百万级长连接日趋普遍，此时，必然需要一种更高效的 I/O 处理模型。</li>
 </ol>
-<p><img src="/images/io-model.jpg" alt=""></p>
+<p><img loading="lazy" src='/images/io-model.jpg' alt="/images/io-model.jpg"></p>
 <p>Java NIO 实际上就是 <strong>多路复用 I/O</strong>，会有一个线程不断去轮询多个 socket 的状态（selector.select()），如果没有事件就一直阻塞在哪里，通过一个线程就可以管理多个 socket，只有当 socket 真正有读写事件发生时才会占用资源来进行实际的读写操作。</p>
 <p>NIO 同步非阻塞特性：</p>
 <ol>
@@ -278,261 +296,238 @@
 <li>select 是阻塞的，不用担心在函数中 CPU 空转。另外多路复用 IO 为何比非阻塞 IO 模型的 <strong>效率高</strong> 是因为在非阻塞 IO 中，不断询问 socket 状态是通过用户线程去进行的，而在多路复用 IO 中，轮询每个 socket 状态是在 <strong>内核</strong> 中进行的，这个效率比用户线程要高的多。</li>
 </ol>
 <p>JDK 1.4 引入的 <code>java.nio</code> 包采用了新的非阻塞的 I/O 操作方式，实际上 <code>java.io</code> 也已经被 NIO 重新实现过，即使我们不显式地使用 NIO 编程，也能从中受益。</p>
-<table>
-<thead>
-<tr>
-<th>BIO</th>
-<th>NIO</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>面向流（Stream Oriented）</td>
-<td>面向缓冲去（Buffer Oriented）</td>
-</tr>
-<tr>
-<td>阻塞 IO</td>
-<td>非阻塞 IO</td>
-</tr>
-<tr>
-<td>-</td>
-<td>选择器（Selector）</td>
-</tr>
-</tbody>
-</table>
-<p>BIO 是面向流，一次一个字节地处理数据；而 NIO 则面向块（缓冲区），以块的形式处理数据。NIO 主要由三个核心部分组成：Buffer 缓冲区、Channel 管道、Selector 选择器。</p>
-<h4 id="buffer-的工作方式">Buffer 的工作方式</h4>
-<p>Buffer 缓冲区作为 NIO 中直接与数据交互的部分，底层是一个数组结构，它通过几个成员变量来记录当前缓存的数据状态：</p>
-<table>
-<thead>
-<tr>
-<th>索引</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>capacity</td>
-<td>缓冲区数组总长度</td>
-</tr>
-<tr>
-<td>position</td>
-<td>下一个要操作的数据元素的位置</td>
-</tr>
-<tr>
-<td>limit</td>
-<td>缓冲区数组不可操作的下一个元素的位置</td>
-</tr>
-<tr>
-<td>mark</td>
-<td>备忘位置，与 reset() 联合使用</td>
-</tr>
-</tbody>
-</table>
-<p>ByteBuffer 常用 API 如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ByteBuffer byteBuffer <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>10<span style="color:#f92672">);</span>
-System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;初始化一个长度为 10 的 Buffer: &#34;</span> <span style="color:#f92672">+</span> byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
-
-byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]{</span>2<span style="color:#f92672">,</span> 3<span style="color:#f92672">,</span> 3<span style="color:#f92672">});</span>
-System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;往缓冲区写入三个字节: &#34;</span> <span style="color:#f92672">+</span> byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
-
-byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">flip</span><span style="color:#f92672">();</span>
-System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;切换到读模式: &#34;</span> <span style="color:#f92672">+</span> byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
-
-<span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> bytes <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>3<span style="color:#f92672">];</span>
-System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;读取前结果集数据: &#34;</span> <span style="color:#f92672">+</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span>bytes<span style="color:#f92672">));</span>
-byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>bytes<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 3<span style="color:#f92672">);</span>
-<span style="color:#75715e">// 读取的时候，length 最大可为 limit，不然会抛出 java.nio.BufferUnderflowException
-</span><span style="color:#75715e"></span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>byteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
-System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;读取后结果集数据: &#34;</span> <span style="color:#f92672">+</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span>bytes<span style="color:#f92672">));</span>
-</code></pre></div><p>输出结果如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">初始化一个长度为 <span style="color:#ae81ff">10</span> 的 Buffer: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
-往缓冲区写入三个字节: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
-切换到读模式: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
-读取前结果集数据: <span style="color:#f92672">[</span>0, 0, 0<span style="color:#f92672">]</span>
-java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
-读取后结果集数据: <span style="color:#f92672">[</span>2, 3, 3<span style="color:#f92672">]</span>
-</code></pre></div><p>在写模式下 limit 等于 capacity，表示最后能够写多少个字节的数据，使用 <code>flip()</code> 切换到读模式后， limit 代表最多能够读到多少数据，所以 flip 之后 limit 会被设置成写模式下的 position 值。如果读取超出 limit 的数据则会抛出 <code>java.nio.BufferUnderflowException</code>。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">flip</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        limit <span style="color:#f92672">=</span> position<span style="color:#f92672">;</span>
-        position <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-        mark <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>当想进行下一次写入时，调用 <code>clear()</code> 再次切换成写模式，然后重置 position、limit、mark 值，这样不会擦除缓冲数组中的数据，而是将数据 “遗忘”，准备好再次写入。</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>BIO</th>
+            <th>NIO</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>面向流（Stream Oriented）</td>
+            <td>面向缓冲去（Buffer Oriented）</td>
+        </tr>
+        <tr>
+            <td>阻塞 IO</td>
+            <td>非阻塞 IO</td>
+        </tr>
+        <tr>
+            <td>-</td>
+            <td>选择器（Selector）</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>BIO 是面向流，一次一个字节地处理数据；而 NIO 则面向块（缓冲区），以块的形式处理数据。NIO 主要由三个核心部分组成：Buffer 缓冲区、Channel 管道、Selector 选择器。</p>
+<h4 class="heading-element" id="buffer-的工作方式"><span>Buffer 的工作方式</span>
+  <a href="#buffer-%e7%9a%84%e5%b7%a5%e4%bd%9c%e6%96%b9%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Buffer 缓冲区作为 NIO 中直接与数据交互的部分，底层是一个数组结构，它通过几个成员变量来记录当前缓存的数据状态：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>索引</th>
+            <th>说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>capacity</td>
+            <td>缓冲区数组总长度</td>
+        </tr>
+        <tr>
+            <td>position</td>
+            <td>下一个要操作的数据元素的位置</td>
+        </tr>
+        <tr>
+            <td>limit</td>
+            <td>缓冲区数组不可操作的下一个元素的位置</td>
+        </tr>
+        <tr>
+            <td>mark</td>
+            <td>备忘位置，与 reset() 联合使用</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>ByteBuffer 常用 API 如下：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>ByteBuffer byteBuffer <span style="color:#f92672">=</span> ByteBuffer.<span style="color:#a6e22e">allocate</span>(10);
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;初始化一个长度为 10 的 Buffer: &#34;</span> <span style="color:#f92672">+</span> byteBuffer.<span style="color:#a6e22e">toString</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>byteBuffer.<span style="color:#a6e22e">put</span>(<span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span>{2, 3, 3});
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;往缓冲区写入三个字节: &#34;</span> <span style="color:#f92672">+</span> byteBuffer.<span style="color:#a6e22e">toString</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>byteBuffer.<span style="color:#a6e22e">flip</span>();
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;切换到读模式: &#34;</span> <span style="color:#f92672">+</span> byteBuffer.<span style="color:#a6e22e">toString</span>());
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> bytes <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>3<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;读取前结果集数据: &#34;</span> <span style="color:#f92672">+</span> Arrays.<span style="color:#a6e22e">toString</span>(bytes));
+</span></span><span style="display:flex;"><span>byteBuffer.<span style="color:#a6e22e">get</span>(bytes, 0, 3);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 读取的时候，length 最大可为 limit，不然会抛出 java.nio.BufferUnderflowException</span>
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(byteBuffer.<span style="color:#a6e22e">toString</span>());
+</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34;读取后结果集数据: &#34;</span> <span style="color:#f92672">+</span> Arrays.<span style="color:#a6e22e">toString</span>(bytes));</span></span></code></pre></div><p>输出结果如下：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>初始化一个长度为 <span style="color:#ae81ff">10</span> 的 Buffer: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>往缓冲区写入三个字节: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">10</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>切换到读模式: java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>读取前结果集数据: <span style="color:#f92672">[</span>0, 0, 0<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>java.nio.HeapByteBuffer<span style="color:#f92672">[</span>pos<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> lim<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span> cap<span style="color:#f92672">=</span>10<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>读取后结果集数据: <span style="color:#f92672">[</span>2, 3, 3<span style="color:#f92672">]</span></span></span></code></pre></div><p>在写模式下 limit 等于 capacity，表示最后能够写多少个字节的数据，使用 <code>flip()</code> 切换到读模式后， limit 代表最多能够读到多少数据，所以 flip 之后 limit 会被设置成写模式下的 position 值。如果读取超出 limit 的数据则会抛出 <code>java.nio.BufferUnderflowException</code>。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">flip</span>() {
+</span></span><span style="display:flex;"><span>        limit <span style="color:#f92672">=</span> position;
+</span></span><span style="display:flex;"><span>        position <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        mark <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>;
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><p>当想进行下一次写入时，调用 <code>clear()</code> 再次切换成写模式，然后重置 position、limit、mark 值，这样不会擦除缓冲数组中的数据，而是将数据 “遗忘”，准备好再次写入。</p>
 <p>如果 Buffer 中仍有未读的数据，且后续还需要这些数据，但是此时想要先先写些数据，那么使用 <code>compact()</code> 方法，compact 将所有 <strong>未读的数据拷贝到 Buffer 起始处</strong>，然后将 position设置到最后一个未读元素后面，limit 设置为 capacity，之后就可以写数据了，不会覆盖未读的数据。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">clear</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        position <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-        limit <span style="color:#f92672">=</span> capacity<span style="color:#f92672">;</span>
-        mark <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-<span style="color:#66d9ef">public</span> ByteBuffer <span style="color:#a6e22e">compact</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">arraycopy</span><span style="color:#f92672">(</span>hb<span style="color:#f92672">,</span> ix<span style="color:#f92672">(</span>position<span style="color:#f92672">()),</span> hb<span style="color:#f92672">,</span> ix<span style="color:#f92672">(</span>0<span style="color:#f92672">),</span> remaining<span style="color:#f92672">());</span>
-        position<span style="color:#f92672">(</span>remaining<span style="color:#f92672">());</span>
-        limit<span style="color:#f92672">(</span>capacity<span style="color:#f92672">());</span>
-        discardMark<span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>mark() 与 reset() 组合使用，mark 用来标记当前下次操作的 position 位置，reset 会将 mark 值重新赋给 position。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">mark</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        mark <span style="color:#f92672">=</span> position<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-<span style="color:#75715e">// Resets this buffer&#39;s position to the previously-marked position.
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">reset</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> mark<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span>
-            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> InvalidMarkException<span style="color:#f92672">();</span>
-        position <span style="color:#f92672">=</span> m<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>从操作系统缓冲区复制数据到用户缓冲区比较耗性能，Buffer 提供了以 <strong>内存映射</strong> 的访问方式，即 <code>ByteBuffer.allocateDirect(int capacity)</code>，这个方法返回的 DirectByteBuffer 就是与底层空间关联的缓冲区，通过 Native 代码操作非 JVM 堆的内存空间。每次创建和回收的内存开销都比较大，适合数据量比较大、生命周期比较长的情况。</p>
-<h4 id="nio-的工作机制">NIO 的工作机制</h4>
-<p>NIO 作为非阻塞的 I/O 方式其实是在网络层次中理解的，对于 FileChannel 来说一样是阻塞的。NIO 采用了 <strong>多路复用的 I/O 模型</strong>，一个进程可以同时等待多个文件描述符，而这些文件描述符其中的任意一个进入读就绪状态，select 函数就可以返回。</p>
-<p><img src="/images/nio.png" alt=""></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">clear</span>() {
+</span></span><span style="display:flex;"><span>        position <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        limit <span style="color:#f92672">=</span> capacity;
+</span></span><span style="display:flex;"><span>        mark <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> ByteBuffer <span style="color:#a6e22e">compact</span>() {
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">arraycopy</span>(hb, ix(position()), hb, ix(0), remaining());
+</span></span><span style="display:flex;"><span>        position(remaining());
+</span></span><span style="display:flex;"><span>        limit(capacity());
+</span></span><span style="display:flex;"><span>        discardMark();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>;
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><p>mark() 与 reset() 组合使用，mark 用来标记当前下次操作的 position 位置，reset 会将 mark 值重新赋给 position。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">mark</span>() {
+</span></span><span style="display:flex;"><span>        mark <span style="color:#f92672">=</span> position;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Resets this buffer&#39;s position to the previously-marked position.</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> Buffer <span style="color:#a6e22e">reset</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> mark;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (m <span style="color:#f92672">&lt;</span> 0)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> InvalidMarkException();
+</span></span><span style="display:flex;"><span>        position <span style="color:#f92672">=</span> m;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>;
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><p>从操作系统缓冲区复制数据到用户缓冲区比较耗性能，Buffer 提供了以 <strong>内存映射</strong> 的访问方式，即 <code>ByteBuffer.allocateDirect(int capacity)</code>，这个方法返回的 DirectByteBuffer 就是与底层空间关联的缓冲区，通过 Native 代码操作非 JVM 堆的内存空间。每次创建和回收的内存开销都比较大，适合数据量比较大、生命周期比较长的情况。</p>
+<h4 class="heading-element" id="nio-的工作机制"><span>NIO 的工作机制</span>
+  <a href="#nio-%e7%9a%84%e5%b7%a5%e4%bd%9c%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>NIO 作为非阻塞的 I/O 方式其实是在网络层次中理解的，对于 FileChannel 来说一样是阻塞的。NIO 采用了 <strong>多路复用的 I/O 模型</strong>，一个进程可以同时等待多个文件描述符，而这些文件描述符其中的任意一个进入读就绪状态，select 函数就可以返回。</p>
+<p><img loading="lazy" src='/images/nio.png' alt="/images/nio.png"></p>
 <p>Selector 就是一个 I/O 调度系统，它负责监控每个 Channel 的当前运行状态（需提前注册），当 Channel 中有数据时，就把数据分配到对应的 Buffer 中，我们可以控制 Buffer 的容量及扩容机制，典型的 NIO 代码如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">select</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
-    ByteBuffer buffer <span style="color:#f92672">=</span> ByteBuffer<span style="color:#f92672">.</span><span style="color:#a6e22e">allocate</span><span style="color:#f92672">(</span>1024<span style="color:#f92672">);</span>
-    Selector selector <span style="color:#f92672">=</span> Selector<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">();</span>
-    ServerSocketChannel serverSocketChannel <span style="color:#f92672">=</span> ServerSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">open</span><span style="color:#f92672">();</span>
-    serverSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">configureBlocking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>  <span style="color:#75715e">// 非阻塞模式
-</span><span style="color:#75715e"></span>    serverSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">socket</span><span style="color:#f92672">().</span><span style="color:#a6e22e">bind</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> InetSocketAddress<span style="color:#f92672">(</span>8080<span style="color:#f92672">));</span>
-    <span style="color:#75715e">// 把通信信道注册到选择器上
-</span><span style="color:#75715e"></span>    serverSocketChannel<span style="color:#f92672">.</span><span style="color:#a6e22e">register</span><span style="color:#f92672">(</span>selector<span style="color:#f92672">,</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_ACCEPT</span><span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#75715e">// 检查注册在这个选择器上的所有通信信道是否有事件发生
-</span><span style="color:#75715e"></span>        Set selectedKeys <span style="color:#f92672">=</span> selector<span style="color:#f92672">.</span><span style="color:#a6e22e">selectedKeys</span><span style="color:#f92672">();</span>  <span style="color:#75715e">// 获取所有的 key
-</span><span style="color:#75715e"></span>        Iterator iterator <span style="color:#f92672">=</span> selectedKeys<span style="color:#f92672">.</span><span style="color:#a6e22e">iterator</span><span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>iterator<span style="color:#f92672">.</span><span style="color:#a6e22e">hasNext</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-            SelectionKey selectionKey <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>SelectionKey<span style="color:#f92672">)</span> iterator<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">();</span>
-            <span style="color:#75715e">// 监听客户端的连接请求
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">readyOps</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_ACCEPT</span><span style="color:#f92672">)</span> 
-                <span style="color:#f92672">==</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_ACCEPT</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#75715e">// 获取通信通道对象
-</span><span style="color:#75715e"></span>                ServerSocketChannel ssc <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>ServerSocketChannel<span style="color:#f92672">)</span> selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">channel</span><span style="color:#f92672">();</span>  
-                SocketChannel sc <span style="color:#f92672">=</span> ssc<span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">();</span>  <span style="color:#75715e">// 接收请求
-</span><span style="color:#75715e"></span>                sc<span style="color:#f92672">.</span><span style="color:#a6e22e">configureBlocking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
-                <span style="color:#75715e">// 设置该 channel 为读就绪状态
-</span><span style="color:#75715e"></span>                sc<span style="color:#f92672">.</span><span style="color:#a6e22e">register</span><span style="color:#f92672">(</span>selector<span style="color:#f92672">,</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_READ</span><span style="color:#f92672">);</span>
-                iterator<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">();</span>
-                <span style="color:#75715e">// 处理请求：从读就绪状态的 channel 中读取数据写入 buffer
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">readyOps</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_READ</span><span style="color:#f92672">)</span> 
-                       <span style="color:#f92672">==</span> SelectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">OP_READ</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                SocketChannel sc <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>SocketChannel<span style="color:#f92672">)</span> selectionKey<span style="color:#f92672">.</span><span style="color:#a6e22e">channel</span><span style="color:#f92672">();</span>
-                <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">();</span>
-                    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> sc<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>buffer<span style="color:#f92672">);</span> 
-                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                    buffer<span style="color:#f92672">.</span><span style="color:#a6e22e">flip</span><span style="color:#f92672">();</span>
-                <span style="color:#f92672">}</span>
-                iterator<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">();</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>虽然上述代码把监听请求和处理请求的事件放在同一个线程中，但通常 Web 服务器像 Tomcat 和 Jetty 都是它们放在 <strong>两个线程</strong> 中，一个线程专门以阻塞的方式监听客户端的连接请求，另一个线程真正采用 NIO 的方式负责处理请求，因此每个连接的数据交互都不是阻塞方式。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">select</span>() <span style="color:#66d9ef">throws</span> IOException {
+</span></span><span style="display:flex;"><span>    ByteBuffer buffer <span style="color:#f92672">=</span> ByteBuffer.<span style="color:#a6e22e">allocate</span>(1024);
+</span></span><span style="display:flex;"><span>    Selector selector <span style="color:#f92672">=</span> Selector.<span style="color:#a6e22e">open</span>();
+</span></span><span style="display:flex;"><span>    ServerSocketChannel serverSocketChannel <span style="color:#f92672">=</span> ServerSocketChannel.<span style="color:#a6e22e">open</span>();
+</span></span><span style="display:flex;"><span>    serverSocketChannel.<span style="color:#a6e22e">configureBlocking</span>(<span style="color:#66d9ef">false</span>);  <span style="color:#75715e">// 非阻塞模式</span>
+</span></span><span style="display:flex;"><span>    serverSocketChannel.<span style="color:#a6e22e">socket</span>().<span style="color:#a6e22e">bind</span>(<span style="color:#66d9ef">new</span> InetSocketAddress(8080));
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 把通信信道注册到选择器上</span>
+</span></span><span style="display:flex;"><span>    serverSocketChannel.<span style="color:#a6e22e">register</span>(selector, SelectionKey.<span style="color:#a6e22e">OP_ACCEPT</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">true</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 检查注册在这个选择器上的所有通信信道是否有事件发生</span>
+</span></span><span style="display:flex;"><span>        Set selectedKeys <span style="color:#f92672">=</span> selector.<span style="color:#a6e22e">selectedKeys</span>();  <span style="color:#75715e">// 获取所有的 key</span>
+</span></span><span style="display:flex;"><span>        Iterator iterator <span style="color:#f92672">=</span> selectedKeys.<span style="color:#a6e22e">iterator</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (iterator.<span style="color:#a6e22e">hasNext</span>()) {
+</span></span><span style="display:flex;"><span>            SelectionKey selectionKey <span style="color:#f92672">=</span> (SelectionKey) iterator.<span style="color:#a6e22e">next</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 监听客户端的连接请求</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> ((selectionKey.<span style="color:#a6e22e">readyOps</span>() <span style="color:#f92672">&amp;</span> SelectionKey.<span style="color:#a6e22e">OP_ACCEPT</span>) 
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">==</span> SelectionKey.<span style="color:#a6e22e">OP_ACCEPT</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 获取通信通道对象</span>
+</span></span><span style="display:flex;"><span>                ServerSocketChannel ssc <span style="color:#f92672">=</span> (ServerSocketChannel) selectionKey.<span style="color:#a6e22e">channel</span>();  
+</span></span><span style="display:flex;"><span>                SocketChannel sc <span style="color:#f92672">=</span> ssc.<span style="color:#a6e22e">accept</span>();  <span style="color:#75715e">// 接收请求</span>
+</span></span><span style="display:flex;"><span>                sc.<span style="color:#a6e22e">configureBlocking</span>(<span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 设置该 channel 为读就绪状态</span>
+</span></span><span style="display:flex;"><span>                sc.<span style="color:#a6e22e">register</span>(selector, SelectionKey.<span style="color:#a6e22e">OP_READ</span>);
+</span></span><span style="display:flex;"><span>                iterator.<span style="color:#a6e22e">remove</span>();
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 处理请求：从读就绪状态的 channel 中读取数据写入 buffer</span>
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> ((selectionKey.<span style="color:#a6e22e">readyOps</span>() <span style="color:#f92672">&amp;</span> SelectionKey.<span style="color:#a6e22e">OP_READ</span>) 
+</span></span><span style="display:flex;"><span>                       <span style="color:#f92672">==</span> SelectionKey.<span style="color:#a6e22e">OP_READ</span>) {
+</span></span><span style="display:flex;"><span>                SocketChannel sc <span style="color:#f92672">=</span> (SocketChannel) selectionKey.<span style="color:#a6e22e">channel</span>();
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">true</span>) {
+</span></span><span style="display:flex;"><span>                    buffer.<span style="color:#a6e22e">clear</span>();
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> sc.<span style="color:#a6e22e">read</span>(buffer); 
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (n <span style="color:#f92672">&lt;=</span> 0) {
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    buffer.<span style="color:#a6e22e">flip</span>();
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                iterator.<span style="color:#a6e22e">remove</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>虽然上述代码把监听请求和处理请求的事件放在同一个线程中，但通常 Web 服务器像 Tomcat 和 Jetty 都是它们放在 <strong>两个线程</strong> 中，一个线程专门以阻塞的方式监听客户端的连接请求，另一个线程真正采用 NIO 的方式负责处理请求，因此每个连接的数据交互都不是阻塞方式。</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2020-08-17 09:19:47">Updated on 2020-08-17&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/java-io/" data-title="深入分析 Java I/O 的工作机制" data-hashtags="Java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/java-io/" data-hashtag="Java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/java-io/" data-title="深入分析 Java I/O 的工作机制"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2020/java-io/>https://hoffmanzheng.github.io/2020/java-io/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/java/">
-                    #Java</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2020/dns-cdn/" class="prev" rel="prev" title="深入 Web 请求过程"><i class="iconfont icon-left"></i>&nbsp;深入 Web 请求过程</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2020/java-encode/" class="next" rel="next" title="深入分析 Java Web 中的中文编码问题">深入分析 Java Web 中的中文编码问题&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/java/" class="post-tag" title="Tags - Java">Java</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2020/dns-cdn/" class="post-nav-item" rel="prev" title="深入 Web 请求过程"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>深入 Web 请求过程</a><a href="/2020/java-encode/" class="post-nav-item" rel="next" title="深入分析 Java Web 中的中文编码问题">深入分析 Java Web 中的中文编码问题<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#java-io-类库的基本架构">Java I/O 类库的基本架构</a>
+          <ul>
+            <li><a href="#基于字节的-io-操作接口">基于字节的 I/O 操作接口</a></li>
+            <li><a href="#基于字符的-io-操作接口">基于字符的 I/O 操作接口</a></li>
+            <li><a href="#字节与字符的转化接口">字节与字符的转化接口</a></li>
+          </ul>
+        </li>
+        <li><a href="#磁盘-io-工作机制">磁盘 I/O 工作机制</a>
+          <ul>
+            <li><a href="#几种访问文件的方式">几种访问文件的方式</a></li>
+            <li><a href="#java-访问磁盘文件">Java 访问磁盘文件</a></li>
+            <li><a href="#磁盘-io-优化">磁盘 I/O 优化</a></li>
+          </ul>
+        </li>
+        <li><a href="#网络-io-工作机制">网络 I/O 工作机制</a>
+          <ul>
+            <li><a href="#socket-通信链路">Socket 通信链路</a></li>
+            <li><a href="#数据传输与影响因素">数据传输与影响因素</a></li>
+            <li><a href="#网络-io-优化">网络 I/O 优化</a></li>
+          </ul>
+        </li>
+        <li><a href="#nio-的工作方式">NIO 的工作方式</a>
+          <ul>
+            <li><a href="#bio-与-nio">BIO 与 NIO</a></li>
+            <li><a href="#buffer-的工作方式">Buffer 的工作方式</a></li>
+            <li><a href="#nio-的工作机制">NIO 的工作机制</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/f67b9b71b6ba16ded3ddb8242b5f4551.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

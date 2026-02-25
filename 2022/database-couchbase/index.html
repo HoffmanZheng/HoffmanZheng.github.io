@@ -1,181 +1,163 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2022/distribute-redlock/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2022/devops-loki/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2022/database-couchbase/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           Couchbase: Blazing Fast. Surprisingly Affordable. | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="Couchbase: Blazing Fast. Surprisingly Affordable. | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Couchbase: Blazing Fast. Surprisingly Affordable. - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。
+本篇基于 Couchbase 官网文档 介绍其数据模型、内存存储、服务与搜索、集群可用性等。
+数据 Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。
+"><meta name="keywords" content='Database'>
+  <meta itemprop="name" content="Couchbase: Blazing Fast. Surprisingly Affordable.">
+  <meta itemprop="description" content="Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。
+本篇基于 Couchbase 官网文档 介绍其数据模型、内存存储、服务与搜索、集群可用性等。
+数据 Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。">
+  <meta itemprop="datePublished" content="2022-02-21T13:19:47+01:00">
+  <meta itemprop="dateModified" content="2022-02-21T13:19:47+01:00">
+  <meta itemprop="wordCount" content="530">
+  <meta itemprop="keywords" content="Database"><meta property="og:url" content="https://hoffmanzheng.github.io/2022/database-couchbase/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="Couchbase: Blazing Fast. Surprisingly Affordable.">
+  <meta property="og:description" content="Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。
+本篇基于 Couchbase 官网文档 介绍其数据模型、内存存储、服务与搜索、集群可用性等。
+数据 Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2022-02-21T13:19:47+01:00">
+    <meta property="article:modified_time" content="2022-02-21T13:19:47+01:00">
+    <meta property="article:tag" content="Database">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Couchbase: Blazing Fast. Surprisingly Affordable.">
+  <meta name="twitter:description" content="Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。
+本篇基于 Couchbase 官网文档 介绍其数据模型、内存存储、服务与搜索、集群可用性等。
+数据 Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2022/database-couchbase/" title="Couchbase: Blazing Fast. Surprisingly Affordable. - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2022/distribute-redlock/" title="分布式：[译] 基于 Redis 的分布式锁 " /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2022/devops-loki/" title="Devops：[译] 日志聚合系统 Grafana Loki " /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Couchbase: Blazing Fast. Surprisingly Affordable.",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "Couchbase: Blazing Fast. Surprisingly Affordable.",
-    "headline" : "Couchbase: Blazing Fast. Surprisingly Affordable.",
-    "description" : "Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。\n本篇基于 Couchbase 官网文档 介绍其数据模型、内存存储、服务与搜索、集群可用性等。\n数据 Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本\/复杂的数据类型)。\n{ \u0026#34;a1\u0026#34; : number, \u0026#34;a2\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;a3\u0026#34; : { \/\/ nested array  \u0026#34;b1\u0026#34; : [ number, number, number ] }, \u0026#34;a4\u0026#34; : [ \/\/ array contains objects  { \u0026#34;c1\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;c2\u0026#34; : number }, { \u0026#34;c1\u0026#34; : \u0026#34;string\u0026#34;, \u0026#34;c2\u0026#34; : number } ] } 数据模型 JSON 提供了快速的序列化与反序列化，并且是大多数 REST API 的返回类型。文档通常被认为等效于关系型数据库中的行记录，但它可以存储嵌套文档或数组，提供了更多的灵活性。",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2022",
-    "datePublished": "2022-02-21 13:19:47 \u002b0100 \u002b0100",
-    "dateModified" : "2022-02-21 13:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2022\/database-couchbase\/",
-    "wordCount" : "535",
-    "keywords" : [ "Database", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2022\/database-couchbase\/"
+    },"genre": "posts","keywords": "Database","wordcount":  530 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2022\/database-couchbase\/","datePublished": "2022-02-21T13:19:47+01:00","dateModified": "2022-02-21T13:19:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Couchbase: Blazing Fast. Surprisingly Affordable.</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/reading-notes/" class="post-category" title="Category - Reading Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Reading Notes</a></span></div><div class="post-meta-line"><span title="published on 2022-02-21 13:19:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2022-02-21">2022-02-21</time></span>&nbsp;<span title="530 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 600 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>3 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Couchbase: Blazing Fast. Surprisingly Affordable.</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2022-02-21 itemprop="datePublished">February 21, 2022</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,535 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
-
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p><a href="https://www.couchbase.com/">Couchbase</a> 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。</p>
-<p>本篇基于 <a href="https://docs.couchbase.com/home/server.html">Couchbase 官网文档</a> 介绍其数据模型、内存存储、服务与搜索、集群可用性等。</p>
-<h3 id="数据">数据</h3>
-<p>Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">{
-  <span style="color:#e6db74">&#34;a1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span>,
-  <span style="color:#e6db74">&#34;a2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>,
-  <span style="color:#e6db74">&#34;a3&#34;</span> <span style="color:#f92672">:</span> {   <span style="color:#75715e">// nested array
-</span><span style="color:#75715e"></span>    <span style="color:#e6db74">&#34;b1&#34;</span> <span style="color:#f92672">:</span> [ <span style="color:#a6e22e">number</span>, <span style="color:#a6e22e">number</span>, <span style="color:#a6e22e">number</span> ]
-    },
-  <span style="color:#e6db74">&#34;a4&#34;</span> <span style="color:#f92672">:</span> [   <span style="color:#75715e">// array contains objects
-</span><span style="color:#75715e"></span>    { <span style="color:#e6db74">&#34;c1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>, <span style="color:#e6db74">&#34;c2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span> },
-    { <span style="color:#e6db74">&#34;c1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>, <span style="color:#e6db74">&#34;c2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span> }
-  ]
-}
-</code></pre></div><h4 id="数据模型">数据模型</h4>
-<p>JSON 提供了快速的序列化与反序列化，并且是大多数 REST API 的返回类型。文档通常被认为等效于关系型数据库中的行记录，但它可以存储嵌套文档或数组，提供了更多的灵活性。</p>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#数据">数据</a>
+          <ul>
+            <li><a href="#数据模型">数据模型</a></li>
+            <li><a href="#n1ql">N1QL</a></li>
+          </ul>
+        </li>
+        <li><a href="#buckets-内存与存储">Buckets, 内存与存储</a>
+          <ul>
+            <li><a href="#buckets">Buckets</a></li>
+            <li><a href="#内存">内存</a></li>
+            <li><a href="#存储">存储</a></li>
+          </ul>
+        </li>
+        <li><a href="#服务与索引">服务与索引</a>
+          <ul>
+            <li><a href="#服务">服务</a></li>
+            <li><a href="#索引">索引</a></li>
+            <li><a href="#全文搜索">全文搜索</a></li>
+          </ul>
+        </li>
+        <li><a href="#集群与可用性">集群与可用性</a>
+          <ul>
+            <li><a href="#新增移除节点">新增/移除节点</a></li>
+            <li><a href="#节点失效">节点失效</a></li>
+            <li><a href="#集群内复制">集群内复制</a></li>
+            <li><a href="#跨数据中心复制">跨数据中心复制</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p><a href="https://www.couchbase.com/" target="_blank" rel="external nofollow noopener noreferrer">Couchbase</a> 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。</p>
+<p>本篇基于 <a href="https://docs.couchbase.com/home/server.html" target="_blank" rel="external nofollow noopener noreferrer">Couchbase 官网文档</a> 介绍其数据模型、内存存储、服务与搜索、集群可用性等。</p>
+<h3 class="heading-element" id="数据"><span>数据</span>
+  <a href="#%e6%95%b0%e6%8d%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;a1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;a2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;a3&#34;</span> <span style="color:#f92672">:</span> {   <span style="color:#75715e">// nested array
+</span></span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;b1&#34;</span> <span style="color:#f92672">:</span> [ <span style="color:#a6e22e">number</span>, <span style="color:#a6e22e">number</span>, <span style="color:#a6e22e">number</span> ]
+</span></span><span style="display:flex;"><span>    },
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;a4&#34;</span> <span style="color:#f92672">:</span> [   <span style="color:#75715e">// array contains objects
+</span></span></span><span style="display:flex;"><span>    { <span style="color:#e6db74">&#34;c1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>, <span style="color:#e6db74">&#34;c2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span> },
+</span></span><span style="display:flex;"><span>    { <span style="color:#e6db74">&#34;c1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>, <span style="color:#e6db74">&#34;c2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span> }
+</span></span><span style="display:flex;"><span>  ]
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h4 class="heading-element" id="数据模型"><span>数据模型</span>
+  <a href="#%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>JSON 提供了快速的序列化与反序列化，并且是大多数 REST API 的返回类型。文档通常被认为等效于关系型数据库中的行记录，但它可以存储嵌套文档或数组，提供了更多的灵活性。</p>
 <p>文档可以包含嵌套结构，这让开发者可以在不使用引用或连接表的情况下表达多对多的数据关系，并自然地展示分层数据。一个支持用户根据日期检索的在线航班预订应用，它的关系模型需要多张表 —— 航班、航线、日程，如下图所示：</p>
-<p><img src="/images/couchbase-relationalDataModel.png" alt=""></p>
+<p><img loading="lazy" src='/images/couchbase-relationalDataModel.png' alt="/images/couchbase-relationalDataModel.png"></p>
 <p>相对地，文档模型却只需要一个嵌套了所有航班日程的文档：</p>
-<p><img src="/images/couchbase-jsonDataModel.png" alt=""></p>
+<p><img loading="lazy" src='/images/couchbase-jsonDataModel.png' alt="/images/couchbase-jsonDataModel.png"></p>
 <p>因此在文档模型中，每个文档都可以 <strong>高度自包含</strong>。这将支持应用需求的快速实现，并且对可扩展性和延迟都具有重要意义：可以在不访问其他文档的情况下原子地复制或更改一个文档；消除了负责的节点间协调需求，并减少了征用。</p>
 <p>在文档模型中，schema 是应用结构化文档数据的结果，它完全由应用定义和管理。Couchbase 并 <strong>不强求一致性</strong>，文档结构可以在文档间存有差异，这允许数据以一种高效的方式被呈现。schema 也可以逐渐被应用进化：属性和结构可以被添加到文档，而无需同时更新其它文档（这个灵活性对于大型长期应用是一个特别的优势）。</p>
 <p>Couchbase 对文档操作提供了原子性、一致性、隔离性和持久性。单个写操作被保证为完全成功或失败，操作不会导致文档处于部分更新的状态。在 <strong>设计文档结构</strong> 时需要考虑性能和可扩展性：</p>
@@ -183,46 +165,52 @@
 <li>有的时候定义较少嵌套复杂信息的富文档比较合适，这允许信息在单个操作中被读取/写入。因为独立的对象间只有较少的关联，可扩展性也因此被加强。这也使分组属性较为容易的维持在一个相互一致的状态。</li>
 <li>当访问模式可预测且数据量较少时，定义大量相互引用的文档可能较为合适，可以减少网络带宽的消耗。文件可以通过 key 相互引用。</li>
 </ul>
-<h4 id="n1ql">N1QL</h4>
-<p>在关系型数据库中，数据以一致的结构存储在表中，并通过主键相互关联。相比之下，Couchbase 使用 JSON 这种更灵活的数据模式，以及针对 JSON 增强的 SQL N1QL。N1QL 将数据作为格式自由的文档处理，并将数据聚集在一个称作 <code>keyspaces</code> 的大集合中。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js">(<span style="color:#a6e22e">HRData</span> <span style="color:#a6e22e">keyspace</span>)
- {
-     <span style="color:#e6db74">&#39;Name&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Jamie&#39;</span>
-     <span style="color:#e6db74">&#39;SSN&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">234</span>
-     <span style="color:#e6db74">&#39;Wage&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">123</span>
-     <span style="color:#e6db74">&#39;History&#39;</span><span style="color:#f92672">:</span>   <span style="color:#75715e">// 在关系型数据库中，这数组会存在另一个关联表中
-</span><span style="color:#75715e"></span>      [
-       [<span style="color:#e6db74">&#39;Yahoo&#39;</span>, <span style="color:#ae81ff">2005</span>, <span style="color:#ae81ff">2006</span>],
-       [<span style="color:#e6db74">&#39;Oracle&#39;</span>, <span style="color:#ae81ff">2006</span>, <span style="color:#ae81ff">2012</span>],
-     ]
- },
-
- {
-     <span style="color:#e6db74">&#39;Name&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Steve</span>
-     <span style="color:#e6db74">&#39;SSN&#39;</span><span style="color:#f92672">:</span>  <span style="color:#ae81ff">123</span>,
-     <span style="color:#e6db74">&#39;Wage&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">456</span>,
- }
-</code></pre></div><p>N1QL 中的 <code>FROM</code> 被用来在不同的数据源 keyspaces 中检索。同样每个文档也会视自身为一个数据源，并在其嵌套元素中执行查询。嵌套元素可以通过点操作符 <code>.</code> 进入，数组元素通过中括号 <code>[]</code> 来索引。检索出的属性可以通过 <code>AS</code> 操作符来重命名：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">SELECT firstjob FROM HRData.History<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> AS firstjob
-<span style="color:#f92672">{</span>
-     <span style="color:#e6db74">&#39;firstjob&#39;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#39;Yahoo&#39;</span>, 2005, 2006<span style="color:#f92672">]</span>
-<span style="color:#f92672">}</span>
-
-SELECT firstjob<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span> FROM HRData.History<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> AS firstjob
-<span style="color:#f92672">{</span>
-     <span style="color:#e6db74">&#39;firstjob[2]&#39;</span>: <span style="color:#ae81ff">2006</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>此外，N1QL 在实现多表关联时有不同的实现方式，它只支持 loopup doc 主键形式 left-to-right 关联，关联的左表需要能够生成右表文档的主键：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">SELECT &lt;select_list&gt;
-FROM Table_A A
-LEFT JOIN Table_B B
-ON KEYS &lt;keys-clause<span style="color:#f92672">(</span>A<span style="color:#f92672">)</span>&gt;
-</code></pre></div><p>参考：<a href="https://dzone.com/articles/visually-explaining-n1ql-joins">Visually Explaining N1QL JOINs</a></p>
-<h3 id="buckets-内存与存储">Buckets, 内存与存储</h3>
-<p>Couchbase 将数据保存在 Bucket 中，Couchbase buckets 在内存和硬盘中都有，而 Ephemeral bucket 作为暂时 bucket 只存在于内存中。bucket 可以设置以 <strong>压缩</strong> 形式存储数据来最大化资源效率，文档也可以（像 Redis 那样）设置一个过期时间。</p>
+<h4 class="heading-element" id="n1ql"><span>N1QL</span>
+  <a href="#n1ql" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在关系型数据库中，数据以一致的结构存储在表中，并通过主键相互关联。相比之下，Couchbase 使用 JSON 这种更灵活的数据模式，以及针对 JSON 增强的 SQL N1QL。N1QL 将数据作为格式自由的文档处理，并将数据聚集在一个称作 <code>keyspaces</code> 的大集合中。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>(<span style="color:#a6e22e">HRData</span> <span style="color:#a6e22e">keyspace</span>)
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;Name&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Jamie&#39;</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;SSN&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">234</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;Wage&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">123</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;History&#39;</span><span style="color:#f92672">:</span>   <span style="color:#75715e">// 在关系型数据库中，这数组会存在另一个关联表中
+</span></span></span><span style="display:flex;"><span>      [
+</span></span><span style="display:flex;"><span>       [<span style="color:#e6db74">&#39;Yahoo&#39;</span>, <span style="color:#ae81ff">2005</span>, <span style="color:#ae81ff">2006</span>],
+</span></span><span style="display:flex;"><span>       [<span style="color:#e6db74">&#39;Oracle&#39;</span>, <span style="color:#ae81ff">2006</span>, <span style="color:#ae81ff">2012</span>],
+</span></span><span style="display:flex;"><span>     ]
+</span></span><span style="display:flex;"><span> },
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> {
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;Name&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Steve</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;SSN&#39;</span><span style="color:#f92672">:</span>  <span style="color:#ae81ff">123</span>,
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;Wage&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">456</span>,
+</span></span><span style="display:flex;"><span> }</span></span></code></pre></div><p>N1QL 中的 <code>FROM</code> 被用来在不同的数据源 keyspaces 中检索。同样每个文档也会视自身为一个数据源，并在其嵌套元素中执行查询。嵌套元素可以通过点操作符 <code>.</code> 进入，数组元素通过中括号 <code>[]</code> 来索引。检索出的属性可以通过 <code>AS</code> 操作符来重命名：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>SELECT firstjob FROM HRData.History<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> AS firstjob
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;firstjob&#39;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#39;Yahoo&#39;</span>, 2005, 2006<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>SELECT firstjob<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span> FROM HRData.History<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> AS firstjob
+</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;firstjob[2]&#39;</span>: <span style="color:#ae81ff">2006</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span></span></span></code></pre></div><p>此外，N1QL 在实现多表关联时有不同的实现方式，它只支持 loopup doc 主键形式 left-to-right 关联，关联的左表需要能够生成右表文档的主键：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>SELECT &lt;select_list&gt;
+</span></span><span style="display:flex;"><span>FROM Table_A A
+</span></span><span style="display:flex;"><span>LEFT JOIN Table_B B
+</span></span><span style="display:flex;"><span>ON KEYS &lt;keys-clause<span style="color:#f92672">(</span>A<span style="color:#f92672">)</span>&gt;</span></span></code></pre></div><p>参考：<a href="https://dzone.com/articles/visually-explaining-n1ql-joins" target="_blank" rel="external nofollow noopener noreferrer">Visually Explaining N1QL JOINs</a></p>
+<h3 class="heading-element" id="buckets-内存与存储"><span>Buckets, 内存与存储</span>
+  <a href="#buckets-%e5%86%85%e5%ad%98%e4%b8%8e%e5%ad%98%e5%82%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Couchbase 将数据保存在 Bucket 中，Couchbase buckets 在内存和硬盘中都有，而 Ephemeral bucket 作为暂时 bucket 只存在于内存中。bucket 可以设置以 <strong>压缩</strong> 形式存储数据来最大化资源效率，文档也可以（像 Redis 那样）设置一个过期时间。</p>
 <p>Couchbase 使用内存来保证高性能和可扩展性：内存中会存放经常被请求的数据，最近没被使用的数据会被从内存中驱逐出去。多线程的读取和写入提供了数据的同时读取和写入，来保证交高的吞吐量。</p>
-<h4 id="buckets">Buckets</h4>
-<p>Bucket 是在逻辑上用来分组键值对的集合，共有三种 bucket 类型：</p>
+<h4 class="heading-element" id="buckets"><span>Buckets</span>
+  <a href="#buckets" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Bucket 是在逻辑上用来分组键值对的集合，共有三种 bucket 类型：</p>
 <ul>
 <li>Couchbase bucket
 <ul>
@@ -244,56 +232,79 @@ ON KEYS &lt;keys-clause<span style="color:#f92672">(</span>A<span style="color:#
 </ul>
 <p><code>vBuckets</code> （有时也被称作分片 <code>shards</code>）是集群中高效分散数据的虚拟 buckets，并且支持在多个节点间复制。Couchbase / Ephemeral bucket 都实现了 vBuckets，每个 bucket 拥有 1024 个 vBuckets 均分集群的内存和存储。写入操作会在 active vBuckets 中执行，大多数读取操作也会在 active vBuckets 中执行，当必要时数据可以从 replica vBuckets 中读取。</p>
 <p>对象在写入或检索时会先根据它的 key 用 <code>CRC32</code> 哈希算法计算出对象存储的 vBuckets 下标值，再通过 vBuckets map 在集群中找到映射的单个节点，最后在那个服务节点上执行操作，其结构关系如下图所示：</p>
-<p><img src="/images/couchbase-vbucketToNodeMapping.png" alt=""></p>
-<h4 id="内存">内存</h4>
-<p>Couchbase 服务器完全集成了缓冲层，提供高速数据访问。需要写入 Couchbase bucket 中的数据，会先进去缓冲层，然后同时放入磁盘队列和复制队列（示意如下图），因此 replica bucket 可以被更新。由于配置了内存限额，缓冲层中不常用的对象会被写入磁盘，然后从内存中被移出来释放空间，这个异步过程被称为 <code>ejection</code>。</p>
-<p><img src="/images/couchbase-createDocSequence3.png" alt=""></p>
+<p><img loading="lazy" src='/images/couchbase-vbucketToNodeMapping.png' alt="/images/couchbase-vbucketToNodeMapping.png"></p>
+<h4 class="heading-element" id="内存"><span>内存</span>
+  <a href="#%e5%86%85%e5%ad%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Couchbase 服务器完全集成了缓冲层，提供高速数据访问。需要写入 Couchbase bucket 中的数据，会先进去缓冲层，然后同时放入磁盘队列和复制队列（示意如下图），因此 replica bucket 可以被更新。由于配置了内存限额，缓冲层中不常用的对象会被写入磁盘，然后从内存中被移出来释放空间，这个异步过程被称为 <code>ejection</code>。</p>
+<p><img loading="lazy" src='/images/couchbase-createDocSequence3.png' alt="/images/couchbase-createDocSequence3.png"></p>
 <p>每个 bucket 的可用内存由 <code>mem_low_wat</code> 和 <code>mem_high_wat</code> 来管理，当 bucket 中的数据持续地被加载到内存中，且数量达到 mem_low_wat 时，不会触发任何动作。如有更多数据被加载，数量达到 mem_high_wat 时，对象可被 eject 出去，直到内存数量下降至 mem_low_wat。如果 ejection 过程无法释放足够的空间，数据服务将停止吸收数据，并向客户端发送异常信息。</p>
 <p>Ejection 基于 NRU (Not Recently Used) 算法，最近没有被访问的数据对象都可能从内存中 eject 出去。随着时间推移，Couchbase 服务器内存就变的碎片化了，这将导致内存无法被高效利用，为此 Couchbase 提供了 <code>Acitve Memory Defragmenter</code> ，它会定期扫描缓存，来识别较少使用的页，然后将这些页上的对象们重新打包，来释放空间。</p>
-<p><img src="/images/couchbase-tunableMemory.png" alt=""></p>
-<h4 id="存储">存储</h4>
-<p>Couchbase 会将数据对象压缩后存储在磁盘，当有客户端请求的时候，对象会重新从磁盘恢复到内存来响应访问。需要注意的是，Ephemeral bucket 中的对象只会维持在内存中，而不会被存储在磁盘上。</p>
+<p><img loading="lazy" src='/images/couchbase-tunableMemory.png' alt="/images/couchbase-tunableMemory.png"></p>
+<h4 class="heading-element" id="存储"><span>存储</span>
+  <a href="#%e5%ad%98%e5%82%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Couchbase 会将数据对象压缩后存储在磁盘，当有客户端请求的时候，对象会重新从磁盘恢复到内存来响应访问。需要注意的是，Ephemeral bucket 中的对象只会维持在内存中，而不会被存储在磁盘上。</p>
 <p>磁盘的读取和写入 I/O 是后台任务，并不会阻塞客户端的交互。多线程的读取和写入将提供磁盘上同时高性能的读写操作，线程间冲突将通过将线程分配给 1024 个 vBuckets 的特定子集来避免。</p>
 <p>磁盘上的对象也会由于删除操作或过期时间而被删除，Couchbase 会在删除对象会保持对象的墓碑 <code>tombstone</code>（对象的元信息），以此在节点和集群间提供最终一致性。</p>
-<h3 id="服务与索引">服务与索引</h3>
-<p>服务会在管理员初始化节点时配置和部署，每个节点可以选择服务的一个子集，并给它们分配各自的内存限额。每种服务支持一种特殊形式的数据访问，在多个集群节点部署服务将支持较高的工作负荷，并保证最高的性能和资源可用性。</p>
+<h3 class="heading-element" id="服务与索引"><span>服务与索引</span>
+  <a href="#%e6%9c%8d%e5%8a%a1%e4%b8%8e%e7%b4%a2%e5%bc%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>服务会在管理员初始化节点时配置和部署，每个节点可以选择服务的一个子集，并给它们分配各自的内存限额。每种服务支持一种特殊形式的数据访问，在多个集群节点部署服务将支持较高的工作负荷，并保证最高的性能和资源可用性。</p>
 <p>查询和分析服务将依赖索引服务提供的索引，搜索服务提供了自己内置的索引。设计巧妙的索引将对搜索操作提供显著的性能提升。</p>
-<h4 id="服务">服务</h4>
-<p>Couchbase 服务器提供了数据、查询、索引、搜索、分析、事件六大服务，通过多维度扩展，这些服务可以被相互独立地部署、维护，来满足业务场景的高效响应和紧急的工作负荷需求。</p>
+<h4 class="heading-element" id="服务"><span>服务</span>
+  <a href="#%e6%9c%8d%e5%8a%a1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Couchbase 服务器提供了数据、查询、索引、搜索、分析、事件六大服务，通过多维度扩展，这些服务可以被相互独立地部署、维护，来满足业务场景的高效响应和紧急的工作负荷需求。</p>
 <p>服务可以在每个节点上单独设置并分配内存配额（除了查询服务），每个节点可以运行每种服务的至多一个实例。如果一个集群只用作开发或测试，可以快速地为每个服务设置相同的内存配额，如下图所示：</p>
-<p><img src="/images/couchbase-cbClusterWithServicesDevelopment.png" alt=""></p>
+<p><img loading="lazy" src='/images/couchbase-cbClusterWithServicesDevelopment.png' alt="/images/couchbase-cbClusterWithServicesDevelopment.png"></p>
 <p>服务可以被分配更大的内存配额，并且可能作为节点上的唯一服务来处理更大的工作量。如果一个特别的服务需要在生产环境处理大量数据，要被密集索引，并通过查询和搜索来解决，下图的配置会更有效：</p>
-<p><img src="/images/couchbase-cbClusterWithServicesProduction.png" alt=""></p>
-<h4 id="索引">索引</h4>
-<p>与关系型数据库一样，Couchbase 也拥有基于每个对象唯一 key 的主键索引和基于文档内属性的二级索引（也被称作全局二级索引 GSI）。GSI 可以被独立（不依赖于 vBuckets 的划分）划分在有索引服务的集群节点，也就是说，数据对象和它的索引可以有不同的划分下标，对应不同的集群节点。GSI 可以被复制到其他的集群节点来实现高可用性和高性能（负载均衡）。</p>
+<p><img loading="lazy" src='/images/couchbase-cbClusterWithServicesProduction.png' alt="/images/couchbase-cbClusterWithServicesProduction.png"></p>
+<h4 class="heading-element" id="索引"><span>索引</span>
+  <a href="#%e7%b4%a2%e5%bc%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>与关系型数据库一样，Couchbase 也拥有基于每个对象唯一 key 的主键索引和基于文档内属性的二级索引（也被称作全局二级索引 GSI）。GSI 可以被独立（不依赖于 vBuckets 的划分）划分在有索引服务的集群节点，也就是说，数据对象和它的索引可以有不同的划分下标，对应不同的集群节点。GSI 可以被复制到其他的集群节点来实现高可用性和高性能（负载均衡）。</p>
 <p>应用和数据库驱动会将 N1QL 查询提交到集群中其中一个可用的查询节点，查询节点会分析语句，规划出最优的执行计划。根据执行计划将查询递交给索引节点或数据节点来执行，其流程如下图所示：</p>
-<p><img src="/images/couchbase-query_execution.png" alt=""></p>
-<p>有关索引对查询性能的优化可以参考另一篇博文：<a href="https://hoffmanzheng.github.io/2020/database-index/">Database：高性能 MySQL - 索引</a></p>
-<h4 id="全文搜索">全文搜索</h4>
-<p>Couchbase 使用基于 <a href="http://blevesearch.com/">Bleve</a> 的全文搜索，首先要在执行搜索的 bucket 上创建全文索引，默认的 <code>default</code> 的 Type Mappings 指可以对 bucket 内的所有文档进行搜索，如下图所示：</p>
-<p><img src="/images/couchbase-defaultFullTextIndex.png" alt=""></p>
+<p><img loading="lazy" src='/images/couchbase-query_execution.png' alt="/images/couchbase-query_execution.png"></p>
+<p>有关索引对查询性能的优化可以参考另一篇博文：<a href="https://hoffmanzheng.github.io/2020/database-index/" target="_blank" rel="external nofollow noopener noreferrer">Database：高性能 MySQL - 索引</a></p>
+<h4 class="heading-element" id="全文搜索"><span>全文搜索</span>
+  <a href="#%e5%85%a8%e6%96%87%e6%90%9c%e7%b4%a2" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Couchbase 使用基于 <a href="http://blevesearch.com/" target="_blank" rel="external nofollow noopener noreferrer">Bleve</a> 的全文搜索，首先要在执行搜索的 bucket 上创建全文索引，默认的 <code>default</code> 的 Type Mappings 指可以对 bucket 内的所有文档进行搜索，如下图所示：</p>
+<p><img loading="lazy" src='/images/couchbase-defaultFullTextIndex.png' alt="/images/couchbase-defaultFullTextIndex.png"></p>
 <p>当然也可以只索引 bucket 中某个类型的文档，这样有助于减少空间和内存使用。例如指定文档 ID 下划线前的字符串为类型，hotel 为类型映射，然后将 default type mappings 取消即可，如下图所示：</p>
-<p><img src="/images/couchbase-typeMapping.png" alt=""></p>
+<p><img loading="lazy" src='/images/couchbase-typeMapping.png' alt="/images/couchbase-typeMapping.png"></p>
 <p>此外还可以仅索引文档中的某个字段，如下图所示：</p>
-<p><img src="/images/couchbase-searchField.png" alt=""></p>
+<p><img loading="lazy" src='/images/couchbase-searchField.png' alt="/images/couchbase-searchField.png"></p>
 <p>在网页管理员控制台测试搜索功能后，就可以用 REST API 来实现搜索：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">curl</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">u</span> <span style="color:#a6e22e">Administrator</span><span style="color:#f92672">:</span><span style="color:#a6e22e">password</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">X</span> <span style="color:#a6e22e">POST</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">H</span> <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> <span style="color:#f92672">\</span>
-<span style="color:#a6e22e">http</span><span style="color:#f92672">:</span><span style="color:#75715e">//localhost:8094/api/index/travel-FTS/query \
-</span><span style="color:#75715e"></span><span style="color:#f92672">-</span><span style="color:#a6e22e">d</span> <span style="color:#e6db74">&#39;{
-</span><span style="color:#e6db74">  &#34;explain&#34;: true,
-</span><span style="color:#e6db74">  &#34;fields&#34;: [
-</span><span style="color:#e6db74">    &#34;*&#34;
-</span><span style="color:#e6db74">  ],
-</span><span style="color:#e6db74">  &#34;highlight&#34;: {},
-</span><span style="color:#e6db74">  &#34;query&#34;: {
-</span><span style="color:#e6db74">    &#34;query&#34;: &#34;hotel&#34;
-</span><span style="color:#e6db74">  }
-</span><span style="color:#e6db74">}&#39;</span>
-</code></pre></div><h3 id="集群与可用性">集群与可用性</h3>
-<p>Couchbase 集群包含一个或多个 Couchbase 服务器的实例，每个实例都运行在一个独立的节点上，数据和服务在集群中被共享。当一个 Couchbase 服务器被配置到一个节点上时，它可以被指定为一个新的集群或者作为一个已有集群的参与者。Couchbase 集群管理员运行在集群的每个节点上，并在节点间通信，保证所有节点的健康。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">curl</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">u</span> <span style="color:#a6e22e">Administrator</span><span style="color:#f92672">:</span><span style="color:#a6e22e">password</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">X</span> <span style="color:#a6e22e">POST</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">H</span> <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> <span style="color:#f92672">\</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">http</span><span style="color:#f92672">:</span><span style="color:#75715e">//localhost:8094/api/index/travel-FTS/query \
+</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#a6e22e">d</span> <span style="color:#e6db74">&#39;{
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;explain&#34;: true,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;fields&#34;: [
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;*&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  ],
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;highlight&#34;: {},
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;query&#34;: {
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;query&#34;: &#34;hotel&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  }
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}&#39;</span></span></span></code></pre></div><h3 class="heading-element" id="集群与可用性"><span>集群与可用性</span>
+  <a href="#%e9%9b%86%e7%be%a4%e4%b8%8e%e5%8f%af%e7%94%a8%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Couchbase 集群包含一个或多个 Couchbase 服务器的实例，每个实例都运行在一个独立的节点上，数据和服务在集群中被共享。当一个 Couchbase 服务器被配置到一个节点上时，它可以被指定为一个新的集群或者作为一个已有集群的参与者。Couchbase 集群管理员运行在集群的每个节点上，并在节点间通信，保证所有节点的健康。</p>
 <p>数据会在不影响应用的情况下自动分散在集群中。每个 bucket 会被数据服务存储为 1024 个 vBuckets（虚拟 bucket），并平均分散在所有可用的数据服务节点。vBuckets 可以被跨集群间复制，并将其副本存于其他的节点。Couchbase 会在保证没有数据丢失的前提下自动处理节点的新增、删除和失效。在监测到配置变化时，vBuckets 和它的副本会在可用的节点上进行重新分配。跨数据中心复制 XDCR 可以将数据选择性地复制到一个远端节点，以此实现高可用性。</p>
-<h4 id="新增移除节点">新增/移除节点</h4>
-<p>添加节点时，会在持续处理现有的工作量的同时完成数据的重新分布 <code>redistribution</code>：</p>
+<h4 class="heading-element" id="新增移除节点"><span>新增/移除节点</span>
+  <a href="#%e6%96%b0%e5%a2%9e%e7%a7%bb%e9%99%a4%e8%8a%82%e7%82%b9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>添加节点时，会在持续处理现有的工作量的同时完成数据的重新分布 <code>redistribution</code>：</p>
 <ol>
 <li>用现有的集群配置更新新的节点</li>
 <li>初始化 rebalance，重新计算 vBucket 映射表</li>
@@ -302,124 +313,108 @@ ON KEYS &lt;keys-clause<span style="color:#f92672">(</span>A<span style="color:#
 <li>新节点上的新 vBuckets 会被激活，新的 vBucket 映射表被交流给其他的节点。重复上述过程直到再平衡完成。</li>
 </ol>
 <p>移除一个数据服务节点的过程与新增的过程相似：在要维护的节点上创建 vBuckets，并将要移除的节点 vBucket 上的数据复制到那里。当节点上不再有 vBuckets 时，节点就会从集群中移除。当新增或移除一个没有数据服务的节点时，则无需移动数据。</p>
-<h4 id="节点失效">节点失效</h4>
-<p>在 Couchbase 服务集群中的节点会通过心跳机制提供它们的健康状态。所有实例都会定期提供心跳，其中包含了节点状态的基础统计信息。如果在一个默认时期内不再收到某个节点的心跳，集群会自动转移该故障节点。共有两种故障转移 <code>Failover</code> 的类型：</p>
+<h4 class="heading-element" id="节点失效"><span>节点失效</span>
+  <a href="#%e8%8a%82%e7%82%b9%e5%a4%b1%e6%95%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在 Couchbase 服务集群中的节点会通过心跳机制提供它们的健康状态。所有实例都会定期提供心跳，其中包含了节点状态的基础统计信息。如果在一个默认时期内不再收到某个节点的心跳，集群会自动转移该故障节点。共有两种故障转移 <code>Failover</code> 的类型：</p>
 <ul>
 <li>Graceful: 这是一个在线操作，要求零停机时间。当要移除的节点包含数据服务时，在剩下的集群节点上的副本 vBuckets 会被提升为激活状态，而要移除的节点上的活跃 vBuckets 会是 dead 状态。在整个过程中，数据服务节点会被主动、有序地移除，集群为每个 bucket 保持所有 1024 个活跃的 vBuckets。</li>
 <li>Hard: 当节点失效时自动采取的故障转移过程，被动地从集群中移去节点，因为节点已经变得不可用或不稳定。当失去的节点曾运行数据服务，这个过程会从剩下的集群节点中将副本 vBuckets 提升激活，直到每个 bucket 有 1024 个活跃的 vBuckets。</li>
 </ul>
-<p>Hard Failover 应该只在某个节点变成不可用时被使用，当失效节点曾有数据服务时，集群会进入一个降级状态。部分副本 vBuckets 会被升级成活跃 vBuckets，集群则因减少的副本 vBuckets 缺少再一次对抗节点停电的资源。如果失效的节点运行着集群中唯一一个索引服务，索引会在强制故障转移期间变得不可用。ref: <a href="https://docs.couchbase.com/server/6.0/learn/clusters-and-availability/hard-failover.html#hard-failover-example">Hard Failover Example</a></p>
-<h4 id="集群内复制">集群内复制</h4>
-<p>bucket 可以拥有至多三个副本，bucket 数据允许在副本中维护和更新。当节点故障时，就可以激活故障节点维护的数据副本。为了在节点故障时保证最大的数据可用性，集群会计算并在可用节点上实施最优的 vBuckets 分配，来减少在单个节点故障时的数据损失，如下图所示：</p>
-<p><img src="/images/couchbase-vBucketReplication.png" alt=""></p>
-<h4 id="跨数据中心复制">跨数据中心复制</h4>
-<p>Cross Data Center Replication (XDCR) 能够在集群间复制数据，来避免数据中心故障，并提供分布全球的高性能数据访问。</p>
+<p>Hard Failover 应该只在某个节点变成不可用时被使用，当失效节点曾有数据服务时，集群会进入一个降级状态。部分副本 vBuckets 会被升级成活跃 vBuckets，集群则因减少的副本 vBuckets 缺少再一次对抗节点停电的资源。如果失效的节点运行着集群中唯一一个索引服务，索引会在强制故障转移期间变得不可用。ref: <a href="https://docs.couchbase.com/server/6.0/learn/clusters-and-availability/hard-failover.html#hard-failover-example" target="_blank" rel="external nofollow noopener noreferrer">Hard Failover Example</a></p>
+<h4 class="heading-element" id="集群内复制"><span>集群内复制</span>
+  <a href="#%e9%9b%86%e7%be%a4%e5%86%85%e5%a4%8d%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>bucket 可以拥有至多三个副本，bucket 数据允许在副本中维护和更新。当节点故障时，就可以激活故障节点维护的数据副本。为了在节点故障时保证最大的数据可用性，集群会计算并在可用节点上实施最优的 vBuckets 分配，来减少在单个节点故障时的数据损失，如下图所示：</p>
+<p><img loading="lazy" src='/images/couchbase-vBucketReplication.png' alt="/images/couchbase-vBucketReplication.png"></p>
+<h4 class="heading-element" id="跨数据中心复制"><span>跨数据中心复制</span>
+  <a href="#%e8%b7%a8%e6%95%b0%e6%8d%ae%e4%b8%ad%e5%bf%83%e5%a4%8d%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Cross Data Center Replication (XDCR) 能够在集群间复制数据，来避免数据中心故障，并提供分布全球的高性能数据访问。</p>
 <p>XDCR 支持跨集群单向 <code>Unidirectionally</code> 复制，在源 bucket 中存储的数据会被复制到指定的目标 bucket。尽管被复制的数据可以用来提供服务，但这事实上是设计用作容灾恢复的备份。</p>
-<p><img src="/images/couchbase-unidirectional-xdcr.png" alt=""></p>
+<p><img loading="lazy" src='/images/couchbase-unidirectional-xdcr.png' alt="/images/couchbase-unidirectional-xdcr.png"></p>
 <p><code>Bidirectionally</code> 双向复制：源 bucket 中的数据可以被复制到目标 bucket，相反地，目标 bucket 中的数据也可以被复制回源 bucket。这让两个 buckets 都可以提供数据服务，在不同地区提供更快的数据访问。需要注意的是，XDCR 只提供了基础的单向复制机制，双向复制是通过实施两个相反的单向复制来实现的。</p>
-<p><img src="/images/couchbase-bidirectional-xdcr.png" alt=""></p>
+<p><img loading="lazy" src='/images/couchbase-bidirectional-xdcr.png' alt="/images/couchbase-bidirectional-xdcr.png"></p>
 <p>当双向复制的数据被不同地区的应用所修改时，可能会引起 <strong>XDCR 冲突</strong>，即文档数据在同一时刻或多或少被不同地修改了。XDCR 提供了基于序列号或时间戳的冲突解决方法：</p>
 <ul>
 <li>序列号是每个文档都会维护，并随着每一次文档更新而递增的。冲突时会比较源文档与目标文档的序列号，文档修订数较多的胜出。比如一个网站的点击计数，在冲突时，拥有更多计数的文档更能反应真实的计数值，在这种情况下就可以选择基于序列号的冲突解决。</li>
 <li>文档最后一次写入的时间戳也可以被用来在冲突时比较，拥有最近更新时间戳的文档胜出。如果新的值持续地被写入到同一个 key，且我们更关注 &ldquo;当前值&rdquo; 时，就应该使用基于时间戳的冲突解决，它保证了文档拥有最新的版本。</li>
 </ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2022-02-21 13:19:47">Updated on 2022-02-21&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2022/database-couchbase/" data-title="Couchbase: Blazing Fast. Surprisingly Affordable." data-hashtags="Database"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2022/database-couchbase/" data-hashtag="Database"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2022/database-couchbase/" data-title="Couchbase: Blazing Fast. Surprisingly Affordable."><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2022/database-couchbase/>https://hoffmanzheng.github.io/2022/database-couchbase/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/database/">
-                    #Database</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2022/distribute-redlock/" class="prev" rel="prev" title="分布式：[译] 基于 Redis 的分布式锁 "><i class="iconfont icon-left"></i>&nbsp;分布式：[译] 基于 Redis 的分布式锁 </a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2022/devops-loki/" class="next" rel="next" title="Devops：[译] 日志聚合系统 Grafana Loki ">Devops：[译] 日志聚合系统 Grafana Loki &nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/database/" class="post-tag" title="Tags - Database">Database</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2022/distribute-redlock/" class="post-nav-item" rel="prev" title="分布式：[译] 基于 Redis 的分布式锁 "><i class="fa-solid fa-angle-left" aria-hidden="true"></i>分布式：[译] 基于 Redis 的分布式锁 </a><a href="/2022/devops-loki/" class="post-nav-item" rel="next" title="Devops：[译] 日志聚合系统 Grafana Loki ">Devops：[译] 日志聚合系统 Grafana Loki <i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#数据">数据</a>
+          <ul>
+            <li><a href="#数据模型">数据模型</a></li>
+            <li><a href="#n1ql">N1QL</a></li>
+          </ul>
+        </li>
+        <li><a href="#buckets-内存与存储">Buckets, 内存与存储</a>
+          <ul>
+            <li><a href="#buckets">Buckets</a></li>
+            <li><a href="#内存">内存</a></li>
+            <li><a href="#存储">存储</a></li>
+          </ul>
+        </li>
+        <li><a href="#服务与索引">服务与索引</a>
+          <ul>
+            <li><a href="#服务">服务</a></li>
+            <li><a href="#索引">索引</a></li>
+            <li><a href="#全文搜索">全文搜索</a></li>
+          </ul>
+        </li>
+        <li><a href="#集群与可用性">集群与可用性</a>
+          <ul>
+            <li><a href="#新增移除节点">新增/移除节点</a></li>
+            <li><a href="#节点失效">节点失效</a></li>
+            <li><a href="#集群内复制">集群内复制</a></li>
+            <li><a href="#跨数据中心复制">跨数据中心复制</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/52959434c560302dfc027b1dfc8c43e1.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

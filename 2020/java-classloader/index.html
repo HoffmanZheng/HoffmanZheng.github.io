@@ -1,422 +1,352 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2020/java-compile/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2020/jvm-architecture-memory/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/java-classloader/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           深入分析 ClassLoader 工作机制 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="深入分析 ClassLoader 工作机制 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>深入分析 ClassLoader 工作机制 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="Java 是个强类型的编程语言，一个变量的类型在编译时就已经决定了，就是最初声明它的类型， 如果想把它当成另一个类型来使用，需要先经过显式的类型转换，转换时可能会因为类型不符而抛出 ClassCastException。
+本篇以 《深入分析 Java Web 技术内幕》 第六章 深入分析 ClassLoader 工作机制 的内容为参考，讲解 Java 中的类型，类加载机制，类加载错误分析 等。
+Java 中的类型 如开篇所说，一个 Java 对象的类型在声明的时候就被确定了，但 Java 是面对对象的语言，有丰富的接口和抽象类，一个对象被传来传去的时候，可能就丢失了它的一些类型信息，但 Java 也像 C&#43;&#43; 那样是拥有 RTTI (Run-Time Type Identification) 运行时类型识别 特性的语言。在任何时刻，任何一个对象都清楚地知道自己的具体类型（可以通过反射获取）。
+"><meta name="keywords" content='Java'>
+  <meta itemprop="name" content="深入分析 ClassLoader 工作机制">
+  <meta itemprop="description" content="Java 是个强类型的编程语言，一个变量的类型在编译时就已经决定了，就是最初声明它的类型， 如果想把它当成另一个类型来使用，需要先经过显式的类型转换，转换时可能会因为类型不符而抛出 ClassCastException。
+本篇以 《深入分析 Java Web 技术内幕》 第六章 深入分析 ClassLoader 工作机制 的内容为参考，讲解 Java 中的类型，类加载机制，类加载错误分析 等。
+Java 中的类型 如开篇所说，一个 Java 对象的类型在声明的时候就被确定了，但 Java 是面对对象的语言，有丰富的接口和抽象类，一个对象被传来传去的时候，可能就丢失了它的一些类型信息，但 Java 也像 C&#43;&#43; 那样是拥有 RTTI (Run-Time Type Identification) 运行时类型识别 特性的语言。在任何时刻，任何一个对象都清楚地知道自己的具体类型（可以通过反射获取）。">
+  <meta itemprop="datePublished" content="2020-09-22T09:19:47+01:00">
+  <meta itemprop="dateModified" content="2020-09-22T09:19:47+01:00">
+  <meta itemprop="wordCount" content="312">
+  <meta itemprop="keywords" content="Java"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/java-classloader/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="深入分析 ClassLoader 工作机制">
+  <meta property="og:description" content="Java 是个强类型的编程语言，一个变量的类型在编译时就已经决定了，就是最初声明它的类型， 如果想把它当成另一个类型来使用，需要先经过显式的类型转换，转换时可能会因为类型不符而抛出 ClassCastException。
+本篇以 《深入分析 Java Web 技术内幕》 第六章 深入分析 ClassLoader 工作机制 的内容为参考，讲解 Java 中的类型，类加载机制，类加载错误分析 等。
+Java 中的类型 如开篇所说，一个 Java 对象的类型在声明的时候就被确定了，但 Java 是面对对象的语言，有丰富的接口和抽象类，一个对象被传来传去的时候，可能就丢失了它的一些类型信息，但 Java 也像 C&#43;&#43; 那样是拥有 RTTI (Run-Time Type Identification) 运行时类型识别 特性的语言。在任何时刻，任何一个对象都清楚地知道自己的具体类型（可以通过反射获取）。">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-09-22T09:19:47+01:00">
+    <meta property="article:modified_time" content="2020-09-22T09:19:47+01:00">
+    <meta property="article:tag" content="Java">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="深入分析 ClassLoader 工作机制">
+  <meta name="twitter:description" content="Java 是个强类型的编程语言，一个变量的类型在编译时就已经决定了，就是最初声明它的类型， 如果想把它当成另一个类型来使用，需要先经过显式的类型转换，转换时可能会因为类型不符而抛出 ClassCastException。
+本篇以 《深入分析 Java Web 技术内幕》 第六章 深入分析 ClassLoader 工作机制 的内容为参考，讲解 Java 中的类型，类加载机制，类加载错误分析 等。
+Java 中的类型 如开篇所说，一个 Java 对象的类型在声明的时候就被确定了，但 Java 是面对对象的语言，有丰富的接口和抽象类，一个对象被传来传去的时候，可能就丢失了它的一些类型信息，但 Java 也像 C&#43;&#43; 那样是拥有 RTTI (Run-Time Type Identification) 运行时类型识别 特性的语言。在任何时刻，任何一个对象都清楚地知道自己的具体类型（可以通过反射获取）。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/java-classloader/" title="深入分析 ClassLoader 工作机制 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2020/java-compile/" title="Javac 编译原理与 class 文件结构" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/jvm-architecture-memory/" title="JVM：体系结构与内存管理" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "深入分析 ClassLoader 工作机制",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "深入分析 ClassLoader 工作机制",
-    "headline" : "深入分析 ClassLoader 工作机制",
-    "description" : "Java 是个强类型的编程语言，一个变量的类型在编译时就已经决定了，就是最初声明它的类型， 如果想把它当成另一个类型来使用，需要先经过显式的类型转换，转换时可能会因为类型不符而抛出 ClassCastException。\n本篇以 《深入分析 Java Web 技术内幕》 第六章 深入分析 ClassLoader 工作机制 的内容为参考，讲解 Java 中的类型，类加载机制，类加载错误分析 等。\nJava 中的类型 如开篇所说，一个 Java 对象的类型在声明的时候就被确定了，但 Java 是面对对象的语言，有丰富的接口和抽象类，一个对象被传来传去的时候，可能就丢失了它的一些类型信息，但 Java 也像 C\u002b\u002b 那样是拥有 RTTI (Run-Time Type Identification) 运行时类型识别 特性的语言。在任何时刻，任何一个对象都清楚地知道自己的具体类型（可以通过反射获取）。\n不知道大家有没有想过，Java 中的对象是如何被创造出来的，创造时是否又遵循了一个怎样的规则。其实 Java 中的对象都是根据各自的说明书构建出来的，这个说明书信息就是在 Javac 编译原理与 class 文件结构 中生成的类的 class 字节码文件之中，这些字节码文件又被存储在永久代 (Permenent Generation Java 7 之前) \/ 元空间 (MetaSpace Java 8 之后) 之中。\n当需要创建一个对象时，就会将这个创建任务委托给类加载器来完成，类加载器会找到指定的 class 字节码文件，根据说明书来装配出一个需要的对象。因此任何一个 Java 对象，在运行时都清楚的知道自己是由哪个类的字节码装配出来的，都可以通过 getClass() \/ instanceof 来获取自己的具体类型。\n类加载机制 JVM 类加载机制分为五个部分：加载、验证、准备、解析、初始化，如下所示：\n   类加载阶段 作用     加载 生成 Class 对象，作为方法区这个类的各种数据入口   验证 确保 Class 文件的字节流中包含的信息符合当前虚拟机的要求   准备 为类变量分配内存空间，并设置变量初始值，非 finanl 是0，final 会赋值   解析 虚拟机将常量池中的符号引用替换为直接引用的过程   初始化 执行类构造器方法（静态语句块）    ClassLoader 类加载器 类加载器 ClassLoader 在 JDK 源码中的 rt.",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2020",
-    "datePublished": "2020-09-22 09:19:47 \u002b0100 \u002b0100",
-    "dateModified" : "2020-09-22 09:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/java-classloader\/",
-    "wordCount" : "313",
-    "keywords" : [ "Java", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/java-classloader\/"
+    },"genre": "posts","keywords": "Java","wordcount":  312 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2020\/java-classloader\/","datePublished": "2020-09-22T09:19:47+01:00","dateModified": "2020-09-22T09:19:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>深入分析 ClassLoader 工作机制</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/reading-notes/" class="post-category" title="Category - Reading Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Reading Notes</a></span></div><div class="post-meta-line"><span title="published on 2020-09-22 09:19:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2020-09-22">2020-09-22</time></span>&nbsp;<span title="312 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 400 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>2 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">深入分析 ClassLoader 工作机制</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2020-09-22 itemprop="datePublished">September 22, 2020</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,313 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
-
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>Java 是个强类型的编程语言，一个变量的类型在编译时就已经决定了，就是最初声明它的类型， 如果想把它当成另一个类型来使用，需要先经过显式的类型转换，转换时可能会因为类型不符而抛出 <code>ClassCastException</code>。</p>
-<p>本篇以 <a href="https://book.douban.com/subject/25953851/">《深入分析 Java Web 技术内幕》</a> 第六章 深入分析 ClassLoader 工作机制 的内容为参考，讲解 Java 中的类型，类加载机制，类加载错误分析 等。</p>
-<h3 id="java-中的类型">Java 中的类型</h3>
-<p>如开篇所说，一个 Java 对象的类型在声明的时候就被确定了，但 Java 是面对对象的语言，有丰富的接口和抽象类，一个对象被传来传去的时候，可能就丢失了它的一些类型信息，但 Java 也像 C++ 那样是拥有 RTTI (Run-Time Type Identification) <strong>运行时类型识别</strong> 特性的语言。在任何时刻，任何一个对象都清楚地知道自己的具体类型（可以通过反射获取）。</p>
-<p>不知道大家有没有想过，Java 中的对象是如何被创造出来的，创造时是否又遵循了一个怎样的规则。其实 Java 中的对象都是根据各自的说明书构建出来的，这个说明书信息就是在 <a href="https://hoffmanzheng.github.io/2020/java-compile/">Javac 编译原理与 class 文件结构</a> 中生成的类的 class 字节码文件之中，这些字节码文件又被存储在永久代 (Permenent Generation Java 7 之前) / 元空间 (MetaSpace Java 8 之后) 之中。</p>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#java-中的类型">Java 中的类型</a></li>
+        <li><a href="#类加载机制">类加载机制</a></li>
+        <li><a href="#classloader-类加载器">ClassLoader 类加载器</a>
+          <ul>
+            <li><a href="#双亲委派加载模型">双亲委派加载模型</a></li>
+            <li><a href="#常见加载类错误分析">常见加载类错误分析</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>Java 是个强类型的编程语言，一个变量的类型在编译时就已经决定了，就是最初声明它的类型， 如果想把它当成另一个类型来使用，需要先经过显式的类型转换，转换时可能会因为类型不符而抛出 <code>ClassCastException</code>。</p>
+<p>本篇以 <a href="https://book.douban.com/subject/25953851/" target="_blank" rel="external nofollow noopener noreferrer">《深入分析 Java Web 技术内幕》</a> 第六章 深入分析 ClassLoader 工作机制 的内容为参考，讲解 Java 中的类型，类加载机制，类加载错误分析 等。</p>
+<h3 class="heading-element" id="java-中的类型"><span>Java 中的类型</span>
+  <a href="#java-%e4%b8%ad%e7%9a%84%e7%b1%bb%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>如开篇所说，一个 Java 对象的类型在声明的时候就被确定了，但 Java 是面对对象的语言，有丰富的接口和抽象类，一个对象被传来传去的时候，可能就丢失了它的一些类型信息，但 Java 也像 C++ 那样是拥有 RTTI (Run-Time Type Identification) <strong>运行时类型识别</strong> 特性的语言。在任何时刻，任何一个对象都清楚地知道自己的具体类型（可以通过反射获取）。</p>
+<p>不知道大家有没有想过，Java 中的对象是如何被创造出来的，创造时是否又遵循了一个怎样的规则。其实 Java 中的对象都是根据各自的说明书构建出来的，这个说明书信息就是在 <a href="https://hoffmanzheng.github.io/2020/java-compile/" target="_blank" rel="external nofollow noopener noreferrer">Javac 编译原理与 class 文件结构</a> 中生成的类的 class 字节码文件之中，这些字节码文件又被存储在永久代 (Permenent Generation Java 7 之前) / 元空间 (MetaSpace Java 8 之后) 之中。</p>
 <p>当需要创建一个对象时，就会将这个创建任务委托给类加载器来完成，类加载器会找到指定的 class 字节码文件，根据说明书来装配出一个需要的对象。因此任何一个 Java 对象，在运行时都清楚的知道自己是由哪个类的字节码装配出来的，都可以通过 <code>getClass() / instanceof</code> 来获取自己的具体类型。</p>
-<h3 id="类加载机制">类加载机制</h3>
-<p>JVM 类加载机制分为五个部分：加载、验证、准备、解析、初始化，如下所示：</p>
-<p><img src="/images/class-load-process.jpg" alt=""></p>
-<table>
-<thead>
-<tr>
-<th>类加载阶段</th>
-<th>作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>加载</td>
-<td>生成 Class 对象，作为方法区这个类的各种数据入口</td>
-</tr>
-<tr>
-<td>验证</td>
-<td>确保 Class 文件的字节流中包含的信息符合当前虚拟机的要求</td>
-</tr>
-<tr>
-<td>准备</td>
-<td>为类变量分配内存空间，并设置变量初始值，非 finanl 是0，final 会赋值</td>
-</tr>
-<tr>
-<td>解析</td>
-<td>虚拟机将常量池中的符号引用替换为直接引用的过程</td>
-</tr>
-<tr>
-<td>初始化</td>
-<td>执行类构造器方法（静态语句块）</td>
-</tr>
-</tbody>
-</table>
-<h3 id="classloader-类加载器">ClassLoader 类加载器</h3>
-<p>类加载器 ClassLoader 在 JDK 源码中的 rt.jar (rt 即 runtime) 这个包中，先看下这个类都有哪几个主要的方法：</p>
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>主要作用</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>defineClass(byte[], int, int)</td>
-<td>将字节流解析成 JVM 能够识别的 Class 对象</td>
-</tr>
-<tr>
-<td>findClass(String)</td>
-<td>获取要加载类的字节码（重写以自定义）</td>
-</tr>
-<tr>
-<td>resolveClass(Class&lt;?&gt; c)</td>
-<td>链接类到 JVM（实例化时进行）</td>
-</tr>
-<tr>
-<td>loadClass(String)</td>
-<td>加载某个类（不重新定义加载规则，直接调用）</td>
-</tr>
-</tbody>
-</table>
-<p>因为有 defineClass 方法的存在，构建对象实例的字节码不仅可以是编译后产生的 class 文件，它还可能是从网络上传输过来的字节流，或者是在内存中 <strong>动态生成的增强字节码</strong>。</p>
-<h4 id="双亲委派加载模型">双亲委派加载模型</h4>
-<p>JVM 提供了三层 ClassLoader：</p>
-<table>
-<thead>
-<tr>
-<th>ClassLoader</th>
-<th>function</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Bootstrap ClassLoader</td>
-<td>加载 JVM 自身工作需要的类（不遵守双亲委派原则）<code>JAVA_HOME\lib</code></td>
-</tr>
-<tr>
-<td>ExtClassLoader</td>
-<td>扩展类加载器 <code>JAVA_HOME\lib\ext</code></td>
-</tr>
-<tr>
-<td>AppClassLoader</td>
-<td>应用类加载器，加载用户路径 classpath 下的类</td>
-</tr>
-</tbody>
-</table>
-<p><img src="/images/ClassLoader.jpg" alt=""></p>
+<h3 class="heading-element" id="类加载机制"><span>类加载机制</span>
+  <a href="#%e7%b1%bb%e5%8a%a0%e8%bd%bd%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>JVM 类加载机制分为五个部分：加载、验证、准备、解析、初始化，如下所示：</p>
+<p><img loading="lazy" src='/images/class-load-process.jpg' alt="/images/class-load-process.jpg"></p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>类加载阶段</th>
+            <th>作用</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>加载</td>
+            <td>生成 Class 对象，作为方法区这个类的各种数据入口</td>
+        </tr>
+        <tr>
+            <td>验证</td>
+            <td>确保 Class 文件的字节流中包含的信息符合当前虚拟机的要求</td>
+        </tr>
+        <tr>
+            <td>准备</td>
+            <td>为类变量分配内存空间，并设置变量初始值，非 finanl 是0，final 会赋值</td>
+        </tr>
+        <tr>
+            <td>解析</td>
+            <td>虚拟机将常量池中的符号引用替换为直接引用的过程</td>
+        </tr>
+        <tr>
+            <td>初始化</td>
+            <td>执行类构造器方法（静态语句块）</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h3 class="heading-element" id="classloader-类加载器"><span>ClassLoader 类加载器</span>
+  <a href="#classloader-%e7%b1%bb%e5%8a%a0%e8%bd%bd%e5%99%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>类加载器 ClassLoader 在 JDK 源码中的 rt.jar (rt 即 runtime) 这个包中，先看下这个类都有哪几个主要的方法：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>方法</th>
+            <th>主要作用</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>defineClass(byte[], int, int)</td>
+            <td>将字节流解析成 JVM 能够识别的 Class 对象</td>
+        </tr>
+        <tr>
+            <td>findClass(String)</td>
+            <td>获取要加载类的字节码（重写以自定义）</td>
+        </tr>
+        <tr>
+            <td>resolveClass(Class<!-- raw HTML omitted --> c)</td>
+            <td>链接类到 JVM（实例化时进行）</td>
+        </tr>
+        <tr>
+            <td>loadClass(String)</td>
+            <td>加载某个类（不重新定义加载规则，直接调用）</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>因为有 defineClass 方法的存在，构建对象实例的字节码不仅可以是编译后产生的 class 文件，它还可能是从网络上传输过来的字节流，或者是在内存中 <strong>动态生成的增强字节码</strong>。</p>
+<h4 class="heading-element" id="双亲委派加载模型"><span>双亲委派加载模型</span>
+  <a href="#%e5%8f%8c%e4%ba%b2%e5%a7%94%e6%b4%be%e5%8a%a0%e8%bd%bd%e6%a8%a1%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>JVM 提供了三层 ClassLoader：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>ClassLoader</th>
+            <th>function</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Bootstrap ClassLoader</td>
+            <td>加载 JVM 自身工作需要的类（不遵守双亲委派原则）<code>JAVA_HOME\lib</code></td>
+        </tr>
+        <tr>
+            <td>ExtClassLoader</td>
+            <td>扩展类加载器 <code>JAVA_HOME\lib\ext</code></td>
+        </tr>
+        <tr>
+            <td>AppClassLoader</td>
+            <td>应用类加载器，加载用户路径 classpath 下的类</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p><img loading="lazy" src='/images/ClassLoader.jpg' alt="/images/ClassLoader.jpg"></p>
 <p>加载类对象时，会先委托其 parent 类加载器来加载这个类，如果 parent 类加载器加载成功，则直接返回加载结果了；如果 parent 类加载器加载失败，则再尝试使用当前的类加载器加载这个类，具体可以看 <code>loadClass</code> 方法：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">protected</span> Class<span style="color:#f92672">&lt;?&gt;</span> loadClass<span style="color:#f92672">(</span>String name<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> resolve<span style="color:#f92672">)</span>
-        <span style="color:#66d9ef">throws</span> ClassNotFoundException
-<span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>getClassLoadingLock<span style="color:#f92672">(</span>name<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-        <span style="color:#75715e">// First, check if the class has already been loaded
-</span><span style="color:#75715e"></span>        Class<span style="color:#f92672">&lt;?&gt;</span> c <span style="color:#f92672">=</span> findLoadedClass<span style="color:#f92672">(</span>name<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">long</span> t0 <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">nanoTime</span><span style="color:#f92672">();</span>
-            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>parent <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    c <span style="color:#f92672">=</span> parent<span style="color:#f92672">.</span><span style="color:#a6e22e">loadClass</span><span style="color:#f92672">(</span>name<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
-                    <span style="color:#75715e">// 如果有 parent 加载器，通过 parent 来加载
-</span><span style="color:#75715e"></span>                <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                    c <span style="color:#f92672">=</span> findBootstrapClassOrNull<span style="color:#f92672">(</span>name<span style="color:#f92672">);</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>ClassNotFoundException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#75715e">// ClassNotFoundException thrown if class not found
-</span><span style="color:#75715e"></span>                <span style="color:#75715e">// from the non-null parent class loader
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">protected</span> Class<span style="color:#f92672">&lt;?&gt;</span> loadClass(String name, <span style="color:#66d9ef">boolean</span> resolve)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throws</span> ClassNotFoundException
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">synchronized</span> (getClassLoadingLock(name)) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// First, check if the class has already been loaded</span>
+</span></span><span style="display:flex;"><span>        Class<span style="color:#f92672">&lt;?&gt;</span> c <span style="color:#f92672">=</span> findLoadedClass(name);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (c <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">long</span> t0 <span style="color:#f92672">=</span> System.<span style="color:#a6e22e">nanoTime</span>();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (parent <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>                    c <span style="color:#f92672">=</span> parent.<span style="color:#a6e22e">loadClass</span>(name, <span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// 如果有 parent 加载器，通过 parent 来加载</span>
+</span></span><span style="display:flex;"><span>                } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                    c <span style="color:#f92672">=</span> findBootstrapClassOrNull(name);
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (ClassNotFoundException e) {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// ClassNotFoundException thrown if class not found</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// from the non-null parent class loader</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (c <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// If still not found, then invoke findClass in order</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// to find the class.</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">long</span> t1 <span style="color:#f92672">=</span> System.<span style="color:#a6e22e">nanoTime</span>();
+</span></span><span style="display:flex;"><span>                c <span style="color:#f92672">=</span> findClass(name);
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// 如果 parent 拒绝加载此类，则会有此类加载器完成加载</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// this is the defining class loader; record the stats</span>
+</span></span><span style="display:flex;"><span>                sun.<span style="color:#a6e22e">misc</span>.<span style="color:#a6e22e">PerfCounter</span>.<span style="color:#a6e22e">getParentDelegationTime</span>().<span style="color:#a6e22e">addTime</span>(t1 <span style="color:#f92672">-</span> t0);
+</span></span><span style="display:flex;"><span>                sun.<span style="color:#a6e22e">misc</span>.<span style="color:#a6e22e">PerfCounter</span>.<span style="color:#a6e22e">getFindClassTime</span>().<span style="color:#a6e22e">addElapsedTimeFrom</span>(t1);
+</span></span><span style="display:flex;"><span>                sun.<span style="color:#a6e22e">misc</span>.<span style="color:#a6e22e">PerfCounter</span>.<span style="color:#a6e22e">getFindClasses</span>().<span style="color:#a6e22e">increment</span>();
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (resolve) {
+</span></span><span style="display:flex;"><span>            resolveClass(c);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> c;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>双亲委托加载机制，是出于安全考虑，JVM 核心类都是由最顶端的启动类加载器加载的，不会由下面的类加载器加载，以保证安全。比如我自己写了一个异常的 <code>java.lang.String</code> ，是无法被恶意地加载的，因为应用类加载器会委托其父加载器去加载，而在父加载器的已加载类列表中已经存在了 JDK 的 java.lang.String，此时就会直接返回，而不去加载这个恶意的类。</p>
+<h4 class="heading-element" id="常见加载类错误分析"><span>常见加载类错误分析</span>
+  <a href="#%e5%b8%b8%e8%a7%81%e5%8a%a0%e8%bd%bd%e7%b1%bb%e9%94%99%e8%af%af%e5%88%86%e6%9e%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>类加载异常</th>
+            <th>可能的原因</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>ClassNotFoundException</td>
+            <td>当前 classpath 下没有指定的文件</td>
+        </tr>
+        <tr>
+            <td>NoClassDefFoundError</td>
+            <td>命令行运行程序时，类前面没有加包名</td>
+        </tr>
+        <tr>
+            <td>UnsatisfiedLinkError</td>
+            <td>不小心把 JVM 中的某个 lib 删除了</td>
+        </tr>
+        <tr>
+            <td>ClassCastException</td>
+            <td>强制类型转换时，类型不匹配</td>
+        </tr>
+        <tr>
+            <td>ExceptionInInitializerError</td>
+            <td>对象初始化时出现异常</td>
+        </tr>
+    </tbody>
+  </table>
+</div></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2020-09-22 09:19:47">Updated on 2020-09-22&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/java-classloader/" data-title="深入分析 ClassLoader 工作机制" data-hashtags="Java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/java-classloader/" data-hashtag="Java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/java-classloader/" data-title="深入分析 ClassLoader 工作机制"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#75715e">// If still not found, then invoke findClass in order
-</span><span style="color:#75715e"></span>                <span style="color:#75715e">// to find the class.
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">long</span> t1 <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">nanoTime</span><span style="color:#f92672">();</span>
-                c <span style="color:#f92672">=</span> findClass<span style="color:#f92672">(</span>name<span style="color:#f92672">);</span>
-                <span style="color:#75715e">// 如果 parent 拒绝加载此类，则会有此类加载器完成加载
-</span><span style="color:#75715e"></span>
-                <span style="color:#75715e">// this is the defining class loader; record the stats
-</span><span style="color:#75715e"></span>                sun<span style="color:#f92672">.</span><span style="color:#a6e22e">misc</span><span style="color:#f92672">.</span><span style="color:#a6e22e">PerfCounter</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getParentDelegationTime</span><span style="color:#f92672">().</span><span style="color:#a6e22e">addTime</span><span style="color:#f92672">(</span>t1 <span style="color:#f92672">-</span> t0<span style="color:#f92672">);</span>
-                sun<span style="color:#f92672">.</span><span style="color:#a6e22e">misc</span><span style="color:#f92672">.</span><span style="color:#a6e22e">PerfCounter</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getFindClassTime</span><span style="color:#f92672">().</span><span style="color:#a6e22e">addElapsedTimeFrom</span><span style="color:#f92672">(</span>t1<span style="color:#f92672">);</span>
-                sun<span style="color:#f92672">.</span><span style="color:#a6e22e">misc</span><span style="color:#f92672">.</span><span style="color:#a6e22e">PerfCounter</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getFindClasses</span><span style="color:#f92672">().</span><span style="color:#a6e22e">increment</span><span style="color:#f92672">();</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>resolve<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            resolveClass<span style="color:#f92672">(</span>c<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">return</span> c<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>双亲委托加载机制，是出于安全考虑，JVM 核心类都是由最顶端的启动类加载器加载的，不会由下面的类加载器加载，以保证安全。比如我自己写了一个异常的 <code>java.lang.String</code> ，是无法被恶意地加载的，因为应用类加载器会委托其父加载器去加载，而在父加载器的已加载类列表中已经存在了 JDK 的 java.lang.String，此时就会直接返回，而不去加载这个恶意的类。</p>
-<h4 id="常见加载类错误分析">常见加载类错误分析</h4>
-<table>
-<thead>
-<tr>
-<th>类加载异常</th>
-<th>可能的原因</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ClassNotFoundException</td>
-<td>当前 classpath 下没有指定的文件</td>
-</tr>
-<tr>
-<td>NoClassDefFoundError</td>
-<td>命令行运行程序时，类前面没有加包名</td>
-</tr>
-<tr>
-<td>UnsatisfiedLinkError</td>
-<td>不小心把 JVM 中的某个 lib 删除了</td>
-</tr>
-<tr>
-<td>ClassCastException</td>
-<td>强制类型转换时，类型不匹配</td>
-</tr>
-<tr>
-<td>ExceptionInInitializerError</td>
-<td>对象初始化时出现异常</td>
-</tr>
-</tbody>
-</table>
-
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2020/java-classloader/>https://hoffmanzheng.github.io/2020/java-classloader/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/java/">
-                    #Java</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2020/java-compile/" class="prev" rel="prev" title="Javac 编译原理与 class 文件结构"><i class="iconfont icon-left"></i>&nbsp;Javac 编译原理与 class 文件结构</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2020/jvm-architecture-memory/" class="next" rel="next" title="JVM：体系结构与内存管理">JVM：体系结构与内存管理&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/java/" class="post-tag" title="Tags - Java">Java</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2020/java-compile/" class="post-nav-item" rel="prev" title="Javac 编译原理与 Class 文件结构"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Javac 编译原理与 Class 文件结构</a><a href="/2020/jvm-architecture-memory/" class="post-nav-item" rel="next" title="JVM：体系结构与内存管理">JVM：体系结构与内存管理<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#java-中的类型">Java 中的类型</a></li>
+        <li><a href="#类加载机制">类加载机制</a></li>
+        <li><a href="#classloader-类加载器">ClassLoader 类加载器</a>
+          <ul>
+            <li><a href="#双亲委派加载模型">双亲委派加载模型</a></li>
+            <li><a href="#常见加载类错误分析">常见加载类错误分析</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/41c5f4aeaf47faf02160b9d8ea3eec31.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

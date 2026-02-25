@@ -1,334 +1,237 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2021/java-spring/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2022/distribute-redlock/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2021/ruby-bundler/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           Ruby：版本管理 RVM、Gem 与 Bundler | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="Ruby：版本管理 RVM、Gem 与 Bundler | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Ruby：版本管理 RVM、Gem 与 Bundler - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 RubyGems 管理 Ruby 的组件，使用 Bundler 来解决项目中 gem 组件的依赖问题，使用 RVM 管理不同版本的 Ruby 环境等。
+推荐阅读：
+Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾) Ruby Gemfile 详解 RubyGems Ruby 主要通过 require 函数来引入外部的库文件，参数可以传文件名，相对路径或是绝对路径。当参数是文件名时，Ruby 会去 $LOAD_PATH 这个全局变量定义的路径中搜索库文件。
+"><meta name="keywords" content='Ruby'>
+  <meta itemprop="name" content="Ruby：版本管理 RVM、Gem 与 Bundler">
+  <meta itemprop="description" content="本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 RubyGems 管理 Ruby 的组件，使用 Bundler 来解决项目中 gem 组件的依赖问题，使用 RVM 管理不同版本的 Ruby 环境等。
+推荐阅读：
+Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾) Ruby Gemfile 详解 RubyGems Ruby 主要通过 require 函数来引入外部的库文件，参数可以传文件名，相对路径或是绝对路径。当参数是文件名时，Ruby 会去 $LOAD_PATH 这个全局变量定义的路径中搜索库文件。">
+  <meta itemprop="datePublished" content="2021-10-10T13:19:47+01:00">
+  <meta itemprop="dateModified" content="2021-10-10T13:19:47+01:00">
+  <meta itemprop="wordCount" content="467">
+  <meta itemprop="keywords" content="Ruby"><meta property="og:url" content="https://hoffmanzheng.github.io/2021/ruby-bundler/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="Ruby：版本管理 RVM、Gem 与 Bundler">
+  <meta property="og:description" content="本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 RubyGems 管理 Ruby 的组件，使用 Bundler 来解决项目中 gem 组件的依赖问题，使用 RVM 管理不同版本的 Ruby 环境等。
+推荐阅读：
+Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾) Ruby Gemfile 详解 RubyGems Ruby 主要通过 require 函数来引入外部的库文件，参数可以传文件名，相对路径或是绝对路径。当参数是文件名时，Ruby 会去 $LOAD_PATH 这个全局变量定义的路径中搜索库文件。">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-10-10T13:19:47+01:00">
+    <meta property="article:modified_time" content="2021-10-10T13:19:47+01:00">
+    <meta property="article:tag" content="Ruby">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Ruby：版本管理 RVM、Gem 与 Bundler">
+  <meta name="twitter:description" content="本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 RubyGems 管理 Ruby 的组件，使用 Bundler 来解决项目中 gem 组件的依赖问题，使用 RVM 管理不同版本的 Ruby 环境等。
+推荐阅读：
+Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾) Ruby Gemfile 详解 RubyGems Ruby 主要通过 require 函数来引入外部的库文件，参数可以传文件名，相对路径或是绝对路径。当参数是文件名时，Ruby 会去 $LOAD_PATH 这个全局变量定义的路径中搜索库文件。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2021/ruby-bundler/" title="Ruby：版本管理 RVM、Gem 与 Bundler - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2021/java-spring/" title="深入解析 Spring 架构与设计" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2022/distribute-redlock/" title="分布式：[译] 基于 Redis 的分布式锁 " /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Ruby：版本管理 RVM、Gem 与 Bundler",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "Ruby：版本管理 RVM、Gem 与 Bundler",
-    "headline" : "Ruby：版本管理 RVM、Gem 与 Bundler",
-    "description" : "本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 RubyGems 管理 Ruby 的组件，使用 Bundler 来解决项目中 gem 组件的依赖问题，使用 RVM 管理不同版本的 Ruby 环境等。\n推荐阅读：\n Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾) Ruby Gemfile 详解  RubyGems Ruby 主要通过 require 函数来引入外部的库文件，参数可以传文件名，相对路径或是绝对路径。当参数是文件名时，Ruby 会去 $LOAD_PATH 这个全局变量定义的路径中搜索库文件。\n$ ruby -e \u0026#34;puts $:\u0026#34; \/usr\/local\/lib\/ruby\/site_ruby\/2.7.0 \/usr\/local\/lib\/ruby\/site_ruby\/2.7.0\/x86_64-darwin20 \/usr\/local\/lib\/ruby\/site_ruby \/usr\/local\/lib\/ruby\/vendor_ruby\/2.7.0 \/usr\/local\/lib\/ruby\/vendor_ruby\/2.7.0\/x86_64-darwin20 \/usr\/local\/lib\/ruby\/vendor_ruby \/usr\/local\/Cellar\/ruby@2.7\/2.7.4\/lib\/ruby\/2.7.0 \/usr\/local\/Cellar\/ruby@2.7\/2.7.4\/lib\/ruby\/2.7.0\/x86_64-darwin20 $LOAD_PATH 是一个数组变量，里面存放依赖路径字符串，可以看到其中的目录可以分成三大类：\n site_ruby 默认优先级最高，安装本机相关库 vendor_ruby 操作系统供应商进行定制用的，一般为空 2.7.4 ruby 标准库目录，比如 date, csv 库  require 会按照 $LOAD_PATH 数组里面的路径顺序进行查找，找到了就不继续往下找了。\nRubyGems 是用来寻找并管理 Ruby 组件的工具，让你可以轻松下载别人的代码，它重写了 require 函数的实现，并将 gem 安装到和 site_ruby 平级的 gems 目录下。gem 工具允许你用一个单一命令完成下载以及安装，允许你一键卸载，并且中心化管理所有安装了的库。",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2021",
-    "datePublished": "2021-10-10 13:19:47 \u002b0100 \u002b0100",
-    "dateModified" : "2021-10-10 13:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2021\/ruby-bundler\/",
-    "wordCount" : "475",
-    "keywords" : [ "Ruby", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2021\/ruby-bundler\/"
+    },"genre": "posts","keywords": "Ruby","wordcount":  467 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2021\/ruby-bundler\/","datePublished": "2021-10-10T13:19:47+01:00","dateModified": "2021-10-10T13:19:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Ruby：版本管理 RVM、Gem 与 Bundler</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/study-notes/" class="post-category" title="Category - Study Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Study Notes</a></span></div><div class="post-meta-line"><span title="published on 2021-10-10 13:19:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2021-10-10">2021-10-10</time></span>&nbsp;<span title="467 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 500 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>3 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Ruby：版本管理 RVM、Gem 与 Bundler</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2021-10-10 itemprop="datePublished">October 10, 2021</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/study-notes/"> Study notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,475 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
-
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 <a href="https://rubygems.org/">RubyGems</a> 管理 Ruby 的组件，使用 <a href="https://bundler.io/">Bundler</a> 来解决项目中 gem 组件的依赖问题，使用 <a href="https://rvm.io/">RVM</a> 管理不同版本的 Ruby 环境等。</p>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#rubygems">RubyGems</a></li>
+        <li><a href="#bundler">Bundler</a></li>
+        <li><a href="#ruby-environment-manager">Ruby enVironment Manager</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>本篇介绍在 Ruby 项目中版本及包管理的工程实践，包括使用 <a href="https://rubygems.org/" target="_blank" rel="external nofollow noopener noreferrer">RubyGems</a> 管理 Ruby 的组件，使用 <a href="https://bundler.io/" target="_blank" rel="external nofollow noopener noreferrer">Bundler</a> 来解决项目中 gem 组件的依赖问题，使用 <a href="https://rvm.io/" target="_blank" rel="external nofollow noopener noreferrer">RVM</a> 管理不同版本的 Ruby 环境等。</p>
 <p>推荐阅读：</p>
 <ol>
-<li><a href="https://ruby-china.org/topics/28453">Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾)</a></li>
-<li><a href="https://ruby-china.org/topics/26655">Ruby Gemfile 详解</a></li>
+<li><a href="https://ruby-china.org/topics/28453" target="_blank" rel="external nofollow noopener noreferrer">Bundler 到底是怎么工作的(暨 Ruby 依赖管理历史回顾)</a></li>
+<li><a href="https://ruby-china.org/topics/26655" target="_blank" rel="external nofollow noopener noreferrer">Ruby Gemfile 详解</a></li>
 </ol>
-<h3 id="rubygems">RubyGems</h3>
-<p>Ruby 主要通过 <code>require</code> 函数来引入外部的库文件，参数可以传文件名，相对路径或是绝对路径。当参数是文件名时，Ruby 会去 <code>$LOAD_PATH</code> 这个全局变量定义的路径中搜索库文件。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$ ruby -e <span style="color:#e6db74">&#34;puts $:&#34;</span> 
-/usr/local/lib/ruby/site_ruby/2.7.0
-/usr/local/lib/ruby/site_ruby/2.7.0/x86_64-darwin20
-/usr/local/lib/ruby/site_ruby
-/usr/local/lib/ruby/vendor_ruby/2.7.0
-/usr/local/lib/ruby/vendor_ruby/2.7.0/x86_64-darwin20
-/usr/local/lib/ruby/vendor_ruby
-/usr/local/Cellar/ruby@2.7/2.7.4/lib/ruby/2.7.0
-/usr/local/Cellar/ruby@2.7/2.7.4/lib/ruby/2.7.0/x86_64-darwin20
-</code></pre></div><p>$LOAD_PATH 是一个数组变量，里面存放依赖路径字符串，可以看到其中的目录可以分成三大类：</p>
+<h3 class="heading-element" id="rubygems"><span>RubyGems</span>
+  <a href="#rubygems" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Ruby 主要通过 <code>require</code> 函数来引入外部的库文件，参数可以传文件名，相对路径或是绝对路径。当参数是文件名时，Ruby 会去 <code>$LOAD_PATH</code> 这个全局变量定义的路径中搜索库文件。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$ ruby -e <span style="color:#e6db74">&#34;puts $:&#34;</span> 
+</span></span><span style="display:flex;"><span>/usr/local/lib/ruby/site_ruby/<span style="color:#ae81ff">2.7</span>.0
+</span></span><span style="display:flex;"><span>/usr/local/lib/ruby/site_ruby/<span style="color:#ae81ff">2.7</span>.<span style="color:#ae81ff">0</span>/x86_64-darwin20
+</span></span><span style="display:flex;"><span>/usr/local/lib/ruby/site_ruby
+</span></span><span style="display:flex;"><span>/usr/local/lib/ruby/vendor_ruby/<span style="color:#ae81ff">2.7</span>.0
+</span></span><span style="display:flex;"><span>/usr/local/lib/ruby/vendor_ruby/<span style="color:#ae81ff">2.7</span>.<span style="color:#ae81ff">0</span>/x86_64-darwin20
+</span></span><span style="display:flex;"><span>/usr/local/lib/ruby/vendor_ruby
+</span></span><span style="display:flex;"><span>/usr/local/Cellar/ruby@2.<span style="color:#ae81ff">7</span>/<span style="color:#ae81ff">2.7</span>.<span style="color:#ae81ff">4</span>/lib/ruby/<span style="color:#ae81ff">2.7</span>.0
+</span></span><span style="display:flex;"><span>/usr/local/Cellar/ruby@2.<span style="color:#ae81ff">7</span>/<span style="color:#ae81ff">2.7</span>.<span style="color:#ae81ff">4</span>/lib/ruby/<span style="color:#ae81ff">2.7</span>.<span style="color:#ae81ff">0</span>/x86_64-darwin20</span></span></code></pre></div><p>$LOAD_PATH 是一个数组变量，里面存放依赖路径字符串，可以看到其中的目录可以分成三大类：</p>
 <ul>
 <li>site_ruby 默认优先级最高，安装本机相关库</li>
 <li>vendor_ruby 操作系统供应商进行定制用的，一般为空</li>
 <li>2.7.4 ruby 标准库目录，比如 date, csv 库</li>
 </ul>
 <p>require 会按照 $LOAD_PATH 数组里面的路径顺序进行查找，找到了就不继续往下找了。</p>
-<p><a href="https://rubygems.org/">RubyGems</a> 是用来寻找并管理 Ruby 组件的工具，让你可以轻松下载别人的代码，它重写了 require 函数的实现，并将 gem 安装到和 site_ruby 平级的 <code>gems</code> 目录下。gem 工具允许你用一个单一命令完成下载以及安装，允许你一键卸载，并且中心化管理所有安装了的库。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">gem install rails -v 4.1
-gem uninstall
-gem list rails
-</code></pre></div><p>但 RubyGems 也有没有解决的问题，一个大问题就是没有依赖的版本控制，并且大多数 gem 都被安装进的同一个路径下，如果系统中存在多个需要 gem 的 Ruby 项目，又该如何对依赖的 gem 版本进行分别管理呢？</p>
-<h3 id="bundler">Bundler</h3>
-<p>Bundler 的出现修复了 RubyGems 没有解决的问题，它让项目可以根据定义来使用 gem，并且在安装 gem 时就进行版本冲突的解析。Ruby 的开发者只需要列出他所需要的 Gem，然后 Bundler 就会找出合适的版本让它们在一起工作，并且把一个可行解（但不一定是最优解）放入 Gemfile.lock。这个文件保证了共享代码或者部署到服务器时能够安装到正确的依赖版本。</p>
-<p>Bundler 的工作原理，See: <a href="https://bundler.io/rationale.html">Bundler&rsquo;s Purpose and Rationale</a>。在应用根目录 <code>Gemfile</code> 文件里声明依赖后，Bundler 会去 source 指定的 <code>https://rubygems.org</code> 上寻找 gem</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">source <span style="color:#e6db74">&#39;https://rubygems.org&#39;</span>
-
-gem <span style="color:#e6db74">&#39;rails&#39;</span>, <span style="color:#e6db74">&#39;4.1.0.rc2&#39;</span>
-gem <span style="color:#e6db74">&#39;rack-cache&#39;</span>
-gem <span style="color:#e6db74">&#39;nokogiri&#39;</span>, <span style="color:#e6db74">&#39;~&gt; 1.6.1&#39;</span>
-</code></pre></div><p>项目第一次安装依赖时可以执行 <code>bundle install --path=vendor/bundle</code> 把 gem 安装到项目的 vendor/bundle 目录下，再在 git 中忽略此目录，这样做就不会因为多个项目安装 gem 到系统目录，而导致系统里的 gem 冲突。</p>
+<p><a href="https://rubygems.org/" target="_blank" rel="external nofollow noopener noreferrer">RubyGems</a> 是用来寻找并管理 Ruby 组件的工具，让你可以轻松下载别人的代码，它重写了 require 函数的实现，并将 gem 安装到和 site_ruby 平级的 <code>gems</code> 目录下。gem 工具允许你用一个单一命令完成下载以及安装，允许你一键卸载，并且中心化管理所有安装了的库。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>gem install rails -v <span style="color:#ae81ff">4.1</span>
+</span></span><span style="display:flex;"><span>gem uninstall
+</span></span><span style="display:flex;"><span>gem list rails</span></span></code></pre></div><p>但 RubyGems 也有没有解决的问题，一个大问题就是没有依赖的版本控制，并且大多数 gem 都被安装进的同一个路径下，如果系统中存在多个需要 gem 的 Ruby 项目，又该如何对依赖的 gem 版本进行分别管理呢？</p>
+<h3 class="heading-element" id="bundler"><span>Bundler</span>
+  <a href="#bundler" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Bundler 的出现修复了 RubyGems 没有解决的问题，它让项目可以根据定义来使用 gem，并且在安装 gem 时就进行版本冲突的解析。Ruby 的开发者只需要列出他所需要的 Gem，然后 Bundler 就会找出合适的版本让它们在一起工作，并且把一个可行解（但不一定是最优解）放入 Gemfile.lock。这个文件保证了共享代码或者部署到服务器时能够安装到正确的依赖版本。</p>
+<p>Bundler 的工作原理，See: <a href="https://bundler.io/rationale.html" target="_blank" rel="external nofollow noopener noreferrer">Bundler&rsquo;s Purpose and Rationale</a>。在应用根目录 <code>Gemfile</code> 文件里声明依赖后，Bundler 会去 source 指定的 <code>https://rubygems.org</code> 上寻找 gem</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>source <span style="color:#e6db74">&#39;https://rubygems.org&#39;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>gem <span style="color:#e6db74">&#39;rails&#39;</span>, <span style="color:#e6db74">&#39;4.1.0.rc2&#39;</span>
+</span></span><span style="display:flex;"><span>gem <span style="color:#e6db74">&#39;rack-cache&#39;</span>
+</span></span><span style="display:flex;"><span>gem <span style="color:#e6db74">&#39;nokogiri&#39;</span>, <span style="color:#e6db74">&#39;~&gt; 1.6.1&#39;</span></span></span></code></pre></div><p>项目第一次安装依赖时可以执行 <code>bundle install --path=vendor/bundle</code> 把 gem 安装到项目的 vendor/bundle 目录下，再在 git 中忽略此目录，这样做就不会因为多个项目安装 gem 到系统目录，而导致系统里的 gem 冲突。</p>
 <p>因为在 Gemfile 中声明的依赖有它们自己的依赖，所以运行 bundle install 会安装相当多的 gem。如果任何需要的 gem 已经被安装了，bundler 会直接使用它们。在所有需要的 gem 被成功安装后，bundler 会写一个所有这些 gem 和它们的版本号的快照到 <code>Gemfile.lock</code> 中。</p>
 <p>如果开发的是个 Rails 应用，默认就有可以可以运行 bundler 的代码了。对于其他的应用（比如基于 Sinatra 的应用），需要在引用任何 gem 之前配置一下 bundler。比如在 <code>require 'sinatra'</code> 的那个文件的第一行加入以下代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">require <span style="color:#e6db74">&#39;rubygems&#39;</span>               // Ruby 1.8 以后的版本不再需要这句
-require <span style="color:#e6db74">&#39;bundle/setup&#39;</span>
-</code></pre></div><p>这样 bundler 就能将 gem 的地址加入到 <code>$LOAD_PATH</code> 中，以此来让 require 正常工作。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>require <span style="color:#e6db74">&#39;rubygems&#39;</span>               // Ruby <span style="color:#ae81ff">1.8</span> 以后的版本不再需要这句
+</span></span><span style="display:flex;"><span>require <span style="color:#e6db74">&#39;bundle/setup&#39;</span></span></span></code></pre></div><p>这样 bundler 就能将 gem 的地址加入到 <code>$LOAD_PATH</code> 中，以此来让 require 正常工作。</p>
 <p>Gemfile 和 Gemfile.lock 应该被一起放到 <strong>版本管理</strong> 中，这样版本库中就有了应用最后一次确定能正常工作时所有的 gem 及版本号的记录。当在别的机器上获取应用代码并执行 bundle install 时，bundler 会找到 Gemfile.lock，跳过解决依赖的步骤并按照之前记录的依赖版本号获取 gem。仅在 Gemfile 确切地指定依赖的第三方版本并 <strong>不能保证</strong> 应用使用正确的依赖版本，因为 gem 通常给它们自己的依赖声明一个版本号的范围。</p>
 <p>Bundle install 会 <strong>保守</strong> 地执行依赖升级，不会更新在 Gemfile 中没有显式更改的 gem（或者它们的依赖）。举个例子，rails 依赖了 actionpack，actionpack 又依赖了 rack，与此同时 rack-cache 也依赖了 rack，如果在更新 rails 的同时也更新了依赖的 rack，没有得到更新的 rack-cache 就可能与新版的 rack 出现不可预见的兼容问题。对此，如果 Gemfile 中的 rack-cache 没有被修改，bundler 就会把它和它的依赖 (rack) 当成一个不可修改的整体。</p>
 <p>可以使用 <code>bundle update</code> 命令（不推荐），在不修改 Gemfile 的情况下更新 gem，但这个命令会从头开始解决依赖并忽略掉 Gemfile.lock，需要做好全面的测试和 <code>git reset --hard</code> 的准备。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">bundle update rack-cache        // 更新 rack-cache 到 Gemfile 里允许的最新版本
-bundle update                   // 升级所有 Gemfile 里的 gem 到最新能用的版本
-</code></pre></div><h3 id="ruby-environment-manager">Ruby enVironment Manager</h3>
-<p>RVM 支持管理多个 Ruby 应用环境并且支持切换。对 Ruby 版本管理的方法如下（See: <a href="https://rvm.io/rvm/basics">The Basics of RVM</a>）：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$ rvm install 2.7.4             // 安装并使用指定版本
-$ rvm list                      // 列举 RVM 安装过的 Ruby 版本  
-<span style="color:#75715e"># =* - current &amp;&amp; default</span>
- * ruby-2.6.3 [ x86_64 ]        <span style="color:#75715e">#  * - default</span>
-=&gt; ruby-2.7.4 [ x86_64 ]        <span style="color:#75715e"># =&gt; - current</span>
-$ ruby -v                       // 当前使用的 Ruby 版本
-$ which ruby                    // 当前使用的 Ruby 的路径
-/Users/hoffman.zheng/.rvm/rubies/ruby-2.7.4/bin/ruby   // 注意放在~/.rvm 目录下
-$ rvm --default use 2.7.4       // 设置默认的 Ruby 版本
-$ rvm use 2.6.3                 // 设置当前的 Ruby 版本
-</code></pre></div><p>RVM 会隔离当前操作系统中已经安装的 Ruby 版本，如需切换回系统的 Ruby，可以让 RVM 撤销已经应用的环境更改：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$ rvm use system                // 切换回系统的 Ruby
-$ which ruby
-/usr/local/opt/ruby@2.7/bin/ruby     // 切换回的系统 Ruby 的路径
-</code></pre></div><p>RVM 会为每个版本的 Ruby 创建一个完全隔离的 Gem 目录，此外还可以根据项目/应用将 Gem 依赖们进一步分开（See: <a href="https://rvm.io/gemsets/basics">Named Gem Sets</a>）：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-powershell" data-lang="powershell">$ which ruby                    // 当前使用的 Ruby 的路径
-/Users/hoffman.zheng/.rvm/rubies/ruby-2.7.4/bin/ruby   // 注意放在~/.rvm 目录下
-$ rvm gemdir                    // 当前版本 Ruby 的 Gem 目录
-/Users/hoffman.zheng/.rvm/gems/ruby-2.7.4
-$ rvm 2.6.3@testing --create    // 为 2.6.3@test 创建一个隔离的 gems 文件夹
-$ rvm gemdir
-/Users/hoffman.zheng/.rvm/gems/ruby-2.6.3@test
-$ rvm gemset create alias1 alias2     // 为当前版本 Ruby 创建两个 gems 环境
-$ rvm 2.6.3@alias1              // 切换使用的 gems 环境
-</code></pre></div><p>可以在文件资源管理器中看到，RVM 为 2.6.3 版本的 Ruby 又创建了一个单独的 gems 文件夹（如果根本没有使用 RVM 的 gemset，会从 default 目录获取 gems；一个具名的 gemset 将会从 global 中继承 gems，或者说 global 文件夹允许用户共享 gems）：</p>
-<p><img src="/images/ruby-namedGemsets.png" alt=""></p>
-<p>如果仍对 RVM 的工作流不熟悉，可以参考下官方给的 workflow：<a href="https://rvm.io/workflow/examples">Examples of using RVM</a></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>bundle update rack-cache        // 更新 rack-cache 到 Gemfile 里允许的最新版本
+</span></span><span style="display:flex;"><span>bundle update                   // 升级所有 Gemfile 里的 gem 到最新能用的版本</span></span></code></pre></div><h3 class="heading-element" id="ruby-environment-manager"><span>Ruby enVironment Manager</span>
+  <a href="#ruby-environment-manager" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>RVM 支持管理多个 Ruby 应用环境并且支持切换。对 Ruby 版本管理的方法如下（See: <a href="https://rvm.io/rvm/basics" target="_blank" rel="external nofollow noopener noreferrer">The Basics of RVM</a>）：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$ rvm install <span style="color:#ae81ff">2.7</span>.4             // 安装并使用指定版本
+</span></span><span style="display:flex;"><span>$ rvm list                      // 列举 RVM 安装过的 Ruby 版本  
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># =* - current &amp;&amp; default</span>
+</span></span><span style="display:flex;"><span> * ruby-<span style="color:#ae81ff">2.6</span>.3 [ x86_64 ]        <span style="color:#75715e">#  * - default</span>
+</span></span><span style="display:flex;"><span>=&gt; ruby-<span style="color:#ae81ff">2.7</span>.4 [ x86_64 ]        <span style="color:#75715e"># =&gt; - current</span>
+</span></span><span style="display:flex;"><span>$ ruby -v                       // 当前使用的 Ruby 版本
+</span></span><span style="display:flex;"><span>$ which ruby                    // 当前使用的 Ruby 的路径
+</span></span><span style="display:flex;"><span>/Users/hoffman.zheng/.rvm/rubies/ruby-<span style="color:#ae81ff">2.7</span>.<span style="color:#ae81ff">4</span>/bin/ruby   // 注意放在~/.rvm 目录下
+</span></span><span style="display:flex;"><span>$ rvm --default use <span style="color:#ae81ff">2.7</span>.4       // 设置默认的 Ruby 版本
+</span></span><span style="display:flex;"><span>$ rvm use <span style="color:#ae81ff">2.6</span>.3                 // 设置当前的 Ruby 版本</span></span></code></pre></div><p>RVM 会隔离当前操作系统中已经安装的 Ruby 版本，如需切换回系统的 Ruby，可以让 RVM 撤销已经应用的环境更改：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$ rvm use system                // 切换回系统的 Ruby
+</span></span><span style="display:flex;"><span>$ which ruby
+</span></span><span style="display:flex;"><span>/usr/local/opt/ruby@2.<span style="color:#ae81ff">7</span>/bin/ruby     // 切换回的系统 Ruby 的路径</span></span></code></pre></div><p>RVM 会为每个版本的 Ruby 创建一个完全隔离的 Gem 目录，此外还可以根据项目/应用将 Gem 依赖们进一步分开（See: <a href="https://rvm.io/gemsets/basics" target="_blank" rel="external nofollow noopener noreferrer">Named Gem Sets</a>）：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-powershell" data-lang="powershell"><span style="display:flex;"><span>$ which ruby                    // 当前使用的 Ruby 的路径
+</span></span><span style="display:flex;"><span>/Users/hoffman.zheng/.rvm/rubies/ruby-<span style="color:#ae81ff">2.7</span>.<span style="color:#ae81ff">4</span>/bin/ruby   // 注意放在~/.rvm 目录下
+</span></span><span style="display:flex;"><span>$ rvm gemdir                    // 当前版本 Ruby 的 Gem 目录
+</span></span><span style="display:flex;"><span>/Users/hoffman.zheng/.rvm/gems/ruby-<span style="color:#ae81ff">2.7</span>.4
+</span></span><span style="display:flex;"><span>$ rvm <span style="color:#ae81ff">2.6</span>.<span style="color:#ae81ff">3</span>@testing --create    // 为 <span style="color:#ae81ff">2.6</span>.<span style="color:#ae81ff">3</span>@test 创建一个隔离的 gems 文件夹
+</span></span><span style="display:flex;"><span>$ rvm gemdir
+</span></span><span style="display:flex;"><span>/Users/hoffman.zheng/.rvm/gems/ruby-<span style="color:#ae81ff">2.6</span>.<span style="color:#ae81ff">3</span>@test
+</span></span><span style="display:flex;"><span>$ rvm gemset create alias1 alias2     // 为当前版本 Ruby 创建两个 gems 环境
+</span></span><span style="display:flex;"><span>$ rvm <span style="color:#ae81ff">2.6</span>.<span style="color:#ae81ff">3</span>@alias1              // 切换使用的 gems 环境</span></span></code></pre></div><p>可以在文件资源管理器中看到，RVM 为 2.6.3 版本的 Ruby 又创建了一个单独的 gems 文件夹（如果根本没有使用 RVM 的 gemset，会从 default 目录获取 gems；一个具名的 gemset 将会从 global 中继承 gems，或者说 global 文件夹允许用户共享 gems）：</p>
+<p><img loading="lazy" src='/images/ruby-namedGemsets.png' alt="/images/ruby-namedGemsets.png"></p>
+<p>如果仍对 RVM 的工作流不熟悉，可以参考下官方给的 workflow：<a href="https://rvm.io/workflow/examples" target="_blank" rel="external nofollow noopener noreferrer">Examples of using RVM</a></p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2021-10-10 13:19:47">Updated on 2021-10-10&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2021/ruby-bundler/" data-title="Ruby：版本管理 RVM、Gem 与 Bundler" data-hashtags="Ruby"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2021/ruby-bundler/" data-hashtag="Ruby"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2021/ruby-bundler/" data-title="Ruby：版本管理 RVM、Gem 与 Bundler"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2021/ruby-bundler/>https://hoffmanzheng.github.io/2021/ruby-bundler/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/ruby/">
-                    #Ruby</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2021/java-spring/" class="prev" rel="prev" title="深入解析 Spring 架构与设计"><i class="iconfont icon-left"></i>&nbsp;深入解析 Spring 架构与设计</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2022/distribute-redlock/" class="next" rel="next" title="分布式：[译] 基于 Redis 的分布式锁 ">分布式：[译] 基于 Redis 的分布式锁 &nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/ruby/" class="post-tag" title="Tags - Ruby">Ruby</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2021/java-spring/" class="post-nav-item" rel="prev" title="深入解析 Spring 架构与设计"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>深入解析 Spring 架构与设计</a><a href="/2022/distribute-redlock/" class="post-nav-item" rel="next" title="分布式：[译] 基于 Redis 的分布式锁 ">分布式：[译] 基于 Redis 的分布式锁 <i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#rubygems">RubyGems</a></li>
+        <li><a href="#bundler">Bundler</a></li>
+        <li><a href="#ruby-environment-manager">Ruby enVironment Manager</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/ddebb6e102535dcce0b5453e431dfe55.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

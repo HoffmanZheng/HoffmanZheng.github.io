@@ -1,173 +1,157 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2021/database-innodb/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2021/java-concurrency/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2021/java-exception-log/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           Java：异常处理与日志记录 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="Java：异常处理与日志记录 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Java：异常处理与日志记录 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="在开发 Java 项目中通常依赖 Eclipse/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹 快速定位并解决线上问题。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。
+本篇将结合 阿里巴巴《Java 开发手册（嵩山版）》、 Log4j 2.x 官方文档、 Takipi 日志相关文章 讲解在项目中如何优雅地处理异常以及高效且有效地记录日志。
+Java 的异常处理 错误码 阿里巴巴《Java 开发手册（嵩山版）》 中有关错误码给出了以下几点指导：
+"><meta name="keywords" content='java'>
+  <meta itemprop="name" content="Java：异常处理与日志记录">
+  <meta itemprop="description" content="在开发 Java 项目中通常依赖 Eclipse/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹 快速定位并解决线上问题。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。
+本篇将结合 阿里巴巴《Java 开发手册（嵩山版）》、 Log4j 2.x 官方文档、 Takipi 日志相关文章 讲解在项目中如何优雅地处理异常以及高效且有效地记录日志。
+Java 的异常处理 错误码 阿里巴巴《Java 开发手册（嵩山版）》 中有关错误码给出了以下几点指导：">
+  <meta itemprop="datePublished" content="2021-03-24T13:19:47+01:00">
+  <meta itemprop="dateModified" content="2021-03-24T13:19:47+01:00">
+  <meta itemprop="wordCount" content="706">
+  <meta itemprop="keywords" content="Java"><meta property="og:url" content="https://hoffmanzheng.github.io/2021/java-exception-log/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="Java：异常处理与日志记录">
+  <meta property="og:description" content="在开发 Java 项目中通常依赖 Eclipse/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹 快速定位并解决线上问题。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。
+本篇将结合 阿里巴巴《Java 开发手册（嵩山版）》、 Log4j 2.x 官方文档、 Takipi 日志相关文章 讲解在项目中如何优雅地处理异常以及高效且有效地记录日志。
+Java 的异常处理 错误码 阿里巴巴《Java 开发手册（嵩山版）》 中有关错误码给出了以下几点指导：">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-03-24T13:19:47+01:00">
+    <meta property="article:modified_time" content="2021-03-24T13:19:47+01:00">
+    <meta property="article:tag" content="Java">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Java：异常处理与日志记录">
+  <meta name="twitter:description" content="在开发 Java 项目中通常依赖 Eclipse/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹 快速定位并解决线上问题。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。
+本篇将结合 阿里巴巴《Java 开发手册（嵩山版）》、 Log4j 2.x 官方文档、 Takipi 日志相关文章 讲解在项目中如何优雅地处理异常以及高效且有效地记录日志。
+Java 的异常处理 错误码 阿里巴巴《Java 开发手册（嵩山版）》 中有关错误码给出了以下几点指导：">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2021/java-exception-log/" title="Java：异常处理与日志记录 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2021/database-innodb/" title="Database：InnoDB 存储引擎" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2021/java-concurrency/" title="Java：并发编程实战" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Java：异常处理与日志记录",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "Java：异常处理与日志记录",
-    "headline" : "Java：异常处理与日志记录",
-    "description" : "在开发 Java 项目中通常依赖 Eclipse\/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹 快速定位并解决线上问题。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。\n本篇将结合 阿里巴巴《Java 开发手册（嵩山版）》、 Log4j 2.x 官方文档、 Takipi 日志相关文章 讲解在项目中如何优雅地处理异常以及高效且有效地记录日志。\nJava 的异常处理 错误码 阿里巴巴《Java 开发手册（嵩山版）》 中有关错误码给出了以下几点指导：\n 错误码就像康熙字典中的生僻字一样，用词似乎精准，但是字典不容易随身携带并且简单易懂。1）错误码必须能够快速知晓 错误来源，可快速判断是谁的问题。 2）错误码必须能够进行清晰地比对（代码中容易 equals）。 3） 错误码有利于团队快速对错误原因达到 一致认知 错误码分成两个部分：错误产生来源 \u002b 四位数字编号 ，可参考手册中的附表（避免随意定义新的错误码），用于快速溯源。将来源于客户、当前系统、第三方服务的错误快速 区分。在无法具体确定的错误场景中，可直接使用 宏观错误码，比如 A0001（用户端错误）、B0001（系统执行出错）、C0001（调用第三方服务出错） 错误码不能直接输出给用户作为提示信息使用。堆栈（stack_trace）、错误信息（error_message）、错误码（ error_code）、提示信息（ user_tip）是一个有效关联并互相转义的和谐整体，但是 请勿互相越俎代庖。错误码之外的业务独特信息由 error_message 来承载，而不是让错误码本身涵盖过多具体业务属性 在获取第三方服务错误码时，向上抛出允许 本系统转义，由 C 转为 B，并且在错误信息上带上原有的第三方错误码。  异常处理 阿里巴巴《Java 开发手册（嵩山版）》 中有关异常处理给出了以下几点指导：\n 异常设计的初衷是解决程序运行中的各种意外情况，而不是做流程或条件控制，且异常的处理效率比条件判断方式要低很多。 非受检异常如 RuntimeException、NullPointerException 等不应该通过 catch 的方式来处理，而是自行使用条件判断。 尽可能 区分异常类型，再做对应的异常处理。定义异常时区分 unckecked \/ checked 异常，避免直接抛出 new RuntimeException() 或是 Exception \/ Throwable，应使用 有业务含义 的自定义异常。 如果不想处理异常，可以将该异常抛出给它的调用者。最外层的业务使用者，必须处理异常，将其 转化 为用户可以理解的内容。在事务场景中，应注意在 catch 后 手动回滚 事务。 finally 块必须对资源对象、流对象进行关闭，推荐使用 try-with-resources 方式。在 finally 中禁止使用 return，finally 中的 return 会无情地屏蔽掉 try 中的 return 语句。 方法的返回值可以为 null，不强制返回空集合，或者空对象等，必须添加 注释充分说明什么情况下会返回 null 值。必须考虑到远程调用失败、 序列化失败、运行时异常等场景返回 null 的情况。 防止 NullPointerException 是程序员的基本修养，注意 NPE 产生的场景：  返回类型为基本数据类型， return 包装数据类型的对象时，自动拆箱有可能产生 NPE。 反例： public int f() { return Integer 对象}， 如果为 null，自动解箱抛 NPE。 数据库的查询结果可能为 null。 集合里的元素即使 isNotEmpty，取出的数据元素也可能为 null。 远程调用返回对象时，一律要求进行空指针判断，防止 NPE。 对于 Session 中获取的数据，建议进行 NPE 检查，避免空指针。 级联调用 obj.",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2021",
-    "datePublished": "2021-03-24 13:19:47 \u002b0100 \u002b0100",
-    "dateModified" : "2021-03-24 13:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2021\/java-exception-log\/",
-    "wordCount" : "709",
-    "keywords" : [ "java", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2021\/java-exception-log\/"
+    },"genre": "posts","keywords": "java","wordcount":  706 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2021\/java-exception-log\/","datePublished": "2021-03-24T13:19:47+01:00","dateModified": "2021-03-24T13:19:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Java：异常处理与日志记录</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/study-notes/" class="post-category" title="Category - Study Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Study Notes</a></span></div><div class="post-meta-line"><span title="published on 2021-03-24 13:19:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2021-03-24">2021-03-24</time></span>&nbsp;<span title="706 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 800 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>4 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Java：异常处理与日志记录</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2021-03-24 itemprop="datePublished">March 24, 2021</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/study-notes/"> Study notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,709 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#错误码">错误码</a></li>
+        <li><a href="#异常处理">异常处理</a>
+          <ul>
+            <li><a href="#统一的异常处理">统一的异常处理</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>在开发 Java 项目中通常依赖 Eclipse/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹 <strong>快速定位并解决线上问题</strong>。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。</p>
-<p>本篇将结合 <a href="https://developer.aliyun.com/topic/java20">阿里巴巴《Java 开发手册（嵩山版）》</a>、 <a href="https://logging.apache.org/log4j/2.x/">Log4j 2.x 官方文档</a>、 <a href="https://www.overops.com/">Takipi 日志相关文章</a> 讲解在项目中如何优雅地处理异常以及高效且有效地记录日志。</p>
-<h1 id="java-的异常处理">Java 的异常处理</h1>
-<h3 id="错误码">错误码</h3>
-<p><a href="https://developer.aliyun.com/topic/java20">阿里巴巴《Java 开发手册（嵩山版）》</a> 中有关错误码给出了以下几点指导：</p>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#日志组件的选择">日志组件的选择</a></li>
+        <li><a href="#日志的配置">日志的配置</a>
+          <ul>
+            <li><a href="#日志级别">日志级别</a></li>
+            <li><a href="#日志的配置-1">日志的配置</a></li>
+          </ul>
+        </li>
+        <li><a href="#日志打印最佳实践">日志打印最佳实践</a>
+          <ul>
+            <li><a href="#记录日志的时机">记录日志的时机</a></li>
+            <li><a href="#日志打印最佳实践-1">日志打印最佳实践</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>在开发 Java 项目中通常依赖 Eclipse/IDEA 等集成开发工具的 Debug 调试来追踪解决 Bug，而在没有调试工具的测试、生产环境（一般也不允许远程调试）往往通过日志的轨迹 <strong>快速定位并解决线上问题</strong>。 但如果日志输出不好，不仅无法辅助定位问题反而可能会影响到程序的运行性能和稳定性。</p>
+<p>本篇将结合 <a href="https://developer.aliyun.com/topic/java20" target="_blank" rel="external nofollow noopener noreferrer">阿里巴巴《Java 开发手册（嵩山版）》</a>、 <a href="https://logging.apache.org/log4j/2.x/" target="_blank" rel="external nofollow noopener noreferrer">Log4j 2.x 官方文档</a>、 <a href="https://www.overops.com/" target="_blank" rel="external nofollow noopener noreferrer">Takipi 日志相关文章</a> 讲解在项目中如何优雅地处理异常以及高效且有效地记录日志。</p>
+<h1 class="heading-element" id="java-的异常处理"><span>Java 的异常处理</span>
+  <a href="#java-%e7%9a%84%e5%bc%82%e5%b8%b8%e5%a4%84%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="错误码"><span>错误码</span>
+  <a href="#%e9%94%99%e8%af%af%e7%a0%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://developer.aliyun.com/topic/java20" target="_blank" rel="external nofollow noopener noreferrer">阿里巴巴《Java 开发手册（嵩山版）》</a> 中有关错误码给出了以下几点指导：</p>
 <ol>
 <li>错误码就像康熙字典中的生僻字一样，用词似乎精准，但是字典不容易随身携带并且简单易懂。1）错误码必须能够快速知晓 <strong>错误来源</strong>，可快速判断是谁的问题。 2）错误码必须能够进行清晰地比对（代码中容易 equals）。 3） 错误码有利于团队快速对错误原因达到 <strong>一致认知</strong></li>
 <li>错误码分成两个部分：错误产生来源 + 四位数字编号 ，可参考手册中的附表（避免随意定义新的错误码），用于快速溯源。将来源于客户、当前系统、第三方服务的错误快速 <strong>区分</strong>。在无法具体确定的错误场景中，可直接使用 <strong>宏观错误码</strong>，比如 A0001（用户端错误）、B0001（系统执行出错）、C0001（调用第三方服务出错）</li>
 <li>错误码不能直接输出给用户作为提示信息使用。堆栈（stack_trace）、错误信息（error_message）、错误码（ error_code）、提示信息（ user_tip）是一个有效关联并互相转义的和谐整体，但是 <strong>请勿互相越俎代庖</strong>。错误码之外的业务独特信息由 error_message 来承载，而不是让错误码本身涵盖过多具体业务属性</li>
 <li>在获取第三方服务错误码时，向上抛出允许 <strong>本系统转义</strong>，由 C 转为 B，并且在错误信息上带上原有的第三方错误码。</li>
 </ol>
-<h3 id="异常处理">异常处理</h3>
-<p><a href="https://developer.aliyun.com/topic/java20">阿里巴巴《Java 开发手册（嵩山版）》</a> 中有关异常处理给出了以下几点指导：</p>
+<h3 class="heading-element" id="异常处理"><span>异常处理</span>
+  <a href="#%e5%bc%82%e5%b8%b8%e5%a4%84%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><a href="https://developer.aliyun.com/topic/java20" target="_blank" rel="external nofollow noopener noreferrer">阿里巴巴《Java 开发手册（嵩山版）》</a> 中有关异常处理给出了以下几点指导：</p>
 <ol>
 <li>异常设计的初衷是解决程序运行中的各种意外情况，而不是做流程或条件控制，且异常的处理效率比条件判断方式要低很多。</li>
 <li>非受检异常如 RuntimeException、NullPointerException 等不应该通过 catch 的方式来处理，而是自行使用条件判断。</li>
@@ -187,19 +171,27 @@
 </ul>
 </li>
 </ol>
-<h4 id="统一的异常处理">统一的异常处理</h4>
-<p>对于不可避免需要处理的各种异常，代码中就会出现大量的 try&hellip; catch&hellip; finally&hellip; 代码块，不仅有大量的代码冗余，还影响代码的可读性。但异常还是要处理的，那么如何优雅地处理各种异常呢。</p>
+<h4 class="heading-element" id="统一的异常处理"><span>统一的异常处理</span>
+  <a href="#%e7%bb%9f%e4%b8%80%e7%9a%84%e5%bc%82%e5%b8%b8%e5%a4%84%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>对于不可避免需要处理的各种异常，代码中就会出现大量的 try&hellip; catch&hellip; finally&hellip; 代码块，不仅有大量的代码冗余，还影响代码的可读性。但异常还是要处理的，那么如何优雅地处理各种异常呢。</p>
 <p>在写测试用例的时候体验过 JUnit 的 Assert 带给我们的丝滑，可以模仿其写一个断言类，<strong>使用 asset 断言来代替日常的异常 throw</strong>，在断言失败时会调用抛出异常的接口。</p>
-<p><img src="/images/asset-replace-throw.jpg" alt=""></p>
+<p><img loading="lazy" src='/images/asset-replace-throw.jpg' alt="/images/asset-replace-throw.jpg"></p>
 <p>将错误码和异常信息封装在枚举中，这样就不用每一种异常都单独定义一个异常类了。</p>
-<p><img src="/images/exception-enum.jpg" alt=""></p>
+<p><img loading="lazy" src='/images/exception-enum.jpg' alt="/images/exception-enum.jpg"></p>
 <p>最终的业务逻辑在判断处理异常时就会变得非常简洁了：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLIENT_INVALID_INPUT</span><span style="color:#f92672">.</span><span style="color:#a6e22e">assertNotNull</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
-ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLIENT_INVALID_INPUT</span><span style="color:#f92672">.</span><span style="color:#a6e22e">assertNotNull</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Object<span style="color:#f92672">());</span>
-</code></pre></div><p>至于统一的异常处理，可以参考使用下 Spring 提供的 <code>@ExceptionHandler</code> 。</p>
-<h1 id="java-的日志记录">Java 的日志记录</h1>
-<h3 id="日志组件的选择">日志组件的选择</h3>
-<p>纵览 Java Log 的发展历程：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>ExceptionEnum.<span style="color:#a6e22e">CLIENT_INVALID_INPUT</span>.<span style="color:#a6e22e">assertNotNull</span>(<span style="color:#66d9ef">null</span>);
+</span></span><span style="display:flex;"><span>ExceptionEnum.<span style="color:#a6e22e">CLIENT_INVALID_INPUT</span>.<span style="color:#a6e22e">assertNotNull</span>(<span style="color:#66d9ef">new</span> Object());</span></span></code></pre></div><p>至于统一的异常处理，可以参考使用下 Spring 提供的 <code>@ExceptionHandler</code> 。</p>
+<h1 class="heading-element" id="java-的日志记录"><span>Java 的日志记录</span>
+  <a href="#java-%e7%9a%84%e6%97%a5%e5%bf%97%e8%ae%b0%e5%bd%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="日志组件的选择"><span>日志组件的选择</span>
+  <a href="#%e6%97%a5%e5%bf%97%e7%bb%84%e4%bb%b6%e7%9a%84%e9%80%89%e6%8b%a9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>纵览 Java Log 的发展历程：</p>
 <ol>
 <li>Log4j（作者Ceki Gülcü）出来时就等到了广泛的应用（注意这里是直接使用），是 Java 日志事实上的标准，并成为了 Apache 的项目</li>
 <li>Apache 要求把 Log4j 并入到 JDK，SUN 拒绝，并在 JDK1.4 版本后增加了 JUL（java.util.logging）</li>
@@ -209,300 +201,287 @@ ExceptionEnum<span style="color:#f92672">.</span><span style="color:#a6e22e">CLI
 <li>Apache 参考了 Logback 并做了一系列优化，推出了log4j 2</li>
 </ol>
 <p>因此现在市面上常用的日志组件有：</p>
-<table>
-<thead>
-<tr>
-<th>日志框架</th>
-<th>介绍</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>commons-logging</td>
-<td>Apache 提供的日志门面接口，已停止更新，现在已经不太流行了</td>
-</tr>
-<tr>
-<td>slf4j</td>
-<td>Simple Logging Facade for Java，简单日志门面接口，不包含日志实现，允许用户根据喜好接入不同的日志实现</td>
-</tr>
-<tr>
-<td>Log4j</td>
-<td>Apache 的一个开源日志框架，市占率最多，但在 15 年 08 月被宣布停止维护，推荐升级到 log4j 2</td>
-</tr>
-<tr>
-<td>Log4j 2</td>
-<td>Log4j 的升级产品，不兼容 Log4j</td>
-</tr>
-<tr>
-<td>Logging</td>
-<td>Java 自带的日志工具类，java.util.logging 包，现在基本没什么人用了</td>
-</tr>
-<tr>
-<td>Logback</td>
-<td>Slf4j 的原生实现框架，提供了对 Log4j 的改进，速度更快，所需内存更少</td>
-</tr>
-</tbody>
-</table>
-<p>推荐使用门面模式的日志框架，有利于维护各个类统一的日志处理方式。<a href="https://developer.aliyun.com/topic/java20">阿里巴巴《Java 开发手册（嵩山版）》</a> 对此的代码规范如下：</p>
-<p><img src="/images/manual-log-component.png" alt="image-20210326174344710"></p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>日志框架</th>
+            <th>介绍</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>commons-logging</td>
+            <td>Apache 提供的日志门面接口，已停止更新，现在已经不太流行了</td>
+        </tr>
+        <tr>
+            <td>slf4j</td>
+            <td>Simple Logging Facade for Java，简单日志门面接口，不包含日志实现，允许用户根据喜好接入不同的日志实现</td>
+        </tr>
+        <tr>
+            <td>Log4j</td>
+            <td>Apache 的一个开源日志框架，市占率最多，但在 15 年 08 月被宣布停止维护，推荐升级到 log4j 2</td>
+        </tr>
+        <tr>
+            <td>Log4j 2</td>
+            <td>Log4j 的升级产品，不兼容 Log4j</td>
+        </tr>
+        <tr>
+            <td>Logging</td>
+            <td>Java 自带的日志工具类，java.util.logging 包，现在基本没什么人用了</td>
+        </tr>
+        <tr>
+            <td>Logback</td>
+            <td>Slf4j 的原生实现框架，提供了对 Log4j 的改进，速度更快，所需内存更少</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>推荐使用门面模式的日志框架，有利于维护各个类统一的日志处理方式。<a href="https://developer.aliyun.com/topic/java20" target="_blank" rel="external nofollow noopener noreferrer">阿里巴巴《Java 开发手册（嵩山版）》</a> 对此的代码规范如下：</p>
+<p><img loading="lazy" src='/images/manual-log-component.png' alt="image-20210326174344710"></p>
 <p>在比较关注性能的地方，可以选择 Logback 或者自己实现高性能的 Logging API 更合适，在已经使用了 Log4j 的项目中，如果没有发现问题，则可以继续使用 Log4j2，如果不想有依赖则可以使用 java.util.logging 或者框架容器已经提供的日志接口。</p>
-<h3 id="日志的配置">日志的配置</h3>
-<h4 id="日志级别">日志级别</h4>
-<table>
-<thead>
-<tr>
-<th>日志级别</th>
-<th>规范和说明</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>DEBUG</td>
-<td>主要输出调试性质的内容如：参数信息、调试细节、返回值等。用于开发、测试，应尽可能详尽，起到调试的作用</td>
-</tr>
-<tr>
-<td>INFO</td>
-<td>记录系统关键信息，旨在保留系统正常工作期间的关键运行指标，方便日常运维工作以及错误回溯时上下文场景的复现。建议在项目完成后，在测试环境将日志级别调成 INFO，验证日志是否达到预期</td>
-</tr>
-<tr>
-<td>WARN</td>
-<td>主要输出警告性质的内容，这些内容应该是可以预知且有规划的，比如某个方法参数不满足条件等</td>
-</tr>
-<tr>
-<td>ERROR</td>
-<td>主要针对一些不可预知的信息，诸如：错误、异常等，比如在 catch 中抓获的网络通信、数据库连接异常。在带有错误、异常对象的数据时，需要将该对象一并输出</td>
-</tr>
-</tbody>
-</table>
-<p>由于 INFO 及 DEBUG 日志打印量远大于 ERROR，出于性能的考虑，如果代码为核心代码，执行频率非常高，务必推敲日志设计是否合理，是否需要下调为 DEBUG 级别日志。</p>
+<h3 class="heading-element" id="日志的配置"><span>日志的配置</span>
+  <a href="#%e6%97%a5%e5%bf%97%e7%9a%84%e9%85%8d%e7%bd%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="日志级别"><span>日志级别</span>
+  <a href="#%e6%97%a5%e5%bf%97%e7%ba%a7%e5%88%ab" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>日志级别</th>
+            <th>规范和说明</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>DEBUG</td>
+            <td>主要输出调试性质的内容如：参数信息、调试细节、返回值等。用于开发、测试，应尽可能详尽，起到调试的作用</td>
+        </tr>
+        <tr>
+            <td>INFO</td>
+            <td>记录系统关键信息，旨在保留系统正常工作期间的关键运行指标，方便日常运维工作以及错误回溯时上下文场景的复现。建议在项目完成后，在测试环境将日志级别调成 INFO，验证日志是否达到预期</td>
+        </tr>
+        <tr>
+            <td>WARN</td>
+            <td>主要输出警告性质的内容，这些内容应该是可以预知且有规划的，比如某个方法参数不满足条件等</td>
+        </tr>
+        <tr>
+            <td>ERROR</td>
+            <td>主要针对一些不可预知的信息，诸如：错误、异常等，比如在 catch 中抓获的网络通信、数据库连接异常。在带有错误、异常对象的数据时，需要将该对象一并输出</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>由于 INFO 及 DEBUG 日志打印量远大于 ERROR，出于性能的考虑，如果代码为核心代码，执行频率非常高，务必推敲日志设计是否合理，是否需要下调为 DEBUG 级别日志。</p>
 <p>一般来说，WARN 级别代表可恢复的异常，此次失败 <strong>不影响下次业务的执行</strong>，不会短信报警。ERROR 级别会有短信甚至电话报警，意味着系统中发生了非常严重的问题，<strong>必须马上有人处理</strong>，比如数据库不可用，系统的关键业务流程走不下去等等。不区分问题的重要程度，只要有问题就 ERROR 记录下来是非常 <strong>不负责任</strong> 的行为。如果不分轻重缓急一律 ERROR 对待，就会徒增报错的频率，久而久之，运维人员对错误报警就不会那么在意，这个警报也就失去了原始的意义。</p>
-<p><a href="https://developer.aliyun.com/topic/java20">阿里巴巴《Java 开发手册（嵩山版）》</a> 在日志级别方面的规范要求有：</p>
+<p><a href="https://developer.aliyun.com/topic/java20" target="_blank" rel="external nofollow noopener noreferrer">阿里巴巴《Java 开发手册（嵩山版）》</a> 在日志级别方面的规范要求有：</p>
 <blockquote>
 <p>【推荐】谨慎地记录日志。生产环境 <strong>禁止</strong> 输出 debug 日志；有选择地输出 info 日志；如果使用 warn 来记录刚上线时的业务行为信息，一定要注意日志输出量的问题，避免把服务器磁盘撑爆，并记得及时删除这些观察日志。</p>
 <p>说明：大量地输出无效日志，不利于系统性能提升，也不利于快速定位错误点。记录日志时请思考：这些日志真的有人看吗？看到这条日志你能做什么？能不能给问题排查带来好处？</p>
 <p>【推荐】可以使用 warn 日志级别来记录用户输入参数错误的情况，避免用户投诉时，无所适从。如非必要，请不要在此场景打出 error 级别，<strong>避免频繁报警</strong>。</p>
 <p>说明：注意日志输出的级别，error 级别只记录系统逻辑出错、异常或者重要的错误信息。</p>
 </blockquote>
-<h4 id="日志的配置-1">日志的配置</h4>
-<p><a href="https://logging.apache.org/log4j/2.x/manual/configuration.html">Log4j 2.x 配置文档</a> 中详细地介绍了如何通过配置文件来管理日志行为。在项目启动的时候，Log4j 会在 classpath 中搜索配置文件，然后使用对应的配置工厂 <code>ConfigurationFactory</code> 来配置 Logger。如果没有找到配置文件，则将会使用默认的配置。与默认配置等效的配置文件会看起来像：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
-<span style="color:#f92672">&lt;Configuration</span> <span style="color:#a6e22e">status=</span><span style="color:#e6db74">&#34;WARN&#34;</span><span style="color:#f92672">&gt;</span>
-  <span style="color:#f92672">&lt;Appenders&gt;</span>
-    <span style="color:#f92672">&lt;Console</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Console&#34;</span> <span style="color:#a6e22e">target=</span><span style="color:#e6db74">&#34;SYSTEM_OUT&#34;</span><span style="color:#f92672">&gt;</span>   // 日志输出到 console
-      <span style="color:#f92672">&lt;PatternLayout</span> <span style="color:#a6e22e">pattern=</span><span style="color:#e6db74">&#34;%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&#34;</span><span style="color:#f92672">/&gt;</span>    // 日志格式
-    <span style="color:#f92672">&lt;/Console&gt;</span>
-  <span style="color:#f92672">&lt;/Appenders&gt;</span>
-  <span style="color:#f92672">&lt;Loggers&gt;</span>
-    <span style="color:#f92672">&lt;Root</span> <span style="color:#a6e22e">level=</span><span style="color:#e6db74">&#34;error&#34;</span><span style="color:#f92672">&gt;</span>    // 默认根日志的级别为 error
-      <span style="color:#f92672">&lt;AppenderRef</span> <span style="color:#a6e22e">ref=</span><span style="color:#e6db74">&#34;Console&#34;</span><span style="color:#f92672">/&gt;</span>
-    <span style="color:#f92672">&lt;/Root&gt;</span>
-  <span style="color:#f92672">&lt;/Loggers&gt;</span>
-<span style="color:#f92672">&lt;/Configuration&gt;</span>
-</code></pre></div><p>在对日志配置前理解日志的工作机制是至关重要的，在没有理解 <a href="https://logging.apache.org/log4j/2.x/manual/architecture.html">Log4j 体系结构</a> 的情况下去配置日志将会备受挫折。</p>
+<h4 class="heading-element" id="日志的配置-1"><span>日志的配置</span>
+  <a href="#%e6%97%a5%e5%bf%97%e7%9a%84%e9%85%8d%e7%bd%ae-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><a href="https://logging.apache.org/log4j/2.x/manual/configuration.html" target="_blank" rel="external nofollow noopener noreferrer">Log4j 2.x 配置文档</a> 中详细地介绍了如何通过配置文件来管理日志行为。在项目启动的时候，Log4j 会在 classpath 中搜索配置文件，然后使用对应的配置工厂 <code>ConfigurationFactory</code> 来配置 Logger。如果没有找到配置文件，则将会使用默认的配置。与默认配置等效的配置文件会看起来像：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-xml" data-lang="xml"><span style="display:flex;"><span><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;Configuration</span> <span style="color:#a6e22e">status=</span><span style="color:#e6db74">&#34;WARN&#34;</span><span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;Appenders&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;Console</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;Console&#34;</span> <span style="color:#a6e22e">target=</span><span style="color:#e6db74">&#34;SYSTEM_OUT&#34;</span><span style="color:#f92672">&gt;</span>   // 日志输出到 console
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;PatternLayout</span> <span style="color:#a6e22e">pattern=</span><span style="color:#e6db74">&#34;%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n&#34;</span><span style="color:#f92672">/&gt;</span>    // 日志格式
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/Console&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/Appenders&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;Loggers&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;Root</span> <span style="color:#a6e22e">level=</span><span style="color:#e6db74">&#34;error&#34;</span><span style="color:#f92672">&gt;</span>    // 默认根日志的级别为 error
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">&lt;AppenderRef</span> <span style="color:#a6e22e">ref=</span><span style="color:#e6db74">&#34;Console&#34;</span><span style="color:#f92672">/&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&lt;/Root&gt;</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">&lt;/Loggers&gt;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">&lt;/Configuration&gt;</span></span></span></code></pre></div><p>在对日志配置前理解日志的工作机制是至关重要的，在没有理解 <a href="https://logging.apache.org/log4j/2.x/manual/architecture.html" target="_blank" rel="external nofollow noopener noreferrer">Log4j 体系结构</a> 的情况下去配置日志将会备受挫折。</p>
 <p>日志可以配置多个 logger 元素，logger 元素必须有一个名字属性，也可以单独指定 additivity（默认 true），和 level（默认 ERROR）。如果想对某个 Logger 设置单独的日志级别，可以在配置文件中添加一个新的日志定义，如果想避免这个 Logger 下产生的日志重复提交给上级的根日志，可以将 <code>additivity</code> 设置为 false。</p>
-<p>对 Log4j 2 一些特性如 Appenders，Filters，Layout 等的配置可以参考 ：<a href="https://logging.apache.org/log4j/2.x/">Log4j 2 官方文档</a></p>
-<h3 id="日志打印最佳实践">日志打印最佳实践</h3>
-<h4 id="记录日志的时机">记录日志的时机</h4>
-<p>在看线上日志的时候，可曾陷入过有效日志被 <strong>大量无意义</strong> 的日志信息淹没的日志泥潭？</p>
+<p>对 Log4j 2 一些特性如 Appenders，Filters，Layout 等的配置可以参考 ：<a href="https://logging.apache.org/log4j/2.x/" target="_blank" rel="external nofollow noopener noreferrer">Log4j 2 官方文档</a></p>
+<h3 class="heading-element" id="日志打印最佳实践"><span>日志打印最佳实践</span>
+  <a href="#%e6%97%a5%e5%bf%97%e6%89%93%e5%8d%b0%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="记录日志的时机"><span>记录日志的时机</span>
+  <a href="#%e8%ae%b0%e5%bd%95%e6%97%a5%e5%bf%97%e7%9a%84%e6%97%b6%e6%9c%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在看线上日志的时候，可曾陷入过有效日志被 <strong>大量无意义</strong> 的日志信息淹没的日志泥潭？</p>
 <p>回归初衷，记录的日志大致有以下三种用途：</p>
-<table>
-<thead>
-<tr>
-<th>功能</th>
-<th>用途</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>问题追踪</td>
-<td>辅助排查和定位线上问题，优化程序运行性能</td>
-</tr>
-<tr>
-<td>状态监控</td>
-<td>通过日志分析，监控系统的运行状态</td>
-</tr>
-<tr>
-<td>安全审计</td>
-<td>安全审计，发现未授权的操作</td>
-</tr>
-</tbody>
-</table>
-<p>因此，记录日志的合适时机有以下几种：</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th>功能</th>
+            <th>用途</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>问题追踪</td>
+            <td>辅助排查和定位线上问题，优化程序运行性能</td>
+        </tr>
+        <tr>
+            <td>状态监控</td>
+            <td>通过日志分析，监控系统的运行状态</td>
+        </tr>
+        <tr>
+            <td>安全审计</td>
+            <td>安全审计，发现未授权的操作</td>
+        </tr>
+    </tbody>
+  </table>
+</div><p>因此，记录日志的合适时机有以下几种：</p>
 <ul>
 <li>编程语言提示异常：流行框架的异常报错，是质量非常高的，应当适当记录，结合业务情况使用 warn 或者 error 级别</li>
 <li>业务流程预期不符：取决于开发人员判断能否容忍情形发生，常见的有：外部参数不正确，数据处理返回值不在合理范围内等</li>
 <li>组件关键动作：核心数据表增删改查，核心组件运行等，建议记录 info 级别，如果日志频度高或打印量特别大，可以提炼关键点 info 记录，其余酌情考虑 debug 级别</li>
 <li>系统初始化：核心模块或者组件初始化过程中往往依赖一些关键配置，根据参数不同会提供不一样的服务，务必在这里记录 info 日志，打印出参数以及启动完成态服务表述</li>
 </ul>
-<h4 id="日志打印最佳实践-1">日志打印最佳实践</h4>
-<ol>
+<h4 class="heading-element" id="日志打印最佳实践-1"><span>日志打印最佳实践</span>
+  <a href="#%e6%97%a5%e5%bf%97%e6%89%93%e5%8d%b0%e6%9c%80%e4%bd%b3%e5%ae%9e%e8%b7%b5-1" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
 <li>使用门面接口定义日志对象，符合抽象编程思想方便切换。最好将日志对象定义为 <code>static final</code>，因为通过调用相同日志名称的 <code>getLogger</code> 将会返回相同的日志实例，但每次实例化一个新的日志对象是一个相当昂贵的操作</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> org.slf4j.Logger<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> org.slf4j.LoggerFactory<span style="color:#f92672">;</span>
-
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> Logger logger <span style="color:#f92672">=</span> LoggerFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">getLogger</span><span style="color:#f92672">({</span>ClassName<span style="color:#f92672">}.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
-</code></pre></div><ol start="2">
-<li>虽然 Apache 在 <a href="https://logging.apache.org/log4j/2.x/manual/usage.html">Log4j 2.x 使用文档</a> 中花了较大的篇幅阐明：logger name 会在 Logger 创建的时候被指定，当 log 方法被调用时日志事件却会反映出调用方的类名，这可能会与 Logger 的创建类有所 <strong>不同</strong>。但在文末，其指出在日志中打印出 location information（class name, method name and line number）会产生较大的 <strong>性能损失</strong>，如果方法名和行数不重要的话，最好 <strong>确保每个类拥有它自己的 Logger</strong>，这样 logger name 就能真实反映出执行 logging 的类。根据 <a href="https://www.overops.com/blog/how-to-instantly-improve-your-java-logging-with-7-logback-tweaks/">Takipi</a> 的测试结果，如果在日志中加入 Class 信息，性能会相比 Logback 的默认配置 <strong>下降 6 成左右</strong>，因此如果一定要打印类信息，可以考虑用类名来命名 Logger。</li>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> org.slf4j.Logger;
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> org.slf4j.LoggerFactory;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> Logger logger <span style="color:#f92672">=</span> LoggerFactory.<span style="color:#a6e22e">getLogger</span>({ClassName}.<span style="color:#a6e22e">class</span>);</span></span></code></pre></div><ol start="2">
+<li>虽然 Apache 在 <a href="https://logging.apache.org/log4j/2.x/manual/usage.html" target="_blank" rel="external nofollow noopener noreferrer">Log4j 2.x 使用文档</a> 中花了较大的篇幅阐明：logger name 会在 Logger 创建的时候被指定，当 log 方法被调用时日志事件却会反映出调用方的类名，这可能会与 Logger 的创建类有所 <strong>不同</strong>。但在文末，其指出在日志中打印出 location information（class name, method name and line number）会产生较大的 <strong>性能损失</strong>，如果方法名和行数不重要的话，最好 <strong>确保每个类拥有它自己的 Logger</strong>，这样 logger name 就能真实反映出执行 logging 的类。根据 <a href="https://www.overops.com/blog/how-to-instantly-improve-your-java-logging-with-7-logback-tweaks/" target="_blank" rel="external nofollow noopener noreferrer">Takipi</a> 的测试结果，如果在日志中加入 Class 信息，性能会相比 Logback 的默认配置 <strong>下降 6 成左右</strong>，因此如果一定要打印类信息，可以考虑用类名来命名 Logger。</li>
 </ol>
-<p><img src="/images/log-class-pattern.png" alt="log-class-pattern"></p>
+<p><img loading="lazy" src='/images/log-class-pattern.png' alt="log-class-pattern"></p>
 <ol start="3">
 <li>使用参数化形式 {} 占位，[] 进行参数隔离，可读性好。一看就知道 [] 里面是输出的动态参数。且不要在日志中调用对象的方法获取值，除非确保该对象肯定不为 null，否则很有可能会因为日志的问题而导致应用产生 <strong>空指针</strong> 异常。</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">logger<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;invalid Param [{}]&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;\&#34;\&#34;&#34;</span><span style="color:#f92672">);</span>
-
-2021<span style="color:#f92672">-</span>03<span style="color:#f92672">-</span>25 16<span style="color:#f92672">:</span>38<span style="color:#f92672">:</span>03<span style="color:#f92672">,</span>408 DEBUG <span style="color:#f92672">[</span>StaffInfoService<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#f92672">:</span>520<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> invalid Param <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">]</span>
-    
-log<span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;load student (id=[{}]), name: [{}]&#34;</span><span style="color:#f92672">,</span> id<span style="color:#f92672">,</span> student<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">());</span>  <span style="color:#75715e">// 不推荐
-</span><span style="color:#75715e"></span>
-log<span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;load student (id=[{}]), student: [{}]&#34;</span><span style="color:#f92672">,</span> id<span style="color:#f92672">,</span> student<span style="color:#f92672">);</span>  <span style="color:#75715e">// 推荐
-</span></code></pre></div><p>如果使用了字符串拼接的方式输出日志，即使 DEBUG 级别的日志在生产环境中不会输出到文件中，也可能带来不小的开销，在 <a href="https://logging.apache.org/log4j/2.x/performance.html">Log4j 2.x 性能文档</a> 中就对比了字符串拼接和参数化信息两者的性能差异。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">log<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Entry number: [{}] is [{}]&#34;</span><span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> entry<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
-<span style="color:#75715e">// 完全格式化的信息字符串在 logger 的 DEBUG 级别没有启用时不会被构建
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">// 如果没有这个 API，就需要三行代码来实现同样的功能
-</span><span style="color:#75715e">// 仍在使用不支持{}模板的 Log4j 1.x 或 Apache Commons Logging 组件的公司都会有在日志输出前加判断的编码规范
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>logger<span style="color:#f92672">.</span><span style="color:#a6e22e">isDebugEnabled</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-    log<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Entry number: &#34;</span> <span style="color:#f92672">+</span> i <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is &#34;</span> <span style="color:#f92672">+</span> entry<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">// 即使在没有启用 DEBUG 的生产环境也会将变量转换为字符串进行拼接，产生性能开销
-</span><span style="color:#75715e"></span>log<span style="color:#f92672">.</span><span style="color:#a6e22e">debug</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Entry number: &#34;</span> <span style="color:#f92672">+</span> i <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is &#34;</span> <span style="color:#f92672">+</span> entry<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
-</code></pre></div><ul>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>logger.<span style="color:#a6e22e">debug</span>(<span style="color:#e6db74">&#34;invalid Param [{}]&#34;</span>, <span style="color:#e6db74">&#34;\&#34;\&#34;&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>2021<span style="color:#f92672">-</span>03<span style="color:#f92672">-</span>25 16:38:03,408 DEBUG <span style="color:#f92672">[</span>StaffInfoService.<span style="color:#a6e22e">java</span>:520<span style="color:#f92672">]</span> : invalid Param <span style="color:#f92672">[</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>log.<span style="color:#a6e22e">info</span>(<span style="color:#e6db74">&#34;load student (id=[{}]), name: [{}]&#34;</span>, id, student.<span style="color:#a6e22e">getName</span>());  <span style="color:#75715e">// 不推荐</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>log.<span style="color:#a6e22e">info</span>(<span style="color:#e6db74">&#34;load student (id=[{}]), student: [{}]&#34;</span>, id, student);  <span style="color:#f92672">//</span> 推荐</span></span></code></pre></div><p>如果使用了字符串拼接的方式输出日志，即使 DEBUG 级别的日志在生产环境中不会输出到文件中，也可能带来不小的开销，在 <a href="https://logging.apache.org/log4j/2.x/performance.html" target="_blank" rel="external nofollow noopener noreferrer">Log4j 2.x 性能文档</a> 中就对比了字符串拼接和参数化信息两者的性能差异。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>log.<span style="color:#a6e22e">debug</span>(<span style="color:#e6db74">&#34;Entry number: [{}] is [{}]&#34;</span>, i, entry<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 完全格式化的信息字符串在 logger 的 DEBUG 级别没有启用时不会被构建</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 如果没有这个 API，就需要三行代码来实现同样的功能</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 仍在使用不支持{}模板的 Log4j 1.x 或 Apache Commons Logging 组件的公司都会有在日志输出前加判断的编码规范</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (logger.<span style="color:#a6e22e">isDebugEnabled</span>()) {
+</span></span><span style="display:flex;"><span>    log.<span style="color:#a6e22e">debug</span>(<span style="color:#e6db74">&#34;Entry number: &#34;</span> <span style="color:#f92672">+</span> i <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is &#34;</span> <span style="color:#f92672">+</span> entry<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>.<span style="color:#a6e22e">toString</span>());
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 即使在没有启用 DEBUG 的生产环境也会将变量转换为字符串进行拼接，产生性能开销</span>
+</span></span><span style="display:flex;"><span>log.<span style="color:#a6e22e">debug</span>(<span style="color:#e6db74">&#34;Entry number: &#34;</span> <span style="color:#f92672">+</span> i <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; is &#34;</span> <span style="color:#f92672">+</span> entry<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>.<span style="color:#a6e22e">toString</span>());</span></span></code></pre></div><ul>
 <li>如果启用了 DEBUG，则日志信息需要在记录点被格式化。异步记录日志时，参数可能在后台线程记录前就在应用线程中被改变。这将在日志文件中展现出错误的信息。为了防止这种情况，Log4j 2, log4j 1.2, Logback 选择在将信息传递给后台线程之 <strong>前</strong>  就格式化信息文本。</li>
 <li>这项安全举措却产生了性能开销。下图对比了使用不同日志组件记录带参数信息时的吞吐量。JUL（java.util.logging）没有内置的异步处理器，它的 <code>MemoryHandler</code> 并没有采取上述的安全策略，而只是保留了原始参数对象的引用。因此它在单线程下非常快，然而在更多的应用线程并发记录日志时，<strong>锁内容的开销超过了它的收益</strong>。在吞吐量的绝对值上，Log4j 2 异步日志想比其他的日志框架表现得更出色，但注意信息格式化的开销将会随着参数数量的上升而急剧增加。</li>
 </ul>
-<p><img src="/images/log-parameterized-message.png" alt="log-parameterized-message"></p>
+<p><img loading="lazy" src='/images/log-parameterized-message.png' alt="log-parameterized-message"></p>
 <ol start="4">
 <li>禁用标准输出 <code>System.out.println</code> 和 <code>System.err.println</code> 记录日志。因为这个只会打印到控制台，而不会记录到日志文件中，不方便管理日志。此外，标准输出不会显示类名和行号信息，很难定位日志内容和打印的位置，根本无法排查问题。</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// e.printStackTrace() 其实也是通过 System.err 来进行输出的
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-    printStackTrace<span style="color:#f92672">(</span>System<span style="color:#f92672">.</span><span style="color:#a6e22e">err</span><span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><ol start="5">
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">// e.printStackTrace() 其实也是通过 System.err 来进行输出的</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printStackTrace</span>() {
+</span></span><span style="display:flex;"><span>    printStackTrace(System.<span style="color:#a6e22e">err</span>);
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><ol start="5">
 <li>建议记录下所有未被捕获的日志，其实抛出异常有开销，记录异常同样会带来一定的开销，主要原因是 <code>Throwable</code> 类的 <code>fillInStackTrace</code> 方法默认是同步的。一般使用 logger.error 都会打出异常的堆栈，如果对吞吐量有一定的要求，可以考虑覆盖该方法，去掉 <code>synchronized native</code>，直接返回实例本身。</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> Throwable <span style="color:#a6e22e">fillInStackTrace</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stackTrace <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span>
-            backtrace <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#75715e">/* Out of protocol state */</span> <span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            fillInStackTrace<span style="color:#f92672">(</span>0<span style="color:#f92672">);</span>
-            stackTrace <span style="color:#f92672">=</span> UNASSIGNED_STACK<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><ol start="6">
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> Throwable <span style="color:#a6e22e">fillInStackTrace</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (stackTrace <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span>
+</span></span><span style="display:flex;"><span>            backtrace <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#75715e">/* Out of protocol state */</span> ) {
+</span></span><span style="display:flex;"><span>            fillInStackTrace(0);
+</span></span><span style="display:flex;"><span>            stackTrace <span style="color:#f92672">=</span> UNASSIGNED_STACK;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span>;
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><ol start="6">
 <li>异步日志：应用线程捕获所有需要的信息放入队列，后台线程随后会处理这些信息。只要队列足够大，应用线程应该只需花费非常少的时间在调用日志上并很快返回到业务逻辑中。</li>
 </ol>
 <ul>
 <li>性能更高的 Log4j 2 Async Logger 使用了 <strong>无锁</strong> 的数据结构，而不是 Log4j 1.2 和 Log4j 2 Async Appender 所用的 <code>ArrayBlockingQueue</code>，这样多线程应用就不会在入队日志事件时经历阻塞。</li>
 <li>下图展示了一个无锁数据结构在多线程场景下对吞吐量产生的影响：Log4j 2 Async Logger 随着线程数的提升表现出了更好的 <strong>可伸缩性</strong>。其他的日志组件由于承受锁的开销，在更多线程的场景下只获得了不变或更低的吞吐量。需要注意的是，图中展示出的峰值吞吐量，一旦队列满了 appender 就需要等待，会导致吞吐量出现了下降的情况。</li>
 </ul>
-<p><img src="/images/log4j2-async-logger.png" alt="log4j 2-async-logger"></p>
+<p><img loading="lazy" src='/images/log4j2-async-logger.png' alt="log4j 2-async-logger"></p>
 <ol start="7">
 <li>在分布式系统中，一个完整请求的日志并 <strong>不只在一个应用</strong> 的日志文件中，而是分散在不同服务器上不同应用节点的日志文件中。所以最好在每个子系统的日志中附上一个 UUID 标识，便于后续查询相关的日志。</li>
 <li>很多时候会在单机上部署多实例以便充分利用服务器资源，这时千万不要贪图日志监控或日志查询方便，将多个实例的日志写到同一个日志文件中。如果多个 JVM 往同一个文件里写日志，大约会使性能降低 10%。如果对同一个日志文件有大量的写需求，可以考虑 <strong>拆分日志到不同的文件</strong>。添加多个 Appender，不同的情况使用不同的 Logger。</li>
 <li>调用第三方服务时，所有的出参、入参、遇到的异常都是必须记录的，因为 <strong>很难追溯第三方模块发生的问题</strong>。</li>
 <li>异常信息应该包括两类信息：案发现场信息和 <strong>异常堆栈信息</strong>。尽量通过异常的日志能还原当时的情景，比如当时受影响的是哪个用户、传入的变量是什么、处理哪些核心数据引发的异常等等。有些代码在编写时就知道很难被执行到或者 <strong>不希望被执行到</strong>、以及一些基本不会走到的 else 块，这些地方需要记录下核心日志</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">logger<span style="color:#f92672">.</span><span style="color:#a6e22e">error</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;inputParams:{} and errorMessage:{}&#34;</span><span style="color:#f92672">,</span> 各类参数或者对象 <span style="color:#a6e22e">toString</span><span style="color:#f92672">(),</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">getMessage</span><span style="color:#f92672">(),</span> e<span style="color:#f92672">);</span>
-</code></pre></div>
-    </div>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>logger.<span style="color:#a6e22e">error</span>(<span style="color:#e6db74">&#34;inputParams:{} and errorMessage:{}&#34;</span>, 各类参数或者对象 <span style="color:#a6e22e">toString</span>(), e.<span style="color:#a6e22e">getMessage</span>(), e);</span></span></code></pre></div></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2021-03-24 13:19:47">Updated on 2021-03-24&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2021/java-exception-log/" data-title="Java：异常处理与日志记录" data-hashtags="java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2021/java-exception-log/" data-hashtag="java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2021/java-exception-log/" data-title="Java：异常处理与日志记录"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2021/java-exception-log/>https://hoffmanzheng.github.io/2021/java-exception-log/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/java/">
-                    #java</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2021/database-innodb/" class="prev" rel="prev" title="Database：InnoDB 存储引擎"><i class="iconfont icon-left"></i>&nbsp;Database：InnoDB 存储引擎</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2021/java-concurrency/" class="next" rel="next" title="Java：并发编程实战">Java：并发编程实战&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/java/" class="post-tag" title="Tags - Java">Java</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2021/database-innodb/" class="post-nav-item" rel="prev" title="Database：InnoDB 存储引擎"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Database：InnoDB 存储引擎</a><a href="/2021/java-concurrency/" class="post-nav-item" rel="next" title="Java：并发编程实战">Java：并发编程实战<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#错误码">错误码</a></li>
+        <li><a href="#异常处理">异常处理</a>
+          <ul>
+            <li><a href="#统一的异常处理">统一的异常处理</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#日志组件的选择">日志组件的选择</a></li>
+        <li><a href="#日志的配置">日志的配置</a>
+          <ul>
+            <li><a href="#日志级别">日志级别</a></li>
+            <li><a href="#日志的配置-1">日志的配置</a></li>
+          </ul>
+        </li>
+        <li><a href="#日志打印最佳实践">日志打印最佳实践</a>
+          <ul>
+            <li><a href="#记录日志的时机">记录日志的时机</a></li>
+            <li><a href="#日志打印最佳实践-1">日志打印最佳实践</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/b4bed858871635ec7d06a52a3af4a475.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

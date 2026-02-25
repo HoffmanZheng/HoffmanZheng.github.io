@@ -1,192 +1,185 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2020/java-multi-thread/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2020/java-hashmap/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           Java：多线程下的安全容器 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="Java：多线程下的安全容器 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Java：多线程下的安全容器 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。
+List 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 Verctor 的复合操作（如遍历&#43;修改）仍会导致 并发修改异常。
+"><meta name="keywords" content='Java'>
+  <meta itemprop="name" content="Java：多线程下的安全容器">
+  <meta itemprop="description" content="在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。
+List 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 Verctor 的复合操作（如遍历&#43;修改）仍会导致 并发修改异常。">
+  <meta itemprop="datePublished" content="2020-01-16T13:19:47+01:00">
+  <meta itemprop="dateModified" content="2020-01-16T13:19:47+01:00">
+  <meta itemprop="wordCount" content="1205">
+  <meta itemprop="keywords" content="Java"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="Java：多线程下的安全容器">
+  <meta property="og:description" content="在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。
+List 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 Verctor 的复合操作（如遍历&#43;修改）仍会导致 并发修改异常。">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-01-16T13:19:47+01:00">
+    <meta property="article:modified_time" content="2020-01-16T13:19:47+01:00">
+    <meta property="article:tag" content="Java">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Java：多线程下的安全容器">
+  <meta name="twitter:description" content="在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。
+List 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 Verctor 的复合操作（如遍历&#43;修改）仍会导致 并发修改异常。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/" title="Java：多线程下的安全容器 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2020/java-multi-thread/" title="Java：初识多线程、原理及实现" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/java-hashmap/" title="Java：HashMap 源码解读" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Java：多线程下的安全容器",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "Java：多线程下的安全容器",
-    "headline" : "Java：多线程下的安全容器",
-    "description" : "在我之前的博客 Java：初识多线程、原理及实现 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。\nList 类的安全容器 1. Vector 与 SynchronizedList 1.1 Vector Vector 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 Verctor 的复合操作（如遍历\u002b修改）仍会导致 并发修改异常。\npublic synchronized boolean add(E e); public synchronized boolean isEmpty(); public synchronized E get(int index); public synchronized void sort(Comparator\u0026lt;? super E\u0026gt; c); 1.2 SynchronizedList SynchronizedList 类和 vector 类似，只不过是在方法内进行同步锁：\npublic E get(int index) { synchronized (mutex) {return list.get(index);}} public E set(int index, E element) { synchronized (mutex) {return list.",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2020",
-    "datePublished": "2020-01-16 13:19:47 \u002b0100 \u002b0100",
-    "dateModified" : "2020-01-16 13:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/java-thread-safe-collection\/",
-    "wordCount" : "1213",
-    "keywords" : [ "Java", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/java-thread-safe-collection\/"
+    },"genre": "posts","keywords": "Java","wordcount":  1205 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2020\/java-thread-safe-collection\/","datePublished": "2020-01-16T13:19:47+01:00","dateModified": "2020-01-16T13:19:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Java：多线程下的安全容器</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/study-notes/" class="post-category" title="Category - Study Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Study Notes</a></span></div><div class="post-meta-line"><span title="published on 2020-01-16 13:19:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2020-01-16">2020-01-16</time></span>&nbsp;<span title="1205 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 1300 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>6 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Java：多线程下的安全容器</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2020-01-16 itemprop="datePublished">January 16, 2020</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/study-notes/"> Study notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,1213 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-vector-与-synchronizedlist">1. Vector 与 SynchronizedList</a>
+          <ul>
+            <li><a href="#11-vector">1.1 Vector</a></li>
+            <li><a href="#12-synchronizedlist">1.2 SynchronizedList</a></li>
+            <li><a href="#13-vector-和-synchronizedlist-可能会出现的问题">1.3 Vector 和 SynchronizedList 可能会出现的问题</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-copyonwritearraylist">2. CopyOnWriteArrayList</a>
+          <ul>
+            <li><a href="#21-copyonwritearraylist-实现原理">2.1 CopyOnWriteArrayList 实现原理</a></li>
+            <li><a href="#22-copyonwritearraylist-的结构与方法">2.2 CopyOnWriteArrayList 的结构与方法</a></li>
+            <li><a href="#23-为什么-copyonwritearraylist-迭代时不需要显式加锁">2.3 为什么 CopyOnWriteArrayList 迭代时不需要显式加锁</a></li>
+            <li><a href="#24-copyonwritearraylist-的缺点">2.4 CopyOnWriteArrayList 的缺点</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>在我之前的博客 <a href="https://hoffmanzheng.github.io/2020/java-multi-thread/">Java：初识多线程、原理及实现</a> 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。</p>
-<h1 id="list-类的安全容器">List 类的安全容器</h1>
-<h3 id="1-vector-与-synchronizedlist">1. Vector 与 SynchronizedList</h3>
-<h4 id="11-vector">1.1 Vector</h4>
-<p><code>Vector</code> 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 Verctor 的复合操作（如遍历+修改）仍会导致 <strong>并发修改异常</strong>。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>E e<span style="color:#f92672">);</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">();</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> E <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">);</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>Comparator<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> E<span style="color:#f92672">&gt;</span> c<span style="color:#f92672">);</span>
-</code></pre></div><h4 id="12-synchronizedlist">1.2 SynchronizedList</h4>
-<p><code>SynchronizedList</code> 类和 vector 类似，只不过是在方法内进行同步锁：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> E <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>mutex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>index<span style="color:#f92672">);}}</span>
-<span style="color:#66d9ef">public</span> E <span style="color:#a6e22e">set</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> E element<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>mutex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>index<span style="color:#f92672">,</span> element<span style="color:#f92672">);}}</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> E element<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>mutex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>index<span style="color:#f92672">,</span> element<span style="color:#f92672">);}}</span>
-<span style="color:#66d9ef">public</span> E <span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>mutex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span><span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>index<span style="color:#f92672">);}}</span>
-</code></pre></div><h4 id="13-vector-和-synchronizedlist-可能会出现的问题">1.3 Vector 和 SynchronizedList 可能会出现的问题</h4>
-<p>虽然 Vector 和 SynchronizedList 的单个方法都是线程安全的，但是对其的复合操作仍然需要用户手动地同步。SynchronizedList 在使用迭代器遍历的时候也会有同样的问题，源码已经提醒我们要 <strong>手动加锁</strong> 了。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> ListIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">listIterator</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">listIterator</span><span style="color:#f92672">();</span> <span style="color:#75715e">// Must be manually synched by user
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-
-        <span style="color:#66d9ef">public</span> ListIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">listIterator</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">listIterator</span><span style="color:#f92672">(</span>index<span style="color:#f92672">);</span> <span style="color:#75715e">// Must be manually synched by user
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="2-copyonwritearraylist">2. CopyOnWriteArrayList</h3>
-<p>总的来说，JUC 下支持并发的容器与老一代的线程安全类相比，总结起来就是加锁粒度的问题。</p>
-<h4 id="21-copyonwritearraylist-实现原理">2.1 CopyOnWriteArrayList 实现原理</h4>
-<p>首先引用维基上对 Copy-on-Write 机制的解释：</p>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-hashtable">1. HashTable</a></li>
+        <li><a href="#2-jdk-17-的-concurrenthashmap">2. JDK 1.7 的 ConcurrentHashMap</a></li>
+        <li><a href="#3-jdk-18-的-concurrenthashmap">3. JDK 1.8 的 ConcurrentHashMap</a>
+          <ul>
+            <li><a href="#31-concurrenthashmap-源码文档解读">3.1 ConcurrentHashMap 源码文档解读</a></li>
+            <li><a href="#32-concurrenthashmap-线程安全实现原理">3.2 ConcurrentHashMap 线程安全实现原理</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>在我之前的博客 <a href="https://hoffmanzheng.github.io/2020/java-multi-thread/" target="_blank" rel="external nofollow noopener noreferrer">Java：初识多线程、原理及实现</a> 提及，多线程下对数据的非原子性操作会造成数据错误，为此 JDK 也提供了一些线程安全的容器。本篇主要介绍 List 类的安全容器：Vector 和 CopyOnWriteArrayList，以及 Map 类的 HashTable 和 ConcurrentHashMap。从他们之前的区别，后者对前者的改进，具体的实现原理这几个角度进行分析。</p>
+<h1 class="heading-element" id="list-类的安全容器"><span>List 类的安全容器</span>
+  <a href="#list-%e7%b1%bb%e7%9a%84%e5%ae%89%e5%85%a8%e5%ae%b9%e5%99%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="1-vector-与-synchronizedlist"><span>1. Vector 与 SynchronizedList</span>
+  <a href="#1-vector-%e4%b8%8e-synchronizedlist" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="11-vector"><span>1.1 Vector</span>
+  <a href="#11-vector" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><code>Vector</code> 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 Verctor 的复合操作（如遍历+修改）仍会导致 <strong>并发修改异常</strong>。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">add</span>(E e);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isEmpty</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> E <span style="color:#a6e22e">get</span>(<span style="color:#66d9ef">int</span> index);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sort</span>(Comparator<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> E<span style="color:#f92672">&gt;</span> c);</span></span></code></pre></div><h4 class="heading-element" id="12-synchronizedlist"><span>1.2 SynchronizedList</span>
+  <a href="#12-synchronizedlist" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><code>SynchronizedList</code> 类和 vector 类似，只不过是在方法内进行同步锁：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> E <span style="color:#a6e22e">get</span>(<span style="color:#66d9ef">int</span> index) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">synchronized</span> (mutex) {<span style="color:#66d9ef">return</span> list.<span style="color:#a6e22e">get</span>(index);}}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> E <span style="color:#a6e22e">set</span>(<span style="color:#66d9ef">int</span> index, E element) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">synchronized</span> (mutex) {<span style="color:#66d9ef">return</span> list.<span style="color:#a6e22e">set</span>(index, element);}}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">int</span> index, E element) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">synchronized</span> (mutex) {list.<span style="color:#a6e22e">add</span>(index, element);}}
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> E <span style="color:#a6e22e">remove</span>(<span style="color:#66d9ef">int</span> index) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">synchronized</span> (mutex) {<span style="color:#66d9ef">return</span> list.<span style="color:#a6e22e">remove</span>(index);}}</span></span></code></pre></div><h4 class="heading-element" id="13-vector-和-synchronizedlist-可能会出现的问题"><span>1.3 Vector 和 SynchronizedList 可能会出现的问题</span>
+  <a href="#13-vector-%e5%92%8c-synchronizedlist-%e5%8f%af%e8%83%bd%e4%bc%9a%e5%87%ba%e7%8e%b0%e7%9a%84%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>虽然 Vector 和 SynchronizedList 的单个方法都是线程安全的，但是对其的复合操作仍然需要用户手动地同步。SynchronizedList 在使用迭代器遍历的时候也会有同样的问题，源码已经提醒我们要 <strong>手动加锁</strong> 了。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> ListIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">listIterator</span>() {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> list.<span style="color:#a6e22e">listIterator</span>(); <span style="color:#75715e">// Must be manually synched by user</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> ListIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">listIterator</span>(<span style="color:#66d9ef">int</span> index) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> list.<span style="color:#a6e22e">listIterator</span>(index); <span style="color:#75715e">// Must be manually synched by user</span>
+</span></span><span style="display:flex;"><span>        }</span></span></code></pre></div><h3 class="heading-element" id="2-copyonwritearraylist"><span>2. CopyOnWriteArrayList</span>
+  <a href="#2-copyonwritearraylist" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>总的来说，JUC 下支持并发的容器与老一代的线程安全类相比，总结起来就是加锁粒度的问题。</p>
+<h4 class="heading-element" id="21-copyonwritearraylist-实现原理"><span>2.1 CopyOnWriteArrayList 实现原理</span>
+  <a href="#21-copyonwritearraylist-%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>首先引用维基上对 Copy-on-Write 机制的解释：</p>
 <blockquote>
 <p>Copy-on-Write 机制：如果有多个调用者（callers）同时请求相同资源（如内存或磁盘上的数据存储），他们会共同获取相同的指针指向相同的资源，直到某个调用者试图修改资源的内容时，系统才会真正 <strong>复制一份专用副本（private copy）给该调用者</strong>，而其他调用者所见到的最初的资源仍然保持不变。优点是如果调用者没有修改该资源，就不会有副本（private copy）被建立，因此多个调用者只是读取操作时可以共享同一份资源。</p>
 </blockquote>
@@ -194,65 +187,71 @@
 <blockquote>
 <p>CopyOnWriteArrayList 是 ArrayList 线程安全的一种变体，底层的所有修改操作通过复制数组的方式来实现。这通常会过于昂贵，但在遍历操作远大于修改操作时更加高效；并且无需在并发遍历时进行同步。Iterator 通过引用在迭代器被创建时的“快照”形式的列表，保证列表在迭代周期不发生改变来排除干扰，保证不抛出并发修改异常。在迭代器上的修改操作将不被支持，它们会抛出 UnsupportedOperationException。</p>
 </blockquote>
-<h4 id="22-copyonwritearraylist-的结构与方法">2.2 CopyOnWriteArrayList 的结构与方法</h4>
-<p>看源码可知 CopyOnWriteArrayList 底层是数据，加锁通过 <code>ReentrantLock</code> 来实现。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CopyOnWriteArrayList</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">implements</span> List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;,</span> RandomAccess<span style="color:#f92672">,</span> Cloneable<span style="color:#f92672">,</span> java<span style="color:#f92672">.</span><span style="color:#a6e22e">io</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Serializable</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/** The lock protecting all mutators */</span>
-    <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">transient</span> ReentrantLock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReentrantLock<span style="color:#f92672">();</span>
-
-    <span style="color:#75715e">/** The array, accessed only via getArray/setArray. */</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">transient</span> <span style="color:#66d9ef">volatile</span> Object<span style="color:#f92672">[]</span> array<span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Gets the array.  Non-private so as to also be accessible
-</span><span style="color:#75715e">     * from CopyOnWriteArraySet class.
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">final</span> Object<span style="color:#f92672">[]</span> <span style="color:#a6e22e">getArray</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> array<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>相比 Vector / SynchronizedList 需要在遍历时手动加锁的情况，CopyOnWriteArrayList 在使用迭代器时不需要显式加锁，可以看下它的 mutation 方法如 add：</p>
+<h4 class="heading-element" id="22-copyonwritearraylist-的结构与方法"><span>2.2 CopyOnWriteArrayList 的结构与方法</span>
+  <a href="#22-copyonwritearraylist-%e7%9a%84%e7%bb%93%e6%9e%84%e4%b8%8e%e6%96%b9%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>看源码可知 CopyOnWriteArrayList 底层是数据，加锁通过 <code>ReentrantLock</code> 来实现。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CopyOnWriteArrayList</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">implements</span> List<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span>, RandomAccess, Cloneable, java.<span style="color:#a6e22e">io</span>.<span style="color:#a6e22e">Serializable</span> {
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** The lock protecting all mutators */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">transient</span> ReentrantLock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ReentrantLock();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/** The array, accessed only via getArray/setArray. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">transient</span> <span style="color:#66d9ef">volatile</span> Object<span style="color:#f92672">[]</span> array;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Gets the array.  Non-private so as to also be accessible
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * from CopyOnWriteArraySet class.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">final</span> Object<span style="color:#f92672">[]</span> <span style="color:#a6e22e">getArray</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> array;
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><p>相比 Vector / SynchronizedList 需要在遍历时手动加锁的情况，CopyOnWriteArrayList 在使用迭代器时不需要显式加锁，可以看下它的 mutation 方法如 add：</p>
 <p>可以看到在进行 add 时就上锁，复制一个新数组，增加操作在新数组上完成，将 array 指向到新数组中，最后解锁。这种同步形式对于其他的修改操作 remove、clear、set 等也是类似的。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>E e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">final</span> ReentrantLock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">;</span>
-        lock<span style="color:#f92672">.</span><span style="color:#a6e22e">lock</span><span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            Object<span style="color:#f92672">[]</span> elements <span style="color:#f92672">=</span> getArray<span style="color:#f92672">();</span>
-            <span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> elements<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-            <span style="color:#75715e">// 复制新数组，并在长度上加一
-</span><span style="color:#75715e"></span>            Object<span style="color:#f92672">[]</span> newElements <span style="color:#f92672">=</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">copyOf</span><span style="color:#f92672">(</span>elements<span style="color:#f92672">,</span> len <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
-            newElements<span style="color:#f92672">[</span>len<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
-            <span style="color:#75715e">// 将实例指向新数组
-</span><span style="color:#75715e"></span>            setArray<span style="color:#f92672">(</span>newElements<span style="color:#f92672">);</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
-            lock<span style="color:#f92672">.</span><span style="color:#a6e22e">unlock</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>至此，CopyOnWriteArrayList 线程安全的策略就很明显了：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">add</span>(E e) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">final</span> ReentrantLock lock <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">lock</span>;
+</span></span><span style="display:flex;"><span>        lock.<span style="color:#a6e22e">lock</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>            Object<span style="color:#f92672">[]</span> elements <span style="color:#f92672">=</span> getArray();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> elements.<span style="color:#a6e22e">length</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 复制新数组，并在长度上加一</span>
+</span></span><span style="display:flex;"><span>            Object<span style="color:#f92672">[]</span> newElements <span style="color:#f92672">=</span> Arrays.<span style="color:#a6e22e">copyOf</span>(elements, len <span style="color:#f92672">+</span> 1);
+</span></span><span style="display:flex;"><span>            newElements<span style="color:#f92672">[</span>len<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> e;
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 将实例指向新数组</span>
+</span></span><span style="display:flex;"><span>            setArray(newElements);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>            lock.<span style="color:#a6e22e">unlock</span>();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><p>至此，CopyOnWriteArrayList 线程安全的策略就很明显了：</p>
 <ul>
 <li>所有的非修改操作不加锁，修改操作加锁。</li>
 <li>在修改时，先复制出一个新数组，修改的操作在新数组中完成，最后将新数组交由 array 变量指向。</li>
 </ul>
-<h4 id="23-为什么-copyonwritearraylist-迭代时不需要显式加锁">2.3 为什么 CopyOnWriteArrayList 迭代时不需要显式加锁</h4>
-<p>通过观察 CopyOnWriteArrayList 的迭代器不难发现，它在迭代器内使用了 final 修饰的引用类型数组 snapshot，这就使所有的修改操作中将实例指向新数组的 <code>setArray(newElements)</code> 这个操作在迭代器的生命周期内无法执行，以此保证在迭代过程中不会抛出并发修改异常。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> Iterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">iterator</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> COWIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;(</span>getArray<span style="color:#f92672">(),</span> 0<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">COWIterator</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> ListIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
-        <span style="color:#75715e">/** Snapshot of the array */</span>
-        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Object<span style="color:#f92672">[]</span> snapshot<span style="color:#f92672">;</span>
-        <span style="color:#75715e">/** Index of element to be returned by subsequent call to next.  */</span>
-        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> cursor<span style="color:#f92672">;</span>
-
-        <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">COWIterator</span><span style="color:#f92672">(</span>Object<span style="color:#f92672">[]</span> elements<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> initialCursor<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            cursor <span style="color:#f92672">=</span> initialCursor<span style="color:#f92672">;</span>
-            snapshot <span style="color:#f92672">=</span> elements<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><h4 id="24-copyonwritearraylist-的缺点">2.4 CopyOnWriteArrayList 的缺点</h4>
-<ul>
+<h4 class="heading-element" id="23-为什么-copyonwritearraylist-迭代时不需要显式加锁"><span>2.3 为什么 CopyOnWriteArrayList 迭代时不需要显式加锁</span>
+  <a href="#23-%e4%b8%ba%e4%bb%80%e4%b9%88-copyonwritearraylist-%e8%bf%ad%e4%bb%a3%e6%97%b6%e4%b8%8d%e9%9c%80%e8%a6%81%e6%98%be%e5%bc%8f%e5%8a%a0%e9%94%81" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>通过观察 CopyOnWriteArrayList 的迭代器不难发现，它在迭代器内使用了 final 修饰的引用类型数组 snapshot，这就使所有的修改操作中将实例指向新数组的 <code>setArray(newElements)</code> 这个操作在迭代器的生命周期内无法执行，以此保证在迭代过程中不会抛出并发修改异常。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Iterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">iterator</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> COWIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span>(getArray(), 0);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">COWIterator</span><span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> ListIterator<span style="color:#f92672">&lt;</span>E<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/** Snapshot of the array */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Object<span style="color:#f92672">[]</span> snapshot;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/** Index of element to be returned by subsequent call to next.  */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> cursor;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">COWIterator</span>(Object<span style="color:#f92672">[]</span> elements, <span style="color:#66d9ef">int</span> initialCursor) {
+</span></span><span style="display:flex;"><span>            cursor <span style="color:#f92672">=</span> initialCursor;
+</span></span><span style="display:flex;"><span>            snapshot <span style="color:#f92672">=</span> elements;
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><h4 class="heading-element" id="24-copyonwritearraylist-的缺点"><span>2.4 CopyOnWriteArrayList 的缺点</span>
+  <a href="#24-copyonwritearraylist-%e7%9a%84%e7%bc%ba%e7%82%b9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
 <li><strong>内存占用</strong>：如果 CopyOnWriteArrayList 经常要增删改里面的数据，经常要执行 <code>add()、set()、remove()</code> 的话，那是比较耗费内存的。
 <ul>
 <li>因为这些修改操作都要 <strong>复制一个数组</strong> 出来。</li>
@@ -264,56 +263,63 @@
 </ul>
 </li>
 </ul>
-<h1 id="map-类的安全容器">Map 类的安全容器</h1>
-<h3 id="1-hashtable">1. HashTable</h3>
-<p><code>Hashtable</code> ：将 get / put 所有相关操作都 synchronized 化，这相当于给整个哈希表加了一把 <strong>大锁</strong>，多线程访问时候，只要有一个线程访问或操作该对象，那其他线程只能阻塞，相当于将所有的操作 <strong>串行化</strong>，在竞争激烈的并发场景中性能就会非常差。</p>
+<h1 class="heading-element" id="map-类的安全容器"><span>Map 类的安全容器</span>
+  <a href="#map-%e7%b1%bb%e7%9a%84%e5%ae%89%e5%85%a8%e5%ae%b9%e5%99%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="1-hashtable"><span>1. HashTable</span>
+  <a href="#1-hashtable" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><code>Hashtable</code> ：将 get / put 所有相关操作都 synchronized 化，这相当于给整个哈希表加了一把 <strong>大锁</strong>，多线程访问时候，只要有一个线程访问或操作该对象，那其他线程只能阻塞，相当于将所有的操作 <strong>串行化</strong>，在竞争激烈的并发场景中性能就会非常差。</p>
 <p>HashTable 与 Vector 一样，由于较大的同步开销和复合操作的并发异常 <strong>已被弃用</strong>，如今以 HashMap 和 ConcurrentHashMap 来代替其使用。</p>
-<p><img src="/images/HashTableLock.png" alt="HashTable 的全表锁"></p>
-<h3 id="2-jdk-17-的-concurrenthashmap">2. JDK 1.7 的 ConcurrentHashMap</h3>
-<p><code>ConcurrentHashMap</code>：使用继承了 <code>ReentrantLock</code> 的 segments 数组代替整个桶数据，segment 实例包含一个 <code>HashEntry&lt;K, V&gt;[]</code> table，即 segment 就是一个小的 HashMap，并且自带了一把锁。每个 segment 守护着若干个 HashEntry 键值对链表，当对这些 HashEntry 链表数据进行修改时，必须首先获得对应的 Segment 实例的锁。每个 segment <strong>只锁容器其中一部分数据</strong>，多线程访问容器里不同数据段的数据，就不会存在锁竞争，提高并发访问率。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> Segment<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[]</span> segments<span style="color:#f92672">;</span>
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> DEFAULT_CONCURRENCY_LEVEL <span style="color:#f92672">=</span> 16<span style="color:#f92672">;</span>  <span style="color:#75715e">// 并发级别
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Segment</span><span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">extends</span> ReentrantLock <span style="color:#66d9ef">implements</span> Serializable <span style="color:#960050;background-color:#1e0010">｛</span>
-    <span style="color:#66d9ef">transient</span> <span style="color:#66d9ef">volatile</span> HashEntry<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[]</span> table<span style="color:#f92672">;</span>
-<span style="color:#960050;background-color:#1e0010">｝</span>
-</code></pre></div><p><img src="/images/HashMapSegmentsLock.png" alt="JDK 1.8 之前 ConrrentHashMap 的分段锁"></p>
+<p><img loading="lazy" src='/images/HashTableLock.png' alt="HashTable 的全表锁"></p>
+<h3 class="heading-element" id="2-jdk-17-的-concurrenthashmap"><span>2. JDK 1.7 的 ConcurrentHashMap</span>
+  <a href="#2-jdk-17-%e7%9a%84-concurrenthashmap" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><code>ConcurrentHashMap</code>：使用继承了 <code>ReentrantLock</code> 的 segments 数组代替整个桶数据，segment 实例包含一个 <code>HashEntry&lt;K, V&gt;[]</code> table，即 segment 就是一个小的 HashMap，并且自带了一把锁。每个 segment 守护着若干个 HashEntry 键值对链表，当对这些 HashEntry 链表数据进行修改时，必须首先获得对应的 Segment 实例的锁。每个 segment <strong>只锁容器其中一部分数据</strong>，多线程访问容器里不同数据段的数据，就不会存在锁竞争，提高并发访问率。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">final</span> Segment<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;[]</span> segments;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> DEFAULT_CONCURRENCY_LEVEL <span style="color:#f92672">=</span> 16;  <span style="color:#75715e">// 并发级别</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Segment</span><span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">extends</span> ReentrantLock <span style="color:#66d9ef">implements</span> Serializable <span style="color:#960050;background-color:#1e0010">｛</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">transient</span> <span style="color:#66d9ef">volatile</span> HashEntry<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;[]</span> table;
+</span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">｝</span></span></span></code></pre></div><p><img loading="lazy" src='/images/HashMapSegmentsLock.png' alt="JDK 1.8 之前 ConrrentHashMap 的分段锁"></p>
 <p>看下源码中的构造器可以得知：</p>
 <ol>
 <li>ConcurrentHashMap 根据初始容量 initialCapacity 和并发级别 <code>concurrencyLevel</code> 来决定需要创建的 segments 数组的数量，以及每个 segment 中键值对的桶数组大小。（这两个数都为 2 的次方数）</li>
 <li>新建 segments 数组及一个 segment 实例，并将实例放到数组的第 0 个位置。</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ConcurrentHashMap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> initialCapacity<span style="color:#f92672">,</span>
-                             <span style="color:#66d9ef">float</span> loadFactor<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> concurrencyLevel<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!(</span>loadFactor <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> initialCapacity <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">||</span> concurrencyLevel <span style="color:#f92672">&lt;=</span> 0<span style="color:#f92672">)</span>
-            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException<span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>concurrencyLevel <span style="color:#f92672">&gt;</span> MAX_SEGMENTS<span style="color:#f92672">)</span>
-            concurrencyLevel <span style="color:#f92672">=</span> MAX_SEGMENTS<span style="color:#f92672">;</span>
-        <span style="color:#75715e">// Find power-of-two sizes best matching arguments
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> sshift <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">int</span> ssize <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>ssize <span style="color:#f92672">&lt;</span> concurrencyLevel<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 根据并发级别决定segment数组大小
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">++</span>sshift<span style="color:#f92672">;</span>
-            ssize <span style="color:#f92672">&lt;&lt;=</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">segmentShift</span> <span style="color:#f92672">=</span> 32 <span style="color:#f92672">-</span> sshift<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">segmentMask</span> <span style="color:#f92672">=</span> ssize <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>initialCapacity <span style="color:#f92672">&gt;</span> MAXIMUM_CAPACITY<span style="color:#f92672">)</span>
-            initialCapacity <span style="color:#f92672">=</span> MAXIMUM_CAPACITY<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> initialCapacity <span style="color:#f92672">/</span> ssize<span style="color:#f92672">;</span>  <span style="color:#75715e">// 根据c算出每个segment里有几个桶数组
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">*</span> ssize <span style="color:#f92672">&lt;</span> initialCapacity<span style="color:#f92672">)</span>
-            <span style="color:#f92672">++</span>c<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">int</span> cap <span style="color:#f92672">=</span> MIN_SEGMENT_TABLE_CAPACITY<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>cap <span style="color:#f92672">&lt;</span> c<span style="color:#f92672">)</span>
-            cap <span style="color:#f92672">&lt;&lt;=</span> 1<span style="color:#f92672">;</span>  
-        <span style="color:#75715e">// create segments and segments[0]
-</span><span style="color:#75715e"></span>        Segment<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> s0 <span style="color:#f92672">=</span>
-            <span style="color:#66d9ef">new</span> Segment<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;(</span>loadFactor<span style="color:#f92672">,</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)(</span>cap <span style="color:#f92672">*</span> loadFactor<span style="color:#f92672">),</span>
-                             <span style="color:#f92672">(</span>HashEntry<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[])</span><span style="color:#66d9ef">new</span> HashEntry<span style="color:#f92672">[</span>cap<span style="color:#f92672">]);</span>
-        Segment<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[]</span> ss <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Segment<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[])</span><span style="color:#66d9ef">new</span> Segment<span style="color:#f92672">[</span>ssize<span style="color:#f92672">];</span>
-        UNSAFE<span style="color:#f92672">.</span><span style="color:#a6e22e">putOrderedObject</span><span style="color:#f92672">(</span>ss<span style="color:#f92672">,</span> SBASE<span style="color:#f92672">,</span> s0<span style="color:#f92672">);</span> <span style="color:#75715e">// ordered write of segments[0]
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">segments</span> <span style="color:#f92672">=</span> ss<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>观察其 put 方法：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ConcurrentHashMap</span>(<span style="color:#66d9ef">int</span> initialCapacity,
+</span></span><span style="display:flex;"><span>                             <span style="color:#66d9ef">float</span> loadFactor, <span style="color:#66d9ef">int</span> concurrencyLevel) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>(loadFactor <span style="color:#f92672">&gt;</span> 0) <span style="color:#f92672">||</span> initialCapacity <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">||</span> concurrencyLevel <span style="color:#f92672">&lt;=</span> 0)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalArgumentException();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (concurrencyLevel <span style="color:#f92672">&gt;</span> MAX_SEGMENTS)
+</span></span><span style="display:flex;"><span>            concurrencyLevel <span style="color:#f92672">=</span> MAX_SEGMENTS;
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Find power-of-two sizes best matching arguments</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> sshift <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> ssize <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (ssize <span style="color:#f92672">&lt;</span> concurrencyLevel) {  <span style="color:#75715e">// 根据并发级别决定segment数组大小</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">++</span>sshift;
+</span></span><span style="display:flex;"><span>            ssize <span style="color:#f92672">&lt;&lt;=</span> 1;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">segmentShift</span> <span style="color:#f92672">=</span> 32 <span style="color:#f92672">-</span> sshift;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">segmentMask</span> <span style="color:#f92672">=</span> ssize <span style="color:#f92672">-</span> 1;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (initialCapacity <span style="color:#f92672">&gt;</span> MAXIMUM_CAPACITY)
+</span></span><span style="display:flex;"><span>            initialCapacity <span style="color:#f92672">=</span> MAXIMUM_CAPACITY;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> initialCapacity <span style="color:#f92672">/</span> ssize;  <span style="color:#75715e">// 根据c算出每个segment里有几个桶数组</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (c <span style="color:#f92672">*</span> ssize <span style="color:#f92672">&lt;</span> initialCapacity)
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">++</span>c;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> cap <span style="color:#f92672">=</span> MIN_SEGMENT_TABLE_CAPACITY;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> (cap <span style="color:#f92672">&lt;</span> c)
+</span></span><span style="display:flex;"><span>            cap <span style="color:#f92672">&lt;&lt;=</span> 1;  
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// create segments and segments[0]</span>
+</span></span><span style="display:flex;"><span>        Segment<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> s0 <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">new</span> Segment<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span>(loadFactor, (<span style="color:#66d9ef">int</span>)(cap <span style="color:#f92672">*</span> loadFactor),
+</span></span><span style="display:flex;"><span>                             (HashEntry<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;[]</span>)<span style="color:#66d9ef">new</span> HashEntry<span style="color:#f92672">[</span>cap<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>        Segment<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;[]</span> ss <span style="color:#f92672">=</span> (Segment<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;[]</span>)<span style="color:#66d9ef">new</span> Segment<span style="color:#f92672">[</span>ssize<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        UNSAFE.<span style="color:#a6e22e">putOrderedObject</span>(ss, SBASE, s0); <span style="color:#75715e">// ordered write of segments[0]</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">segments</span> <span style="color:#f92672">=</span> ss;
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><p>观察其 put 方法：</p>
 <ol>
 <li>put 时会先计算 key 的哈希值所在的 segments 数组下标</li>
 <li>判断所要 put 的 segment 是否为空，通过 <code>s = ensureSegment(j)</code> 构造 segment 实例对象。在该方法内，会先拿到构造器中创建的 segments 数组中第 0 个segment 作为模版 prototype，拿到模版 segment 中的桶数组大小、装载因子信息来创建当前需要的 segment 实例。</li>
@@ -325,67 +331,72 @@
 </ul>
 </li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> V <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>K key<span style="color:#f92672">,</span> V value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        Segment<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> s<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>value <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>  <span style="color:#75715e">// value值不允许为null
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NullPointerException<span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">int</span> hash <span style="color:#f92672">=</span> hash<span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>hash <span style="color:#f92672">&gt;&gt;&gt;</span> segmentShift<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> segmentMask<span style="color:#f92672">;</span>  <span style="color:#75715e">// segments 数组下标
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>s <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Segment<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;)</span>UNSAFE<span style="color:#f92672">.</span><span style="color:#a6e22e">getObject</span>          <span style="color:#75715e">// nonvolatile; recheck
-</span><span style="color:#75715e"></span>             <span style="color:#f92672">(</span>segments<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">&lt;&lt;</span> SSHIFT<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> SBASE<span style="color:#f92672">))</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#75715e">//  in ensureSegment
-</span><span style="color:#75715e"></span>            s <span style="color:#f92672">=</span> ensureSegment<span style="color:#f92672">(</span>j<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> hash<span style="color:#f92672">,</span> value<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-<span style="color:#75715e">// segment 中的 put 方法
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">final</span> V <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>K key<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> hash<span style="color:#f92672">,</span> V value<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> onlyIfAbsent<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            HashEntry<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> node <span style="color:#f92672">=</span> tryLock<span style="color:#f92672">()</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">:</span>
-                scanAndLockForPut<span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> hash<span style="color:#f92672">,</span> value<span style="color:#f92672">);</span> <span style="color:#75715e">// 加锁
-</span><span style="color:#75715e"></span>            V oldValue<span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                HashEntry<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[]</span> tab <span style="color:#f92672">=</span> table<span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>tab<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> hash<span style="color:#f92672">;</span>  <span style="color:#75715e">// segment中哈希桶的数组下标
-</span><span style="color:#75715e"></span>                HashEntry<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> first <span style="color:#f92672">=</span> entryAt<span style="color:#f92672">(</span>tab<span style="color:#f92672">,</span> index<span style="color:#f92672">);</span>
-                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>HashEntry<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> e <span style="color:#f92672">=</span> first<span style="color:#f92672">;;)</span> <span style="color:#f92672">{</span>
-                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        K k<span style="color:#f92672">;</span>
-                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>k <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> key <span style="color:#f92672">||</span>
-                            <span style="color:#f92672">(</span>e<span style="color:#f92672">.</span><span style="color:#a6e22e">hash</span> <span style="color:#f92672">==</span> hash <span style="color:#f92672">&amp;&amp;</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>k<span style="color:#f92672">)))</span> <span style="color:#f92672">{</span>
-                            oldValue <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">value</span><span style="color:#f92672">;</span>
-                            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>onlyIfAbsent<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                                e<span style="color:#f92672">.</span><span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value<span style="color:#f92672">;</span>
-                                <span style="color:#f92672">++</span>modCount<span style="color:#f92672">;</span>
-                            <span style="color:#f92672">}</span>
-                            <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                        <span style="color:#f92672">}</span>
-                        e <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                    <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>node <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-                            node<span style="color:#f92672">.</span><span style="color:#a6e22e">setNext</span><span style="color:#f92672">(</span>first<span style="color:#f92672">);</span>
-                        <span style="color:#66d9ef">else</span>
-                            node <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashEntry<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;(</span>hash<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> value<span style="color:#f92672">,</span> first<span style="color:#f92672">);</span>
-                        <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> count <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">&gt;</span> threshold <span style="color:#f92672">&amp;&amp;</span> tab<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> MAXIMUM_CAPACITY<span style="color:#f92672">)</span>
-                            rehash<span style="color:#f92672">(</span>node<span style="color:#f92672">);</span>
-                        <span style="color:#66d9ef">else</span>
-                            setEntryAt<span style="color:#f92672">(</span>tab<span style="color:#f92672">,</span> index<span style="color:#f92672">,</span> node<span style="color:#f92672">);</span>
-                        <span style="color:#f92672">++</span>modCount<span style="color:#f92672">;</span>
-                        count <span style="color:#f92672">=</span> c<span style="color:#f92672">;</span>
-                        oldValue <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-                        <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
-                unlock<span style="color:#f92672">();</span>  <span style="color:#75715e">// 解锁
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">return</span> oldValue<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="3-jdk-18-的-concurrenthashmap">3. JDK 1.8 的 ConcurrentHashMap</h3>
-<p>到了 JDK 1.8 的时候已经摒弃了分段锁，而是使用 synchronized 桶数组头节点 Node 和 CAS 来实现并发控制。（ JDK 1.6 以后 对 synchronized 锁做了很多优化， 整个看起来就像是优化过且线程安全的 HashMap，虽然在 JDK 1.8 中还能看到 Segment 的数据结构，但是已经简化了属性，只是为了兼容旧版本）</p>
-<p><img src="/images/HashMapLock.jpeg" alt="JDK 1.8 后的并发哈希表的锁"></p>
-<h4 id="31-concurrenthashmap-源码文档解读">3.1 ConcurrentHashMap 源码文档解读</h4>
-<p>源码的注释文档主要说了这么几点：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> V <span style="color:#a6e22e">put</span>(K key, V value) {
+</span></span><span style="display:flex;"><span>        Segment<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> s;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (value <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>)  <span style="color:#75715e">// value值不允许为null</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NullPointerException();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> hash <span style="color:#f92672">=</span> hash(key);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> (hash <span style="color:#f92672">&gt;&gt;&gt;</span> segmentShift) <span style="color:#f92672">&amp;</span> segmentMask;  <span style="color:#75715e">// segments 数组下标</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ((s <span style="color:#f92672">=</span> (Segment<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span>)UNSAFE.<span style="color:#a6e22e">getObject</span>          <span style="color:#75715e">// nonvolatile; recheck</span>
+</span></span><span style="display:flex;"><span>             (segments, (j <span style="color:#f92672">&lt;&lt;</span> SSHIFT) <span style="color:#f92672">+</span> SBASE)) <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) <span style="color:#75715e">//  in ensureSegment</span>
+</span></span><span style="display:flex;"><span>            s <span style="color:#f92672">=</span> ensureSegment(j);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> s.<span style="color:#a6e22e">put</span>(key, hash, value, <span style="color:#66d9ef">false</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// segment 中的 put 方法</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">final</span> V <span style="color:#a6e22e">put</span>(K key, <span style="color:#66d9ef">int</span> hash, V value, <span style="color:#66d9ef">boolean</span> onlyIfAbsent) {
+</span></span><span style="display:flex;"><span>            HashEntry<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> node <span style="color:#f92672">=</span> tryLock() <span style="color:#f92672">?</span> <span style="color:#66d9ef">null</span> :
+</span></span><span style="display:flex;"><span>                scanAndLockForPut(key, hash, value); <span style="color:#75715e">// 加锁</span>
+</span></span><span style="display:flex;"><span>            V oldValue;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                HashEntry<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;[]</span> tab <span style="color:#f92672">=</span> table;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> (tab.<span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1) <span style="color:#f92672">&amp;</span> hash;  <span style="color:#75715e">// segment中哈希桶的数组下标</span>
+</span></span><span style="display:flex;"><span>                HashEntry<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> first <span style="color:#f92672">=</span> entryAt(tab, index);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> (HashEntry<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> e <span style="color:#f92672">=</span> first;;) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (e <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>                        K k;
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">if</span> ((k <span style="color:#f92672">=</span> e.<span style="color:#a6e22e">key</span>) <span style="color:#f92672">==</span> key <span style="color:#f92672">||</span>
+</span></span><span style="display:flex;"><span>                            (e.<span style="color:#a6e22e">hash</span> <span style="color:#f92672">==</span> hash <span style="color:#f92672">&amp;&amp;</span> key.<span style="color:#a6e22e">equals</span>(k))) {
+</span></span><span style="display:flex;"><span>                            oldValue <span style="color:#f92672">=</span> e.<span style="color:#a6e22e">value</span>;
+</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>onlyIfAbsent) {
+</span></span><span style="display:flex;"><span>                                e.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>                                <span style="color:#f92672">++</span>modCount;
+</span></span><span style="display:flex;"><span>                            }
+</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                        }
+</span></span><span style="display:flex;"><span>                        e <span style="color:#f92672">=</span> e.<span style="color:#a6e22e">next</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">if</span> (node <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>                            node.<span style="color:#a6e22e">setNext</span>(first);
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>                            node <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashEntry<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span>(hash, key, value, first);
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> count <span style="color:#f92672">+</span> 1;
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">if</span> (c <span style="color:#f92672">&gt;</span> threshold <span style="color:#f92672">&amp;&amp;</span> tab.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> MAXIMUM_CAPACITY)
+</span></span><span style="display:flex;"><span>                            rehash(node);
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>                            setEntryAt(tab, index, node);
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">++</span>modCount;
+</span></span><span style="display:flex;"><span>                        count <span style="color:#f92672">=</span> c;
+</span></span><span style="display:flex;"><span>                        oldValue <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">finally</span> {
+</span></span><span style="display:flex;"><span>                unlock();  <span style="color:#75715e">// 解锁</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> oldValue;
+</span></span><span style="display:flex;"><span>        }</span></span></code></pre></div><h3 class="heading-element" id="3-jdk-18-的-concurrenthashmap"><span>3. JDK 1.8 的 ConcurrentHashMap</span>
+  <a href="#3-jdk-18-%e7%9a%84-concurrenthashmap" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>到了 JDK 1.8 的时候已经摒弃了分段锁，而是使用 synchronized 桶数组头节点 Node 和 CAS 来实现并发控制。（ JDK 1.6 以后 对 synchronized 锁做了很多优化， 整个看起来就像是优化过且线程安全的 HashMap，虽然在 JDK 1.8 中还能看到 Segment 的数据结构，但是已经简化了属性，只是为了兼容旧版本）</p>
+<p><img loading="lazy" src='/images/HashMapLock.jpeg' alt="JDK 1.8 后的并发哈希表的锁"></p>
+<h4 class="heading-element" id="31-concurrenthashmap-源码文档解读"><span>3.1 ConcurrentHashMap 源码文档解读</span>
+  <a href="#31-concurrenthashmap-%e6%ba%90%e7%a0%81%e6%96%87%e6%a1%a3%e8%a7%a3%e8%af%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>源码的注释文档主要说了这么几点：</p>
 <ol>
 <li>支持高并发的检索和更新，即使所有的操作都是线程安全，但检索时是不加锁的，也不支持锁定整个表。</li>
 <li>检索 / get 操作不会阻塞，检索会反映最近一次完成更新时的结果（即在当前时间点的值）。虽然不会抛出并发修改异常，迭代器却是被设计为在单线程下使用的。</li>
@@ -393,172 +404,151 @@
 <li>支持批量操作。</li>
 <li>ConcurrentHashMap 的 key 和 Value 都不能为 null。</li>
 </ol>
-<h4 id="32-concurrenthashmap-线程安全实现原理">3.2 ConcurrentHashMap 线程安全实现原理</h4>
-<p>相比 Java 1.7 的 ConcurrentHashMap 使用 &ldquo;锁分段&rdquo; 来保证数据的线程安全，Java 1.8 的ConcurrentHashMap 通过 <strong>同步指定哈希桶的第一个节点</strong> 来实现这个功能。</p>
+<h4 class="heading-element" id="32-concurrenthashmap-线程安全实现原理"><span>3.2 ConcurrentHashMap 线程安全实现原理</span>
+  <a href="#32-concurrenthashmap-%e7%ba%bf%e7%a8%8b%e5%ae%89%e5%85%a8%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>相比 Java 1.7 的 ConcurrentHashMap 使用 &ldquo;锁分段&rdquo; 来保证数据的线程安全，Java 1.8 的ConcurrentHashMap 通过 <strong>同步指定哈希桶的第一个节点</strong> 来实现这个功能。</p>
 <ul>
 <li>若头节点不存在则会调用 <code>casTabAt(tab, i, null, new Node&lt;K, V&gt;(hash, key, value, null))</code> 以线程安全的方式创建一个新的头节点。</li>
 <li><code>volatile Node&lt;K, V&gt; next;</code> 用 volatile 修饰节点来保证每次获取的都是最新设置的值。</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> V <span style="color:#a6e22e">putVal</span><span style="color:#f92672">(</span>K key<span style="color:#f92672">,</span> V value<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> onlyIfAbsent<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> value <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NullPointerException<span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">int</span> hash <span style="color:#f92672">=</span> spread<span style="color:#f92672">(</span>key<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">());</span>
-        <span style="color:#66d9ef">int</span> binCount <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[]</span> tab <span style="color:#f92672">=</span> table<span style="color:#f92672">;;)</span> <span style="color:#f92672">{</span>
-            Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> f<span style="color:#f92672">;</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> fh<span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tab <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">=</span> tab<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span>
-                tab <span style="color:#f92672">=</span> initTable<span style="color:#f92672">();</span>
-            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>f <span style="color:#f92672">=</span> tabAt<span style="color:#f92672">(</span>tab<span style="color:#f92672">,</span> i <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> hash<span style="color:#f92672">))</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// 获取桶数组下标
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>casTabAt<span style="color:#f92672">(</span>tab<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span>  <span style="color:#75715e">// 如果桶为空，执行cas方法来new一个新节点，同时保证并发数据安全
-</span><span style="color:#75715e"></span>                             <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;(</span>hash<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> value<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)))</span>
-                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>                   <span style="color:#75715e">// no lock when adding to empty bin
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>fh <span style="color:#f92672">=</span> f<span style="color:#f92672">.</span><span style="color:#a6e22e">hash</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> MOVED<span style="color:#f92672">)</span> <span style="color:#75715e">// 当前表正在转移数据，用当前线程帮忙转移
-</span><span style="color:#75715e"></span>                tab <span style="color:#f92672">=</span> helpTransfer<span style="color:#f92672">(</span>tab<span style="color:#f92672">,</span> f<span style="color:#f92672">);</span>
-            <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                V oldVal <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span>f<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// 以第一个节点作为锁
-</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tabAt<span style="color:#f92672">(</span>tab<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> f<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>fh <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                            binCount <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-                            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> e <span style="color:#f92672">=</span> f<span style="color:#f92672">;;</span> <span style="color:#f92672">++</span>binCount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// 遍历链表找key更新value
-</span><span style="color:#75715e"></span>                                K ek<span style="color:#f92672">;</span>
-                                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">.</span><span style="color:#a6e22e">hash</span> <span style="color:#f92672">==</span> hash <span style="color:#f92672">&amp;&amp;</span>
-                                    <span style="color:#f92672">((</span>ek <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> key <span style="color:#f92672">||</span>
-                                     <span style="color:#f92672">(</span>ek <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>ek<span style="color:#f92672">))))</span> <span style="color:#f92672">{</span>
-                                    oldVal <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
-                                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>onlyIfAbsent<span style="color:#f92672">)</span>
-                                        e<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> value<span style="color:#f92672">;</span>
-                                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                                <span style="color:#f92672">}</span>
-                                Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> pred <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
-                                <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>e <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// 遍历到链表尾部，插入一个新节点
-</span><span style="color:#75715e"></span>                                    pred<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;(</span>hash<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span>
-                                                              value<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
-                                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                                <span style="color:#f92672">}</span>
-                            <span style="color:#f92672">}</span>
-                        <span style="color:#f92672">}</span>
-                        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>f <span style="color:#66d9ef">instanceof</span> TreeBin<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// 红黑树的put
-</span><span style="color:#75715e"></span>                            Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> p<span style="color:#f92672">;</span>
-                            binCount <span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span>
-                            <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>p <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>TreeBin<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;)</span>f<span style="color:#f92672">).</span><span style="color:#a6e22e">putTreeVal</span><span style="color:#f92672">(</span>hash<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span>
-                                                           value<span style="color:#f92672">))</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                                oldVal <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
-                                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>onlyIfAbsent<span style="color:#f92672">)</span>
-                                    p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> value<span style="color:#f92672">;</span>
-                            <span style="color:#f92672">}</span>
-                        <span style="color:#f92672">}</span>
-                    <span style="color:#f92672">}</span>
-                <span style="color:#f92672">}</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>binCount <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>binCount <span style="color:#f92672">&gt;=</span> TREEIFY_THRESHOLD<span style="color:#f92672">)</span> <span style="color:#75715e">// 判断是否树化
-</span><span style="color:#75715e"></span>                        treeifyBin<span style="color:#f92672">(</span>tab<span style="color:#f92672">,</span> i<span style="color:#f92672">);</span>
-                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>oldVal <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-                        <span style="color:#66d9ef">return</span> oldVal<span style="color:#f92672">;</span>
-                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-        addCount<span style="color:#f92672">(</span>1L<span style="color:#f92672">,</span> binCount<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div>
-    </div>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">final</span> V <span style="color:#a6e22e">putVal</span>(K key, V value, <span style="color:#66d9ef">boolean</span> onlyIfAbsent) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> value <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> NullPointerException();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> hash <span style="color:#f92672">=</span> spread(key.<span style="color:#a6e22e">hashCode</span>());
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> binCount <span style="color:#f92672">=</span> 0;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;[]</span> tab <span style="color:#f92672">=</span> table;;) {
+</span></span><span style="display:flex;"><span>            Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> f; <span style="color:#66d9ef">int</span> n, i, fh;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (tab <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> (n <span style="color:#f92672">=</span> tab.<span style="color:#a6e22e">length</span>) <span style="color:#f92672">==</span> 0)
+</span></span><span style="display:flex;"><span>                tab <span style="color:#f92672">=</span> initTable();
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> ((f <span style="color:#f92672">=</span> tabAt(tab, i <span style="color:#f92672">=</span> (n <span style="color:#f92672">-</span> 1) <span style="color:#f92672">&amp;</span> hash)) <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) { <span style="color:#75715e">// 获取桶数组下标</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (casTabAt(tab, i, <span style="color:#66d9ef">null</span>,  <span style="color:#75715e">// 如果桶为空，执行cas方法来new一个新节点，同时保证并发数据安全</span>
+</span></span><span style="display:flex;"><span>                             <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span>(hash, key, value, <span style="color:#66d9ef">null</span>)))
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">break</span>;                   <span style="color:#75715e">// no lock when adding to empty bin</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> ((fh <span style="color:#f92672">=</span> f.<span style="color:#a6e22e">hash</span>) <span style="color:#f92672">==</span> MOVED) <span style="color:#75715e">// 当前表正在转移数据，用当前线程帮忙转移</span>
+</span></span><span style="display:flex;"><span>                tab <span style="color:#f92672">=</span> helpTransfer(tab, f);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                V oldVal <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">synchronized</span> (f) {  <span style="color:#75715e">// 以第一个节点作为锁</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (tabAt(tab, i) <span style="color:#f92672">==</span> f) {
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">if</span> (fh <span style="color:#f92672">&gt;=</span> 0) {
+</span></span><span style="display:flex;"><span>                            binCount <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">for</span> (Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> e <span style="color:#f92672">=</span> f;; <span style="color:#f92672">++</span>binCount) { <span style="color:#75715e">// 遍历链表找key更新value</span>
+</span></span><span style="display:flex;"><span>                                K ek;
+</span></span><span style="display:flex;"><span>                                <span style="color:#66d9ef">if</span> (e.<span style="color:#a6e22e">hash</span> <span style="color:#f92672">==</span> hash <span style="color:#f92672">&amp;&amp;</span>
+</span></span><span style="display:flex;"><span>                                    ((ek <span style="color:#f92672">=</span> e.<span style="color:#a6e22e">key</span>) <span style="color:#f92672">==</span> key <span style="color:#f92672">||</span>
+</span></span><span style="display:flex;"><span>                                     (ek <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> key.<span style="color:#a6e22e">equals</span>(ek)))) {
+</span></span><span style="display:flex;"><span>                                    oldVal <span style="color:#f92672">=</span> e.<span style="color:#a6e22e">val</span>;
+</span></span><span style="display:flex;"><span>                                    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>onlyIfAbsent)
+</span></span><span style="display:flex;"><span>                                        e.<span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>                                    <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                                }
+</span></span><span style="display:flex;"><span>                                Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> pred <span style="color:#f92672">=</span> e;
+</span></span><span style="display:flex;"><span>                                <span style="color:#66d9ef">if</span> ((e <span style="color:#f92672">=</span> e.<span style="color:#a6e22e">next</span>) <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) { <span style="color:#75715e">// 遍历到链表尾部，插入一个新节点</span>
+</span></span><span style="display:flex;"><span>                                    pred.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span>(hash, key,
+</span></span><span style="display:flex;"><span>                                                              value, <span style="color:#66d9ef">null</span>);
+</span></span><span style="display:flex;"><span>                                    <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                                }
+</span></span><span style="display:flex;"><span>                            }
+</span></span><span style="display:flex;"><span>                        }
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (f <span style="color:#66d9ef">instanceof</span> TreeBin) { <span style="color:#75715e">// 红黑树的put</span>
+</span></span><span style="display:flex;"><span>                            Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> p;
+</span></span><span style="display:flex;"><span>                            binCount <span style="color:#f92672">=</span> 2;
+</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">if</span> ((p <span style="color:#f92672">=</span> ((TreeBin<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span>)f).<span style="color:#a6e22e">putTreeVal</span>(hash, key,
+</span></span><span style="display:flex;"><span>                                                           value)) <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>                                oldVal <span style="color:#f92672">=</span> p.<span style="color:#a6e22e">val</span>;
+</span></span><span style="display:flex;"><span>                                <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>onlyIfAbsent)
+</span></span><span style="display:flex;"><span>                                    p.<span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>                            }
+</span></span><span style="display:flex;"><span>                        }
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (binCount <span style="color:#f92672">!=</span> 0) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (binCount <span style="color:#f92672">&gt;=</span> TREEIFY_THRESHOLD) <span style="color:#75715e">// 判断是否树化</span>
+</span></span><span style="display:flex;"><span>                        treeifyBin(tab, i);
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (oldVal <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">return</span> oldVal;
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        addCount(1L, binCount);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2020-01-16 13:19:47">Updated on 2020-01-16&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/" data-title="Java：多线程下的安全容器" data-hashtags="Java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/" data-hashtag="Java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/" data-title="Java：多线程下的安全容器"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2020/java-thread-safe-collection/>https://hoffmanzheng.github.io/2020/java-thread-safe-collection/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/java/">
-                    #Java</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2020/java-multi-thread/" class="prev" rel="prev" title="Java：初识多线程、原理及实现"><i class="iconfont icon-left"></i>&nbsp;Java：初识多线程、原理及实现</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2020/java-hashmap/" class="next" rel="next" title="Java：HashMap 源码解读">Java：HashMap 源码解读&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/java/" class="post-tag" title="Tags - Java">Java</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2020/java-multi-thread/" class="post-nav-item" rel="prev" title="Java：初识多线程、原理及实现"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Java：初识多线程、原理及实现</a><a href="/2020/java-hashmap/" class="post-nav-item" rel="next" title="Java：HashMap 源码解读">Java：HashMap 源码解读<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-vector-与-synchronizedlist">1. Vector 与 SynchronizedList</a>
+          <ul>
+            <li><a href="#11-vector">1.1 Vector</a></li>
+            <li><a href="#12-synchronizedlist">1.2 SynchronizedList</a></li>
+            <li><a href="#13-vector-和-synchronizedlist-可能会出现的问题">1.3 Vector 和 SynchronizedList 可能会出现的问题</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-copyonwritearraylist">2. CopyOnWriteArrayList</a>
+          <ul>
+            <li><a href="#21-copyonwritearraylist-实现原理">2.1 CopyOnWriteArrayList 实现原理</a></li>
+            <li><a href="#22-copyonwritearraylist-的结构与方法">2.2 CopyOnWriteArrayList 的结构与方法</a></li>
+            <li><a href="#23-为什么-copyonwritearraylist-迭代时不需要显式加锁">2.3 为什么 CopyOnWriteArrayList 迭代时不需要显式加锁</a></li>
+            <li><a href="#24-copyonwritearraylist-的缺点">2.4 CopyOnWriteArrayList 的缺点</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-hashtable">1. HashTable</a></li>
+        <li><a href="#2-jdk-17-的-concurrenthashmap">2. JDK 1.7 的 ConcurrentHashMap</a></li>
+        <li><a href="#3-jdk-18-的-concurrenthashmap">3. JDK 1.8 的 ConcurrentHashMap</a>
+          <ul>
+            <li><a href="#31-concurrenthashmap-源码文档解读">3.1 ConcurrentHashMap 源码文档解读</a></li>
+            <li><a href="#32-concurrenthashmap-线程安全实现原理">3.2 ConcurrentHashMap 线程安全实现原理</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/f78c4928f89f98a596b3c07503f4fa09.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

@@ -1,165 +1,150 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2019/maven/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2020/java-multi-thread/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/java-collection/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           Java：Collection、Map 集合工具类 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="Java：Collection、Map 集合工具类 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Java：Collection、Map 集合工具类 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="本篇介绍 Java 中集合类框架的基础知识，包括 List，Set，Map。此外，关于使用频率最高的容器 HashMap 则会在另一篇博文 Java：HashMap 源码解读 中详细分析；关于这些集合类的线程安全问题，会在 Java：多线程下的安全容器 中进行讲述。
+Collection 继承体系 "><meta name="keywords" content='Java'>
+  <meta itemprop="name" content="Java：Collection、Map 集合工具类">
+  <meta itemprop="description" content="本篇介绍 Java 中集合类框架的基础知识，包括 List，Set，Map。此外，关于使用频率最高的容器 HashMap 则会在另一篇博文 Java：HashMap 源码解读 中详细分析；关于这些集合类的线程安全问题，会在 Java：多线程下的安全容器 中进行讲述。
+Collection 继承体系">
+  <meta itemprop="datePublished" content="2020-01-02T16:11:47+01:00">
+  <meta itemprop="dateModified" content="2020-01-02T16:11:47+01:00">
+  <meta itemprop="wordCount" content="704">
+  <meta itemprop="keywords" content="Java"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/java-collection/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="Java：Collection、Map 集合工具类">
+  <meta property="og:description" content="本篇介绍 Java 中集合类框架的基础知识，包括 List，Set，Map。此外，关于使用频率最高的容器 HashMap 则会在另一篇博文 Java：HashMap 源码解读 中详细分析；关于这些集合类的线程安全问题，会在 Java：多线程下的安全容器 中进行讲述。
+Collection 继承体系">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-01-02T16:11:47+01:00">
+    <meta property="article:modified_time" content="2020-01-02T16:11:47+01:00">
+    <meta property="article:tag" content="Java">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Java：Collection、Map 集合工具类">
+  <meta name="twitter:description" content="本篇介绍 Java 中集合类框架的基础知识，包括 List，Set，Map。此外，关于使用频率最高的容器 HashMap 则会在另一篇博文 Java：HashMap 源码解读 中详细分析；关于这些集合类的线程安全问题，会在 Java：多线程下的安全容器 中进行讲述。
+Collection 继承体系">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/java-collection/" title="Java：Collection、Map 集合工具类 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2019/maven/" title="Maven：生命周期、插件及包管理" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/java-multi-thread/" title="Java：初识多线程、原理及实现" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Java：Collection、Map 集合工具类",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "Java：Collection、Map 集合工具类",
-    "headline" : "Java：Collection、Map 集合工具类",
-    "description" : "本篇介绍 Java 中集合类框架的基础知识，包括 List，Set，Map。此外，关于使用频率最高的容器 HashMap 则会在另一篇博文 Java：HashMap 源码解读 中详细分析；关于这些集合类的线程安全问题，会在 Java：多线程下的安全容器 中进行讲述。\nCollection 继承体系 1. 集合 Collection 介绍  为什么需要集合？  集合使 Java 可以处理多个同类型的对象（List \/ Set），亦或是多个键值对类型的数据（Map）。   集合的常用功能：  添加：add(Object obj)、addAll(Collection c)； 删除：clear()、remove(Object)、removeAll(Collection)； 判断包含：isEmpty()、contains(Object)、containsAll(Collection)；  contains 方法进行判定时，会调用 equals 方法，所以在用集合存储引用对象（非原生数据类型）时需要重写 equals 和 HashCode 方法。   遍历获取：Iteratoriterator()； 长度：size()； 交集：retainAll(Collection c)； 若有元素被移除，此操作会改变原有实例集合。   迭代器（Iterator）：  以内部类的方式遍历集合中的元素，有以下方法：  hasNext()； next()； remove()；   构造思路：  写一个 iterator() 方法返回一个自己的迭代器， 创建一个自己的迭代器继承 Iterator 接口，重写接口的三个方法。 使用时：用 iterator() 创建迭代器，再用迭代器去调用其中的三个方法。      2.",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2020",
-    "datePublished": "2020-01-02 16:11:47 \u002b0100 \u002b0100",
-    "dateModified" : "2020-01-02 16:11:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/java-collection\/",
-    "wordCount" : "707",
-    "keywords" : [ "Java", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/java-collection\/"
+    },"genre": "posts","keywords": "Java","wordcount":  704 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2020\/java-collection\/","datePublished": "2020-01-02T16:11:47+01:00","dateModified": "2020-01-02T16:11:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Java：Collection、Map 集合工具类</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/study-notes/" class="post-category" title="Category - Study Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Study Notes</a></span></div><div class="post-meta-line"><span title="published on 2020-01-02 16:11:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2020-01-02">2020-01-02</time></span>&nbsp;<span title="704 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 800 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>4 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Java：Collection、Map 集合工具类</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2020-01-02 itemprop="datePublished">January 2, 2020</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/study-notes/"> Study notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,707 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-集合-collection-介绍">1. 集合 Collection 介绍</a></li>
+        <li><a href="#2-list对付顺序的好帮手">2. List：对付顺序的好帮手</a></li>
+        <li><a href="#3-set注重独一无二的性质">3. Set：注重独一无二的性质</a></li>
+        <li><a href="#4-map用key来搜索的专家映射">4. Map：用Key来搜索的专家（映射）</a></li>
+        <li><a href="#5-guava">5. Guava</a></li>
+      </ul>
+    </li>
+  </ul>
 
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>本篇介绍 Java 中集合类框架的基础知识，包括 List，Set，Map。此外，关于使用频率最高的容器 HashMap 则会在另一篇博文 <a href="https://hoffmanzheng.github.io/2020/java-hashmap/">Java：HashMap 源码解读</a> 中详细分析；关于这些集合类的线程安全问题，会在 <a href="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/">Java：多线程下的安全容器</a> 中进行讲述。</p>
-<h1 id="collection-继承体系">Collection 继承体系</h1>
-<p><img src="/images/Collections.png" alt="Collection 继承体系"></p>
-<h3 id="1-集合-collection-介绍">1. 集合 Collection 介绍</h3>
-<ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-arraylistvector-及-linkedlist">1. ArrayList、Vector 及 LinkedList</a>
+          <ul>
+            <li><a href="#11-arraylist-与-linkedlist-区别">1.1 ArrayList 与 LinkedList 区别</a></li>
+            <li><a href="#12-randomaccess-接口">1.2 RandomAccess 接口</a></li>
+            <li><a href="#13-双向链表和双向循环链表">1.3 双向链表和双向循环链表</a></li>
+            <li><a href="#14-arraylist-与-vector-的区别为什么要用-arraylist-取代-vector">1.4 ArrayList 与 Vector 的区别，为什么要用 ArrayList 取代 Vector</a></li>
+            <li><a href="#15-arraylist-的扩容机制">1.5 ArrayList 的扩容机制</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-hashmaphashtable-及-hashset">2. HashMap、HashTable 及 HashSet</a>
+          <ul>
+            <li><a href="#21-hashmap-和-hashtable-的区别">2.1 HashMap 和 Hashtable 的区别</a></li>
+            <li><a href="#22-hashmap-和-hashset区别">2.2 HashMap 和 HashSet区别</a></li>
+            <li><a href="#23-hashset-如何检查重复">2.3 HashSet 如何检查重复</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-comparable-和-comparator的区别">3. comparable 和 Comparator的区别</a>
+          <ul>
+            <li><a href="#31-comparator定制排序">3.1 Comparator定制排序</a></li>
+            <li><a href="#32-重写-compareto-方法实现按年龄来排序">3.2 重写 compareTo 方法实现按年龄来排序</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-如何选用集合">4. 如何选用集合?</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>本篇介绍 Java 中集合类框架的基础知识，包括 List，Set，Map。此外，关于使用频率最高的容器 HashMap 则会在另一篇博文 <a href="https://hoffmanzheng.github.io/2020/java-hashmap/" target="_blank" rel="external nofollow noopener noreferrer">Java：HashMap 源码解读</a> 中详细分析；关于这些集合类的线程安全问题，会在 <a href="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/" target="_blank" rel="external nofollow noopener noreferrer">Java：多线程下的安全容器</a> 中进行讲述。</p>
+<h1 class="heading-element" id="collection-继承体系"><span>Collection 继承体系</span>
+  <a href="#collection-%e7%bb%a7%e6%89%bf%e4%bd%93%e7%b3%bb" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p><img loading="lazy" src='/images/Collections.png' alt="Collection 继承体系"></p>
+<h3 class="heading-element" id="1-集合-collection-介绍"><span>1. 集合 Collection 介绍</span>
+  <a href="#1-%e9%9b%86%e5%90%88-collection-%e4%bb%8b%e7%bb%8d" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
 <li>为什么需要集合？
 <ul>
 <li>集合使 Java 可以处理多个同类型的对象（List / Set），亦或是多个键值对类型的数据（Map）。</li>
@@ -195,8 +180,11 @@
 </ul>
 </li>
 </ul>
-<h3 id="2-list对付顺序的好帮手">2. List：对付顺序的好帮手</h3>
-<ul>
+<h3 class="heading-element" id="2-list对付顺序的好帮手"><span>2. List：对付顺序的好帮手</span>
+  <a href="#2-list%e5%af%b9%e4%bb%98%e9%a1%ba%e5%ba%8f%e7%9a%84%e5%a5%bd%e5%b8%ae%e6%89%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
 <li>List 是插入有序的，元素可重复的。</li>
 <li>List 有个自己的迭代器 <code>ListIterator</code> ，比普通的迭代器多出几个功能：向前遍历、添加元素、设置元素等。</li>
 <li>List 常用的实现类有
@@ -207,8 +195,11 @@
 </ul>
 </li>
 </ul>
-<h3 id="3-set注重独一无二的性质">3. Set：注重独一无二的性质</h3>
-<ul>
+<h3 class="heading-element" id="3-set注重独一无二的性质"><span>3. Set：注重独一无二的性质</span>
+  <a href="#3-set%e6%b3%a8%e9%87%8d%e7%8b%ac%e4%b8%80%e6%97%a0%e4%ba%8c%e7%9a%84%e6%80%a7%e8%b4%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
 <li>Set 是插入无序的，元素不可重复的。</li>
 <li>Set 常用实现类有
 <ul>
@@ -218,16 +209,18 @@
 </ul>
 </li>
 </ul>
-<h3 id="4-map用key来搜索的专家映射">4. Map：用Key来搜索的专家（映射）</h3>
-<ul>
+<h3 class="heading-element" id="4-map用key来搜索的专家映射"><span>4. Map：用Key来搜索的专家（映射）</span>
+  <a href="#4-map%e7%94%a8key%e6%9d%a5%e6%90%9c%e7%b4%a2%e7%9a%84%e4%b8%93%e5%ae%b6%e6%98%a0%e5%b0%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
 <li>如果数据是键值对类型的，就需要选择 <code>HashMap</code> 进行存储。如果要保持插入顺序，可以选择 <code>LinkedHashMap</code> ，如果需要排序则选择 <code>TreeMap</code> 。</li>
 <li>Key 不能重复（是唯一的），每个 Key 最多只能映射到一个值，但多个 Key 可以引用相同的对象。</li>
 <li>Map 的常用方法有：</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">containsKey<span style="color:#f92672">();</span> containsValue<span style="color:#f92672">();</span>
-get<span style="color:#f92672">(</span>Key<span style="color:#f92672">);</span> put<span style="color:#f92672">(</span>K<span style="color:#f92672">,</span> V<span style="color:#f92672">);</span>
-keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返回所有的 key
-</span></code></pre></div><ul>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>containsKey(); containsValue();
+</span></span><span style="display:flex;"><span>get(Key); put(K, V);
+</span></span><span style="display:flex;"><span>keySet();  <span style="color:#f92672">//</span>返回所有的 key</span></span></code></pre></div><ul>
 <li>HashMap 的 key 的 set 就是一个 HashSet，HashSet 有的功能 HashMap 都有，所有 HashSet 里面包了一个 HashMap。</li>
 <li>HashMap 的线程不安全性：HashMap的实现 没有被同步 &mdash;&gt; HashMap 的死循环（搜这个）。
 <ul>
@@ -242,15 +235,27 @@ keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返�
 </ul>
 </li>
 </ul>
-<h3 id="5-guava">5. Guava</h3>
-<ul>
+<h3 class="heading-element" id="5-guava"><span>5. Guava</span>
+  <a href="#5-guava" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
 <li>是 <code>Google</code> 写的集合框架，在原生 JDK Collection 的基础上增添了更多有用的实现，如：<code>MultiSet</code> 可以存储相同的元素，并告诉你他们被存了多少次；<code>BidirectionMap</code> 可以实现从 <code>value</code> 映射回 <code>Key</code> 值。</li>
 <li>思想：不要重复发明轮子，尽量使用经过实战检验的类库。</li>
 </ul>
-<h1 id="集合类灵魂拷问">集合类灵魂拷问</h1>
-<h3 id="1-arraylistvector-及-linkedlist">1. ArrayList、Vector 及 LinkedList</h3>
-<h4 id="11-arraylist-与-linkedlist-区别">1.1 ArrayList 与 LinkedList 区别</h4>
-<ul>
+<h1 class="heading-element" id="集合类灵魂拷问"><span>集合类灵魂拷问</span>
+  <a href="#%e9%9b%86%e5%90%88%e7%b1%bb%e7%81%b5%e9%ad%82%e6%8b%b7%e9%97%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="1-arraylistvector-及-linkedlist"><span>1. ArrayList、Vector 及 LinkedList</span>
+  <a href="#1-arraylistvector-%e5%8f%8a-linkedlist" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="11-arraylist-与-linkedlist-区别"><span>1.1 ArrayList 与 LinkedList 区别</span>
+  <a href="#11-arraylist-%e4%b8%8e-linkedlist-%e5%8c%ba%e5%88%ab" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
 <li>
 <p>是否线程安全：两者都是不同步的，都不保证线程安全。</p>
 </li>
@@ -271,54 +276,70 @@ keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返�
 <p>内存空间占用： ArrayList 的空间浪费主要体现在 List 列表的结尾会预留一定的容量空间，而 LinkedList 的空间花费则体现在它的每一个元素都需要消耗比 ArrayList 更多的空间（因为要存放直接后继和直接前驱以及数据）。</p>
 </li>
 </ul>
-<h4 id="12-randomaccess-接口">1.2 RandomAccess 接口</h4>
-<p><code>RandomAccess</code> 接口声明了一个约定：实现这个接口的类具有随机访问功能。</p>
+<h4 class="heading-element" id="12-randomaccess-接口"><span>1.2 RandomAccess 接口</span>
+  <a href="#12-randomaccess-%e6%8e%a5%e5%8f%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><code>RandomAccess</code> 接口声明了一个约定：实现这个接口的类具有随机访问功能。</p>
 <p><code>Collections.binarySearch</code> 方法中，会先判断 List 是否是 RandomAccess 的实例，然后调用不同的二分查找方法。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>
-    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">binarySearch</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> Comparable<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> T<span style="color:#f92672">&gt;&gt;</span> list<span style="color:#f92672">,</span> T key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>list <span style="color:#66d9ef">instanceof</span> RandomAccess <span style="color:#f92672">||</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()&lt;</span>BINARYSEARCH_THRESHOLD<span style="color:#f92672">)</span>
-            <span style="color:#66d9ef">return</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">indexedBinarySearch</span><span style="color:#f92672">(</span>list<span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">else</span>
-            <span style="color:#66d9ef">return</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">iteratorBinarySearch</span><span style="color:#f92672">(</span>list<span style="color:#f92672">,</span> key<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><p>ArrayList 实现了 RandomAccess 接口，而 LinkedList 没有实现。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#f92672">&lt;</span>T<span style="color:#f92672">&gt;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">binarySearch</span>(List<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> Comparable<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">super</span> T<span style="color:#f92672">&gt;&gt;</span> list, T key) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (list <span style="color:#66d9ef">instanceof</span> RandomAccess <span style="color:#f92672">||</span> list.<span style="color:#a6e22e">size</span>()<span style="color:#f92672">&lt;</span>BINARYSEARCH_THRESHOLD)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Collections.<span style="color:#a6e22e">indexedBinarySearch</span>(list, key);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> Collections.<span style="color:#a6e22e">iteratorBinarySearch</span>(list, key);
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><p>ArrayList 实现了 RandomAccess 接口，而 LinkedList 没有实现。</p>
 <ul>
 <li>即声明了 ArrayList 具有快速随机访问的功能，它的底层是数组，数组天然支持随机访问，时间复杂度为 O(1)。</li>
 <li>声明了 LinkedList 不具有随机访问的功能，它的底层是链表。链表需要遍历到特定位置才能访问特定位置的元素，时间复杂度为 O(n)。</li>
 <li>实现了 RandomAccess 接口的 List，优先选择普通 for 循环 遍历，其次 foreach。</li>
 <li>未实现 RandomAccess 接口的 List，优先选择 iterator 遍历（foreach遍历底层也是通过iterator实现的）大 size 的数据，<strong>千万不要使用普通 for 循环</strong>。</li>
 </ul>
-<h4 id="13-双向链表和双向循环链表">1.3 双向链表和双向循环链表</h4>
-<ul>
+<h4 class="heading-element" id="13-双向链表和双向循环链表"><span>1.3 双向链表和双向循环链表</span>
+  <a href="#13-%e5%8f%8c%e5%90%91%e9%93%be%e8%a1%a8%e5%92%8c%e5%8f%8c%e5%90%91%e5%be%aa%e7%8e%af%e9%93%be%e8%a1%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
 <li>双向链表： 包含两个指针，一个prev指向前一个节点，一个next指向后一个节点。</li>
 </ul>
-<p><img src="/images/%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.png" alt=""></p>
+<p><img loading="lazy" src='/images/双向链表.png' alt="/images/双向链表.png"></p>
 <ul>
 <li>双向循环链表： 最后一个节点的 next 指向head，而 head 的prev指向最后一个节点，构成一个环。</li>
 </ul>
-<p><img src="/images/%E5%BE%AA%E7%8E%AF%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8.jpg" alt=""></p>
-<h4 id="14-arraylist-与-vector-的区别为什么要用-arraylist-取代-vector">1.4 ArrayList 与 Vector 的区别，为什么要用 ArrayList 取代 Vector</h4>
-<ul>
+<p><img loading="lazy" src='/images/循环双向链表.jpg' alt="/images/循环双向链表.jpg"></p>
+<h4 class="heading-element" id="14-arraylist-与-vector-的区别为什么要用-arraylist-取代-vector"><span>1.4 ArrayList 与 Vector 的区别，为什么要用 ArrayList 取代 Vector</span>
+  <a href="#14-arraylist-%e4%b8%8e-vector-%e7%9a%84%e5%8c%ba%e5%88%ab%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e7%94%a8-arraylist-%e5%8f%96%e4%bb%a3-vector" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
 <li><code>Vector</code> 类通过将所有的方法声明 synchronized 来保证数据的线程安全。但同步的确是整个 vector 实例，导致一个线程在访问实例时，其他线程都需要等待的尴尬情形，较大的同步开销完全不符合并发设计的初衷。此外，多线程下对 verctor 的复合操作（如遍历+修改）仍会导致 <strong>并发修改异常</strong>。</li>
 <li>ArrayList 不是同步的，所以在不需要保证线程安全时建议使用 ArrayList。</li>
 </ul>
-<h4 id="15-arraylist-的扩容机制">1.5 ArrayList 的扩容机制</h4>
-<ul>
+<h4 class="heading-element" id="15-arraylist-的扩容机制"><span>1.5 ArrayList 的扩容机制</span>
+  <a href="#15-arraylist-%e7%9a%84%e6%89%a9%e5%ae%b9%e6%9c%ba%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
 <li>当调用 ArrayList 的 add 或者 addAll 方法的时候，会先进行判定现有容量是否足够 <code>ensureCapacity</code>，如果不够则会进行 <code>动态扩容</code> ，即新建一个更大容量（一般为之前容量的 1.5 倍）的 ArrayList，然后把原有的数据拷贝进去，最后赋值给之前的引用对象。</li>
 <li>如果要在指定位置 i 插入和删除元素的话 <code>add(int index, E element)</code>，会调用 <code>System.arraycopy</code> 来实现 i 位置及之后元素的移动；而在扩容时则调用了 <code>Arrays.copyOf</code> 方法</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">native</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">arraycopy</span><span style="color:#f92672">(</span>Object src<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> srcPos<span style="color:#f92672">,</span>
-                           Object dest<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> destPos<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> length<span style="color:#f92672">);</span>
-
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">copyOf</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> original<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> newLength<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> copy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>newLength<span style="color:#f92672">];</span>
-        System<span style="color:#f92672">.</span><span style="color:#a6e22e">arraycopy</span><span style="color:#f92672">(</span>original<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> copy<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span>
-                         Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>original<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> newLength<span style="color:#f92672">));</span>
-        <span style="color:#66d9ef">return</span> copy<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="2-hashmaphashtable-及-hashset">2. HashMap、HashTable 及 HashSet</h3>
-<h4 id="21-hashmap-和-hashtable-的区别">2.1 HashMap 和 Hashtable 的区别</h4>
-<ul>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">native</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">arraycopy</span>(Object src, <span style="color:#66d9ef">int</span> srcPos,
+</span></span><span style="display:flex;"><span>                           Object dest, <span style="color:#66d9ef">int</span> destPos, <span style="color:#66d9ef">int</span> length);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">copyOf</span>(<span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> original, <span style="color:#66d9ef">int</span> newLength) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> copy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>newLength<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">arraycopy</span>(original, 0, copy, 0,
+</span></span><span style="display:flex;"><span>                         Math.<span style="color:#a6e22e">min</span>(original.<span style="color:#a6e22e">length</span>, newLength));
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> copy;
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><h3 class="heading-element" id="2-hashmaphashtable-及-hashset"><span>2. HashMap、HashTable 及 HashSet</span>
+  <a href="#2-hashmaphashtable-%e5%8f%8a-hashset" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="21-hashmap-和-hashtable-的区别"><span>2.1 HashMap 和 Hashtable 的区别</span>
+  <a href="#21-hashmap-%e5%92%8c-hashtable-%e7%9a%84%e5%8c%ba%e5%88%ab" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
 <li>线程是否安全：HashMap 是非线程安全的，<code>HashTable</code> 是线程安全的；HashTable 内部的方法基本都经过 <code>synchronized</code> 修饰。（如果你要保证线程安全的话就使用 ConcurrentHashMap 吧！）</li>
 <li>效率：因为线程安全的问题，HashMap 要比 HashTable 效率高一点。另外，HashTable 基本被淘汰，不要在代码中使用它。</li>
 <li>对 Null key 和 Null value 的支持：HashMap 中，null 可以作为键，这样的键只有一个，可以有一个或多个键所对应的值为 null。。但是在 HashTable 中 put 进的键值只要有一个 null，直接抛出 <code>NullPointerException</code>。</li>
@@ -330,36 +351,43 @@ keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返�
 </li>
 <li>底层数据结构：JDK 1.8 以后的 HashMap 在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为8）时，将链表转化为红黑树，以减少搜索时间。Hashtable 没有这样的机制。</li>
 </ul>
-<h4 id="22-hashmap-和-hashset区别">2.2 HashMap 和 HashSet区别</h4>
-<p>如果你看过 <code>HashSet</code> 源码的话就应该知道：HashSet 底层就是基于 HashMap 实现的。（HashSet 的源码非常非常少，因为除了 <code>clone() </code>、<code>writeObject()</code>、<code>readObject()</code>是 HashSet 自己不得不实现之外，其他方法都是直接调用 HashMap 中的方法。</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:center">HashMap</th>
-<th style="text-align:center">HashSet</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">实现了 Map 接口</td>
-<td style="text-align:center">实现 Set 接口</td>
-</tr>
-<tr>
-<td style="text-align:center">存储键值对</td>
-<td style="text-align:center">仅存储对象</td>
-</tr>
-<tr>
-<td style="text-align:center">调用 <code>put()</code>向map中添加元素</td>
-<td style="text-align:center">调用 <code>add()</code>方法向Set中添加元素</td>
-</tr>
-<tr>
-<td style="text-align:center">HashMap 使用键（Key）计算 HashCode</td>
-<td style="text-align:center">HashSet 使用成员对象来计算HashCode 值，对于两个对象来说 HashCode 可能相同，所以 equals() 方法用来判断对象的相等性，</td>
-</tr>
-</tbody>
-</table>
-<h4 id="23-hashset-如何检查重复">2.3 HashSet 如何检查重复</h4>
-<p>当你把对象加入 <code>HashSet</code> 时，HashSet 会先计算对象的 <code>HashCode</code> 值来判断对象加入的位置，同时也会与其他加入的对象的 HashCode 值作比较，如果没有相符的 HashCode，HashSet 会假设对象没有重复出现。但是如果发现有相同 HashCode 值的对象，这时会调用 <code>equals()</code> 方法来检查 HashCode 相等的对象是否真的相同。如果两者相同，HashSet 就不会让加入操作成功。</p>
+<h4 class="heading-element" id="22-hashmap-和-hashset区别"><span>2.2 HashMap 和 HashSet区别</span>
+  <a href="#22-hashmap-%e5%92%8c-hashset%e5%8c%ba%e5%88%ab" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>如果你看过 <code>HashSet</code> 源码的话就应该知道：HashSet 底层就是基于 HashMap 实现的。（HashSet 的源码非常非常少，因为除了 <code>clone() </code>、<code>writeObject()</code>、<code>readObject()</code>是 HashSet 自己不得不实现之外，其他方法都是直接调用 HashMap 中的方法。</p>
+<div class="table-wrapper">
+  <table>
+    <thead>
+        <tr>
+            <th style="text-align: center">HashMap</th>
+            <th style="text-align: center">HashSet</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td style="text-align: center">实现了 Map 接口</td>
+            <td style="text-align: center">实现 Set 接口</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">存储键值对</td>
+            <td style="text-align: center">仅存储对象</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">调用 <code>put()</code>向map中添加元素</td>
+            <td style="text-align: center">调用 <code>add()</code>方法向Set中添加元素</td>
+        </tr>
+        <tr>
+            <td style="text-align: center">HashMap 使用键（Key）计算 HashCode</td>
+            <td style="text-align: center">HashSet 使用成员对象来计算HashCode 值，对于两个对象来说 HashCode 可能相同，所以 equals() 方法用来判断对象的相等性，</td>
+        </tr>
+    </tbody>
+  </table>
+</div><h4 class="heading-element" id="23-hashset-如何检查重复"><span>2.3 HashSet 如何检查重复</span>
+  <a href="#23-hashset-%e5%a6%82%e4%bd%95%e6%a3%80%e6%9f%a5%e9%87%8d%e5%a4%8d" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>当你把对象加入 <code>HashSet</code> 时，HashSet 会先计算对象的 <code>HashCode</code> 值来判断对象加入的位置，同时也会与其他加入的对象的 HashCode 值作比较，如果没有相符的 HashCode，HashSet 会假设对象没有重复出现。但是如果发现有相同 HashCode 值的对象，这时会调用 <code>equals()</code> 方法来检查 HashCode 相等的对象是否真的相同。如果两者相同，HashSet 就不会让加入操作成功。</p>
 <ul>
 <li>hashCode() 约定</li>
 </ul>
@@ -391,8 +419,11 @@ keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返�
 <li>== 是指对内存地址进行比较 equals() 是对字符串的内容进行比较</li>
 <li>== 指引用是否相同 equals() 指的是值是否相同</li>
 </ol>
-<h3 id="3-comparable-和-comparator的区别">3. comparable 和 Comparator的区别</h3>
-<ul>
+<h3 class="heading-element" id="3-comparable-和-comparator的区别"><span>3. comparable 和 Comparator的区别</span>
+  <a href="#3-comparable-%e5%92%8c-comparator%e7%9a%84%e5%8c%ba%e5%88%ab" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
 <li>comparable接口实际上是出自 <code>java.lang</code> 包 它有一个 <code>compareTo(Object obj)</code> 方法用来排序
 <ul>
 <li>想要对引用类型对象进行排序的话，会让他们的类实现 <code>comparable</code> 接口。</li>
@@ -404,138 +435,127 @@ keySet<span style="color:#f92672">();</span>  <span style="color:#75715e">//返�
 </ul>
 </li>
 </ul>
-<h4 id="31-comparator定制排序">3.1 Comparator定制排序</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>arrayList<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;()</span> <span style="color:#f92672">{</span>
-	<span style="color:#a6e22e">@Override</span>
-	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Integer o1<span style="color:#f92672">,</span> Integer o2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-		<span style="color:#66d9ef">return</span> o2<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>o1<span style="color:#f92672">);</span>    <span style="color:#75715e">// 从小到大排序，变成了从大到小。
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-<span style="color:#f92672">});</span>               <span style="color:#75715e">// 用匿名内部类 重写比较器，定制原生数据类型的比较方法。
-</span></code></pre></div><h4 id="32-重写-compareto-方法实现按年龄来排序">3.2 重写 compareTo 方法实现按年龄来排序</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span>  <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Person<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> age<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Person</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> age<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">super</span><span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> name<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">age</span> <span style="color:#f92672">=</span> age<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-   <span style="color:#75715e">// 重写 compareTo 方法实现按年龄来排序
-</span><span style="color:#75715e"></span>    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Person o<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#75715e">// TODO Auto-generated method stub
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">age</span> <span style="color:#f92672">&gt;</span> o<span style="color:#f92672">.</span><span style="color:#a6e22e">getAge</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">age</span> <span style="color:#f92672">&lt;</span> o<span style="color:#f92672">.</span><span style="color:#a6e22e">getAge</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">return</span> age<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>                     <span style="color:#75715e">// 对于非原生数据类型，需要其实现 comparable 接口，来进行排序。
-</span></code></pre></div><h3 id="4-如何选用集合">4. 如何选用集合?</h3>
-<ul>
+<h4 class="heading-element" id="31-comparator定制排序"><span>3.1 Comparator定制排序</span>
+  <a href="#31-comparator%e5%ae%9a%e5%88%b6%e6%8e%92%e5%ba%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>Collections.<span style="color:#a6e22e">sort</span>(arrayList, <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span>() {
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span>(Integer o1, Integer o2) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> o2.<span style="color:#a6e22e">compareTo</span>(o1);    <span style="color:#75715e">// 从小到大排序，变成了从大到小。</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>});               <span style="color:#f92672">//</span> 用匿名内部类 重写比较器<span style="color:#960050;background-color:#1e0010">，</span>定制原生数据类型的比较方法<span style="color:#960050;background-color:#1e0010">。</span></span></span></code></pre></div><h4 class="heading-element" id="32-重写-compareto-方法实现按年龄来排序"><span>3.2 重写 compareTo 方法实现按年龄来排序</span>
+  <a href="#32-%e9%87%8d%e5%86%99-compareto-%e6%96%b9%e6%b3%95%e5%ae%9e%e7%8e%b0%e6%8c%89%e5%b9%b4%e9%be%84%e6%9d%a5%e6%8e%92%e5%ba%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span>  <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Person</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Person<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> String name;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> age;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Person</span>(String name, <span style="color:#66d9ef">int</span> age) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">super</span>();
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">name</span> <span style="color:#f92672">=</span> name;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">age</span> <span style="color:#f92672">=</span> age;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// 重写 compareTo 方法实现按年龄来排序</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span>(Person o) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// TODO Auto-generated method stub</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">age</span> <span style="color:#f92672">&gt;</span> o.<span style="color:#a6e22e">getAge</span>()) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> 1;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">age</span> <span style="color:#f92672">&lt;</span> o.<span style="color:#a6e22e">getAge</span>()) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> age;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}                     <span style="color:#f92672">//</span> 对于非原生数据类型<span style="color:#960050;background-color:#1e0010">，</span>需要其实现 comparable 接口<span style="color:#960050;background-color:#1e0010">，</span>来进行排序<span style="color:#960050;background-color:#1e0010">。</span></span></span></code></pre></div><h3 class="heading-element" id="4-如何选用集合"><span>4. 如何选用集合?</span>
+  <a href="#4-%e5%a6%82%e4%bd%95%e9%80%89%e7%94%a8%e9%9b%86%e5%90%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><ul>
 <li>主要根据集合的特点来选用，比如我们需要根据键值获取到元素值时就选用 Map 接口下的集合，需要排序时选择 TreeMap，不需要排序时就选择 HashMap，需要保证线程安全就选用 ConcurrentHashMap。</li>
 <li>当我们只需要存放元素值时，就选择实现 Collection 接口的集合，需要保证元素唯一时选择实现 Set 接口的集合比如 TreeSet 或 HashSet，不需要就选择实现 List 接口的比如 ArrayList 或 LinkedList，然后再根据实现这些接口的集合的特点来选用。</li>
 </ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2020-01-02 16:11:47">Updated on 2020-01-02&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/java-collection/" data-title="Java：Collection、Map 集合工具类" data-hashtags="Java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/java-collection/" data-hashtag="Java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/java-collection/" data-title="Java：Collection、Map 集合工具类"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2020/java-collection/>https://hoffmanzheng.github.io/2020/java-collection/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/java/">
-                    #Java</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2019/maven/" class="prev" rel="prev" title="Maven：生命周期、插件及包管理"><i class="iconfont icon-left"></i>&nbsp;Maven：生命周期、插件及包管理</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2020/java-multi-thread/" class="next" rel="next" title="Java：初识多线程、原理及实现">Java：初识多线程、原理及实现&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/java/" class="post-tag" title="Tags - Java">Java</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2019/maven/" class="post-nav-item" rel="prev" title="Maven：生命周期、插件及包管理"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Maven：生命周期、插件及包管理</a><a href="/2020/java-multi-thread/" class="post-nav-item" rel="next" title="Java：初识多线程、原理及实现">Java：初识多线程、原理及实现<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-集合-collection-介绍">1. 集合 Collection 介绍</a></li>
+        <li><a href="#2-list对付顺序的好帮手">2. List：对付顺序的好帮手</a></li>
+        <li><a href="#3-set注重独一无二的性质">3. Set：注重独一无二的性质</a></li>
+        <li><a href="#4-map用key来搜索的专家映射">4. Map：用Key来搜索的专家（映射）</a></li>
+        <li><a href="#5-guava">5. Guava</a></li>
+      </ul>
+    </li>
+  </ul>
 
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#1-arraylistvector-及-linkedlist">1. ArrayList、Vector 及 LinkedList</a>
+          <ul>
+            <li><a href="#11-arraylist-与-linkedlist-区别">1.1 ArrayList 与 LinkedList 区别</a></li>
+            <li><a href="#12-randomaccess-接口">1.2 RandomAccess 接口</a></li>
+            <li><a href="#13-双向链表和双向循环链表">1.3 双向链表和双向循环链表</a></li>
+            <li><a href="#14-arraylist-与-vector-的区别为什么要用-arraylist-取代-vector">1.4 ArrayList 与 Vector 的区别，为什么要用 ArrayList 取代 Vector</a></li>
+            <li><a href="#15-arraylist-的扩容机制">1.5 ArrayList 的扩容机制</a></li>
+          </ul>
+        </li>
+        <li><a href="#2-hashmaphashtable-及-hashset">2. HashMap、HashTable 及 HashSet</a>
+          <ul>
+            <li><a href="#21-hashmap-和-hashtable-的区别">2.1 HashMap 和 Hashtable 的区别</a></li>
+            <li><a href="#22-hashmap-和-hashset区别">2.2 HashMap 和 HashSet区别</a></li>
+            <li><a href="#23-hashset-如何检查重复">2.3 HashSet 如何检查重复</a></li>
+          </ul>
+        </li>
+        <li><a href="#3-comparable-和-comparator的区别">3. comparable 和 Comparator的区别</a>
+          <ul>
+            <li><a href="#31-comparator定制排序">3.1 Comparator定制排序</a></li>
+            <li><a href="#32-重写-compareto-方法实现按年龄来排序">3.2 重写 compareTo 方法实现按年龄来排序</a></li>
+          </ul>
+        </li>
+        <li><a href="#4-如何选用集合">4. 如何选用集合?</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/9ddef4bd84f11f01763670415651fa19.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

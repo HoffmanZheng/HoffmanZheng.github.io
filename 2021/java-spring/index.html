@@ -1,381 +1,325 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2021/database-redis/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2021/ruby-bundler/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2021/java-spring/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           深入解析 Spring 架构与设计 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="深入解析 Spring 架构与设计 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>深入解析 Spring 架构与设计 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="Spring 在 Java 开发中，有着不可替代的作用和地位。Spring 的目标在于让 Java EE 的开发变得更容易，这也意味着 Spring 框架的使用也应该是容易的。相比与 EJB 模型引入的过度的复杂性，Spring 提供了 IoC 容器和 AOP 支持，来降低框架对应用的 侵入性。在处理与现有优秀解决方案的关系时，Spring 不会与这些第三方的解决方案发生竞争，而是致力于为应用提供使用优秀方案的集成平台，真正地把 Spring 定位在应用平台的地位，使得自己成为一个兼容并包的开放体系。
+本篇结合 《Spring技术内幕（第2版）》 从源代码的角度讲解 Spring 的各个主要功能模块的设计和实现原理。
+IoC 容器的实现 如果每个对象都需要靠自身实现去获取它所 依赖 的对象，会引起代码的高度耦合并且难以测试。很多对象并不会经常发生变化，它们之间的相互依赖关系也是比较稳定的，不会随着应用的 运行状态 的改变而改变，这些特性使得这些对象依赖关系的建立和维护可以交由容器来统一完成。
+"><meta name="keywords" content='component'>
+  <meta itemprop="name" content="深入解析 Spring 架构与设计">
+  <meta itemprop="description" content="Spring 在 Java 开发中，有着不可替代的作用和地位。Spring 的目标在于让 Java EE 的开发变得更容易，这也意味着 Spring 框架的使用也应该是容易的。相比与 EJB 模型引入的过度的复杂性，Spring 提供了 IoC 容器和 AOP 支持，来降低框架对应用的 侵入性。在处理与现有优秀解决方案的关系时，Spring 不会与这些第三方的解决方案发生竞争，而是致力于为应用提供使用优秀方案的集成平台，真正地把 Spring 定位在应用平台的地位，使得自己成为一个兼容并包的开放体系。
+本篇结合 《Spring技术内幕（第2版）》 从源代码的角度讲解 Spring 的各个主要功能模块的设计和实现原理。
+IoC 容器的实现 如果每个对象都需要靠自身实现去获取它所 依赖 的对象，会引起代码的高度耦合并且难以测试。很多对象并不会经常发生变化，它们之间的相互依赖关系也是比较稳定的，不会随着应用的 运行状态 的改变而改变，这些特性使得这些对象依赖关系的建立和维护可以交由容器来统一完成。">
+  <meta itemprop="datePublished" content="2021-08-26T13:19:47+01:00">
+  <meta itemprop="dateModified" content="2021-08-26T13:19:47+01:00">
+  <meta itemprop="wordCount" content="546">
+  <meta itemprop="keywords" content="Component"><meta property="og:url" content="https://hoffmanzheng.github.io/2021/java-spring/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="深入解析 Spring 架构与设计">
+  <meta property="og:description" content="Spring 在 Java 开发中，有着不可替代的作用和地位。Spring 的目标在于让 Java EE 的开发变得更容易，这也意味着 Spring 框架的使用也应该是容易的。相比与 EJB 模型引入的过度的复杂性，Spring 提供了 IoC 容器和 AOP 支持，来降低框架对应用的 侵入性。在处理与现有优秀解决方案的关系时，Spring 不会与这些第三方的解决方案发生竞争，而是致力于为应用提供使用优秀方案的集成平台，真正地把 Spring 定位在应用平台的地位，使得自己成为一个兼容并包的开放体系。
+本篇结合 《Spring技术内幕（第2版）》 从源代码的角度讲解 Spring 的各个主要功能模块的设计和实现原理。
+IoC 容器的实现 如果每个对象都需要靠自身实现去获取它所 依赖 的对象，会引起代码的高度耦合并且难以测试。很多对象并不会经常发生变化，它们之间的相互依赖关系也是比较稳定的，不会随着应用的 运行状态 的改变而改变，这些特性使得这些对象依赖关系的建立和维护可以交由容器来统一完成。">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2021-08-26T13:19:47+01:00">
+    <meta property="article:modified_time" content="2021-08-26T13:19:47+01:00">
+    <meta property="article:tag" content="Component">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="深入解析 Spring 架构与设计">
+  <meta name="twitter:description" content="Spring 在 Java 开发中，有着不可替代的作用和地位。Spring 的目标在于让 Java EE 的开发变得更容易，这也意味着 Spring 框架的使用也应该是容易的。相比与 EJB 模型引入的过度的复杂性，Spring 提供了 IoC 容器和 AOP 支持，来降低框架对应用的 侵入性。在处理与现有优秀解决方案的关系时，Spring 不会与这些第三方的解决方案发生竞争，而是致力于为应用提供使用优秀方案的集成平台，真正地把 Spring 定位在应用平台的地位，使得自己成为一个兼容并包的开放体系。
+本篇结合 《Spring技术内幕（第2版）》 从源代码的角度讲解 Spring 的各个主要功能模块的设计和实现原理。
+IoC 容器的实现 如果每个对象都需要靠自身实现去获取它所 依赖 的对象，会引起代码的高度耦合并且难以测试。很多对象并不会经常发生变化，它们之间的相互依赖关系也是比较稳定的，不会随着应用的 运行状态 的改变而改变，这些特性使得这些对象依赖关系的建立和维护可以交由容器来统一完成。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2021/java-spring/" title="深入解析 Spring 架构与设计 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2021/database-redis/" title="Database：Redis 设计与实现" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2021/ruby-bundler/" title="Ruby：版本管理 RVM、Gem 与 Bundler" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "深入解析 Spring 架构与设计",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "深入解析 Spring 架构与设计",
-    "headline" : "深入解析 Spring 架构与设计",
-    "description" : "Spring 在 Java 开发中，有着不可替代的作用和地位。Spring 的目标在于让 Java EE 的开发变得更容易，这也意味着 Spring 框架的使用也应该是容易的。相比与 EJB 模型引入的过度的复杂性，Spring 提供了 IoC 容器和 AOP 支持，来降低框架对应用的 侵入性。在处理与现有优秀解决方案的关系时，Spring 不会与这些第三方的解决方案发生竞争，而是致力于为应用提供使用优秀方案的集成平台，真正地把 Spring 定位在应用平台的地位，使得自己成为一个兼容并包的开放体系。\n本篇结合 《Spring技术内幕（第2版）》 从源代码的角度讲解 Spring 的各个主要功能模块的设计和实现原理。\nIoC 容器的实现 如果每个对象都需要靠自身实现去获取它所 依赖 的对象，会引起代码的高度耦合并且难以测试。很多对象并不会经常发生变化，它们之间的相互依赖关系也是比较稳定的，不会随着应用的 运行状态 的改变而改变，这些特性使得这些对象依赖关系的建立和维护可以交由容器来统一完成。\nIoC 容器的出现使得对象的依赖注入可以从代码中 解耦 出来，把对依赖的 控制权 从具体业务对象手中转交到平台或者框架中，有效地解决了面对对象系统设计的复杂性和系统的可测试性。\nBeanFactory 对 IoC 容器的功能定义 以 BeanFactory 的实现类 XmlBeanFactory 为例，它继承了 DefaultListableBeanFactory 并在其基础上增加了功能，从名字上可以猜到，它是一个可以读取以 XML 文件方式定义的 BeanDefinition（管理了对象之间的相互依赖关系） 的 IoC 容器。\nDefaultListableBeanFactory 是一个很重要的 IoC 实现，其他的 IoC 容器比如 ApplicationContext，也是通过持有或者扩展 DefaultListableBeanFactory 来获得基本的 IoC 容器的功能的。BeanDefinition 的信息来源被封装在 Resource 中，对 XML 文件定义信息的具体处理又委托给了 XmlBeanDefinitionReader 来实现。它们间相互关系的伪代码如下：",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2021",
-    "datePublished": "2021-08-26 13:19:47 \u002b0100 \u002b0100",
-    "dateModified" : "2021-08-26 13:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2021\/java-spring\/",
-    "wordCount" : "549",
-    "keywords" : [ "component", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2021\/java-spring\/"
+    },"genre": "posts","keywords": "component","wordcount":  546 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2021\/java-spring\/","datePublished": "2021-08-26T13:19:47+01:00","dateModified": "2021-08-26T13:19:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>深入解析 Spring 架构与设计</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/reading-notes/" class="post-category" title="Category - Reading Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Reading Notes</a></span></div><div class="post-meta-line"><span title="published on 2021-08-26 13:19:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2021-08-26">2021-08-26</time></span>&nbsp;<span title="546 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 600 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>3 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">深入解析 Spring 架构与设计</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2021-08-26 itemprop="datePublished">August 26, 2021</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/reading-notes/"> Reading notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,549 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
-
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p><a href="https://spring.io/">Spring</a> 在 Java 开发中，有着不可替代的作用和地位。Spring 的目标在于让 Java EE 的开发变得更容易，这也意味着 Spring 框架的使用也应该是容易的。相比与 EJB 模型引入的过度的复杂性，Spring 提供了 IoC 容器和 AOP 支持，来降低框架对应用的 <strong>侵入性</strong>。在处理与现有优秀解决方案的关系时，Spring 不会与这些第三方的解决方案发生竞争，而是致力于为应用提供使用优秀方案的集成平台，真正地把 Spring 定位在应用平台的地位，使得自己成为一个兼容并包的开放体系。</p>
-<p>本篇结合 <a href="https://book.douban.com/subject/10470970/">《Spring技术内幕（第2版）》</a> 从源代码的角度讲解 Spring 的各个主要功能模块的设计和实现原理。</p>
-<h3 id="ioc-容器的实现">IoC 容器的实现</h3>
-<p>如果每个对象都需要靠自身实现去获取它所 <strong>依赖</strong> 的对象，会引起代码的高度耦合并且难以测试。很多对象并不会经常发生变化，它们之间的相互依赖关系也是比较稳定的，不会随着应用的 <strong>运行状态</strong> 的改变而改变，这些特性使得这些对象依赖关系的建立和维护可以交由容器来统一完成。</p>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#ioc-容器的实现">IoC 容器的实现</a>
+          <ul>
+            <li><a href="#beanfactory-对-ioc-容器的功能定义">BeanFactory 对 IoC 容器的功能定义</a></li>
+            <li><a href="#ioc-容器的初始化">IoC 容器的初始化</a></li>
+            <li><a href="#ioc-容器的依赖注入">IoC 容器的依赖注入</a></li>
+            <li><a href="#容器的其他特性">容器的其他特性</a></li>
+          </ul>
+        </li>
+        <li><a href="#spring-aop-的实现">Spring AOP 的实现</a></li>
+        <li><a href="#spring-mvc-与-web-环境">Spring MVC 与 Web 环境</a></li>
+        <li><a href="#数据库操作组件的实现">数据库操作组件的实现</a></li>
+        <li><a href="#spring-事务处理的实现">Spring 事务处理的实现</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p><a href="https://spring.io/" target="_blank" rel="external nofollow noopener noreferrer">Spring</a> 在 Java 开发中，有着不可替代的作用和地位。Spring 的目标在于让 Java EE 的开发变得更容易，这也意味着 Spring 框架的使用也应该是容易的。相比与 EJB 模型引入的过度的复杂性，Spring 提供了 IoC 容器和 AOP 支持，来降低框架对应用的 <strong>侵入性</strong>。在处理与现有优秀解决方案的关系时，Spring 不会与这些第三方的解决方案发生竞争，而是致力于为应用提供使用优秀方案的集成平台，真正地把 Spring 定位在应用平台的地位，使得自己成为一个兼容并包的开放体系。</p>
+<p>本篇结合 <a href="https://book.douban.com/subject/10470970/" target="_blank" rel="external nofollow noopener noreferrer">《Spring技术内幕（第2版）》</a> 从源代码的角度讲解 Spring 的各个主要功能模块的设计和实现原理。</p>
+<h3 class="heading-element" id="ioc-容器的实现"><span>IoC 容器的实现</span>
+  <a href="#ioc-%e5%ae%b9%e5%99%a8%e7%9a%84%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>如果每个对象都需要靠自身实现去获取它所 <strong>依赖</strong> 的对象，会引起代码的高度耦合并且难以测试。很多对象并不会经常发生变化，它们之间的相互依赖关系也是比较稳定的，不会随着应用的 <strong>运行状态</strong> 的改变而改变，这些特性使得这些对象依赖关系的建立和维护可以交由容器来统一完成。</p>
 <p>IoC 容器的出现使得对象的依赖注入可以从代码中 <strong>解耦</strong> 出来，把对依赖的 <strong>控制权</strong> 从具体业务对象手中转交到平台或者框架中，有效地解决了面对对象系统设计的复杂性和系统的可测试性。</p>
-<h4 id="beanfactory-对-ioc-容器的功能定义">BeanFactory 对 IoC 容器的功能定义</h4>
-<p>以 BeanFactory 的实现类 <code>XmlBeanFactory</code> 为例，它继承了 DefaultListableBeanFactory 并在其基础上增加了功能，从名字上可以猜到，它是一个可以读取以 XML 文件方式定义的 <code>BeanDefinition</code>（管理了对象之间的相互依赖关系） 的 IoC 容器。</p>
-<p><img src="/images/XmlBeanFactory.png" alt=""></p>
+<h4 class="heading-element" id="beanfactory-对-ioc-容器的功能定义"><span>BeanFactory 对 IoC 容器的功能定义</span>
+  <a href="#beanfactory-%e5%af%b9-ioc-%e5%ae%b9%e5%99%a8%e7%9a%84%e5%8a%9f%e8%83%bd%e5%ae%9a%e4%b9%89" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>以 BeanFactory 的实现类 <code>XmlBeanFactory</code> 为例，它继承了 DefaultListableBeanFactory 并在其基础上增加了功能，从名字上可以猜到，它是一个可以读取以 XML 文件方式定义的 <code>BeanDefinition</code>（管理了对象之间的相互依赖关系） 的 IoC 容器。</p>
+<p><img loading="lazy" src='/images/XmlBeanFactory.png' alt="/images/XmlBeanFactory.png"></p>
 <p><code>DefaultListableBeanFactory</code> 是一个很重要的 IoC 实现，其他的 IoC 容器比如 ApplicationContext，也是通过持有或者扩展 DefaultListableBeanFactory 来获得基本的 IoC 容器的功能的。BeanDefinition 的信息来源被封装在 <code>Resource</code> 中，对 XML 文件定义信息的具体处理又委托给了 <code>XmlBeanDefinitionReader</code> 来实现。它们间相互关系的伪代码如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ClassPathResource res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassPathResource<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;beans.xml&#34;</span><span style="color:#f92672">);</span>    <span style="color:#75715e">// IoC 配置文件的抽象资源
-</span><span style="color:#75715e"></span>DefaultListableBeanFactory factory <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DefaultListableBeanFactory<span style="color:#f92672">();</span>
-XmlBeanDefinitionReader reader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> XmlBeanDefinitionReader<span style="color:#f92672">(</span>factory<span style="color:#f92672">);</span>  <span style="color:#75715e">// BeanDefinition 读取器
-</span><span style="color:#75715e"></span>reader<span style="color:#f92672">.</span><span style="color:#a6e22e">loadBeanDefinitions</span><span style="color:#f92672">(</span>res<span style="color:#f92672">);</span>  <span style="color:#75715e">// 载入和注册 Bean
-</span></code></pre></div><p><code>ApplicationContext</code> 是一个高级形态意义的 IoC 容器，它除了提供 BeanFactory 的基本功能外，还为用户提供了附加服务，比如支持不同的信息源（国际化），支持不同的访问资源，支持应用事件。这些丰富的附加功能，使得 ApplicationContext 以一种更加面向框架的方式工作以及对上下文进行分层和实现继承。</p>
-<h4 id="ioc-容器的初始化">IoC 容器的初始化</h4>
-<p>IoC 容器的初始化（一般不包含 Bean 依赖注入的实现）包括 BeanDefinition 的 Resouce 定位、载入和注册这三个基本的过程。值得注意的是，Spring在实现中是把这三个过程分开并使用不同的模块来完成的，这样可以让用户更加灵活地对这三个过程进行剪裁和扩展。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>ClassPathResource res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassPathResource(<span style="color:#e6db74">&#34;beans.xml&#34;</span>);    <span style="color:#75715e">// IoC 配置文件的抽象资源</span>
+</span></span><span style="display:flex;"><span>DefaultListableBeanFactory factory <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DefaultListableBeanFactory();
+</span></span><span style="display:flex;"><span>XmlBeanDefinitionReader reader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> XmlBeanDefinitionReader(factory);  <span style="color:#75715e">// BeanDefinition 读取器</span>
+</span></span><span style="display:flex;"><span>reader.<span style="color:#a6e22e">loadBeanDefinitions</span>(res);  <span style="color:#f92672">//</span> 载入和注册 Bean</span></span></code></pre></div><p><code>ApplicationContext</code> 是一个高级形态意义的 IoC 容器，它除了提供 BeanFactory 的基本功能外，还为用户提供了附加服务，比如支持不同的信息源（国际化），支持不同的访问资源，支持应用事件。这些丰富的附加功能，使得 ApplicationContext 以一种更加面向框架的方式工作以及对上下文进行分层和实现继承。</p>
+<h4 class="heading-element" id="ioc-容器的初始化"><span>IoC 容器的初始化</span>
+  <a href="#ioc-%e5%ae%b9%e5%99%a8%e7%9a%84%e5%88%9d%e5%a7%8b%e5%8c%96" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>IoC 容器的初始化（一般不包含 Bean 依赖注入的实现）包括 BeanDefinition 的 Resouce 定位、载入和注册这三个基本的过程。值得注意的是，Spring在实现中是把这三个过程分开并使用不同的模块来完成的，这样可以让用户更加灵活地对这三个过程进行剪裁和扩展。</p>
 <p>以 <code>ClassPathXmlApplicationContext</code> 为例，它通过继承 DefaultResourceLoader 具备了读入 Resource 的能力，在构造函数中通过 <code>refresh</code> 来启动 IoC 容器的初始化：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ClassPathXmlApplicationContext</span> <span style="color:#66d9ef">extends</span> AbstractXmlApplicationContext <span style="color:#f92672">{</span>
-    <span style="color:#f92672">...</span>
-    <span style="color:#75715e">// configLocations 支持一个或多个 BeanDefinition 所在的文件路径
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 还允许指定自己的双亲 IoC 容器
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// 在对象的初始化过程中，调用 refresh 函数，启动了 BeanDefinition 的载入过程（后文分析）
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ClassPathXmlApplicationContext</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> configLocations<span style="color:#f92672">,</span> 
-        <span style="color:#66d9ef">boolean</span> refresh<span style="color:#f92672">,</span> <span style="color:#a6e22e">@Nullable</span> ApplicationContext parent<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> BeansException <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">);</span>
-        setConfigLocations<span style="color:#f92672">(</span>configLocations<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>refresh<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            refresh<span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    
-    <span style="color:#75715e">// clazz - 加载资源的类（基于给定路径）
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ClassPathXmlApplicationContext</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> paths<span style="color:#f92672">,</span> Class<span style="color:#f92672">&lt;?&gt;</span> clazz<span style="color:#f92672">,</span> 
-        <span style="color:#a6e22e">@Nullable</span> ApplicationContext parent<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> BeansException <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">);</span>
-        Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">notNull</span><span style="color:#f92672">(</span>paths<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Path array must not be null&#34;</span><span style="color:#f92672">);</span>
-        Assert<span style="color:#f92672">.</span><span style="color:#a6e22e">notNull</span><span style="color:#f92672">(</span>clazz<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Class argument must not be null&#34;</span><span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">configResources</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Resource<span style="color:#f92672">[</span>paths<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> paths<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">configResources</span><span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassPathResource<span style="color:#f92672">(</span>paths<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> clazz<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-        refresh<span style="color:#f92672">();</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#f92672">...</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>AbstractApplicationContext 中的 refresh 函数会触发整个 BeanDefinition 的载入过程，然后调用  AbstractRefreshableApplicationContext 实现的 <code>refreshBeanFactory</code> ，最后委托给 XmlBeanDefinitionReader 执行 <code>loadBeanDefinitions</code>，具体的流程见下图：</p>
-<p><img src="/images/spring-refreshBeanFactory.png" alt=""></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ClassPathXmlApplicationContext</span> <span style="color:#66d9ef">extends</span> AbstractXmlApplicationContext {
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// configLocations 支持一个或多个 BeanDefinition 所在的文件路径</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 还允许指定自己的双亲 IoC 容器</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 在对象的初始化过程中，调用 refresh 函数，启动了 BeanDefinition 的载入过程（后文分析）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ClassPathXmlApplicationContext</span>(String<span style="color:#f92672">[]</span> configLocations, 
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">boolean</span> refresh, <span style="color:#a6e22e">@Nullable</span> ApplicationContext parent) <span style="color:#66d9ef">throws</span> BeansException {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">super</span>(parent);
+</span></span><span style="display:flex;"><span>        setConfigLocations(configLocations);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (refresh) {
+</span></span><span style="display:flex;"><span>            refresh();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// clazz - 加载资源的类（基于给定路径）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ClassPathXmlApplicationContext</span>(String<span style="color:#f92672">[]</span> paths, Class<span style="color:#f92672">&lt;?&gt;</span> clazz, 
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Nullable</span> ApplicationContext parent) <span style="color:#66d9ef">throws</span> BeansException {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">super</span>(parent);
+</span></span><span style="display:flex;"><span>        Assert.<span style="color:#a6e22e">notNull</span>(paths, <span style="color:#e6db74">&#34;Path array must not be null&#34;</span>);
+</span></span><span style="display:flex;"><span>        Assert.<span style="color:#a6e22e">notNull</span>(clazz, <span style="color:#e6db74">&#34;Class argument must not be null&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">configResources</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Resource<span style="color:#f92672">[</span>paths.<span style="color:#a6e22e">length</span><span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> paths.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">configResources</span><span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassPathResource(paths<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>, clazz);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        refresh();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>AbstractApplicationContext 中的 refresh 函数会触发整个 BeanDefinition 的载入过程，然后调用  AbstractRefreshableApplicationContext 实现的 <code>refreshBeanFactory</code> ，最后委托给 XmlBeanDefinitionReader 执行 <code>loadBeanDefinitions</code>，具体的流程见下图：</p>
+<p><img loading="lazy" src='/images/spring-refreshBeanFactory.png' alt="/images/spring-refreshBeanFactory.png"></p>
 <p>通过代码看一下容器初始化的具体实现：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// AbstractRefreshableApplicationContext
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">refreshBeanFactory</span><span style="color:#f92672">()</span> <span style="color:#66d9ef">throws</span> BeansException <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>hasBeanFactory<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>  <span style="color:#75715e">// shutting down the previous bean factory (if any)
-</span><span style="color:#75715e"></span>        destroyBeans<span style="color:#f92672">();</span>
-        closeBeanFactory<span style="color:#f92672">();</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-        <span style="color:#75715e">// initializing a fresh bean factory
-</span><span style="color:#75715e"></span>        DefaultListableBeanFactory beanFactory <span style="color:#f92672">=</span> createBeanFactory<span style="color:#f92672">();</span> 
-        beanFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">setSerializationId</span><span style="color:#f92672">(</span>getId<span style="color:#f92672">());</span>
-        customizeBeanFactory<span style="color:#f92672">(</span>beanFactory<span style="color:#f92672">);</span>
-        <span style="color:#75715e">// 调用 loadBeanDefinitions 载入 BeanDefinition 的信息
-</span><span style="color:#75715e"></span>        loadBeanDefinitions<span style="color:#f92672">(</span>beanFactory<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">synchronized</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">beanFactoryMonitor</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">beanFactory</span> <span style="color:#f92672">=</span> beanFactory<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> ApplicationContextException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;I/O error parsing bean definition source for &#34;</span> <span style="color:#f92672">+</span> getDisplayName<span style="color:#f92672">(),</span> ex<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">// loadBeanDefinitions 通过一个抽象函数把具体的实现委托给子类来完成
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loadBeanDefinitions</span><span style="color:#f92672">(</span>DefaultListableBeanFactory beanFactory<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> BeansException<span style="color:#f92672">,</span> IOException<span style="color:#f92672">;</span>
-
-<span style="color:#75715e">// AbstractXmlApplicationContext
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loadBeanDefinitions</span><span style="color:#f92672">(</span>DefaultListableBeanFactory beanFactory<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> BeansException<span style="color:#f92672">,</span> IOException <span style="color:#f92672">{</span>
-    <span style="color:#75715e">// Create a new XmlBeanDefinitionReader for the given BeanFactory.
-</span><span style="color:#75715e"></span>    XmlBeanDefinitionReader beanDefinitionReader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> XmlBeanDefinitionReader<span style="color:#f92672">(</span>beanFactory<span style="color:#f92672">);</span>
-
-    <span style="color:#75715e">// Configure the bean definition reader with this context&#39;s resource loading environment.
-</span><span style="color:#75715e"></span>    beanDefinitionReader<span style="color:#f92672">.</span><span style="color:#a6e22e">setEnvironment</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getEnvironment</span><span style="color:#f92672">());</span>
-    beanDefinitionReader<span style="color:#f92672">.</span><span style="color:#a6e22e">setResourceLoader</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
-    beanDefinitionReader<span style="color:#f92672">.</span><span style="color:#a6e22e">setEntityResolver</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ResourceEntityResolver<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">));</span>
-
-    <span style="color:#75715e">// Allow a subclass to provide custom initialization of the reader,
-</span><span style="color:#75715e"></span>    <span style="color:#75715e">// then proceed with actually loading the bean definitions.
-</span><span style="color:#75715e"></span>    initBeanDefinitionReader<span style="color:#f92672">(</span>beanDefinitionReader<span style="color:#f92672">);</span>
-    loadBeanDefinitions<span style="color:#f92672">(</span>beanDefinitionReader<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loadBeanDefinitions</span><span style="color:#f92672">(</span>XmlBeanDefinitionReader reader<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> BeansException<span style="color:#f92672">,</span> IOException <span style="color:#f92672">{</span>
-    <span style="color:#75715e">// 获取需要的 Rescource 集合或者配置文件集合，使用 reader 去解析文件
-</span><span style="color:#75715e"></span>    Resource<span style="color:#f92672">[]</span> configResources <span style="color:#f92672">=</span> getConfigResources<span style="color:#f92672">();</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>configResources <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        reader<span style="color:#f92672">.</span><span style="color:#a6e22e">loadBeanDefinitions</span><span style="color:#f92672">(</span>configResources<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-    String<span style="color:#f92672">[]</span> configLocations <span style="color:#f92672">=</span> getConfigLocations<span style="color:#f92672">();</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>configLocations <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        reader<span style="color:#f92672">.</span><span style="color:#a6e22e">loadBeanDefinitions</span><span style="color:#f92672">(</span>configLocations<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><p>Spring 可以处理不同形式的 BeanDefinition，由于这里使用的是XML方式的定义，所以需要使用XmlBeanDefinitionReader。接下来看一下 BeanDefinition 的具体解析和载入过程：</p>
-<p><img src="/images/spring-loadBeanDefinition.png" alt=""></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">// AbstractRefreshableApplicationContext</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">refreshBeanFactory</span>() <span style="color:#66d9ef">throws</span> BeansException {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (hasBeanFactory()) {  <span style="color:#75715e">// shutting down the previous bean factory (if any)</span>
+</span></span><span style="display:flex;"><span>        destroyBeans();
+</span></span><span style="display:flex;"><span>        closeBeanFactory();
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// initializing a fresh bean factory</span>
+</span></span><span style="display:flex;"><span>        DefaultListableBeanFactory beanFactory <span style="color:#f92672">=</span> createBeanFactory(); 
+</span></span><span style="display:flex;"><span>        beanFactory.<span style="color:#a6e22e">setSerializationId</span>(getId());
+</span></span><span style="display:flex;"><span>        customizeBeanFactory(beanFactory);
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// 调用 loadBeanDefinitions 载入 BeanDefinition 的信息</span>
+</span></span><span style="display:flex;"><span>        loadBeanDefinitions(beanFactory);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">synchronized</span> (<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">beanFactoryMonitor</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">beanFactory</span> <span style="color:#f92672">=</span> beanFactory;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">catch</span> (IOException ex) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> ApplicationContextException(<span style="color:#e6db74">&#34;I/O error parsing bean definition source for &#34;</span> <span style="color:#f92672">+</span> getDisplayName(), ex);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// loadBeanDefinitions 通过一个抽象函数把具体的实现委托给子类来完成</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">abstract</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loadBeanDefinitions</span>(DefaultListableBeanFactory beanFactory) <span style="color:#66d9ef">throws</span> BeansException, IOException;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// AbstractXmlApplicationContext</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loadBeanDefinitions</span>(DefaultListableBeanFactory beanFactory) <span style="color:#66d9ef">throws</span> BeansException, IOException {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Create a new XmlBeanDefinitionReader for the given BeanFactory.</span>
+</span></span><span style="display:flex;"><span>    XmlBeanDefinitionReader beanDefinitionReader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> XmlBeanDefinitionReader(beanFactory);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Configure the bean definition reader with this context&#39;s resource loading environment.</span>
+</span></span><span style="display:flex;"><span>    beanDefinitionReader.<span style="color:#a6e22e">setEnvironment</span>(<span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">getEnvironment</span>());
+</span></span><span style="display:flex;"><span>    beanDefinitionReader.<span style="color:#a6e22e">setResourceLoader</span>(<span style="color:#66d9ef">this</span>);
+</span></span><span style="display:flex;"><span>    beanDefinitionReader.<span style="color:#a6e22e">setEntityResolver</span>(<span style="color:#66d9ef">new</span> ResourceEntityResolver(<span style="color:#66d9ef">this</span>));
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Allow a subclass to provide custom initialization of the reader,</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// then proceed with actually loading the bean definitions.</span>
+</span></span><span style="display:flex;"><span>    initBeanDefinitionReader(beanDefinitionReader);
+</span></span><span style="display:flex;"><span>    loadBeanDefinitions(beanDefinitionReader);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loadBeanDefinitions</span>(XmlBeanDefinitionReader reader) <span style="color:#66d9ef">throws</span> BeansException, IOException {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 获取需要的 Rescource 集合或者配置文件集合，使用 reader 去解析文件</span>
+</span></span><span style="display:flex;"><span>    Resource<span style="color:#f92672">[]</span> configResources <span style="color:#f92672">=</span> getConfigResources();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (configResources <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>        reader.<span style="color:#a6e22e">loadBeanDefinitions</span>(configResources);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    String<span style="color:#f92672">[]</span> configLocations <span style="color:#f92672">=</span> getConfigLocations();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (configLocations <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>        reader.<span style="color:#a6e22e">loadBeanDefinitions</span>(configLocations);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><p>Spring 可以处理不同形式的 BeanDefinition，由于这里使用的是XML方式的定义，所以需要使用XmlBeanDefinitionReader。接下来看一下 BeanDefinition 的具体解析和载入过程：</p>
+<p><img loading="lazy" src='/images/spring-loadBeanDefinition.png' alt="/images/spring-loadBeanDefinition.png"></p>
 <p>AbstractBeanDefinitionReader 会委托 <code>ResourceLoader</code> 来获取 BeanDefinition 的 Resource，
 随后调用的 <code>loadBeanDefinitions(Resource res)</code> 在 BeanDefinitionReader 中是一个接口方法，
 具体的实现在 XmlBeanDefinitionReader 中。这个 Resource 对象封装了对 XML文件的 IO 操作，
 读取器会在读取后委托 DefaultDocumentLoader 执行 <strong>通用的 XML 解析</strong> 获取 Document 对象，
 随后在 registerBeanDefinitions(doc, resource) 中就可以按照 Spring 的 Bean 定义规则来对这个 XML 的文档树进行解析并转化为容器内部的数据结构了（这一步实现委托给了 DefaultBeanDefinitionDocumentReader）。</p>
 <p>具体的 Spring BeanDefinition 的解析是在 <code>BeanDefinitionParserDelegate</code> 中完成的，这个类里包含了各种 Spring Bean 定义规则的处理。id、name、aliase 等属性元素的值会被从 XML 文件相应的元素的属性中读取出来，然后被设置到生成的 <code>BeanDefinitionHolder</code> 中去，其他的属性比如 beanClass、description、lazyInit 等也会在这里被处理。经过逐层地解析，在 XML 文件中定义的 BeanDefinition 就被整个给载入到了 IoC 容器中，并在容器中建立了数据映射。IoC 容器至此大致完成了管理 Bean 对象的 <strong>数据准备</strong> 工作（或者说是初始化过程）。但是重要的依赖注入实际上在这个时候还没有发生，要完全发挥容器的作用，还需完成数据向容器的注册。</p>
-<p><img src="/images/spring-BeanDefinitionReader.png" alt=""></p>
+<p><img loading="lazy" src='/images/spring-BeanDefinitionReader.png' alt="/images/spring-BeanDefinitionReader.png"></p>
 <p>向容器中注册 Bean 即是将 beanName 与 BeanDefinition 的映射关系写入到 DefaultListableBeanFactory 内部的哈希表中。如果遇到同名的 BeanDefinition，进行处理的时候需要依据 allowBeanDefinitionOverriding 的配置来完成。完成注册后，BeanDefinition 就可以被容器使用了，这些信息是容易建立依赖反转的基础。</p>
-<h4 id="ioc-容器的依赖注入">IoC 容器的依赖注入</h4>
-<p>依赖注入的过程通常是用户第一次向 IoC 容器索要 Bean 时触发的，也就是 BeanFactory 的 getBean
+<h4 class="heading-element" id="ioc-容器的依赖注入"><span>IoC 容器的依赖注入</span>
+  <a href="#ioc-%e5%ae%b9%e5%99%a8%e7%9a%84%e4%be%9d%e8%b5%96%e6%b3%a8%e5%85%a5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>依赖注入的过程通常是用户第一次向 IoC 容器索要 Bean 时触发的，也就是 BeanFactory 的 getBean
 接口，其具体实现在 AbstractBeanFactory 中：</p>
-<p><img src="/images/spring-getBean.png" alt=""></p>
+<p><img loading="lazy" src='/images/spring-getBean.png' alt="/images/spring-getBean.png"></p>
 <p>对于 IoC 容器的使用，Spring 提供了许多参数的配置，每一个参数配置实际上代表了一个 IoC
 容器的实现特性，这些特性的实现很多都需要在依赖注入的过程中或者对 Bean
 进行生命周期管理的过程中来完成</p>
 <p>createBean 不但生成了需要的 Bean，还对 Bean 初始化进行了处理，比如实现了在 BeanDefinition
 中的 init-method 属性定义，Bean 后置处理器的实现，等等</p>
-<h4 id="容器的其他特性">容器的其他特性</h4>
-<h3 id="spring-aop-的实现">Spring AOP 的实现</h3>
-<h3 id="spring-mvc-与-web-环境">Spring MVC 与 Web 环境</h3>
-<h3 id="数据库操作组件的实现">数据库操作组件的实现</h3>
-<h3 id="spring-事务处理的实现">Spring 事务处理的实现</h3>
+<h4 class="heading-element" id="容器的其他特性"><span>容器的其他特性</span>
+  <a href="#%e5%ae%b9%e5%99%a8%e7%9a%84%e5%85%b6%e4%bb%96%e7%89%b9%e6%80%a7" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><h3 class="heading-element" id="spring-aop-的实现"><span>Spring AOP 的实现</span>
+  <a href="#spring-aop-%e7%9a%84%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h3 class="heading-element" id="spring-mvc-与-web-环境"><span>Spring MVC 与 Web 环境</span>
+  <a href="#spring-mvc-%e4%b8%8e-web-%e7%8e%af%e5%a2%83" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h3 class="heading-element" id="数据库操作组件的实现"><span>数据库操作组件的实现</span>
+  <a href="#%e6%95%b0%e6%8d%ae%e5%ba%93%e6%93%8d%e4%bd%9c%e7%bb%84%e4%bb%b6%e7%9a%84%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h3 class="heading-element" id="spring-事务处理的实现"><span>Spring 事务处理的实现</span>
+  <a href="#spring-%e4%ba%8b%e5%8a%a1%e5%a4%84%e7%90%86%e7%9a%84%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3></div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2021-08-26 13:19:47">Updated on 2021-08-26&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2021/java-spring/" data-title="深入解析 Spring 架构与设计" data-hashtags="component"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2021/java-spring/" data-hashtag="component"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2021/java-spring/" data-title="深入解析 Spring 架构与设计"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2021/java-spring/>https://hoffmanzheng.github.io/2021/java-spring/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/component/">
-                    #component</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2021/database-redis/" class="prev" rel="prev" title="Database：Redis 设计与实现"><i class="iconfont icon-left"></i>&nbsp;Database：Redis 设计与实现</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2021/ruby-bundler/" class="next" rel="next" title="Ruby：版本管理 RVM、Gem 与 Bundler">Ruby：版本管理 RVM、Gem 与 Bundler&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/component/" class="post-tag" title="Tags - Component">Component</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2021/database-redis/" class="post-nav-item" rel="prev" title="Database：Redis 设计与实现"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Database：Redis 设计与实现</a><a href="/2021/ruby-bundler/" class="post-nav-item" rel="next" title="Ruby：版本管理 RVM、Gem 与 Bundler">Ruby：版本管理 RVM、Gem 与 Bundler<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#ioc-容器的实现">IoC 容器的实现</a>
+          <ul>
+            <li><a href="#beanfactory-对-ioc-容器的功能定义">BeanFactory 对 IoC 容器的功能定义</a></li>
+            <li><a href="#ioc-容器的初始化">IoC 容器的初始化</a></li>
+            <li><a href="#ioc-容器的依赖注入">IoC 容器的依赖注入</a></li>
+            <li><a href="#容器的其他特性">容器的其他特性</a></li>
+          </ul>
+        </li>
+        <li><a href="#spring-aop-的实现">Spring AOP 的实现</a></li>
+        <li><a href="#spring-mvc-与-web-环境">Spring MVC 与 Web 环境</a></li>
+        <li><a href="#数据库操作组件的实现">数据库操作组件的实现</a></li>
+        <li><a href="#spring-事务处理的实现">Spring 事务处理的实现</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/a14a07d30fbf9a92e7213868d2b13148.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

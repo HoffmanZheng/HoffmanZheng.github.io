@@ -1,165 +1,164 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2020/database-optimize-sql/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2021/database-innodb/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/advanced-git/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           Git 进阶与 GitHub 协作详解 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="Git 进阶与 GitHub 协作详解 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Git 进阶与 GitHub 协作详解 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="在 Git 与 GitHub 使用指北 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 Git Reference Manual 介绍一些 Git 底层原理和高阶操作，以及在 GitHub 协作的流程。
+Git 进阶 仓库、提交、分支的本质 Repository Git 仓库的本质其实就是一个可以 追溯所有历史 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 commitID， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 / 副本 / 代码快照，所以仓库的本质即是所有这些快照的集合。
+"><meta name="keywords" content='tools'>
+  <meta itemprop="name" content="Git 进阶与 GitHub 协作详解">
+  <meta itemprop="description" content="在 Git 与 GitHub 使用指北 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 Git Reference Manual 介绍一些 Git 底层原理和高阶操作，以及在 GitHub 协作的流程。
+Git 进阶 仓库、提交、分支的本质 Repository Git 仓库的本质其实就是一个可以 追溯所有历史 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 commitID， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 / 副本 / 代码快照，所以仓库的本质即是所有这些快照的集合。">
+  <meta itemprop="datePublished" content="2020-12-28T13:19:47+01:00">
+  <meta itemprop="dateModified" content="2020-12-28T13:19:47+01:00">
+  <meta itemprop="wordCount" content="774">
+  <meta itemprop="keywords" content="Tools"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/advanced-git/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="Git 进阶与 GitHub 协作详解">
+  <meta property="og:description" content="在 Git 与 GitHub 使用指北 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 Git Reference Manual 介绍一些 Git 底层原理和高阶操作，以及在 GitHub 协作的流程。
+Git 进阶 仓库、提交、分支的本质 Repository Git 仓库的本质其实就是一个可以 追溯所有历史 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 commitID， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 / 副本 / 代码快照，所以仓库的本质即是所有这些快照的集合。">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-12-28T13:19:47+01:00">
+    <meta property="article:modified_time" content="2020-12-28T13:19:47+01:00">
+    <meta property="article:tag" content="Tools">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Git 进阶与 GitHub 协作详解">
+  <meta name="twitter:description" content="在 Git 与 GitHub 使用指北 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 Git Reference Manual 介绍一些 Git 底层原理和高阶操作，以及在 GitHub 协作的流程。
+Git 进阶 仓库、提交、分支的本质 Repository Git 仓库的本质其实就是一个可以 追溯所有历史 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 commitID， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 / 副本 / 代码快照，所以仓库的本质即是所有这些快照的集合。">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/advanced-git/" title="Git 进阶与 GitHub 协作详解 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2020/database-optimize-sql/" title="Database：高性能 MySQL - 优化查询" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2021/database-innodb/" title="Database：InnoDB 存储引擎" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Git 进阶与 GitHub 协作详解",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "Git 进阶与 GitHub 协作详解",
-    "headline" : "Git 进阶与 GitHub 协作详解",
-    "description" : "在 Git 与 GitHub 使用指北 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 Git Reference Manual 介绍一些 Git 底层原理和高阶操作，以及在 GitHub 协作的流程。\nGit 进阶 仓库、提交、分支的本质 Repository Git 仓库的本质其实就是一个可以 追溯所有历史 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 commitID， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 \/ 副本 \/ 代码快照，所以仓库的本质即是所有这些快照的集合。\n可以通过 git log 来查看仓库历史上的状态，然后使用 git checkout \u0026lt;commitID\u0026gt; 来使仓库恢复到某个状态。在 GitHub 网站上可以使用 https:\/\/github.com\/\u0026lt;userName\u0026gt;\/\u0026lt;repositoryName\u0026gt;\/tree\/\u0026lt;commitID\/tag\/branch\u0026gt; 看到这个仓库在某个时刻的状态。\n以下几种方式都可以标识仓库的状态：\n 提交的 commitID，是一个十六进制字符串的 SHA-1 分支名 branch，指向分支最新一次的提交 HEAD，指向当前分支的头 标签 tag，是针对某个仓库状态打的标签，git tag v1.0   相关阅读：GeeksforGeeks：What is a GIT Repository?\n Commit commit 提交是指将仓库从一个状态转移到另外一个状态时发生的变化，它产生的 commit 对象包括：",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2020",
-    "datePublished": "2020-12-28 13:19:47 \u002b0100 \u002b0100",
-    "dateModified" : "2020-12-28 13:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/advanced-git\/",
-    "wordCount" : "778",
-    "keywords" : [ "tools", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/advanced-git\/"
+    },"genre": "posts","keywords": "tools","wordcount":  774 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2020\/advanced-git\/","datePublished": "2020-12-28T13:19:47+01:00","dateModified": "2020-12-28T13:19:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Git 进阶与 GitHub 协作详解</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/study-notes/" class="post-category" title="Category - Study Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Study Notes</a></span></div><div class="post-meta-line"><span title="published on 2020-12-28 13:19:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2020-12-28">2020-12-28</time></span>&nbsp;<span title="774 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 800 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>4 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Git 进阶与 GitHub 协作详解</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2020-12-28 itemprop="datePublished">December 28, 2020</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/study-notes/"> Study notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,778 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#仓库提交分支的本质">仓库、提交、分支的本质</a>
+          <ul>
+            <li><a href="#repository">Repository</a></li>
+            <li><a href="#commit">Commit</a></li>
+            <li><a href="#branch">Branch</a></li>
+          </ul>
+        </li>
+        <li><a href="#远程仓库push-与-pull-详解">远程仓库、push 与 pull 详解</a>
+          <ul>
+            <li><a href="#github-logo-的由来">Github Logo 的由来</a></li>
+            <li><a href="#远程仓库">远程仓库</a></li>
+            <li><a href="#push--pull">push / pull</a></li>
+          </ul>
+        </li>
+        <li><a href="#合并与冲突解决">合并与冲突解决</a>
+          <ul>
+            <li><a href="#merge">Merge</a></li>
+            <li><a href="#rebase">rebase</a></li>
+            <li><a href="#git-merge-squash">git merge &ndash;squash</a></li>
+          </ul>
+        </li>
+        <li><a href="#回退与重放">回退与重放</a>
+          <ul>
+            <li><a href="#checkout">checkout</a></li>
+            <li><a href="#reset">reset</a></li>
+            <li><a href="#cherry-pick">cherry-pick</a></li>
+            <li><a href="#revert">revert</a></li>
+          </ul>
+        </li>
+        <li><a href="#bisect-与-stash">bisect 与 stash</a>
+          <ul>
+            <li><a href="#stash">stash</a></li>
+            <li><a href="#bisect">bisect</a></li>
+            <li><a href="#bisect-学习案例">bisect 学习案例</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>在 <a href="https://hoffmanzheng.github.io/2019/git/">Git 与 GitHub 使用指北</a> 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 <a href="https://git-scm.com/docs">Git Reference Manual</a> 介绍一些 Git 底层原理和高阶操作，以及在 GitHub 协作的流程。</p>
-<h1 id="git-进阶">Git 进阶</h1>
-<h3 id="仓库提交分支的本质">仓库、提交、分支的本质</h3>
-<h4 id="repository">Repository</h4>
-<p>Git 仓库的本质其实就是一个可以 <strong>追溯所有历史</strong> 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 <code>commitID</code>， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 / 副本 / 代码快照，所以仓库的本质即是所有这些快照的集合。</p>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#github-协作方式">GitHub 协作方式</a></li>
+        <li><a href="#github-社区">GitHub 社区</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>在 <a href="https://hoffmanzheng.github.io/2019/git/" target="_blank" rel="external nofollow noopener noreferrer">Git 与 GitHub 使用指北</a> 中笔者已经介绍了 Git 及 GitHub 的基本操作，但对其原理不明所以，本篇将在之前的基础上结合 <a href="https://git-scm.com/docs" target="_blank" rel="external nofollow noopener noreferrer">Git Reference Manual</a> 介绍一些 Git 底层原理和高阶操作，以及在 GitHub 协作的流程。</p>
+<h1 class="heading-element" id="git-进阶"><span>Git 进阶</span>
+  <a href="#git-%e8%bf%9b%e9%98%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="仓库提交分支的本质"><span>仓库、提交、分支的本质</span>
+  <a href="#%e4%bb%93%e5%ba%93%e6%8f%90%e4%ba%a4%e5%88%86%e6%94%af%e7%9a%84%e6%9c%ac%e8%b4%a8" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="repository"><span>Repository</span>
+  <a href="#repository" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Git 仓库的本质其实就是一个可以 <strong>追溯所有历史</strong> 的文件夹，历史的最小单位是仓库在某个时刻的状态（快照）。每一次对仓库的 commit 提交都将产生一个 <code>commitID</code>， 它代表着整个仓库所有的文件和文件夹在某个时刻的状态 / 副本 / 代码快照，所以仓库的本质即是所有这些快照的集合。</p>
 <p>可以通过 <code>git log</code> 来查看仓库历史上的状态，然后使用 <code>git checkout &lt;commitID&gt;</code> 来使仓库恢复到某个状态。在 GitHub 网站上可以使用 <code>https://github.com/&lt;userName&gt;/&lt;repositoryName&gt;/tree/&lt;commitID/tag/branch&gt;</code> 看到这个仓库在某个时刻的状态。</p>
 <p>以下几种方式都可以标识仓库的状态：</p>
 <ul>
@@ -169,10 +168,13 @@
 <li>标签 tag，是针对某个仓库状态打的标签，<code>git tag v1.0</code></li>
 </ul>
 <blockquote>
-<p>相关阅读：<a href="https://www.geeksforgeeks.org/what-is-a-git-repository/">GeeksforGeeks：What is a GIT Repository?</a></p>
+<p>相关阅读：<a href="https://www.geeksforgeeks.org/what-is-a-git-repository/" target="_blank" rel="external nofollow noopener noreferrer">GeeksforGeeks：What is a GIT Repository?</a></p>
 </blockquote>
-<h4 id="commit">Commit</h4>
-<p>commit 提交是指将仓库从一个状态转移到另外一个状态时发生的变化，它产生的 commit 对象包括：</p>
+<h4 class="heading-element" id="commit"><span>Commit</span>
+  <a href="#commit" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>commit 提交是指将仓库从一个状态转移到另外一个状态时发生的变化，它产生的 commit 对象包括：</p>
 <ol>
 <li>commitID</li>
 <li>parent-id，提交的父 id</li>
@@ -180,64 +182,112 @@
 <li>author 编写代码的人（贡献者），包括他的 name、email</li>
 </ol>
 <p>commit 对象是 <strong>不可变</strong> 的，<code>git commit --amend</code> 并没有修改原来的 commit，而是创建了一个新的提交，来替换当前节点（当前分支上最后一次 commit），并连到当前节点的上一个节点。如果 amend 已经 push 在 GitHub 上的提交，会导致和远程仓库的分支 <strong>分叉</strong>，导致无法向远程仓库 push 新的提交（解决方法见 push / pull）。</p>
-<p><img src="/images/git-amend.png" alt=""></p>
-<h4 id="branch">Branch</h4>
-<p>分支是指向某个提交对象的，一个可以 <strong>移动的指针</strong>。新建一个分支，就是新建了一个指针。可以通过 <code>git checkout -b &lt;new-branch&gt; {仓库的某个状态}</code> 来基于仓库的任何一个状态创建一个新的分支。</p>
+<p><img loading="lazy" src='/images/git-amend.png' alt="/images/git-amend.png"></p>
+<h4 class="heading-element" id="branch"><span>Branch</span>
+  <a href="#branch" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>分支是指向某个提交对象的，一个可以 <strong>移动的指针</strong>。新建一个分支，就是新建了一个指针。可以通过 <code>git checkout -b &lt;new-branch&gt; {仓库的某个状态}</code> 来基于仓库的任何一个状态创建一个新的分支。</p>
 <p><code>HEAD</code> 指向当前分支的头，HEAD~{N} 符号 tilda 表示 HEAD 的第 N 任祖先，当然也可以是 master~1 或者 <code>&lt;commitId&gt;~{N}</code> ，HEAD^{N} 符号 caret 表示从左往右数第 N 个父亲。持续的工作和提交，会在仓库中形成了一棵树。</p>
-<p><img src="/images/git-HEAD.png" alt=""></p>
-<h3 id="远程仓库push-与-pull-详解">远程仓库、push 与 pull 详解</h3>
-<h4 id="github-logo-的由来">Github Logo 的由来</h4>
-<p>由于一个仓库的状态可以有多个父亲，也可以把多个提交合并在一起，称之为 octopus merge 章鱼合并，之后就演变成了 octopuss = octopus + pussy &mdash;&gt; <code>octocat</code> 八爪猫，成为今天 GitHub 的 Logo。</p>
-<p><img src="/images/git-octocat.png" alt=""></p>
-<h4 id="远程仓库">远程仓库</h4>
-<p>Git 是一个分布式版本控制系统，当我们从 GitHub 上 <code>clone</code> 一个仓库到本地后，相当于把整个远程仓库全部复制到了本地仓库，包括它的所有历史状态。clone <strong>不一定</strong>要发生在网络上，它还可以在局域网或者磁盘上：</p>
-<p><img src="/images/git-clone.png" alt=""></p>
-<h4 id="push--pull">push / pull</h4>
-<p>git push 能够成功的前提是 <strong>远程仓库的状态一定要是本地待 push 状态的父亲</strong>，相互之间没有发生任何的分叉。</p>
+<p><img loading="lazy" src='/images/git-HEAD.png' alt="/images/git-HEAD.png"></p>
+<h3 class="heading-element" id="远程仓库push-与-pull-详解"><span>远程仓库、push 与 pull 详解</span>
+  <a href="#%e8%bf%9c%e7%a8%8b%e4%bb%93%e5%ba%93push-%e4%b8%8e-pull-%e8%af%a6%e8%a7%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="github-logo-的由来"><span>Github Logo 的由来</span>
+  <a href="#github-logo-%e7%9a%84%e7%94%b1%e6%9d%a5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>由于一个仓库的状态可以有多个父亲，也可以把多个提交合并在一起，称之为 octopus merge 章鱼合并，之后就演变成了 octopuss = octopus + pussy &mdash;&gt; <code>octocat</code> 八爪猫，成为今天 GitHub 的 Logo。</p>
+<p><img loading="lazy" src='/images/git-octocat.png' alt="/images/git-octocat.png"></p>
+<h4 class="heading-element" id="远程仓库"><span>远程仓库</span>
+  <a href="#%e8%bf%9c%e7%a8%8b%e4%bb%93%e5%ba%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Git 是一个分布式版本控制系统，当我们从 GitHub 上 <code>clone</code> 一个仓库到本地后，相当于把整个远程仓库全部复制到了本地仓库，包括它的所有历史状态。clone <strong>不一定</strong>要发生在网络上，它还可以在局域网或者磁盘上：</p>
+<p><img loading="lazy" src='/images/git-clone.png' alt="/images/git-clone.png"></p>
+<h4 class="heading-element" id="push--pull"><span>push / pull</span>
+  <a href="#push--pull" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>git push 能够成功的前提是 <strong>远程仓库的状态一定要是本地待 push 状态的父亲</strong>，相互之间没有发生任何的分叉。</p>
 <p>当我们在 git push 失败后，通常会按照提示使用 git pull，随后会弹出一个合并窗口，这是因为 <code>git pull = git fetch + git merge</code>，fetch 会将远程仓库中所有的状态都拿到本地，merge 会从分叉点开始 <strong>replay 重放</strong> 到 origin 最新的提交，再执行合并过程。合并完成后，远程分支才成为本地分支的父亲，才可以继续完成 push 操作。</p>
-<p><img src="/images/git-merge-origin.png" alt=""></p>
-<h3 id="合并与冲突解决">合并与冲突解决</h3>
-<h4 id="merge">Merge</h4>
-<p>Merge 会从提交状态的分叉点开始 <strong>replay 重放</strong> 到 <code>&lt;commit&gt;</code> 最新的提交，然后不同的仓库状态（代码快照/代码副本）进行合并，Git 会 <strong>逐行检查冲突</strong>，并尝试自动解决，当发现多个状态同时对某一行代码进行了修改时就会冲突报错，这时就需要通过人类的智慧挑选出正确的代码版本解决冲突，完成合并。</p>
-<p><img src="/images/git-merge-description.png" alt=""></p>
+<p><img loading="lazy" src='/images/git-merge-origin.png' alt="/images/git-merge-origin.png"></p>
+<h3 class="heading-element" id="合并与冲突解决"><span>合并与冲突解决</span>
+  <a href="#%e5%90%88%e5%b9%b6%e4%b8%8e%e5%86%b2%e7%aa%81%e8%a7%a3%e5%86%b3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="merge"><span>Merge</span>
+  <a href="#merge" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Merge 会从提交状态的分叉点开始 <strong>replay 重放</strong> 到 <code>&lt;commit&gt;</code> 最新的提交，然后不同的仓库状态（代码快照/代码副本）进行合并，Git 会 <strong>逐行检查冲突</strong>，并尝试自动解决，当发现多个状态同时对某一行代码进行了修改时就会冲突报错，这时就需要通过人类的智慧挑选出正确的代码版本解决冲突，完成合并。</p>
+<p><img loading="lazy" src='/images/git-merge-description.png' alt="/images/git-merge-description.png"></p>
 <p>Merge 的优点是简单，易于理解；记录了完整的历史；冲突解决简单（只需要解决一次冲突就可以）；缺点是历史（基于时间和提交记录的单线历史）杂乱无章；对 bisect 不友好。</p>
-<h4 id="rebase">rebase</h4>
-<p>Rebase 文档介绍说的是：基于另外一个分支的尖端，将当前分支的提交 <strong>重演</strong> 一遍（Reapply commits on top of another base tip）。之前讲 commit 的时候说过，commit 对象都是不可变的，rebase 的重演并不是将 A、B、C 移动到 G 上面去，而是 <strong>产生了三个全新的提交</strong> A' B' C'，所以这个时候提交历史被改变了。</p>
-<p><img src="/images/git-rebase.png" alt=""></p>
+<h4 class="heading-element" id="rebase"><span>rebase</span>
+  <a href="#rebase" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Rebase 文档介绍说的是：基于另外一个分支的尖端，将当前分支的提交 <strong>重演</strong> 一遍（Reapply commits on top of another base tip）。之前讲 commit 的时候说过，commit 对象都是不可变的，rebase 的重演并不是将 A、B、C 移动到 G 上面去，而是 <strong>产生了三个全新的提交</strong> A&rsquo; B&rsquo; C&rsquo;，所以这个时候提交历史被改变了。</p>
+<p><img loading="lazy" src='/images/git-rebase.png' alt="/images/git-rebase.png"></p>
 <p>每次重演的时候，需要依次解决遇到的所有的冲突，痛苦的是 ，同一个文件可能需要 <strong>反复的去解决冲突</strong> 。Rebase 的优点是分支历史是一条直线，清楚直观；对 bisect 友好；缺点是较为复杂，劝退新手；如果冲突可能要重复解决；会⼲扰别⼈（<strong>和别⼈共享的分⽀永远不要force push</strong>）</p>
-<p><img src="/images/git-rebase-practice.png" alt=""></p>
+<p><img loading="lazy" src='/images/git-rebase-practice.png' alt="/images/git-rebase-practice.png"></p>
 <ul>
 <li>每次 rebase 之后都需要使用 force push  才能更新远程分支（因为分支分叉了），所以 <strong>只能在自己的分支上 rebase 共用分支</strong>（rebase master）。</li>
 <li>在自己的分支 my-feature 上 rebase master 合并之后，也是无法 push 到 origin 的，因为和 origin/my-feature 分叉了，但是可以 force push，因为是自己的分支，不会影响到别人。</li>
 <li>有个办法可以减少 rebase 时解决冲突的次数，使用 reset 恢复到 origin 分叉点，然后 commit 产生一个 “压扁的提交”（会丢失一些提交信息），再执行 rebase 的时候就只需要解决一次冲突就可以了。</li>
 </ul>
 <p>因此 rebase 的使用场景有：定时将你的分⽀和主⼲进⾏同步。分支开发，时间长久，要合并时发现冲突太多了，因此需要定期同步。这个场景使用 merge 的话，提交的历史记录就会杂乱不堪， rebase 保持提交历史是一根直线的状态。</p>
-<h4 id="git-merge---squash">git merge &ndash;squash</h4>
-<p>将当前分支的所有提交压扁成一个再提交到共用分支上去，优点是把所有变更合在⼀起，更容易阅读；bisect友好；想要回滚或者 revert ⾮常⽅便；缺点是丢失了所有的历史记录。</p>
-<p><img src="/images/git-merge-squash.png" alt=""></p>
+<h4 class="heading-element" id="git-merge-squash"><span>git merge &ndash;squash</span>
+  <a href="#git-merge-squash" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>将当前分支的所有提交压扁成一个再提交到共用分支上去，优点是把所有变更合在⼀起，更容易阅读；bisect友好；想要回滚或者 revert ⾮常⽅便；缺点是丢失了所有的历史记录。</p>
+<p><img loading="lazy" src='/images/git-merge-squash.png' alt="/images/git-merge-squash.png"></p>
 <p>然后在公共的分支上产生一个压扁后的提交记录：</p>
-<p><img src="/images/git-merge-squash-result.png" alt=""></p>
-<h3 id="回退与重放">回退与重放</h3>
-<h4 id="checkout">checkout</h4>
-<p>Checkout 可以将代码 <strong>复原到任何一个仓库状态</strong> 上，且不修改仓库中的任何信息。在使用 tag 标签切换代码版本后，可能会提示版本 v5.0 不在任何一个分支上，即当前在 <strong>脱离 HEAD</strong> 的状态，所做的提交都会被遗弃，需要按照提示创建一个新的分支，才能保留创建的提交。</p>
-<p><img src="/images/git-checkout.png" alt=""></p>
+<p><img loading="lazy" src='/images/git-merge-squash-result.png' alt="/images/git-merge-squash-result.png"></p>
+<h3 class="heading-element" id="回退与重放"><span>回退与重放</span>
+  <a href="#%e5%9b%9e%e9%80%80%e4%b8%8e%e9%87%8d%e6%94%be" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="checkout"><span>checkout</span>
+  <a href="#checkout" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Checkout 可以将代码 <strong>复原到任何一个仓库状态</strong> 上，且不修改仓库中的任何信息。在使用 tag 标签切换代码版本后，可能会提示版本 v5.0 不在任何一个分支上，即当前在 <strong>脱离 HEAD</strong> 的状态，所做的提交都会被遗弃，需要按照提示创建一个新的分支，才能保留创建的提交。</p>
+<p><img loading="lazy" src='/images/git-checkout.png' alt="/images/git-checkout.png"></p>
 <p>所以 checkout 最重要的作用就是查看代码的历史版本，此外还可以使用 <code>git checkout -- &lt;file&gt;</code> 来丢弃工作区中的修改。</p>
-<p><img src="/images/git-checkout--.png" alt=""></p>
-<h4 id="reset">reset</h4>
-<p>Reset 会强行将当前分支 HEAD 指针移动到指定状态</p>
+<p><img loading="lazy" src='/images/git-checkout--.png' alt="/images/git-checkout--.png"></p>
+<h4 class="heading-element" id="reset"><span>reset</span>
+  <a href="#reset" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Reset 会强行将当前分支 HEAD 指针移动到指定状态</p>
 <ul>
 <li>&ndash;soft：只移动指针，不碰 暂存区 / 工作区，使本地的修改得到了完全的保留</li>
 <li>&ndash;mixed（默认）：保留中间的文件变更，使其变成 not staged 状态（可以压扁提交，但会丢失中间的提交信息 ）</li>
 <li>&ndash;hard：清空当前的全部修改</li>
 </ul>
-<h4 id="cherry-pick">cherry-pick</h4>
-<p>将某个提交在另外的分⽀上 <strong>重放</strong>，使用场景为将一个 bug fix 同步到较老的产品中或者将在 master 上进行的变更希望进入 release 环节。</p>
+<h4 class="heading-element" id="cherry-pick"><span>cherry-pick</span>
+  <a href="#cherry-pick" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>将某个提交在另外的分⽀上 <strong>重放</strong>，使用场景为将一个 bug fix 同步到较老的产品中或者将在 master 上进行的变更希望进入 release 环节。</p>
 <p>先使用 checkout 切换到需要重放的分支上，然后 <code>git cherry-pick &lt;commmitId&gt;</code> 重放某个提交的修改，如果需要 cherry-pick 多个提交可以使用 <code>&lt;commitId&gt;..&lt;commitId&gt;</code> 来代表一个提交的区间。</p>
-<h4 id="revert">revert</h4>
-<p>产生一个 <strong>反向提交</strong>，撤销某个提交。使用场景为撤销历史中的某个更改，如 BUG 或不恰当的功能；或是回滚某次发布。<code>git revert &lt;commitId&gt;</code> ，revert 一个 revert 可以恢复之前的那次 revert。</p>
-<h3 id="bisect-与-stash">bisect 与 stash</h3>
-<h4 id="stash">stash</h4>
-<p>临时性将⼯作⽬录的变更储存起来，然后清空⼯作⽬录（类⽐「存档/读档」）。<code>git stash</code> （需要先使用 git add 添加到暂存区），<code>git stash pop</code>（把原先的更改从储藏室中恢复），<code>git stash list</code> 可以查看当前储藏的变更列表。</p>
+<h4 class="heading-element" id="revert"><span>revert</span>
+  <a href="#revert" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>产生一个 <strong>反向提交</strong>，撤销某个提交。使用场景为撤销历史中的某个更改，如 BUG 或不恰当的功能；或是回滚某次发布。<code>git revert &lt;commitId&gt;</code> ，revert 一个 revert 可以恢复之前的那次 revert。</p>
+<h3 class="heading-element" id="bisect-与-stash"><span>bisect 与 stash</span>
+  <a href="#bisect-%e4%b8%8e-stash" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="stash"><span>stash</span>
+  <a href="#stash" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>临时性将⼯作⽬录的变更储存起来，然后清空⼯作⽬录（类⽐「存档/读档」）。<code>git stash</code> （需要先使用 git add 添加到暂存区），<code>git stash pop</code>（把原先的更改从储藏室中恢复），<code>git stash list</code> 可以查看当前储藏的变更列表。</p>
 <p>使用场景：</p>
 <ul>
 <li>你正在开⼼的开发，突然来了⼀个线上 bug</li>
@@ -245,193 +295,196 @@
 <li>结果⼜来了⼀件优先级更⾼的 bug（再次 git stash，<code>git stash apply stash@{N}</code> 进行恢复）</li>
 <li>完成别的⼯作之后回来继续</li>
 </ul>
-<h4 id="bisect">bisect</h4>
-<p>Bisect 用于在提交历史中查找某处引入的 bug，在问题可以稳定重现的时候，可以迅速定位出问题的代码，有的时候这比直接去 debug 更快捷。</p>
+<h4 class="heading-element" id="bisect"><span>bisect</span>
+  <a href="#bisect" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Bisect 用于在提交历史中查找某处引入的 bug，在问题可以稳定重现的时候，可以迅速定位出问题的代码，有的时候这比直接去 debug 更快捷。</p>
 <ol>
 <li><code>git bisect start/reset</code></li>
 <li>切换提交历史后， <code>git bisect good/bad/skip</code></li>
 <li><code>git bisect run ./run.sh</code>  使用脚本实现自动化 bisect</li>
 </ol>
-<h4 id="bisect-学习案例">bisect 学习案例</h4>
-<p>使用 git bisect 在 <a href="https://github.com/apache/maven">Maven</a> 找出在 3.6.0 和 3.6.1 版本之间导致 <a href="https://issues.apache.org/jira/browse/MNG-6700">MNG-6700</a> 的提交记录，可以使用 <a href="https://github.com/hcsp/maven-issue-reproduction">MNG-6700 BUG Reproduction</a> 复现这个问题。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">/** clone maven 项目到本地，切换版本，然后打包，解压包后就可以找到 mvn */
-git clone https://github.com/apache/maven.git
-git checkout maven-3.6.0
-mvn clean package -Dmaven.test.skip<span style="color:#f92672">=</span>true -Drat.skip<span style="color:#f92672">=</span>true
-unzip apache-maven/target/apache-maven-3.6.0-bin.zip -d .
-
-/** 执行另外一个目录下的 maven 构建，使用 -f 参数，发现 3.6.0 版本没有出现问题 */
-apache-maven-3.6.0/bin/mvn -f ../maven-issue-reproduction/pom.xml compile
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> --- maven-compiler-plugin:3.1:compile <span style="color:#f92672">(</span>default-compile<span style="color:#f92672">)</span> @ maven-issue-reproduction ---
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Changes detected - recompiling the module!
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Compiling <span style="color:#ae81ff">1</span> source file to C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\z</span>ch69<span style="color:#ae81ff">\r</span>ecipes<span style="color:#ae81ff">\t</span>emp<span style="color:#ae81ff">\m</span>aven<span style="color:#ae81ff">\.</span>.<span style="color:#ae81ff">\m</span>aven-issue-reproduction<span style="color:#ae81ff">\t</span>arget<span style="color:#ae81ff">\c</span>lasses
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> BUILD SUCCESS
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Total time:  16.961 s
-
-
-/** 使用 3.6.1 版本 compile 出错，复现问题 */
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> BUILD FAILURE
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Total time:  01:01 min
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Finished at: 2021-01-09T11:33:01+08:00
-<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
-<span style="color:#f92672">[</span>ERROR<span style="color:#f92672">]</span> Failed to execute goal org.jetbrains.kotlin:kotlin-maven-plugin:1.3.0:compile <span style="color:#f92672">(</span>compile<span style="color:#f92672">)</span> on project maven-issue-reproduction: Compilation failure: Compilation failure:
-<span style="color:#f92672">[</span>ERROR<span style="color:#f92672">]</span> C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\z</span>ch69<span style="color:#ae81ff">\r</span>ecipes<span style="color:#ae81ff">\t</span>emp<span style="color:#ae81ff">\m</span>aven-issue-reproduction<span style="color:#ae81ff">\c</span>ommon<span style="color:#ae81ff">\O</span>s.kt:<span style="color:#f92672">[</span>3,12<span style="color:#f92672">]</span> Redeclaration: Os
-<span style="color:#f92672">[</span>ERROR<span style="color:#f92672">]</span> C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\z</span>ch69<span style="color:#ae81ff">\r</span>ecipes<span style="color:#ae81ff">\t</span>emp<span style="color:#ae81ff">\m</span>aven<span style="color:#ae81ff">\.</span>.<span style="color:#ae81ff">\m</span>aven-issue-reproduction<span style="color:#ae81ff">\.\c</span>ommon<span style="color:#ae81ff">\O</span>s.kt:<span style="color:#f92672">[</span>3,12<span style="color:#f92672">]</span> Redeclaration: Os
-
-/** 标记 3.6.1 为有问题的版本，开始 bisect */
-git bisect bad
-You need to start by <span style="color:#e6db74">&#34;git bisect start&#34;</span>
-Do you want me to <span style="color:#66d9ef">do</span> it <span style="color:#66d9ef">for</span> you <span style="color:#f92672">[</span>Y/n<span style="color:#f92672">]</span>? Y
-
-/** 标记 3.6.0 为没有问题的版本后，bisect 将仓库状态自动切换到了提交历史 2928dc6b6 */
-zch69@DESKTOP-BIRCN7U MINGW64 ~/recipes/temp/maven <span style="color:#f92672">((</span>maven-3.6.1<span style="color:#f92672">)</span>|BISECTING<span style="color:#f92672">)</span>
-$ git checkout maven-3.6.0
-$ git bisect good
-Bisecting: <span style="color:#ae81ff">27</span> revisions left to test after this <span style="color:#f92672">(</span>roughly <span style="color:#ae81ff">5</span> steps<span style="color:#f92672">)</span>
-<span style="color:#f92672">[</span>2928dc6b68660cc5ac4022b0bfbc84d51d6905e4<span style="color:#f92672">]</span> refactoring: extracted initParent<span style="color:#f92672">()</span> method
-
-zch69@DESKTOP-BIRCN7U MINGW64 ~/recipes/temp/maven <span style="color:#f92672">((</span>2928dc6b6...<span style="color:#f92672">)</span>|BISECTING<span style="color:#f92672">)</span>
-$ gst
-HEAD detached at 2928dc6b6
-You are currently bisecting, started from branch <span style="color:#e6db74">&#39;d66c9c0b3&#39;</span>.
-  <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git bisect reset&#34;</span> to get back to the original branch<span style="color:#f92672">)</span>
-</code></pre></div><p>之后手动重复以上过程就可以找到导致这个问题的提交记录，但完全可以用脚本来 <strong>自动化</strong> 这个过程：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell"><span style="color:#75715e">#!/bin/sh
-</span><span style="color:#75715e"></span>
-VERSION<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>mvn help:evaluate -Dexpression<span style="color:#f92672">=</span>project.version -q -DforceStdout<span style="color:#66d9ef">)</span> 
-rm -rf apache-maven-*
-mvn clean package -Dmaven.test.skip<span style="color:#f92672">=</span>true -Drat.skip<span style="color:#f92672">=</span>true
-unzip apache-maven/target/apache-maven-$VERSION-bin.zip -d .
-apache-maven-$VERSION/bin/mvn -f ../maven-issue-reproduction/pom.xml compile
-</code></pre></div><p>运行 <code>git bisect run ./run.sh</code> 后就可以等着最后的结果了：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">8b7055fe3ff3696b821409a6904ff4d69aa3ff6b is the first bad commit
-commit 8b7055fe3ff3696b821409a6904ff4d69aa3ff6b
-Author: Mickael Istria &lt;mistria@redhat.com&gt;
-Date:   Thu Nov <span style="color:#ae81ff">29</span> 22:21:29 <span style="color:#ae81ff">2018</span> +0100
-
-    <span style="color:#f92672">[</span>MNG-6533<span style="color:#f92672">]</span> Prefer passing the interim project in ProjectBuildingResult
-
-    Initialize the interim project with <span style="color:#e6db74">&#34;simple&#34;</span> items <span style="color:#f92672">(</span>ie <span style="color:#66d9ef">do</span> not build
-    not reference parent <span style="color:#66d9ef">if</span> it<span style="color:#960050;background-color:#1e0010">&#39;</span>s not yet in the projectIndex<span style="color:#f92672">)</span> and returns
-    it when installation fails further.
-    This give a partial validation of the file, pretty convenient in IDEs.
-
- .../maven/project/DefaultProjectBuilder.java       | <span style="color:#ae81ff">46</span> ++++++++++++++++------
- <span style="color:#ae81ff">1</span> file changed, <span style="color:#ae81ff">33</span> insertions<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">13</span> deletions<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
-bisect run success
-</code></pre></div><h1 id="github-协作详解">Github 协作详解</h1>
-<p>GitHub 已经逐渐成为软件行业的一个事实标准，几乎所有的开源项目都可以在 GitHub 上找</p>
+<h4 class="heading-element" id="bisect-学习案例"><span>bisect 学习案例</span>
+  <a href="#bisect-%e5%ad%a6%e4%b9%a0%e6%a1%88%e4%be%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>使用 git bisect 在 <a href="https://github.com/apache/maven" target="_blank" rel="external nofollow noopener noreferrer">Maven</a> 找出在 3.6.0 和 3.6.1 版本之间导致 <a href="https://issues.apache.org/jira/browse/MNG-6700" target="_blank" rel="external nofollow noopener noreferrer">MNG-6700</a> 的提交记录，可以使用 <a href="https://github.com/hcsp/maven-issue-reproduction" target="_blank" rel="external nofollow noopener noreferrer">MNG-6700 BUG Reproduction</a> 复现这个问题。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>/** clone maven 项目到本地，切换版本，然后打包，解压包后就可以找到 mvn */
+</span></span><span style="display:flex;"><span>git clone https://github.com/apache/maven.git
+</span></span><span style="display:flex;"><span>git checkout maven-3.6.0
+</span></span><span style="display:flex;"><span>mvn clean package -Dmaven.test.skip<span style="color:#f92672">=</span>true -Drat.skip<span style="color:#f92672">=</span>true
+</span></span><span style="display:flex;"><span>unzip apache-maven/target/apache-maven-3.6.0-bin.zip -d .
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/** 执行另外一个目录下的 maven 构建，使用 -f 参数，发现 3.6.0 版本没有出现问题 */
+</span></span><span style="display:flex;"><span>apache-maven-3.6.0/bin/mvn -f ../maven-issue-reproduction/pom.xml compile
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> --- maven-compiler-plugin:3.1:compile <span style="color:#f92672">(</span>default-compile<span style="color:#f92672">)</span> @ maven-issue-reproduction ---
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Changes detected - recompiling the module!
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Compiling <span style="color:#ae81ff">1</span> source file to C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\z</span>ch69<span style="color:#ae81ff">\r</span>ecipes<span style="color:#ae81ff">\t</span>emp<span style="color:#ae81ff">\m</span>aven<span style="color:#ae81ff">\.</span>.<span style="color:#ae81ff">\m</span>aven-issue-reproduction<span style="color:#ae81ff">\t</span>arget<span style="color:#ae81ff">\c</span>lasses
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> BUILD SUCCESS
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Total time:  16.961 s
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/** 使用 3.6.1 版本 compile 出错，复现问题 */
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> BUILD FAILURE
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Total time:  01:01 min
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Finished at: 2021-01-09T11:33:01+08:00
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> ------------------------------------------------------------------------
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>ERROR<span style="color:#f92672">]</span> Failed to execute goal org.jetbrains.kotlin:kotlin-maven-plugin:1.3.0:compile <span style="color:#f92672">(</span>compile<span style="color:#f92672">)</span> on project maven-issue-reproduction: Compilation failure: Compilation failure:
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>ERROR<span style="color:#f92672">]</span> C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\z</span>ch69<span style="color:#ae81ff">\r</span>ecipes<span style="color:#ae81ff">\t</span>emp<span style="color:#ae81ff">\m</span>aven-issue-reproduction<span style="color:#ae81ff">\c</span>ommon<span style="color:#ae81ff">\O</span>s.kt:<span style="color:#f92672">[</span>3,12<span style="color:#f92672">]</span> Redeclaration: Os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>ERROR<span style="color:#f92672">]</span> C:<span style="color:#ae81ff">\U</span>sers<span style="color:#ae81ff">\z</span>ch69<span style="color:#ae81ff">\r</span>ecipes<span style="color:#ae81ff">\t</span>emp<span style="color:#ae81ff">\m</span>aven<span style="color:#ae81ff">\.</span>.<span style="color:#ae81ff">\m</span>aven-issue-reproduction<span style="color:#ae81ff">\.\c</span>ommon<span style="color:#ae81ff">\O</span>s.kt:<span style="color:#f92672">[</span>3,12<span style="color:#f92672">]</span> Redeclaration: Os
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/** 标记 3.6.1 为有问题的版本，开始 bisect */
+</span></span><span style="display:flex;"><span>git bisect bad
+</span></span><span style="display:flex;"><span>You need to start by <span style="color:#e6db74">&#34;git bisect start&#34;</span>
+</span></span><span style="display:flex;"><span>Do you want me to <span style="color:#66d9ef">do</span> it <span style="color:#66d9ef">for</span> you <span style="color:#f92672">[</span>Y/n<span style="color:#f92672">]</span>? Y
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>/** 标记 3.6.0 为没有问题的版本后，bisect 将仓库状态自动切换到了提交历史 2928dc6b6 */
+</span></span><span style="display:flex;"><span>zch69@DESKTOP-BIRCN7U MINGW64 ~/recipes/temp/maven <span style="color:#f92672">((</span>maven-3.6.1<span style="color:#f92672">)</span>|BISECTING<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>$ git checkout maven-3.6.0
+</span></span><span style="display:flex;"><span>$ git bisect good
+</span></span><span style="display:flex;"><span>Bisecting: <span style="color:#ae81ff">27</span> revisions left to test after this <span style="color:#f92672">(</span>roughly <span style="color:#ae81ff">5</span> steps<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>2928dc6b68660cc5ac4022b0bfbc84d51d6905e4<span style="color:#f92672">]</span> refactoring: extracted initParent<span style="color:#f92672">()</span> method
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>zch69@DESKTOP-BIRCN7U MINGW64 ~/recipes/temp/maven <span style="color:#f92672">((</span>2928dc6b6...<span style="color:#f92672">)</span>|BISECTING<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>$ gst
+</span></span><span style="display:flex;"><span>HEAD detached at 2928dc6b6
+</span></span><span style="display:flex;"><span>You are currently bisecting, started from branch <span style="color:#e6db74">&#39;d66c9c0b3&#39;</span>.
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">(</span>use <span style="color:#e6db74">&#34;git bisect reset&#34;</span> to get back to the original branch<span style="color:#f92672">)</span></span></span></code></pre></div><p>之后手动重复以上过程就可以找到导致这个问题的提交记录，但完全可以用脚本来 <strong>自动化</strong> 这个过程：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh
+</span></span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>VERSION<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>mvn help:evaluate -Dexpression<span style="color:#f92672">=</span>project.version -q -DforceStdout<span style="color:#66d9ef">)</span> 
+</span></span><span style="display:flex;"><span>rm -rf apache-maven-*
+</span></span><span style="display:flex;"><span>mvn clean package -Dmaven.test.skip<span style="color:#f92672">=</span>true -Drat.skip<span style="color:#f92672">=</span>true
+</span></span><span style="display:flex;"><span>unzip apache-maven/target/apache-maven-$VERSION-bin.zip -d .
+</span></span><span style="display:flex;"><span>apache-maven-$VERSION/bin/mvn -f ../maven-issue-reproduction/pom.xml compile</span></span></code></pre></div><p>运行 <code>git bisect run ./run.sh</code> 后就可以等着最后的结果了：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>8b7055fe3ff3696b821409a6904ff4d69aa3ff6b is the first bad commit
+</span></span><span style="display:flex;"><span>commit 8b7055fe3ff3696b821409a6904ff4d69aa3ff6b
+</span></span><span style="display:flex;"><span>Author: Mickael Istria &lt;mistria@redhat.com&gt;
+</span></span><span style="display:flex;"><span>Date:   Thu Nov <span style="color:#ae81ff">29</span> 22:21:29 <span style="color:#ae81ff">2018</span> +0100
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">[</span>MNG-6533<span style="color:#f92672">]</span> Prefer passing the interim project in ProjectBuildingResult
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Initialize the interim project with <span style="color:#e6db74">&#34;simple&#34;</span> items <span style="color:#f92672">(</span>ie <span style="color:#66d9ef">do</span> not build
+</span></span><span style="display:flex;"><span>    not reference parent <span style="color:#66d9ef">if</span> it<span style="color:#960050;background-color:#1e0010">&#39;</span>s not yet in the projectIndex<span style="color:#f92672">)</span> and returns
+</span></span><span style="display:flex;"><span>    it when installation fails further.
+</span></span><span style="display:flex;"><span>    This give a partial validation of the file, pretty convenient in IDEs.
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span> .../maven/project/DefaultProjectBuilder.java       | <span style="color:#ae81ff">46</span> ++++++++++++++++------
+</span></span><span style="display:flex;"><span> <span style="color:#ae81ff">1</span> file changed, <span style="color:#ae81ff">33</span> insertions<span style="color:#f92672">(</span>+<span style="color:#f92672">)</span>, <span style="color:#ae81ff">13</span> deletions<span style="color:#f92672">(</span>-<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>bisect run success</span></span></code></pre></div><h1 class="heading-element" id="github-协作详解"><span>Github 协作详解</span>
+  <a href="#github-%e5%8d%8f%e4%bd%9c%e8%af%a6%e8%a7%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>GitHub 已经逐渐成为软件行业的一个事实标准，几乎所有的开源项目都可以在 GitHub 上找</p>
 <p>到代码，它已经不只是一个网站、一个平台了，可以说它已经是软件行业的图腾或者说是宗教了。</p>
-<h3 id="github-协作方式">GitHub 协作方式</h3>
-<p>GitHub 的出现，一改之前项目协作的困难，使得任何人发现了 BUG 都可以来帮助修改。但不能把主分支的 <strong>写权限</strong> 随便给外面的人，以免用户滥用把仓库搞乱。所以就出现了 <code>fork</code> 方式的协同合作：</p>
-<p><img src="/images/github-fork-process.png" alt=""></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">// fork 后的仓库并不会自动地随着上游仓库而更新，需要手动 sync a fork
-git remote add upstream https://github.com/apache/maven.git   // 添加上游仓库
-git fetch upstream  // 获取上游仓库的提交历史
-git merge upstream/master   // 获取更新
-</code></pre></div><h3 id="github-社区">GitHub 社区</h3>
-<p>TODO</p>
+<h3 class="heading-element" id="github-协作方式"><span>GitHub 协作方式</span>
+  <a href="#github-%e5%8d%8f%e4%bd%9c%e6%96%b9%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>GitHub 的出现，一改之前项目协作的困难，使得任何人发现了 BUG 都可以来帮助修改。但不能把主分支的 <strong>写权限</strong> 随便给外面的人，以免用户滥用把仓库搞乱。所以就出现了 <code>fork</code> 方式的协同合作：</p>
+<p><img loading="lazy" src='/images/github-fork-process.png' alt="/images/github-fork-process.png"></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>// fork 后的仓库并不会自动地随着上游仓库而更新，需要手动 sync a fork
+</span></span><span style="display:flex;"><span>git remote add upstream https://github.com/apache/maven.git   // 添加上游仓库
+</span></span><span style="display:flex;"><span>git fetch upstream  // 获取上游仓库的提交历史
+</span></span><span style="display:flex;"><span>git merge upstream/master   // 获取更新</span></span></code></pre></div><h3 class="heading-element" id="github-社区"><span>GitHub 社区</span>
+  <a href="#github-%e7%a4%be%e5%8c%ba" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>TODO</p>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2020-12-28 13:19:47">Updated on 2020-12-28&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/advanced-git/" data-title="Git 进阶与 GitHub 协作详解" data-hashtags="tools"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/advanced-git/" data-hashtag="tools"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/advanced-git/" data-title="Git 进阶与 GitHub 协作详解"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2020/advanced-git/>https://hoffmanzheng.github.io/2020/advanced-git/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/tools/">
-                    #tools</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2020/database-optimize-sql/" class="prev" rel="prev" title="Database：高性能 MySQL - 优化查询"><i class="iconfont icon-left"></i>&nbsp;Database：高性能 MySQL - 优化查询</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2021/database-innodb/" class="next" rel="next" title="Database：InnoDB 存储引擎">Database：InnoDB 存储引擎&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/tools/" class="post-tag" title="Tags - Tools">Tools</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2020/database-optimize-sql/" class="post-nav-item" rel="prev" title="Database：高性能 MySQL - 优化查询"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Database：高性能 MySQL - 优化查询</a><a href="/2021/database-innodb/" class="post-nav-item" rel="next" title="Database：InnoDB 存储引擎">Database：InnoDB 存储引擎<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#仓库提交分支的本质">仓库、提交、分支的本质</a>
+          <ul>
+            <li><a href="#repository">Repository</a></li>
+            <li><a href="#commit">Commit</a></li>
+            <li><a href="#branch">Branch</a></li>
+          </ul>
+        </li>
+        <li><a href="#远程仓库push-与-pull-详解">远程仓库、push 与 pull 详解</a>
+          <ul>
+            <li><a href="#github-logo-的由来">Github Logo 的由来</a></li>
+            <li><a href="#远程仓库">远程仓库</a></li>
+            <li><a href="#push--pull">push / pull</a></li>
+          </ul>
+        </li>
+        <li><a href="#合并与冲突解决">合并与冲突解决</a>
+          <ul>
+            <li><a href="#merge">Merge</a></li>
+            <li><a href="#rebase">rebase</a></li>
+            <li><a href="#git-merge-squash">git merge &ndash;squash</a></li>
+          </ul>
+        </li>
+        <li><a href="#回退与重放">回退与重放</a>
+          <ul>
+            <li><a href="#checkout">checkout</a></li>
+            <li><a href="#reset">reset</a></li>
+            <li><a href="#cherry-pick">cherry-pick</a></li>
+            <li><a href="#revert">revert</a></li>
+          </ul>
+        </li>
+        <li><a href="#bisect-与-stash">bisect 与 stash</a>
+          <ul>
+            <li><a href="#stash">stash</a></li>
+            <li><a href="#bisect">bisect</a></li>
+            <li><a href="#bisect-学习案例">bisect 学习案例</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#github-协作方式">GitHub 协作方式</a></li>
+        <li><a href="#github-社区">GitHub 社区</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/47487e04a6cdb69b00d52c1a205ec86b.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

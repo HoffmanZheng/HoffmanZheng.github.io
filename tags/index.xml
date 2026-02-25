@@ -4,89 +4,72 @@
     <title>Tags on 人间一场大梦</title>
     <link>https://hoffmanzheng.github.io/tags/</link>
     <description>Recent content in Tags on 人间一场大梦</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 19 Dec 2022 13:19:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 23 Oct 2023 03:19:47 +0100</lastBuildDate>
+    <atom:link href="https://hoffmanzheng.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Ruby</title>
+      <link>https://hoffmanzheng.github.io/tags/ruby/</link>
+      <pubDate>Mon, 23 Oct 2023 03:19:47 +0100</pubDate>
+      <guid>https://hoffmanzheng.github.io/tags/ruby/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Tools</title>
+      <link>https://hoffmanzheng.github.io/tags/tools/</link>
+      <pubDate>Sun, 27 Aug 2023 18:19:47 +0100</pubDate>
+      <guid>https://hoffmanzheng.github.io/tags/tools/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Database</title>
       <link>https://hoffmanzheng.github.io/tags/database/</link>
       <pubDate>Mon, 19 Dec 2022 13:19:47 +0100</pubDate>
-      
       <guid>https://hoffmanzheng.github.io/tags/database/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Net</title>
       <link>https://hoffmanzheng.github.io/tags/net/</link>
       <pubDate>Wed, 09 Nov 2022 13:19:47 +0100</pubDate>
-      
       <guid>https://hoffmanzheng.github.io/tags/net/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>code</title>
+      <title>Code</title>
       <link>https://hoffmanzheng.github.io/tags/code/</link>
       <pubDate>Mon, 02 May 2022 03:19:47 +0100</pubDate>
-      
       <guid>https://hoffmanzheng.github.io/tags/code/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Distributed</title>
       <link>https://hoffmanzheng.github.io/tags/distributed/</link>
       <pubDate>Thu, 21 Apr 2022 03:19:47 +0100</pubDate>
-      
       <guid>https://hoffmanzheng.github.io/tags/distributed/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>Ruby</title>
-      <link>https://hoffmanzheng.github.io/tags/ruby/</link>
-      <pubDate>Sun, 10 Oct 2021 13:19:47 +0100</pubDate>
-      
-      <guid>https://hoffmanzheng.github.io/tags/ruby/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>component</title>
+      <title>Component</title>
       <link>https://hoffmanzheng.github.io/tags/component/</link>
       <pubDate>Thu, 26 Aug 2021 13:19:47 +0100</pubDate>
-      
       <guid>https://hoffmanzheng.github.io/tags/component/</guid>
       <description></description>
     </item>
-    
     <item>
       <title>Java</title>
       <link>https://hoffmanzheng.github.io/tags/java/</link>
       <pubDate>Fri, 02 Apr 2021 13:19:47 +0100</pubDate>
-      
       <guid>https://hoffmanzheng.github.io/tags/java/</guid>
       <description></description>
     </item>
-    
     <item>
-      <title>tools</title>
-      <link>https://hoffmanzheng.github.io/tags/tools/</link>
-      <pubDate>Mon, 28 Dec 2020 13:19:47 +0100</pubDate>
-      
-      <guid>https://hoffmanzheng.github.io/tags/tools/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>jvm</title>
+      <title>Jvm</title>
       <link>https://hoffmanzheng.github.io/tags/jvm/</link>
       <pubDate>Fri, 06 Nov 2020 13:37:47 +0100</pubDate>
-      
       <guid>https://hoffmanzheng.github.io/tags/jvm/</guid>
       <description></description>
     </item>
-    
   </channel>
 </rss>

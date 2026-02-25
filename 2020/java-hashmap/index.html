@@ -1,273 +1,307 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2020/net-html/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/java-hashmap/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           Java：HashMap 源码解读 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="Java：HashMap 源码解读 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Java：HashMap 源码解读 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。
+HashMap 的实现原理 1. 哈希表底层实现原理 "><meta name="keywords" content='Java'>
+  <meta itemprop="name" content="Java：HashMap 源码解读">
+  <meta itemprop="description" content="本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。
+HashMap 的实现原理 1. 哈希表底层实现原理">
+  <meta itemprop="datePublished" content="2020-01-28T14:11:47+01:00">
+  <meta itemprop="dateModified" content="2020-01-28T14:11:47+01:00">
+  <meta itemprop="wordCount" content="1082">
+  <meta itemprop="keywords" content="Java"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/java-hashmap/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="Java：HashMap 源码解读">
+  <meta property="og:description" content="本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。
+HashMap 的实现原理 1. 哈希表底层实现原理">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-01-28T14:11:47+01:00">
+    <meta property="article:modified_time" content="2020-01-28T14:11:47+01:00">
+    <meta property="article:tag" content="Java">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Java：HashMap 源码解读">
+  <meta name="twitter:description" content="本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。
+HashMap 的实现原理 1. 哈希表底层实现原理">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/java-hashmap/" title="Java：HashMap 源码解读 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/" title="Java：多线程下的安全容器" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/net-html/" title="Web：HTML 常用标签" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Java：HashMap 源码解读",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "Java：HashMap 源码解读",
-    "headline" : "Java：HashMap 源码解读",
-    "description" : "本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get \/ put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。\nHashMap 的实现原理 1. 哈希表底层实现原理 哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 Entry\u0026lt;K, V\u0026gt; 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。\ntransient Node\u0026lt;K,V\u0026gt;[] table; static class Node\u0026lt;K,V\u0026gt; implements Map.Entry\u0026lt;K,V\u0026gt; { final int hash; final K key; V value; Node\u0026lt;K,V\u0026gt; next; } 2. 为什么采用数组\u002b链表的数据结构 数组的随机访问功能为 O(1) 的哈希表（get \/ put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。\n为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。\n3. 哈希冲突的解决办法  开放地址法： 链地址法： 再哈希法： 公共溢出区域法：  HashMap 扩容 1. HashMap 在什么条件下扩容 若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量 * 装载因子，则会触发 resize() 方法，初始化 table 或是使哈希表容量翻倍。",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2020",
-    "datePublished": "2020-01-28 14:11:47 \u002b0100 \u002b0100",
-    "dateModified" : "2020-01-28 14:11:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/java-hashmap\/",
-    "wordCount" : "1088",
-    "keywords" : [ "Java", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/java-hashmap\/"
+    },"genre": "posts","keywords": "Java","wordcount":  1082 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2020\/java-hashmap\/","datePublished": "2020-01-28T14:11:47+01:00","dateModified": "2020-01-28T14:11:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Java：HashMap 源码解读</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/study-notes/" class="post-category" title="Category - Study Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Study Notes</a></span></div><div class="post-meta-line"><span title="published on 2020-01-28 14:11:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2020-01-28">2020-01-28</time></span>&nbsp;<span title="1082 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 1100 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>6 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Java：HashMap 源码解读</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2020-01-28 itemprop="datePublished">January 28, 2020</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/study-notes/"> Study notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,1088 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
-
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。</p>
-<h3 id="hashmap-的实现原理">HashMap 的实现原理</h3>
-<h4 id="1-哈希表底层实现原理">1. 哈希表底层实现原理</h4>
-<p><img src="/images/hashmap%E5%BA%95%E5%B1%82%E7%BB%93%E6%9E%84.png" alt=""></p>
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#hashmap-的实现原理">HashMap 的实现原理</a>
+          <ul>
+            <li><a href="#1-哈希表底层实现原理">1. 哈希表底层实现原理</a></li>
+            <li><a href="#2-为什么采用数组链表的数据结构">2. 为什么采用数组+链表的数据结构</a></li>
+            <li><a href="#3-哈希冲突的解决办法">3. 哈希冲突的解决办法</a></li>
+          </ul>
+        </li>
+        <li><a href="#hashmap-扩容">HashMap 扩容</a>
+          <ul>
+            <li><a href="#1-hashmap-在什么条件下扩容">1. HashMap 在什么条件下扩容</a></li>
+            <li><a href="#2-为什么扩容是-2-的-n-次幂">2. 为什么扩容是 2 的 n 次幂</a></li>
+            <li><a href="#3-为什么要先高-16-位异或低-16-位再取模运算">3. 为什么要先高 16 位异或低 16 位再取模运算</a></li>
+          </ul>
+        </li>
+        <li><a href="#hashmap-的-get--put-过程">HashMap 的 get / put 过程</a>
+          <ul>
+            <li><a href="#1-哈希表的-put-过程">1. 哈希表的 put 过程</a></li>
+            <li><a href="#2-哈希表的-get-过程">2. 哈希表的 get 过程</a></li>
+            <li><a href="#3-还有哪些哈希算法">3. 还有哪些哈希算法</a></li>
+            <li><a href="#4-字符串中-hashcode-的实现">4. 字符串中 hashCode 的实现</a></li>
+          </ul>
+        </li>
+        <li><a href="#jdk-18-对-hashmap-的改进">JDK 1.8 对 HashMap 的改进</a>
+          <ul>
+            <li><a href="#1-jdk-17-的-hashmap-存在的问题">1. JDK 1.7 的 HashMap 存在的问题</a>
+              <ul>
+                <li><a href="#11-hashmap-cve-安全隐患">1.1 HashMap CVE 安全隐患</a></li>
+                <li><a href="#12-hashmap-多线程操作导致死循环问题">1.2 HashMap 多线程操作导致死循环问题</a></li>
+              </ul>
+            </li>
+            <li><a href="#2-jdk-18-之前的-hashmap-源码实现">2. JDK 1.8 之前的 HashMap 源码实现</a></li>
+            <li><a href="#3-jdk-18-之后的-hashmap-底层实现">3. JDK 1.8 之后的 HashMap 底层实现</a></li>
+            <li><a href="#4-为什么不直接用红黑树而选择先用链表再转红黑树">4. 为什么不直接用红黑树，而选择先用链表再转红黑树</a></li>
+            <li><a href="#5-能否用二叉查找树代替红黑树">5. 能否用二叉查找树代替红黑树</a></li>
+          </ul>
+        </li>
+        <li><a href="#hashmap-的并发问题">HashMap 的并发问题</a>
+          <ul>
+            <li><a href="#1-hashmap-在并发编程环境下有什么问题">1. HashMap 在并发编程环境下有什么问题</a></li>
+            <li><a href="#2-在-jdk-18-中还有这些问题么">2. 在 JDK 1.8 中还有这些问题么</a></li>
+            <li><a href="#3-你一般怎么解决这些问题的">3. 你一般怎么解决这些问题的</a></li>
+          </ul>
+        </li>
+        <li><a href="#hashmap-key-问题">HashMap key 问题</a>
+          <ul>
+            <li><a href="#1-键可以为-null-值么">1. 键可以为 Null 值么</a></li>
+            <li><a href="#2-你一般用什么作为-hashmap-的-key">2. 你一般用什么作为 HashMap 的 key</a></li>
+            <li><a href="#3-我用可变类当-hashmap-的-key-有什么问题">3. 我用可变类当 HashMap 的 key 有什么问题</a></li>
+            <li><a href="#4-如果实现让一个自定义的-class-作为-hashmap-的-key">4. 如果实现让一个自定义的 class 作为 HashMap 的 key</a></li>
+          </ul>
+        </li>
+        <li><a href="#hashmap-javadoc">HashMap Javadoc</a>
+          <ul>
+            <li><a href="#1-概述">1. 概述</a></li>
+            <li><a href="#2-初始容量及装载因子">2. 初始容量及装载因子</a></li>
+            <li><a href="#3-多线程问题">3. 多线程问题</a></li>
+            <li><a href="#4-底层实现">4. 底层实现</a></li>
+            <li><a href="#5-红黑树阈值">5. 红黑树阈值</a></li>
+            <li><a href="#6-其他实现">6. 其他实现</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>本篇基于哈希表的源码详解哈希表相关的各种问题，包括底层实现、扩容机制、get / put 过程、JDK 1.8 的改进、并发问题及 key 问题，并对源码文档进行翻译。</p>
+<h3 class="heading-element" id="hashmap-的实现原理"><span>HashMap 的实现原理</span>
+  <a href="#hashmap-%e7%9a%84%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-哈希表底层实现原理"><span>1. 哈希表底层实现原理</span>
+  <a href="#1-%e5%93%88%e5%b8%8c%e8%a1%a8%e5%ba%95%e5%b1%82%e5%ae%9e%e7%8e%b0%e5%8e%9f%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><img loading="lazy" src='/images/hashmap底层结构.png' alt="/images/hashmap底层结构.png"></p>
 <p>哈希表是一个使用数组与链表（红黑树）实现的键值对集合。哈希桶由 Node 数组构成，键值对用实现了 <code>Entry&lt;K, V&gt;</code> 接口的内部类 Node 存储，它具有 next 指针，将同一个哈希桶中的键值对结构链表化；当桶中的键值对数量超过树化阈值 8 时，哈希桶会转变成红黑树结构。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">transient</span> Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[]</span> table<span style="color:#f92672">;</span>
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span><span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> hash<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">final</span> K key<span style="color:#f92672">;</span>
-        V value<span style="color:#f92672">;</span>
-        Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> next<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h4 id="2-为什么采用数组链表的数据结构">2. 为什么采用数组+链表的数据结构</h4>
-<p>数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">transient</span> Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;[]</span> table;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Node</span><span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> Map.<span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> hash;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">final</span> K key;
+</span></span><span style="display:flex;"><span>        V value;
+</span></span><span style="display:flex;"><span>        Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> next;
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h4 class="heading-element" id="2-为什么采用数组链表的数据结构"><span>2. 为什么采用数组+链表的数据结构</span>
+  <a href="#2-%e4%b8%ba%e4%bb%80%e4%b9%88%e9%87%87%e7%94%a8%e6%95%b0%e7%bb%84%e9%93%be%e8%a1%a8%e7%9a%84%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>数组的随机访问功能为 O(1) 的哈希表（get / put）操作提供了性能保障；链表用于解决哈希冲突，存放具有哈希冲突的元素；同时链表数据结构在增删元素的时候比较方便，不用像数组一样在扩容的时候 new 一个再复制。</p>
 <p>为了改善链表不适合查找的问题，JDK 8 提供了将链表转换成适合查找的红黑树的功能。</p>
-<h4 id="3-哈希冲突的解决办法">3. 哈希冲突的解决办法</h4>
-<ol>
+<h4 class="heading-element" id="3-哈希冲突的解决办法"><span>3. 哈希冲突的解决办法</span>
+  <a href="#3-%e5%93%88%e5%b8%8c%e5%86%b2%e7%aa%81%e7%9a%84%e8%a7%a3%e5%86%b3%e5%8a%9e%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
 <li>开放地址法：</li>
 <li>链地址法：</li>
 <li>再哈希法：</li>
 <li>公共溢出区域法：</li>
 </ol>
-<h3 id="hashmap-扩容">HashMap 扩容</h3>
-<h4 id="1-hashmap-在什么条件下扩容">1. HashMap 在什么条件下扩容</h4>
-<p>若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量 * 装载因子，则会触发 <code>resize()</code> 方法，初始化 table 或是使哈希表容量翻倍。</p>
-<h4 id="2-为什么扩容是-2-的-n-次幂">2. 为什么扩容是 2 的 n 次幂</h4>
-<p>相比于 % 取模，哈希表选择 <code>(n - 1) &amp; hash</code> 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.. 而这样哈希桶的最大 index = 2^n -1，二进制就成了 01111.. 再与对象的哈希值做按位与运算，就能快速的计算出对应哈希桶 index 值，并且是分布均匀的。</p>
+<h3 class="heading-element" id="hashmap-扩容"><span>HashMap 扩容</span>
+  <a href="#hashmap-%e6%89%a9%e5%ae%b9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-hashmap-在什么条件下扩容"><span>1. HashMap 在什么条件下扩容</span>
+  <a href="#1-hashmap-%e5%9c%a8%e4%bb%80%e4%b9%88%e6%9d%a1%e4%bb%b6%e4%b8%8b%e6%89%a9%e5%ae%b9" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>若当前哈希表实例为 null 或者 put 后实例的数据量 size 超过容量 * 装载因子，则会触发 <code>resize()</code> 方法，初始化 table 或是使哈希表容量翻倍。</p>
+<h4 class="heading-element" id="2-为什么扩容是-2-的-n-次幂"><span>2. 为什么扩容是 2 的 n 次幂</span>
+  <a href="#2-%e4%b8%ba%e4%bb%80%e4%b9%88%e6%89%a9%e5%ae%b9%e6%98%af-2-%e7%9a%84-n-%e6%ac%a1%e5%b9%82" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>相比于 % 取模，哈希表选择 <code>(n - 1) &amp; hash</code> 这个更高效率的按位与运算作为哈希桶的索引运算，2^n 的二进制为 10000.. 而这样哈希桶的最大 index = 2^n -1，二进制就成了 01111.. 再与对象的哈希值做按位与运算，就能快速的计算出对应哈希桶 index 值，并且是分布均匀的。</p>
 <p>若在创建哈希表时给定初始容量，哈希表也会用 <code>roundUpToPowerOf2</code> / <code>tableSizeFor</code> 将其扩充为2的幂次方大小。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">// Returns a power of two size for the given target capacity. 
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">tableSizeFor</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> cap<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-	<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> cap <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-    n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 1<span style="color:#f92672">;</span>
-    n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 2<span style="color:#f92672">;</span>
-    n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 4<span style="color:#f92672">;</span>
-    n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 8<span style="color:#f92672">;</span>
-    n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 16<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&gt;=</span> MAXIMUM_CAPACITY<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> MAXIMUM_CAPACITY <span style="color:#f92672">:</span> n <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h4 id="3-为什么要先高-16-位异或低-16-位再取模运算">3. 为什么要先高 16 位异或低 16 位再取模运算</h4>
-<p>文档里解释的很清楚了：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">// Returns a power of two size for the given target capacity. </span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">tableSizeFor</span>(<span style="color:#66d9ef">int</span> cap) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> cap <span style="color:#f92672">-</span> 1;
+</span></span><span style="display:flex;"><span>    n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 1;
+</span></span><span style="display:flex;"><span>    n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 2;
+</span></span><span style="display:flex;"><span>    n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 4;
+</span></span><span style="display:flex;"><span>    n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 8;
+</span></span><span style="display:flex;"><span>    n <span style="color:#f92672">|=</span> n <span style="color:#f92672">&gt;&gt;&gt;</span> 16;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (n <span style="color:#f92672">&lt;</span> 0) <span style="color:#f92672">?</span> 1 : (n <span style="color:#f92672">&gt;=</span> MAXIMUM_CAPACITY) <span style="color:#f92672">?</span> MAXIMUM_CAPACITY : n <span style="color:#f92672">+</span> 1;
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h4 class="heading-element" id="3-为什么要先高-16-位异或低-16-位再取模运算"><span>3. 为什么要先高 16 位异或低 16 位再取模运算</span>
+  <a href="#3-%e4%b8%ba%e4%bb%80%e4%b9%88%e8%a6%81%e5%85%88%e9%ab%98-16-%e4%bd%8d%e5%bc%82%e6%88%96%e4%bd%8e-16-%e4%bd%8d%e5%86%8d%e5%8f%96%e6%a8%a1%e8%bf%90%e7%ae%97" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>文档里解释的很清楚了：</p>
 <ul>
 <li>只有高位不同的哈希值将会一直在哈希桶索引的运算中发生碰撞，比如连续整数的 float 键集。所以应用了一种变换来向下扩散高位哈希值在索引运算中的影响。这是一个在速度、实用性和位分散质量之间的权衡。因为大多数哈希集已经合理分布（无法从扩散中受益），并且由于我们使用树来处理容器中的大量冲突，我们以最廉价的移位 XOR 异或方式合并高位哈希值在索引运算中的影响，并减少系统损失，否则这些高位值会由于有限的哈希表容量而永远不会在索引运算中被使用。即：<strong>为了提高数据散裂性</strong>。</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> h<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">())</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 16<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="hashmap-的-get--put-过程">HashMap 的 get / put 过程</h3>
-<h4 id="1-哈希表的-put-过程">1. 哈希表的 put 过程</h4>
-<p><img src="/images/%E5%93%88%E5%B8%8C%E8%A1%A8put.png" alt=""></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span>(Object key) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> h;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) <span style="color:#f92672">?</span> 0 : (h <span style="color:#f92672">=</span> key.<span style="color:#a6e22e">hashCode</span>()) <span style="color:#f92672">^</span> (h <span style="color:#f92672">&gt;&gt;&gt;</span> 16);
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h3 class="heading-element" id="hashmap-的-get--put-过程"><span>HashMap 的 get / put 过程</span>
+  <a href="#hashmap-%e7%9a%84-get--put-%e8%bf%87%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-哈希表的-put-过程"><span>1. 哈希表的 put 过程</span>
+  <a href="#1-%e5%93%88%e5%b8%8c%e8%a1%a8%e7%9a%84-put-%e8%bf%87%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><img loading="lazy" src='/images/哈希表put.png' alt="/images/哈希表put.png"></p>
 <p>需要注意的几点：</p>
 <ul>
 <li>put 方法的 <strong>返回值是 oldValue</strong>。</li>
 <li>Java 1.8 的哈希表在 put 插入新节点时是 <strong>将新节点直接插入在链表尾部</strong>（1.7 为插入链表头部），并用 binCount 计数当前链表长度 - 1，当超过树化阈值时执行链表树化操作。</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> V <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>K key<span style="color:#f92672">,</span> V value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> putVal<span style="color:#f92672">(</span>hash<span style="color:#f92672">(</span>key<span style="color:#f92672">),</span> key<span style="color:#f92672">,</span> value<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-    	<span style="color:#75715e">// 对key的hashCode()做hash
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-<span style="color:#66d9ef">final</span> V <span style="color:#a6e22e">putVal</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> hash<span style="color:#f92672">,</span> K key<span style="color:#f92672">,</span> V value<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> onlyIfAbsent<span style="color:#f92672">,</span>
-                   <span style="color:#66d9ef">boolean</span> evict<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;[]</span> tab<span style="color:#f92672">;</span> Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> p<span style="color:#f92672">;</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> i<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>tab <span style="color:#f92672">=</span> table<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">=</span> tab<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span>
-            n <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>tab <span style="color:#f92672">=</span> resize<span style="color:#f92672">()).</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#75715e">// Ⅰ：哈希表为空或为null则初始化，n为哈希桶数量
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>p <span style="color:#f92672">=</span> tab<span style="color:#f92672">[</span>i <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> hash<span style="color:#f92672">])</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-            tab<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> newNode<span style="color:#f92672">(</span>hash<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> value<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
-    <span style="color:#75715e">// Ⅱ：若key对应的哈希桶i的第一个节点为null，则直接新建节点
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            Node<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;</span> e<span style="color:#f92672">;</span> K k<span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">hash</span> <span style="color:#f92672">==</span> hash <span style="color:#f92672">&amp;&amp;</span>
-                <span style="color:#f92672">((</span>k <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> key <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>k<span style="color:#f92672">))))</span>
-                e <span style="color:#f92672">=</span> p<span style="color:#f92672">;</span>
-            <span style="color:#75715e">// Ⅲ：若当前key与数组第一个元素的相同（哈希值相等，并且key相同：==/equals）跳至下方if更新value
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p <span style="color:#66d9ef">instanceof</span> TreeNode<span style="color:#f92672">)</span>
-                e <span style="color:#f92672">=</span> <span style="color:#f92672">((</span>TreeNode<span style="color:#f92672">&lt;</span>K<span style="color:#f92672">,</span>V<span style="color:#f92672">&gt;)</span>p<span style="color:#f92672">).</span><span style="color:#a6e22e">putTreeVal</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> tab<span style="color:#f92672">,</span> hash<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> value<span style="color:#f92672">);</span>
-            <span style="color:#75715e">// Ⅳ：若当前数组Node已经是红黑树，在树中插入新的键值对
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> binCount <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> <span style="color:#f92672">;</span> <span style="color:#f92672">++</span>binCount<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>e <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        p<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> newNode<span style="color:#f92672">(</span>hash<span style="color:#f92672">,</span> key<span style="color:#f92672">,</span> value<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
-                        <span style="color:#75715e">// Ⅴ：在链表尾部找到空的节点，插入新Node
-</span><span style="color:#75715e"></span>                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>binCount <span style="color:#f92672">&gt;=</span> TREEIFY_THRESHOLD <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#75715e">// -1 for 1st
-</span><span style="color:#75715e"></span>                            treeifyBin<span style="color:#f92672">(</span>tab<span style="color:#f92672">,</span> hash<span style="color:#f92672">);</span>
-                        <span style="color:#75715e">// Ⅵ：若加入新节点后，该链表长度大于等于8，变成红黑树结构
-</span><span style="color:#75715e"></span>                        <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                    <span style="color:#f92672">}</span>
-                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">.</span><span style="color:#a6e22e">hash</span> <span style="color:#f92672">==</span> hash <span style="color:#f92672">&amp;&amp;</span>
-                        <span style="color:#f92672">((</span>k <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> key <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>k<span style="color:#f92672">))))</span>
-                        <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                    <span style="color:#75715e">// Ⅶ：若链表中存在同一个key，跳至下方if更新value
-</span><span style="color:#75715e"></span>                    p <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// existing mapping for key
-</span><span style="color:#75715e"></span>                V oldValue <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">value</span><span style="color:#f92672">;</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>onlyIfAbsent <span style="color:#f92672">||</span> oldValue <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-                    e<span style="color:#f92672">.</span><span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value<span style="color:#f92672">;</span>
-                <span style="color:#75715e">// Ⅷ：key插入成功，更新value
-</span><span style="color:#75715e"></span>                afterNodeAccess<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
-                <span style="color:#66d9ef">return</span> oldValue<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#f92672">++</span>modCount<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(++</span>size <span style="color:#f92672">&gt;</span> threshold<span style="color:#f92672">)</span>
-            resize<span style="color:#f92672">();</span>
-    	<span style="color:#75715e">// Ⅸ：若size超过阈值，则扩容
-</span><span style="color:#75715e"></span>        afterNodeInsertion<span style="color:#f92672">(</span>evict<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-</code></pre></div><h4 id="2-哈希表的-get-过程">2. 哈希表的 get 过程</h4>
-<p>对 key 做哈希运算，重新计算哈希值：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> V <span style="color:#a6e22e">put</span>(K key, V value) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> putVal(hash(key), key, value, <span style="color:#66d9ef">false</span>, <span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>    	<span style="color:#75715e">// 对key的hashCode()做hash</span>
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">final</span> V <span style="color:#a6e22e">putVal</span>(<span style="color:#66d9ef">int</span> hash, K key, V value, <span style="color:#66d9ef">boolean</span> onlyIfAbsent,
+</span></span><span style="display:flex;"><span>                   <span style="color:#66d9ef">boolean</span> evict) {
+</span></span><span style="display:flex;"><span>        Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;[]</span> tab; Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> p; <span style="color:#66d9ef">int</span> n, i;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ((tab <span style="color:#f92672">=</span> table) <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> (n <span style="color:#f92672">=</span> tab.<span style="color:#a6e22e">length</span>) <span style="color:#f92672">==</span> 0)
+</span></span><span style="display:flex;"><span>            n <span style="color:#f92672">=</span> (tab <span style="color:#f92672">=</span> resize()).<span style="color:#a6e22e">length</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Ⅰ：哈希表为空或为null则初始化，n为哈希桶数量</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ((p <span style="color:#f92672">=</span> tab<span style="color:#f92672">[</span>i <span style="color:#f92672">=</span> (n <span style="color:#f92672">-</span> 1) <span style="color:#f92672">&amp;</span> hash<span style="color:#f92672">]</span>) <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>            tab<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> newNode(hash, key, value, <span style="color:#66d9ef">null</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Ⅱ：若key对应的哈希桶i的第一个节点为null，则直接新建节点</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            Node<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span> e; K k;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (p.<span style="color:#a6e22e">hash</span> <span style="color:#f92672">==</span> hash <span style="color:#f92672">&amp;&amp;</span>
+</span></span><span style="display:flex;"><span>                ((k <span style="color:#f92672">=</span> p.<span style="color:#a6e22e">key</span>) <span style="color:#f92672">==</span> key <span style="color:#f92672">||</span> (key <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> key.<span style="color:#a6e22e">equals</span>(k))))
+</span></span><span style="display:flex;"><span>                e <span style="color:#f92672">=</span> p;
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Ⅲ：若当前key与数组第一个元素的相同（哈希值相等，并且key相同：==/equals）跳至下方if更新value</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (p <span style="color:#66d9ef">instanceof</span> TreeNode)
+</span></span><span style="display:flex;"><span>                e <span style="color:#f92672">=</span> ((TreeNode<span style="color:#f92672">&lt;</span>K,V<span style="color:#f92672">&gt;</span>)p).<span style="color:#a6e22e">putTreeVal</span>(<span style="color:#66d9ef">this</span>, tab, hash, key, value);
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Ⅳ：若当前数组Node已经是红黑树，在树中插入新的键值对</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> binCount <span style="color:#f92672">=</span> 0; ; <span style="color:#f92672">++</span>binCount) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> ((e <span style="color:#f92672">=</span> p.<span style="color:#a6e22e">next</span>) <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>                        p.<span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> newNode(hash, key, value, <span style="color:#66d9ef">null</span>);
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e">// Ⅴ：在链表尾部找到空的节点，插入新Node</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">if</span> (binCount <span style="color:#f92672">&gt;=</span> TREEIFY_THRESHOLD <span style="color:#f92672">-</span> 1) <span style="color:#75715e">// -1 for 1st</span>
+</span></span><span style="display:flex;"><span>                            treeifyBin(tab, hash);
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e">// Ⅵ：若加入新节点后，该链表长度大于等于8，变成红黑树结构</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                    }
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> (e.<span style="color:#a6e22e">hash</span> <span style="color:#f92672">==</span> hash <span style="color:#f92672">&amp;&amp;</span>
+</span></span><span style="display:flex;"><span>                        ((k <span style="color:#f92672">=</span> e.<span style="color:#a6e22e">key</span>) <span style="color:#f92672">==</span> key <span style="color:#f92672">||</span> (key <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> key.<span style="color:#a6e22e">equals</span>(k))))
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// Ⅶ：若链表中存在同一个key，跳至下方if更新value</span>
+</span></span><span style="display:flex;"><span>                    p <span style="color:#f92672">=</span> e;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (e <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) { <span style="color:#75715e">// existing mapping for key</span>
+</span></span><span style="display:flex;"><span>                V oldValue <span style="color:#f92672">=</span> e.<span style="color:#a6e22e">value</span>;
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>onlyIfAbsent <span style="color:#f92672">||</span> oldValue <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>)
+</span></span><span style="display:flex;"><span>                    e.<span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// Ⅷ：key插入成功，更新value</span>
+</span></span><span style="display:flex;"><span>                afterNodeAccess(e);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> oldValue;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">++</span>modCount;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">++</span>size <span style="color:#f92672">&gt;</span> threshold)
+</span></span><span style="display:flex;"><span>            resize();
+</span></span><span style="display:flex;"><span>    	<span style="color:#75715e">// Ⅸ：若size超过阈值，则扩容</span>
+</span></span><span style="display:flex;"><span>        afterNodeInsertion(evict);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>    }</span></span></code></pre></div><h4 class="heading-element" id="2-哈希表的-get-过程"><span>2. 哈希表的 get 过程</span>
+  <a href="#2-%e5%93%88%e5%b8%8c%e8%a1%a8%e7%9a%84-get-%e8%bf%87%e7%a8%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>对 key 做哈希运算，重新计算哈希值：</p>
 <ul>
 <li>哈希表为 null，或哈希桶长度不大于0，返回 null。</li>
 <li>计算对应哈希桶索引，判断桶内第一个元素是否为所需键值对，命中则直接返回。</li>
@@ -283,106 +317,159 @@
 <li>哈希值相等</li>
 <li>key 实例 == 或者 equals</li>
 </ul>
-<h4 id="3-还有哪些哈希算法">3. 还有哪些哈希算法</h4>
-<p>Hash函数是指把一个大范围映射到一个小范围，往往是为了节省空间，使得数据容易保存。</p>
+<h4 class="heading-element" id="3-还有哪些哈希算法"><span>3. 还有哪些哈希算法</span>
+  <a href="#3-%e8%bf%98%e6%9c%89%e5%93%aa%e4%ba%9b%e5%93%88%e5%b8%8c%e7%ae%97%e6%b3%95" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>Hash函数是指把一个大范围映射到一个小范围，往往是为了节省空间，使得数据容易保存。</p>
 <p>比较出名的有MurmurHash、MD4、MD5等等</p>
-<h4 id="4-字符串中-hashcode-的实现">4. 字符串中 hashCode 的实现</h4>
-<p><code>31 * i = 32 * i - i = (i &lt;&lt; 5) - i</code>，这种位移与减法结合的计算相比一般的运算快很多。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hashCode</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> hash<span style="color:#f92672">;</span>
-    <span style="color:#75715e">// 若当前字符串已经计算过哈希值，则直接返回
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">char</span> val<span style="color:#f92672">[]</span> <span style="color:#f92672">=</span> value<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> value<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            h <span style="color:#f92672">=</span> 31 <span style="color:#f92672">*</span> h <span style="color:#f92672">+</span> val<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-            <span style="color:#75715e">// val[i]为第i+1个字符的ASCⅡ码
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-        hash <span style="color:#f92672">=</span> h<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> h<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="jdk-18-对-hashmap-的改进">JDK 1.8 对 HashMap 的改进</h3>
-<h4 id="1-jdk-17-的-hashmap-存在的问题">1. JDK 1.7 的 HashMap 存在的问题</h4>
-<h5 id="11-hashmap-cve-安全隐患">1.1 HashMap CVE 安全隐患</h5>
-<p><code>Tomcat</code> 在 2011 年邮件中报道了哈希表可以通过精心构造的恶意 http 请求造成链表性能退化，并引发网站 DoS 拒绝服务攻击的现象。这个问题在之后的 JDK 7 中得到了解决：对传进来的字符串进行特殊的哈希运算 <code>stringHash32</code> ，来避免恶意的字符串传值造成的哈希表链表性能退化的情况。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-	<span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>0 <span style="color:#f92672">!=</span> h <span style="color:#f92672">&amp;&amp;</span> k <span style="color:#66d9ef">instanceof</span> String<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-		<span style="color:#66d9ef">return</span> sun<span style="color:#f92672">.</span><span style="color:#a6e22e">misc</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Hashing</span><span style="color:#f92672">.</span><span style="color:#a6e22e">stringHash32</span><span style="color:#f92672">((</span>String<span style="color:#f92672">)</span> k<span style="color:#f92672">);</span>
-	<span style="color:#f92672">}</span>
-    <span style="color:#f92672">...</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h5 id="12-hashmap-多线程操作导致死循环问题">1.2 HashMap 多线程操作导致死循环问题</h5>
-<p>主要原因在于并发下 HashMap 扩容时，往新的 HashMap 转移数据可能产生循环链表（此处链表插入是往前插入的，导致和原哈希桶中的位置相反，产生环形链表），导致之后在该哈希桶中搜索键值时可能会发生的死锁现象。<a href="https://coolshell.cn/articles/9606.html">详情查看酷壳：Java HashMap 的死循环</a></p>
+<h4 class="heading-element" id="4-字符串中-hashcode-的实现"><span>4. 字符串中 hashCode 的实现</span>
+  <a href="#4-%e5%ad%97%e7%ac%a6%e4%b8%b2%e4%b8%ad-hashcode-%e7%9a%84%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p><code>31 * i = 32 * i - i = (i &lt;&lt; 5) - i</code>，这种位移与减法结合的计算相比一般的运算快很多。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hashCode</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> hash;
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 若当前字符串已经计算过哈希值，则直接返回</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (h <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> value.<span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> 0) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">char</span> val<span style="color:#f92672">[]</span> <span style="color:#f92672">=</span> value;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> value.<span style="color:#a6e22e">length</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            h <span style="color:#f92672">=</span> 31 <span style="color:#f92672">*</span> h <span style="color:#f92672">+</span> val<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// val[i]为第i+1个字符的ASCⅡ码</span>
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        hash <span style="color:#f92672">=</span> h;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> h;
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h3 class="heading-element" id="jdk-18-对-hashmap-的改进"><span>JDK 1.8 对 HashMap 的改进</span>
+  <a href="#jdk-18-%e5%af%b9-hashmap-%e7%9a%84%e6%94%b9%e8%bf%9b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-jdk-17-的-hashmap-存在的问题"><span>1. JDK 1.7 的 HashMap 存在的问题</span>
+  <a href="#1-jdk-17-%e7%9a%84-hashmap-%e5%ad%98%e5%9c%a8%e7%9a%84%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><h5 class="heading-element" id="11-hashmap-cve-安全隐患"><span>1.1 HashMap CVE 安全隐患</span>
+  <a href="#11-hashmap-cve-%e5%ae%89%e5%85%a8%e9%9a%90%e6%82%a3" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p><code>Tomcat</code> 在 2011 年邮件中报道了哈希表可以通过精心构造的恶意 http 请求造成链表性能退化，并引发网站 DoS 拒绝服务攻击的现象。这个问题在之后的 JDK 7 中得到了解决：对传进来的字符串进行特殊的哈希运算 <code>stringHash32</code> ，来避免恶意的字符串传值造成的哈希表链表性能退化的情况。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span>(Object k) {
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">if</span> (0 <span style="color:#f92672">!=</span> h <span style="color:#f92672">&amp;&amp;</span> k <span style="color:#66d9ef">instanceof</span> String) {
+</span></span><span style="display:flex;"><span>		<span style="color:#66d9ef">return</span> sun.<span style="color:#a6e22e">misc</span>.<span style="color:#a6e22e">Hashing</span>.<span style="color:#a6e22e">stringHash32</span>((String) k);
+</span></span><span style="display:flex;"><span>	}
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h5 class="heading-element" id="12-hashmap-多线程操作导致死循环问题"><span>1.2 HashMap 多线程操作导致死循环问题</span>
+  <a href="#12-hashmap-%e5%a4%9a%e7%ba%bf%e7%a8%8b%e6%93%8d%e4%bd%9c%e5%af%bc%e8%87%b4%e6%ad%bb%e5%be%aa%e7%8e%af%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h5><p>主要原因在于并发下 HashMap 扩容时，往新的 HashMap 转移数据可能产生循环链表（此处链表插入是往前插入的，导致和原哈希桶中的位置相反，产生环形链表），导致之后在该哈希桶中搜索键值时可能会发生的死锁现象。<a href="https://coolshell.cn/articles/9606.html" target="_blank" rel="external nofollow noopener noreferrer">详情查看酷壳：Java HashMap 的死循环</a></p>
 <p>不过，JDK 1.8 后解决了这个问题（使用了保持顺序的扩容 transfer 操作），但是还是不建议在多线程下使用 HashMap，因为多线程下使用 HashMap 还是会存在其他问题比如数据丢失。并发环境下推荐使用 ConcurrentHashMap 。</p>
-<h4 id="2-jdk-18-之前的-hashmap-源码实现">2. JDK 1.8 之前的 HashMap 源码实现</h4>
-<p>JDK 1.8 之前 <code>HashMap</code> 底层是 <strong>数组和链表</strong> 结合在一起使用也就是链表散列。HashMap 通过 key 的 哈希值经过 <strong>扰动函数</strong> 处理过后得到新的 hash 值，然后通过 <code>(n - 1) &amp; hash</code> 判断当前元素存放的位置（这里的 n 指的是数组的长度），如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。</p>
+<h4 class="heading-element" id="2-jdk-18-之前的-hashmap-源码实现"><span>2. JDK 1.8 之前的 HashMap 源码实现</span>
+  <a href="#2-jdk-18-%e4%b9%8b%e5%89%8d%e7%9a%84-hashmap-%e6%ba%90%e7%a0%81%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>JDK 1.8 之前 <code>HashMap</code> 底层是 <strong>数组和链表</strong> 结合在一起使用也就是链表散列。HashMap 通过 key 的 哈希值经过 <strong>扰动函数</strong> 处理过后得到新的 hash 值，然后通过 <code>(n - 1) &amp; hash</code> 判断当前元素存放的位置（这里的 n 指的是数组的长度），如果当前位置存在元素的话，就判断该元素与要存入的元素的 hash 值以及 key 是否相同，如果相同的话，直接覆盖，不相同就通过拉链法解决冲突。</p>
 <ul>
 <li>扰动函数（减少哈希碰撞）</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/* 源码注释：对原有对象的哈希值进行一次补充的哈希运算得到结果值，
-</span><span style="color:#75715e">来防止低质量的哈希方程。这是非常重要的，
-</span><span style="color:#75715e">因为哈希表用2的幂用为哈希表的长度，在低位bits相同时就会发生哈希碰撞。*/</span>
-
-<span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-	h <span style="color:#f92672">^=</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 20<span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 12<span style="color:#f92672">);</span>
-	<span style="color:#66d9ef">return</span> h <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 7<span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 4<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><ul>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/* 源码注释：对原有对象的哈希值进行一次补充的哈希运算得到结果值，
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">来防止低质量的哈希方程。这是非常重要的，
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">因为哈希表用2的幂用为哈希表的长度，在低位bits相同时就会发生哈希碰撞。*/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span>(Object k) {
+</span></span><span style="display:flex;"><span>	h <span style="color:#f92672">^=</span> (h <span style="color:#f92672">&gt;&gt;&gt;</span> 20) <span style="color:#f92672">^</span> (h <span style="color:#f92672">&gt;&gt;&gt;</span> 12);
+</span></span><span style="display:flex;"><span>	<span style="color:#66d9ef">return</span> h <span style="color:#f92672">^</span> (h <span style="color:#f92672">&gt;&gt;&gt;</span> 7) <span style="color:#f92672">^</span> (h <span style="color:#f92672">&gt;&gt;&gt;</span> 4);
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><ul>
 <li>链地址法解决哈希碰撞</li>
 </ul>
 <p>思想：为每个哈希值建立一个单链表，当发生哈希碰撞时，将记录插入到链表中。</p>
-<p><img src="/images/HashBucketLinked.png" alt="链地址法解决哈希碰撞"></p>
+<p><img loading="lazy" src='/images/HashBucketLinked.png' alt="链地址法解决哈希碰撞"></p>
 <ul>
 <li>扩容复制数据时，<strong>会改变数据在链表结构中的顺序</strong>，导致并发下的死循环。</li>
 </ul>
-<h4 id="3-jdk-18-之后的-hashmap-底层实现">3. JDK 1.8 之后的 HashMap 底层实现</h4>
-<p>相比于之前的版本， JDK 1.8 之后在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为8）并且哈希桶数量不小于 64 时，将链表转化为红黑树，以减少搜索时间。（TreeMap、TreeSet 以及 JDK 1.8 之后的 HashMap 底层都用到了红黑树。）（树节点为 6 时会退化 split 为链表，中间有个差值 7 可以防止链表和树之间频繁的转换）</p>
-<p><img src="/images/HashMapTreeSet.jpeg" alt="JDK 1.8 之后的哈希表结构"></p>
+<h4 class="heading-element" id="3-jdk-18-之后的-hashmap-底层实现"><span>3. JDK 1.8 之后的 HashMap 底层实现</span>
+  <a href="#3-jdk-18-%e4%b9%8b%e5%90%8e%e7%9a%84-hashmap-%e5%ba%95%e5%b1%82%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>相比于之前的版本， JDK 1.8 之后在解决哈希冲突时有了较大的变化，当链表长度大于阈值（默认为8）并且哈希桶数量不小于 64 时，将链表转化为红黑树，以减少搜索时间。（TreeMap、TreeSet 以及 JDK 1.8 之后的 HashMap 底层都用到了红黑树。）（树节点为 6 时会退化 split 为链表，中间有个差值 7 可以防止链表和树之间频繁的转换）</p>
+<p><img loading="lazy" src='/images/HashMapTreeSet.jpeg' alt="JDK 1.8 之后的哈希表结构"></p>
 <ul>
 <li>新的哈希算法</li>
 </ul>
 <p>JDK 1.8 的 hash 方法相比于 JDK 1.7 hash 方法原理不变，但是减少了扰动次数，更加简化，并提高了运算性能。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/* 源码注释：将哈希值的较高位对低位进行异或运算，来避免低位相同、只有高位不同的哈希值发生的碰撞。
-</span><span style="color:#75715e">这是一种在速度、实用性和位扩展之间的权衡。因此我们用最便宜的方式，减少系统损失，以及合并高位哈希值
-</span><span style="color:#75715e">的影响，否则这些高位哈希值将由于哈希表长度范围的限制永远不会在索引计算中使用*/</span>
-
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span><span style="color:#f92672">(</span>Object key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> h<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">=</span> key<span style="color:#f92672">.</span><span style="color:#a6e22e">hashCode</span><span style="color:#f92672">())</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>h <span style="color:#f92672">&gt;&gt;&gt;</span> 16<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><ul>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/* 源码注释：将哈希值的较高位对低位进行异或运算，来避免低位相同、只有高位不同的哈希值发生的碰撞。
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">这是一种在速度、实用性和位扩展之间的权衡。因此我们用最便宜的方式，减少系统损失，以及合并高位哈希值
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">的影响，否则这些高位哈希值将由于哈希表长度范围的限制永远不会在索引计算中使用*/</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">hash</span>(Object key) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> h;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> (key <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) <span style="color:#f92672">?</span> 0 : (h <span style="color:#f92672">=</span> key.<span style="color:#a6e22e">hashCode</span>()) <span style="color:#f92672">^</span> (h <span style="color:#f92672">&gt;&gt;&gt;</span> 16);
+</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><ul>
 <li>扩容 transfer 后元素在链表中的顺序不变，这样就避免了在并发扩容时的死循环问题。</li>
 </ul>
-<h4 id="4-为什么不直接用红黑树而选择先用链表再转红黑树">4. 为什么不直接用红黑树，而选择先用链表再转红黑树</h4>
-<p>因为红黑树需要进行左旋，右旋，变色这些操作来保持平衡，而单链表不需要。</p>
+<h4 class="heading-element" id="4-为什么不直接用红黑树而选择先用链表再转红黑树"><span>4. 为什么不直接用红黑树，而选择先用链表再转红黑树</span>
+  <a href="#4-%e4%b8%ba%e4%bb%80%e4%b9%88%e4%b8%8d%e7%9b%b4%e6%8e%a5%e7%94%a8%e7%ba%a2%e9%bb%91%e6%a0%91%e8%80%8c%e9%80%89%e6%8b%a9%e5%85%88%e7%94%a8%e9%93%be%e8%a1%a8%e5%86%8d%e8%bd%ac%e7%ba%a2%e9%bb%91%e6%a0%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>因为红黑树需要进行左旋，右旋，变色这些操作来保持平衡，而单链表不需要。</p>
 <p>当元素小于8个当时候，此时做查询操作，链表结构已经能保证查询性能。当元素大于8个的时候，此时需要红黑树来加快查询速度，但是新增节点的效率变慢了。</p>
 <p>因此，如果一开始就用红黑树结构，元素太少，新增效率又比较慢，无疑这是浪费性能的。</p>
-<h4 id="5-能否用二叉查找树代替红黑树">5. 能否用二叉查找树代替红黑树</h4>
-<p>可以。但是二叉查找树在特殊情况下会变成一条线性结构（这就跟原来使用链表结构一样了，造成很深的问题），遍历查找会非常慢。</p>
-<h3 id="hashmap-的并发问题">HashMap 的并发问题</h3>
-<h4 id="1-hashmap-在并发编程环境下有什么问题">1. HashMap 在并发编程环境下有什么问题</h4>
-<ul>
+<h4 class="heading-element" id="5-能否用二叉查找树代替红黑树"><span>5. 能否用二叉查找树代替红黑树</span>
+  <a href="#5-%e8%83%bd%e5%90%a6%e7%94%a8%e4%ba%8c%e5%8f%89%e6%9f%a5%e6%89%be%e6%a0%91%e4%bb%a3%e6%9b%bf%e7%ba%a2%e9%bb%91%e6%a0%91" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>可以。但是二叉查找树在特殊情况下会变成一条线性结构（这就跟原来使用链表结构一样了，造成很深的问题），遍历查找会非常慢。</p>
+<h3 class="heading-element" id="hashmap-的并发问题"><span>HashMap 的并发问题</span>
+  <a href="#hashmap-%e7%9a%84%e5%b9%b6%e5%8f%91%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-hashmap-在并发编程环境下有什么问题"><span>1. HashMap 在并发编程环境下有什么问题</span>
+  <a href="#1-hashmap-%e5%9c%a8%e5%b9%b6%e5%8f%91%e7%bc%96%e7%a8%8b%e7%8e%af%e5%a2%83%e4%b8%8b%e6%9c%89%e4%bb%80%e4%b9%88%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
 <li>多线程扩容，引起的死循环问题</li>
 <li>多线程 put 的时候可能导致元素丢失</li>
 <li>put 非 null 元素后 get 出来的却是 null</li>
 </ul>
-<h4 id="2-在-jdk-18-中还有这些问题么">2. 在 JDK 1.8 中还有这些问题么</h4>
-<p>在 JDK 1.8 中，死循环问题已经解决。其他两个问题还是存在。</p>
-<h4 id="3-你一般怎么解决这些问题的">3. 你一般怎么解决这些问题的</h4>
-<p>使用 ConcurrentHashmap</p>
-<h3 id="hashmap-key-问题">HashMap key 问题</h3>
-<h4 id="1-键可以为-null-值么">1. 键可以为 Null 值么</h4>
-<p>可以，key 为 null 时，hash() 方法返回 0，会被放到第一个哈希桶中。</p>
-<h4 id="2-你一般用什么作为-hashmap-的-key">2. 你一般用什么作为 HashMap 的 key</h4>
-<p>一般用Integer、String 这种不可变类当 HashMap 当 key，而且 String 最为常用。</p>
+<h4 class="heading-element" id="2-在-jdk-18-中还有这些问题么"><span>2. 在 JDK 1.8 中还有这些问题么</span>
+  <a href="#2-%e5%9c%a8-jdk-18-%e4%b8%ad%e8%bf%98%e6%9c%89%e8%bf%99%e4%ba%9b%e9%97%ae%e9%a2%98%e4%b9%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>在 JDK 1.8 中，死循环问题已经解决。其他两个问题还是存在。</p>
+<h4 class="heading-element" id="3-你一般怎么解决这些问题的"><span>3. 你一般怎么解决这些问题的</span>
+  <a href="#3-%e4%bd%a0%e4%b8%80%e8%88%ac%e6%80%8e%e4%b9%88%e8%a7%a3%e5%86%b3%e8%bf%99%e4%ba%9b%e9%97%ae%e9%a2%98%e7%9a%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>使用 ConcurrentHashmap</p>
+<h3 class="heading-element" id="hashmap-key-问题"><span>HashMap key 问题</span>
+  <a href="#hashmap-key-%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-键可以为-null-值么"><span>1. 键可以为 Null 值么</span>
+  <a href="#1-%e9%94%ae%e5%8f%af%e4%bb%a5%e4%b8%ba-null-%e5%80%bc%e4%b9%88" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>可以，key 为 null 时，hash() 方法返回 0，会被放到第一个哈希桶中。</p>
+<h4 class="heading-element" id="2-你一般用什么作为-hashmap-的-key"><span>2. 你一般用什么作为 HashMap 的 key</span>
+  <a href="#2-%e4%bd%a0%e4%b8%80%e8%88%ac%e7%94%a8%e4%bb%80%e4%b9%88%e4%bd%9c%e4%b8%ba-hashmap-%e7%9a%84-key" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>一般用Integer、String 这种不可变类当 HashMap 当 key，而且 String 最为常用。</p>
 <ul>
 <li>因为字符串是不可变的，所以在它创建的时候 hashcode 就被缓存了，不需要重新计算。这就使得字符串很适合作为 Map 中的键，字符串的处理速度要快过其它的键对象。这就是 HashMap 中的键往往都使用字符串。</li>
 <li>因为获取对象的时候要用到 equals() 和 hashCode() 方法，那么键对象正确的重写这两个方法是非常重要的，这些类已经很规范的覆写了 hashCode() 以及 equals() 方法。</li>
 </ul>
-<h4 id="3-我用可变类当-hashmap-的-key-有什么问题">3. 我用可变类当 HashMap 的 key 有什么问题</h4>
-<p>可变类实例对象的哈希值可能发生改变，导致无法通过 get 方法得到之前 put 进哈希表的值。</p>
-<h4 id="4-如果实现让一个自定义的-class-作为-hashmap-的-key">4. 如果实现让一个自定义的 class 作为 HashMap 的 key</h4>
-<ol>
+<h4 class="heading-element" id="3-我用可变类当-hashmap-的-key-有什么问题"><span>3. 我用可变类当 HashMap 的 key 有什么问题</span>
+  <a href="#3-%e6%88%91%e7%94%a8%e5%8f%af%e5%8f%98%e7%b1%bb%e5%bd%93-hashmap-%e7%9a%84-key-%e6%9c%89%e4%bb%80%e4%b9%88%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>可变类实例对象的哈希值可能发生改变，导致无法通过 get 方法得到之前 put 进哈希表的值。</p>
+<h4 class="heading-element" id="4-如果实现让一个自定义的-class-作为-hashmap-的-key"><span>4. 如果实现让一个自定义的 class 作为 HashMap 的 key</span>
+  <a href="#4-%e5%a6%82%e6%9e%9c%e5%ae%9e%e7%8e%b0%e8%ae%a9%e4%b8%80%e4%b8%aa%e8%87%aa%e5%ae%9a%e4%b9%89%e7%9a%84-class-%e4%bd%9c%e4%b8%ba-hashmap-%e7%9a%84-key" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ol>
 <li>重写 equals 和 hashCode 方法，并遵守其约定</li>
 <li>保证该类不可变
 <ul>
@@ -394,17 +481,26 @@
 </ul>
 </li>
 </ol>
-<h3 id="hashmap-javadoc">HashMap Javadoc</h3>
-<h4 id="1-概述">1. 概述</h4>
-<blockquote>
+<h3 class="heading-element" id="hashmap-javadoc"><span>HashMap Javadoc</span>
+  <a href="#hashmap-javadoc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><h4 class="heading-element" id="1-概述"><span>1. 概述</span>
+  <a href="#1-%e6%a6%82%e8%bf%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><blockquote>
 <p>哈希表是基于 Map 接口的实现。它提供了所有可选的 Map 操作并且允许 null 作为 key 和 value。HashMap大体上与 <code>HashTable</code> 相同，只是 <strong>没有同步</strong> 和允许了 null 作为键值。这个类 <strong>不保证 map 的有序性</strong>，特别是，不保证数据的顺序随着时间不会改变。</p>
 </blockquote>
 <blockquote>
 <p>假设哈希方程把数据均匀的分散在哈希桶中，这个实现可以提供 O(1) 的基础操作（get / put）性能。哈希表中的迭代所需要的时间和哈希表的容量（哈希桶的数量）+键值对的数量成正比。因此，当迭代效率很重要时，不把初始容量设置的过高是非常重要的。</p>
 <p>since 1.2</p>
 </blockquote>
-<h4 id="2-初始容量及装载因子">2. 初始容量及装载因子</h4>
-<blockquote>
+<h4 class="heading-element" id="2-初始容量及装载因子"><span>2. 初始容量及装载因子</span>
+  <a href="#2-%e5%88%9d%e5%a7%8b%e5%ae%b9%e9%87%8f%e5%8f%8a%e8%a3%85%e8%bd%bd%e5%9b%a0%e5%ad%90" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><blockquote>
 <p>影响一个哈希表实例性能的两个参数：初始容量和装载因子。哈希表的容量是表中哈希桶的数量，初始容量    <code>initial capacity</code> 则是哈希表被创建时的容量。装载因子 <code>load factor</code> 是用来描述哈希桶自动扩容前所允许的数据最大填充程度的一个衡量。当哈希表中键值对的数量超过装载因子和当前容量的乘积后，哈希表会执行 <code>rehash</code> 操作， 即内部的数据结构会进行重构，哈希桶的数量会变成现在的两倍。</p>
 </blockquote>
 <blockquote>
@@ -413,8 +509,11 @@
 <blockquote>
 <p>当很多映射被存入一个哈希表中时，如果 <strong>创建一个容量足够大的实例</strong>，将会使数据存储更加高效，而不是让它在需要时自动执行 rehash 来让哈希表变大。 注意使用许多相同哈希值的 keys 会使哈希表的性能变慢。为了改善影响，当 keys 是 Comparable 时，这个类可能会使用 keys 之间的比较顺序来帮助打破平局。</p>
 </blockquote>
-<h4 id="3-多线程问题">3. 多线程问题</h4>
-<blockquote>
+<h4 class="heading-element" id="3-多线程问题"><span>3. 多线程问题</span>
+  <a href="#3-%e5%a4%9a%e7%ba%bf%e7%a8%8b%e9%97%ae%e9%a2%98" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><blockquote>
 <p>注意：这个实现并不是同步的。如果多线程并发地进入一个哈希表，和至少一个线程结构性地修改了 map，它必须是在外部被同步的。（一个结构性的修改指任何添加或者删除一个或多个映射的操作；仅仅改变一个已有键值对的 value 并不是一个结构性的修改。）这通常通过同步某个自然封装 map 的对象来实现的。</p>
 </blockquote>
 <blockquote>
@@ -426,20 +525,29 @@
 <blockquote>
 <p>注意：迭代器的 fail-fast 行为无法得到保证，因为通常来说，在存在不同步的并发修改的情况下，不可能做出任何严格的保证。fail-fast 的迭代器会尽最大努力抛出并发修改异常。 因此，编写依赖于此异常以确保其正确性的程序是错误的：迭代器的快速失败行为应仅用于检测错误。</p>
 </blockquote>
-<h4 id="4-底层实现">4. 底层实现</h4>
-<blockquote>
+<h4 class="heading-element" id="4-底层实现"><span>4. 底层实现</span>
+  <a href="#4-%e5%ba%95%e5%b1%82%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><blockquote>
 <p>这个 map 通常用作 bin 化（bucket 化）的哈希表，但是当 bin 太大时，它们将转换为 TreeNode 的 bin，每个 bin 的结构与 java.util.TreeMap 中的结构类似。大多数 map 方法尝试使用普通的 bin，但是在应用时中继到 TreeNode 中的对应方法（只需通过检查节点的 instanceof）。TreeNodes 的 bin 可以像其他任何 bin 一样被遍历和使用，但在数据元素过多时额外地支持更快的查找。 但是，由于正常使用中的绝大多数 bin 没有过多的元素，检查是否存在 TreeNode 可能会耽误 map 方法的进程。</p>
 </blockquote>
 <blockquote>
 <p>TreeNode bin 主要由哈希值来排序，但哈希值相等，如果两个元素是同一个实现了 Comparable 的类的实例，则通过它们的 compareTo 方法来排序。（我们通过反射保守地检查泛型类型以验证这一点 - 参见方法 compareableClassFor）。当键具有不同的哈希值或可排序时，<strong>增加 tree bin 的复杂度在最坏情况是 O(log n) 操作</strong>，因此，意外或恶意的使用会逐渐降低 map 的性能，包括返回结果分布较差（其中许多 keys 共享一个哈希值，它们也都是可比较的）的 hashCode() 方法。（如果这两种方法都不适用，那么与不采取预防措施相比，我们可能会浪费大约两倍的时间和空间。但是，唯一已知的情况是由于不良的用户编程实践，它已经如此之慢，以至于几乎没有什么区别。）</p>
 </blockquote>
-<h4 id="5-红黑树阈值">5. 红黑树阈值</h4>
-<blockquote>
+<h4 class="heading-element" id="5-红黑树阈值"><span>5. 红黑树阈值</span>
+  <a href="#5-%e7%ba%a2%e9%bb%91%e6%a0%91%e9%98%88%e5%80%bc" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><blockquote>
 <p>因为 TreeNode 的 <strong>大小大约是常规节点的两倍</strong>，所以我们仅在 bin 包含足够节点时才保证使用它们（请参阅 <code>TREEIFY_THRESHOLD</code>）。当它们变得太小（由于移除或调整大小）时，它们会转换回普通 bin。 在使用分布良好的 hashCode 的情况下，tree bins 几乎很少被使用。 理想情况下，在随机 hashCodes 下，bin 中节点的频率遵循 Poisson 分布，默认调整大小阈值 0.75 的在此处的参数平均约为 0.5，尽管由于调整大小粒度而差异很大。 忽略方差，列表大小 k 的预期出现次数是（exp（-0.5）* pow（0.5，k）/ factorial（k））。</p>
 </blockquote>
 <p>随机哈希值条件下，元素在哈希桶中遵循泊松分布，如此，同一个哈希桶中出现 8 个以上元素的概率是相当相当小的，因此选择 8 作为链表结构红黑树化的阈值。</p>
-<h4 id="6-其他实现">6. 其他实现</h4>
-<blockquote>
+<h4 class="heading-element" id="6-其他实现"><span>6. 其他实现</span>
+  <a href="#6-%e5%85%b6%e4%bb%96%e5%ae%9e%e7%8e%b0" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><blockquote>
 <p>Tree bin 的根通常是它的第一个节点。但是，有时（当前仅在 Iterator.remove 上），根目录可能在其他位置，但可以通过父链接（方法TreeNode.root())）进行恢复。</p>
 </blockquote>
 <blockquote>
@@ -452,103 +560,111 @@
 <p>子类 <code>LinkedHashMap</code> 的存在使普通模式与树模式之间的使用和转换变得复杂。 有关定义为在插入，删除和访问时调用的挂钩方法的信息，请参见下文，该方法允许 LinkedHashMap 内部保持独立于这些机制。 （这还要求将 map 实例传递给可能创建新节点的某些实用程序方法。）</p>
 <p>类似并发编程的基于SSA的编码样式有助于避免在所有复杂的指针操作中产生混淆错误。</p>
 </blockquote>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2020-01-28 14:11:47">Updated on 2020-01-28&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/java-hashmap/" data-title="Java：HashMap 源码解读" data-hashtags="Java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/java-hashmap/" data-hashtag="Java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/java-hashmap/" data-title="Java：HashMap 源码解读"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2020/java-hashmap/>https://hoffmanzheng.github.io/2020/java-hashmap/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/java/">
-                    #Java</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2020/java-thread-safe-collection/" class="prev" rel="prev" title="Java：多线程下的安全容器"><i class="iconfont icon-left"></i>&nbsp;Java：多线程下的安全容器</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2020/net-html/" class="next" rel="next" title="Web：HTML 常用标签">Web：HTML 常用标签&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/java/" class="post-tag" title="Tags - Java">Java</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2020/java-thread-safe-collection/" class="post-nav-item" rel="prev" title="Java：多线程下的安全容器"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Java：多线程下的安全容器</a><a href="/2020/net-html/" class="post-nav-item" rel="next" title="Web：HTML 常用标签">Web：HTML 常用标签<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#hashmap-的实现原理">HashMap 的实现原理</a>
+          <ul>
+            <li><a href="#1-哈希表底层实现原理">1. 哈希表底层实现原理</a></li>
+            <li><a href="#2-为什么采用数组链表的数据结构">2. 为什么采用数组+链表的数据结构</a></li>
+            <li><a href="#3-哈希冲突的解决办法">3. 哈希冲突的解决办法</a></li>
+          </ul>
+        </li>
+        <li><a href="#hashmap-扩容">HashMap 扩容</a>
+          <ul>
+            <li><a href="#1-hashmap-在什么条件下扩容">1. HashMap 在什么条件下扩容</a></li>
+            <li><a href="#2-为什么扩容是-2-的-n-次幂">2. 为什么扩容是 2 的 n 次幂</a></li>
+            <li><a href="#3-为什么要先高-16-位异或低-16-位再取模运算">3. 为什么要先高 16 位异或低 16 位再取模运算</a></li>
+          </ul>
+        </li>
+        <li><a href="#hashmap-的-get--put-过程">HashMap 的 get / put 过程</a>
+          <ul>
+            <li><a href="#1-哈希表的-put-过程">1. 哈希表的 put 过程</a></li>
+            <li><a href="#2-哈希表的-get-过程">2. 哈希表的 get 过程</a></li>
+            <li><a href="#3-还有哪些哈希算法">3. 还有哪些哈希算法</a></li>
+            <li><a href="#4-字符串中-hashcode-的实现">4. 字符串中 hashCode 的实现</a></li>
+          </ul>
+        </li>
+        <li><a href="#jdk-18-对-hashmap-的改进">JDK 1.8 对 HashMap 的改进</a>
+          <ul>
+            <li><a href="#1-jdk-17-的-hashmap-存在的问题">1. JDK 1.7 的 HashMap 存在的问题</a>
+              <ul>
+                <li><a href="#11-hashmap-cve-安全隐患">1.1 HashMap CVE 安全隐患</a></li>
+                <li><a href="#12-hashmap-多线程操作导致死循环问题">1.2 HashMap 多线程操作导致死循环问题</a></li>
+              </ul>
+            </li>
+            <li><a href="#2-jdk-18-之前的-hashmap-源码实现">2. JDK 1.8 之前的 HashMap 源码实现</a></li>
+            <li><a href="#3-jdk-18-之后的-hashmap-底层实现">3. JDK 1.8 之后的 HashMap 底层实现</a></li>
+            <li><a href="#4-为什么不直接用红黑树而选择先用链表再转红黑树">4. 为什么不直接用红黑树，而选择先用链表再转红黑树</a></li>
+            <li><a href="#5-能否用二叉查找树代替红黑树">5. 能否用二叉查找树代替红黑树</a></li>
+          </ul>
+        </li>
+        <li><a href="#hashmap-的并发问题">HashMap 的并发问题</a>
+          <ul>
+            <li><a href="#1-hashmap-在并发编程环境下有什么问题">1. HashMap 在并发编程环境下有什么问题</a></li>
+            <li><a href="#2-在-jdk-18-中还有这些问题么">2. 在 JDK 1.8 中还有这些问题么</a></li>
+            <li><a href="#3-你一般怎么解决这些问题的">3. 你一般怎么解决这些问题的</a></li>
+          </ul>
+        </li>
+        <li><a href="#hashmap-key-问题">HashMap key 问题</a>
+          <ul>
+            <li><a href="#1-键可以为-null-值么">1. 键可以为 Null 值么</a></li>
+            <li><a href="#2-你一般用什么作为-hashmap-的-key">2. 你一般用什么作为 HashMap 的 key</a></li>
+            <li><a href="#3-我用可变类当-hashmap-的-key-有什么问题">3. 我用可变类当 HashMap 的 key 有什么问题</a></li>
+            <li><a href="#4-如果实现让一个自定义的-class-作为-hashmap-的-key">4. 如果实现让一个自定义的 class 作为 HashMap 的 key</a></li>
+          </ul>
+        </li>
+        <li><a href="#hashmap-javadoc">HashMap Javadoc</a>
+          <ul>
+            <li><a href="#1-概述">1. 概述</a></li>
+            <li><a href="#2-初始容量及装载因子">2. 初始容量及装载因子</a></li>
+            <li><a href="#3-多线程问题">3. 多线程问题</a></li>
+            <li><a href="#4-底层实现">4. 底层实现</a></li>
+            <li><a href="#5-红黑树阈值">5. 红黑树阈值</a></li>
+            <li><a href="#6-其他实现">6. 其他实现</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/e3792414bb3abbab4d1c1e6bab2043d5.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>

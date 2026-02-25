@@ -1,23 +1,20 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>jvm on 人间一场大梦</title>
+    <title>Jvm - Tag - 人间一场大梦</title>
     <link>https://hoffmanzheng.github.io/tags/jvm/</link>
-    <description>Recent content in jvm on 人间一场大梦</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <description>人间一场大梦</description>
+    <generator>Hugo 0.156.0 &amp; FixIt v0.4.3-20260130042349-e23a50d7</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 06 Nov 2020 13:37:47 +0100</lastBuildDate><atom:link href="https://hoffmanzheng.github.io/tags/jvm/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 06 Nov 2020 13:37:47 +0100</lastBuildDate>
+    <atom:link href="https://hoffmanzheng.github.io/tags/jvm/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>JVM：体系结构与内存管理</title>
       <link>https://hoffmanzheng.github.io/2020/jvm-architecture-memory/</link>
       <pubDate>Fri, 06 Nov 2020 13:37:47 +0100</pubDate>
-      
       <guid>https://hoffmanzheng.github.io/2020/jvm-architecture-memory/</guid>
-      <description>在之前的博客 Javac 编译原理与 class 文件结构 中，我有提及 Javac 编译器将 Java 源码编译成了机器可以接受的指令，解决了高级语言与底层硬件架构的耦合（现在的操作系统几乎完全向用户屏蔽了硬件，也就可以说编译器解决了高级语言与不同操作系统之间的耦合）。
-JVM 屏蔽了各个计算机平台相关的软件或者硬件之间的差异，使 Java 代码可以 全平台运行。本篇以 《深入分析 Java Web 技术内幕》 第七章 JVM 体系结构与工作方式 及第八章 JVM 内存管理 的内容为参考，讲解 JVM 的基本结构、工作方式、内存分配策略及垃圾回收策略等。
-JVM 体系结构 计算机与 Java 虚拟机 在了解 JVM 这台虚拟计算机之前，我们先看看一台真实的计算机的体系结构：
-   计算机组成部分 功能     指令集 计算机所能识别的机器语言的命令集合   计算单元 能识别并控制指令执行的功能模块   寄存器 操作数寄存器、控制寄存器、变址寄存器等   存储单元 存储操作数和保存操作结构的单元，内存和磁盘等   寻址方式 地址位数、最小最大地址范围、地址的运行规则等    指令集 是在 CPU 中用来计算和控制计算机系统的一套指令的集合，在 CPU 设计时规定的一系列与硬件电路相配合的指令系统。可以说指令集是可以直接被机器识别的机器码，必须以二进制格式存在于计算机中，而 汇编语言 是为了让人能够更容易地记住机器指令而使用的助记符，每一条汇编指令都可以直接翻译成一个机器指令。</description>
+      <category domain="https://hoffmanzheng.github.io/categories/reading-notes/">Reading Notes</category>
+      <description>&lt;p&gt;在之前的博客 &lt;a href=&#34;https://hoffmanzheng.github.io/2020/java-compile/&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;Javac 编译原理与 class 文件结构&lt;/a&gt; 中，我有提及 Javac 编译器将 Java 源码编译成了机器可以接受的指令，解决了高级语言与底层硬件架构的耦合（现在的操作系统几乎完全向用户屏蔽了硬件，也就可以说编译器解决了高级语言与不同操作系统之间的耦合）。&lt;/p&gt;&#xA;&lt;p&gt;JVM 屏蔽了各个计算机平台相关的软件或者硬件之间的差异，使 Java 代码可以 &lt;strong&gt;全平台运行&lt;/strong&gt;。本篇以  &lt;a href=&#34;https://book.douban.com/subject/25953851/&#34; target=&#34;_blank&#34; rel=&#34;external nofollow noopener noreferrer&#34;&gt;《深入分析 Java Web 技术内幕》&lt;/a&gt; 第七章 JVM 体系结构与工作方式 及第八章 JVM 内存管理 的内容为参考，讲解 JVM 的基本结构、工作方式、内存分配策略及垃圾回收策略等。&lt;/p&gt;&#xA;&lt;h1 class=&#34;heading-element&#34; id=&#34;jvm-体系结构&#34;&gt;&lt;span&gt;JVM 体系结构&lt;/span&gt;&#xA;  &lt;a href=&#34;#jvm-%e4%bd%93%e7%b3%bb%e7%bb%93%e6%9e%84&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h1&gt;&lt;h3 class=&#34;heading-element&#34; id=&#34;计算机与-java-虚拟机&#34;&gt;&lt;span&gt;计算机与 Java 虚拟机&lt;/span&gt;&#xA;  &lt;a href=&#34;#%e8%ae%a1%e7%ae%97%e6%9c%ba%e4%b8%8e-java-%e8%99%9a%e6%8b%9f%e6%9c%ba&#34; class=&#34;heading-mark&#34;&gt;&#xA;    &lt;svg class=&#34;octicon octicon-link&#34; viewBox=&#34;0 0 16 16&#34; version=&#34;1.1&#34; width=&#34;16&#34; height=&#34;16&#34; aria-hidden=&#34;true&#34;&gt;&lt;path d=&#34;m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z&#34;&gt;&lt;/path&gt;&lt;/svg&gt;&#xA;  &lt;/a&gt;&#xA;&lt;/h3&gt;&lt;p&gt;在了解 JVM 这台虚拟计算机之前，我们先看看一台真实的计算机的体系结构：&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

@@ -1,169 +1,145 @@
 <!DOCTYPE html>
-<html lang="en-us">
+<html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
   <head>
-  <meta http-equiv="content-type" content="text/html;charset=utf-8">
-  <meta http-equiv="X-UA-Compatible" content="chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="robots" content="noodp"/>
-  <meta name="author" content="Chenghao.Zheng">
-  
-  
-  
-  <link rel="prev" href="https://hoffmanzheng.github.io/2020/net-url/" />
-  <link rel="next" href="https://hoffmanzheng.github.io/2020/database-mysql/" />
-  <link rel="canonical" href="https://hoffmanzheng.github.io/2020/net-http-tcp/" />
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-  <meta name="msapplication-TileColor" content="#da532c">
-  <meta name="theme-color" content="#ffffff">
-  <title>
-       
-       
-           Net：计算机网络读书笔记 | 人间一场大梦
-       
-  </title>
-  <meta name="title" content="Net：计算机网络读书笔记 | 人间一场大梦">
-    
-  
-  <link rel="stylesheet" href="/font/iconfont.css">
-  <link rel="stylesheet" href="/css/main.min.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+    <meta name="robots" content="noodp" />
+    <title>Net：计算机网络读书笔记 - 人间一场大梦</title><meta name="author" content="Chenghao Zheng">
+<meta name="description" content="本篇为 《计算机网络自顶向下方法》 的读书笔记，主要介绍：网络分层模型、HTTP 协议、非持续连接和持续连接、报文格式、cookie 与 session、 FTP 协议、HTTPS 协议、TCP 协议、流量控制、UDP 协议 等。
+网络协议分层模型 ISO 提出的计算机网络 OSI（Open System Interconnection Reference Model） 七层模型：
+"><meta name="keywords" content='Net'>
+  <meta itemprop="name" content="Net：计算机网络读书笔记">
+  <meta itemprop="description" content="本篇为 《计算机网络自顶向下方法》 的读书笔记，主要介绍：网络分层模型、HTTP 协议、非持续连接和持续连接、报文格式、cookie 与 session、 FTP 协议、HTTPS 协议、TCP 协议、流量控制、UDP 协议 等。
+网络协议分层模型 ISO 提出的计算机网络 OSI（Open System Interconnection Reference Model） 七层模型：">
+  <meta itemprop="datePublished" content="2020-02-27T13:19:47+01:00">
+  <meta itemprop="dateModified" content="2020-02-27T13:19:47+01:00">
+  <meta itemprop="wordCount" content="484">
+  <meta itemprop="keywords" content="Net"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/net-http-tcp/">
+  <meta property="og:site_name" content="人间一场大梦">
+  <meta property="og:title" content="Net：计算机网络读书笔记">
+  <meta property="og:description" content="本篇为 《计算机网络自顶向下方法》 的读书笔记，主要介绍：网络分层模型、HTTP 协议、非持续连接和持续连接、报文格式、cookie 与 session、 FTP 协议、HTTPS 协议、TCP 协议、流量控制、UDP 协议 等。
+网络协议分层模型 ISO 提出的计算机网络 OSI（Open System Interconnection Reference Model） 七层模型：">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="posts">
+    <meta property="article:published_time" content="2020-02-27T13:19:47+01:00">
+    <meta property="article:modified_time" content="2020-02-27T13:19:47+01:00">
+    <meta property="article:tag" content="Net">
 
-
-  
-  
- 
-
-<script type="application/ld+json">
- "@context" : "http://schema.org",
-    "@type" : "BlogPosting",
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Net：计算机网络读书笔记">
+  <meta name="twitter:description" content="本篇为 《计算机网络自顶向下方法》 的读书笔记，主要介绍：网络分层模型、HTTP 协议、非持续连接和持续连接、报文格式、cookie 与 session、 FTP 协议、HTTPS 协议、TCP 协议、流量控制、UDP 协议 等。
+网络协议分层模型 ISO 提出的计算机网络 OSI（Open System Interconnection Reference Model） 七层模型：">
+<meta name="application-name" content="FixIt">
+<meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/net-http-tcp/" title="Net：计算机网络读书笔记 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2020/net-url/" title="Web：浅析 URL" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/database-mysql/" title="Database：MySQL 数据库" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Net：计算机网络读书笔记",
+    "inLanguage": "en-us",
     "mainEntityOfPage": {
-         "@type": "WebPage",
-         "@id": "https:\/\/hoffmanzheng.github.io\/"
-    },
-    "articleSection" : "posts",
-    "name" : "Net：计算机网络读书笔记",
-    "headline" : "Net：计算机网络读书笔记",
-    "description" : "本篇为 《计算机网络自顶向下方法》 的读书笔记，主要介绍：网络分层模型、HTTP 协议、非持续连接和持续连接、报文格式、cookie 与 session、 FTP 协议、HTTPS 协议、TCP 协议、流量控制、UDP 协议 等。\n网络协议分层模型 ISO 提出的计算机网络 OSI（Open System Interconnection Reference Model） 七层模型：\nTCP \/ IP 分层模型：\n分层体系的优点：HTTP 协议不用担心数据丢失，也 不关注 TCP 从网络的数据丢失和乱序故障中恢复的细节。那是 TCP 以及协议栈较低层协议的工作。\n应用层 现代网络应用有两种主流体系结构：客户 - 服务器体系结构 或 对等（P2P）体系结构。网络应用通过 socket 软件接口向网络发送报文 message 和从网络接收报文来实现在 不同端系统上的进程间的通信。\n应用层协议定义了：\n 换的报文类型，例如请求报文和响应报文 。 各种报文类型的语法，如报文中的各个字段及这些字段是如何描述的 。 字段的语义，即这些字段中包含的信息的含义 。 一个进程何时以及如何发送报文，对报文进行响应的规则。  HTTP 协议 Web 的应用层协议是超文本传输协议 (HyperText Transfer Protocol , HTTP) ，客户端和服务器端通过交换 HTTP 报文进行会话，HTTP 定义了这些报文的结构以及客户和服务器进行报文交换的方式。\nHTTP 定义了 Web 客户向 Web 服务器请求 Web 页面的方式，以及服务器向客户传送 Web 页面的方式。HTTP 使用 TCP 作为它的支撑运输协议，TCP 为 HTTP 提供可靠数据传输服务。",
-    "inLanguage" : "en-us",
-    "author" : "Chenghao Zheng",
-    "creator" : "Chenghao Zheng",
-    "publisher": "Chenghao Zheng",
-    "accountablePerson" : "Chenghao Zheng",
-    "copyrightHolder" : "Chenghao Zheng",
-    "copyrightYear" : "2020",
-    "datePublished": "2020-02-27 13:19:47 \u002b0100 \u002b0100",
-    "dateModified" : "2020-02-27 13:19:47 \u002b0100 \u002b0100",
-    "url" : "https:\/\/hoffmanzheng.github.io\/2020\/net-http-tcp\/",
-    "wordCount" : "485",
-    "keywords" : [ "Net", "人间一场大梦"]
-}
-</script>
-
-</head>
-
-  
-
-
-  <body class="">
-    <div class="wrapper">
-        <nav class="navbar">
-    
-        <div class="top-scroll-bar"></div>
-    
-    <div class="container">
-        <div class="navbar-header header-logo">
-        	<a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a>
-        </div>
-        <div class="menu navbar-right">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
+      "@type": "WebPage",
+      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/net-http-tcp\/"
+    },"genre": "posts","keywords": "Net","wordcount":  484 ,
+    "url": "https:\/\/hoffmanzheng.github.io\/2020\/net-http-tcp\/","datePublished": "2020-02-27T13:19:47+01:00","dateModified": "2020-02-27T13:19:47+01:00","publisher": {
+      "@type": "Organization",
+      "name": ""},"author": {
+        "@type": "Person",
+        "name": "Chenghao Zheng"
+      },"description": ""
+  }
+  </script><script src="/js/head/color-scheme.min.js"></script></head>
+  <body data-instant-intensity="viewport" data-header-desktop="sticky" data-header-mobile="auto"><div class="wrapper" data-page-style="normal"><header class="desktop animate__faster" id="header-desktop">
+  <div class="header-wrapper">
+    <div class="header-title">
+      <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+    <nav>
+      <ul class="menu"><li class="menu-item">
+              <a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item">
+              <a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item">
+              <a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item">
+              <a class="menu-link" href="/about/">About</a></li><li class="menu-item delimiter"></li><li class="menu-item theme-switch" role="button" aria-label="Switch Theme" title="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></li></ul>
+    </nav>
+  </div>
+</header><header class="mobile animate__faster" id="header-mobile">
+  <div class="header-container">
+    <div class="header-wrapper">
+      <div class="header-title">
+        <a href="/" title="人间一场大梦"><span class="header-title-text">人间一场大梦</span></a><span class="header-subtitle"></span></div>
+      <div class="theme-switch" role="button" aria-label="Switch Theme"><i class="fa-solid fa-adjust" aria-hidden="true"></i></div>
+      <div class="menu-toggle" id="menu-toggle-mobile" role="button" aria-labelledby="menu-mobile">
+        <span></span><span></span><span></span>
+      </div>
     </div>
-</nav>
-<nav class="navbar-mobile" id="nav-mobile" style="display: none">
-    
-        <div class="top-scroll-bar"></div>
-    
-     <div class="container">
-        <div class="navbar-header">
-            <div>  <a href="javascript:void(0);" class="theme-switch"><i class="iconfont icon-xihuan"></i></a>&nbsp;<a href="https://hoffmanzheng.github.io/">人间一场大梦</a></div>
-            <div class="menu-toggle">
-                <span></span><span></span><span></span>
-            </div>
+    <nav>
+      <ul class="menu" id="menu-mobile"><li class="menu-item"><a class="menu-link" href="/posts/">Blog</a></li><li class="menu-item"><a class="menu-link" href="/categories/">Categories</a></li><li class="menu-item"><a class="menu-link" href="/tags/">Tags</a></li><li class="menu-item"><a class="menu-link" href="/about/">About</a></li><li class="menu-item menu-system"></li>
+      </ul>
+    </nav>
+  </div>
+</header><main class="fi-container"><aside class="aside-collection animate__animated animate__fadeIn animate__faster" aria-label="Collections"></aside>
+
+  <article class="page single">
+    <div class="header"><h1 class="single-title animate__animated animate__flipInX"><span>Net：计算机网络读书笔记</span>
+      </h1></div><div class="post-meta">
+      <div class="post-meta-line"><span class="post-author"><span class="author"><i class="fa-solid fa-user-circle" aria-hidden="true"></i>
+      Chenghao Zheng</span></span><span class="post-included-in">&nbsp;included in <a href="/categories/study-notes/" class="post-category" title="Category - Study Notes"><i class="fa-regular fa-folder" aria-hidden="true"></i> Study Notes</a></span></div><div class="post-meta-line"><span title="published on 2020-02-27 13:19:47"><i class="fa-solid fa-calendar-days me-1" aria-hidden="true"></i><time datetime="2020-02-27">2020-02-27</time></span>&nbsp;<span title="484 words"><i class="fa-solid fa-pencil-alt me-1" aria-hidden="true"></i>About 500 words</span>&nbsp;<span><i class="fa-regular fa-clock me-1" aria-hidden="true"></i>3 minutes</span>&nbsp;</div>
+    </div><div class="details toc" id="toc-static" data-kept="false">
+        <div class="details-summary toc-title">
+          <span>Contents</span>
+          <span><i class="details-icon fa-solid fa-angle-right" aria-hidden="true"></i></span>
         </div>
-     
-          <div class="menu" id="mobile-menu">
-                
-                
-                <a class="menu-item" href="/posts/" title="">Blog</a>
-                
-                <a class="menu-item" href="/categories/" title="">Categories</a>
-                
-                <a class="menu-item" href="/tags/" title="">Tags</a>
-                
-                <a class="menu-item" href="/about/" title="">About</a>
-                
-        </div>
-    </div>
-</nav>
-    	 <main class="main">
-          <div class="container">
-      		
-<article class="post-warp" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">Net：计算机网络读书笔记</h1>
-        <div class="post-meta">
-                Written by <a itemprop="name" href="https://hoffmanzheng.github.io/" rel="author">Chenghao Zheng</a> with ♥ 
-                <span class="post-time">
-                on <time datetime=2020-02-27 itemprop="datePublished">February 27, 2020</time>
-                </span>
-                in
-                <i class="iconfont icon-folder"></i>
-                <span class="post-category">
-                        <a href="https://hoffmanzheng.github.io/categories/study-notes/"> Study notes </a>
-                        
-                </span>
-                 <span class="post-word-count">,485 words</span>
-        </div>
-    </header>
-    <div class="post-content">
-        
+        <div class="details-content toc-content" id="toc-content-static"><nav id="TableOfContents">
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#http-协议">HTTP 协议</a>
+          <ul>
+            <li><a href="#非持续连接和持续连接">非持续连接和持续连接</a></li>
+            <li><a href="#http-报文格式">HTTP 报文格式</a></li>
+            <li><a href="#cookie-与-session">Cookie 与 Session</a></li>
+          </ul>
+        </li>
+        <li><a href="#ftp文件传输协议">FTP：文件传输协议</a></li>
+        <li><a href="#https">HTTPS</a>
+          <ul>
+            <li><a href="#http-与-https-区别">HTTP 与 HTTPS 区别</a></li>
+            <li><a href="#https-工作原理">HTTPS 工作原理</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-        
-            
-        
-
-        
-        
-     
-          
-          
-          
-
-          
-          
-          
-
-          <p>本篇为 <a href="https://book.douban.com/subject/30280001/">《计算机网络自顶向下方法》</a> 的读书笔记，主要介绍：网络分层模型、HTTP 协议、非持续连接和持续连接、报文格式、cookie 与 session、 FTP 协议、HTTPS 协议、TCP 协议、流量控制、UDP 协议 等。</p>
-<h1 id="网络协议分层模型">网络协议分层模型</h1>
-<p>ISO 提出的计算机网络 OSI（Open System Interconnection Reference Model） 七层模型：</p>
-<p><img src="/images/OSI%E5%88%86%E5%B1%82%E6%A8%A1%E5%9E%8B.png" alt=""></p>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#tcp-报文段结构">TCP 报文段结构</a></li>
+        <li><a href="#可靠数据传输">可靠数据传输</a></li>
+        <li><a href="#流量控制">流量控制</a></li>
+        <li><a href="#udp-协议">UDP 协议</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div><div class="content" id="content"><p>本篇为 <a href="https://book.douban.com/subject/30280001/" target="_blank" rel="external nofollow noopener noreferrer">《计算机网络自顶向下方法》</a> 的读书笔记，主要介绍：网络分层模型、HTTP 协议、非持续连接和持续连接、报文格式、cookie 与 session、 FTP 协议、HTTPS 协议、TCP 协议、流量控制、UDP 协议 等。</p>
+<h1 class="heading-element" id="网络协议分层模型"><span>网络协议分层模型</span>
+  <a href="#%e7%bd%91%e7%bb%9c%e5%8d%8f%e8%ae%ae%e5%88%86%e5%b1%82%e6%a8%a1%e5%9e%8b" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>ISO 提出的计算机网络 OSI（Open System Interconnection Reference Model） 七层模型：</p>
+<p><img loading="lazy" src='/images/OSI分层模型.png' alt="/images/OSI分层模型.png"></p>
 <p>TCP / IP 分层模型：</p>
-<p><img src="/images/TCP%E5%88%86%E5%B1%82%E6%A8%A1%E5%9E%8B.png" alt=""></p>
+<p><img loading="lazy" src='/images/TCP分层模型.png' alt="/images/TCP分层模型.png"></p>
 <p>分层体系的优点：HTTP 协议不用担心数据丢失，也 <strong>不关注</strong> TCP 从网络的数据丢失和乱序故障中恢复的细节。那是 TCP 以及协议栈较低层协议的工作。</p>
-<h1 id="应用层">应用层</h1>
-<p>现代网络应用有两种主流体系结构：客户 - 服务器体系结构 或 对等（P2P）体系结构。网络应用通过 socket 软件接口向网络发送报文 message 和从网络接收报文来实现在 <strong>不同端系统上的进程间的通信</strong>。</p>
+<h1 class="heading-element" id="应用层"><span>应用层</span>
+  <a href="#%e5%ba%94%e7%94%a8%e5%b1%82" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><p>现代网络应用有两种主流体系结构：客户 - 服务器体系结构 或 对等（P2P）体系结构。网络应用通过 socket 软件接口向网络发送报文 message 和从网络接收报文来实现在 <strong>不同端系统上的进程间的通信</strong>。</p>
 <p>应用层协议定义了：</p>
 <ul>
 <li>换的报文类型，例如请求报文和响应报文 。</li>
@@ -171,16 +147,22 @@
 <li>字段的语义，即这些字段中包含的信息的含义 。</li>
 <li>一个进程何时以及如何发送报文，对报文进行响应的规则。</li>
 </ul>
-<h3 id="http-协议">HTTP 协议</h3>
-<p>Web 的应用层协议是超文本传输协议 (HyperText Transfer Protocol , HTTP)   ，客户端和服务器端通过交换 HTTP 报文进行会话，HTTP 定义了这些报文的结构以及客户和服务器进行报文交换的方式。</p>
+<h3 class="heading-element" id="http-协议"><span>HTTP 协议</span>
+  <a href="#http-%e5%8d%8f%e8%ae%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>Web 的应用层协议是超文本传输协议 (HyperText Transfer Protocol , HTTP)   ，客户端和服务器端通过交换 HTTP 报文进行会话，HTTP 定义了这些报文的结构以及客户和服务器进行报文交换的方式。</p>
 <p>HTTP 定义了 Web 客户向 Web 服务器请求 Web 页面的方式，以及服务器向客户传送 Web 页面的方式。HTTP 使用 TCP 作为它的支撑运输协议，TCP 为 HTTP 提供可靠数据传输服务。</p>
 <p>HTTP 2 相对于 HTTP 1.1 的区别有：</p>
 <ul>
 <li>头信息压缩，有效地减少带宽</li>
 <li>推送功能，服务器端可以主动向客户端发起一些数据传输，可以并行推送资源文件，显著地提升了整体的传输效率和性能。</li>
 </ul>
-<h4 id="非持续连接和持续连接">非持续连接和持续连接</h4>
-<p>非持续性连接（non-persistent connection）是每个请求 / 响应对是经一个单独的 TCP 连接发送，而持续连接（persistent connection）是所有的请求及其响应经相同的 TCP 连接发送。HTTP 在其默认方式下使用持续连接，HTTP 客户和服务器也能配置成使用非持续连接 。</p>
+<h4 class="heading-element" id="非持续连接和持续连接"><span>非持续连接和持续连接</span>
+  <a href="#%e9%9d%9e%e6%8c%81%e7%bb%ad%e8%bf%9e%e6%8e%a5%e5%92%8c%e6%8c%81%e7%bb%ad%e8%bf%9e%e6%8e%a5" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>非持续性连接（non-persistent connection）是每个请求 / 响应对是经一个单独的 TCP 连接发送，而持续连接（persistent connection）是所有的请求及其响应经相同的 TCP 连接发送。HTTP 在其默认方式下使用持续连接，HTTP 客户和服务器也能配置成使用非持续连接 。</p>
 <p>在非持续连接状态下， HTTP 服务器进程会在每次向客户发送响应后通知 <strong>TCP 断开连接</strong>，导致向客户返回一个 Web 页面需要产生多个 TCP 连接。非持续连接的 <strong>缺点</strong>：</p>
 <ul>
 <li>
@@ -190,46 +172,63 @@
 <p>对于每个连接，在客户和服务器中都要分配 TCP 的缓冲区和保持 TCP 变量，这给 Web 服务器带来了严重的负担，因为一 台 Web 服务器可能同时服务于数以百计不同的客户的请求 。</p>
 </li>
 </ul>
-<p><img src="/images/%E9%9D%9E%E6%8C%81%E7%BB%AD%E8%BF%9E%E6%8E%A5.png" alt=""></p>
+<p><img loading="lazy" src='/images/非持续连接.png' alt="/images/非持续连接.png"></p>
 <p>而在采用持续连接的情况下，服务器在发送响应后 <strong>保持该 TCP 连接</strong> 打开，使一个完整的 Web 页面请求甚至对同个客户可以用单个持续的 TCP 连接进行传输。如果一个连接经过一段时间间隔仍未被使用，HTTP 服务器就关闭该连接。</p>
 <p>在 HTTP / 1.0 中默认使用非持续连接；而从 HTTP / 1.1 起默认使用持续连接，以保持连接特性，会在请求 / 响应头中加入：（它不会永久保持连接，有一个保持时间）</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-shell" data-lang="shell">Connection：keep-alive
-</code></pre></div><h4 id="http-报文格式">HTTP 报文格式</h4>
-<p>以访问 <a href="https://www.baidu.com">www.baidu.com</a> 为例，HTTP 请求报文格式（每行由一个回车和换行符结束）：</p>
-<p><img src="/images/%E8%AF%B7%E6%B1%82%E5%A4%B4.png" alt=""></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Connection：keep-alive</span></span></code></pre></div><h4 class="heading-element" id="http-报文格式"><span>HTTP 报文格式</span>
+  <a href="#http-%e6%8a%a5%e6%96%87%e6%a0%bc%e5%bc%8f" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>以访问 <a href="https://www.baidu.com" target="_blank" rel="external nofollow noopener noreferrer">www.baidu.com</a> 为例，HTTP 请求报文格式（每行由一个回车和换行符结束）：</p>
+<p><img loading="lazy" src='/images/请求头.png' alt="/images/请求头.png"></p>
 <p>GET 和 POST 请求的主要区别如下：</p>
 <ul>
-<li>GET 方法会将请求参数放在 URL 中（见 <a href="https://hoffmanzheng.github.io/2020/net-url/">Web：浅析 URL</a>），POST 方法会将请求参数放在请求体之中，以表单形式传输。</li>
+<li>GET 方法会将请求参数放在 URL 中（见 <a href="https://hoffmanzheng.github.io/2020/net-url/" target="_blank" rel="external nofollow noopener noreferrer">Web：浅析 URL</a>），POST 方法会将请求参数放在请求体之中，以表单形式传输。</li>
 <li>GET 请求提交的数据最多只有 1024 bytes，而 POST 请求没有这个大小限制。</li>
 <li>GET 请求会将敏感信息暴露在 URL 中，容易造成密码泄露。</li>
 </ul>
 <p>服务器返回的响应头为（返回的 HTML 文件会放在响应的实体体 entity body 中）：</p>
-<p><img src="/images/%E5%93%8D%E5%BA%94%E5%A4%B4.png" alt=""></p>
-<h4 id="cookie-与-session">Cookie 与 Session</h4>
-<p>因为 HTTP 服务器并不保存关于客户的任何信息，所以我们说 HTTP 是一个 <strong>无状态协议</strong>（stateless protocol），这简化了服务器的设计，并且允许工程师去开发可以同时处理数以千计的 TCP 连接的高性能 Web 服务器。通过 Cookie 允许了站点对用户进行跟踪，识别用户并将内容与用户身份联系起来。</p>
+<p><img loading="lazy" src='/images/响应头.png' alt="/images/响应头.png"></p>
+<h4 class="heading-element" id="cookie-与-session"><span>Cookie 与 Session</span>
+  <a href="#cookie-%e4%b8%8e-session" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>因为 HTTP 服务器并不保存关于客户的任何信息，所以我们说 HTTP 是一个 <strong>无状态协议</strong>（stateless protocol），这简化了服务器的设计，并且允许工程师去开发可以同时处理数以千计的 TCP 连接的高性能 Web 服务器。通过 Cookie 允许了站点对用户进行跟踪，识别用户并将内容与用户身份联系起来。</p>
 <p>首次访问某网站时，返回的响应头中会包含 <code>set-cookie</code> 首部行，用户端系统的游览器会对接收到的 cookie 进行保存管理；当之后再访问该网站时，游览器会从 cookie 文件中获取对应的识别码，并放到 HTTP 请求头首部行中发送出去。</p>
 <p>在这种方式下，该网站服务器可以跟踪用户在其站点的活动，虽然不知道具体的用户信息，但用户在什么时间访问了哪些页面都可以被记录，网站通过 cookie 来记住用户名、提供购物车服务、推荐产品、保留用户地址支付方式信息等。</p>
-<p><img src="/images/cookie.png" alt=""></p>
+<p><img loading="lazy" src='/images/cookie.png' alt="/images/cookie.png"></p>
 <p>与 cookie 相对的，<code>session</code> 是在服务器端记录信息确定用户身份的机制。客户端浏览器再次访问时只需要从该 session 中查找该客户的状态就可以了。每个用户访问服务器都会建立一个session，那服务器是怎么标识用户的唯一身份呢？事实上，用户与服务器建立连接的同时，服务器会自动为其分配一个 sessionId。客户端通过 cookie 将 sessionId 带到服务器。当一个用户提交了表单时，浏览器会将用户的 sessionId 自动附加在 HTTP 头信息中（这是浏览器的自动功能，用户不会察觉到），当服务器处理完这个表单后，将结果返回给 sessionId。</p>
-<p>推荐阅读：<a href="https://mp.weixin.qq.com/s?__biz=Mzg2NzA4MTkxNQ==&amp;mid=2247487067&amp;idx=3&amp;sn=4c5e4d7dbd78487b5d94737514232162&amp;chksm=ce40458ff937cc997b713085dbb7298fc7fee1ba7b7825f06e40dd5a4b5020e7a96174d65157&amp;scene=0&amp;xtrack=1&amp;key=2495f607594ce962957990176ff0ddb668a77980f3c3dec4db1de46351a0c8d3ada572bdb632e2fa802062bd8e53ec924c538ca1346257e0b89e57b1e713d519891bf408009d3e9adfc970424927a87d&amp;ascene=14&amp;uin=MjE3NTkwMDQyMA%3D%3D&amp;devicetype=Windows+10&amp;version=62080079&amp;lang=zh_CN&amp;exportkey=AQGUunafp%2FrGut2qObQGz7w%3D&amp;pass_ticket=7l13YI2o1Gse5In5S%2BVZ4HZ%2BGP20HBV2if7cHqRZPNOKVsi2ybcmgKVvdMgryGy3">cookie、session和application都是些什么神？</a></p>
-<h3 id="ftp文件传输协议">FTP：文件传输协议</h3>
-<p>HTTP 和 FTP 都是运行在 TCP 上，然而 FTP 使用了两个并行的 TCP 连接来传输文件，一个是控制连接（control connection），一个是数据连接（data connection）。</p>
-<p><img src="/images/FTP.png" alt=""></p>
+<p>推荐阅读：<a href="https://mp.weixin.qq.com/s?__biz=Mzg2NzA4MTkxNQ==&amp;mid=2247487067&amp;idx=3&amp;sn=4c5e4d7dbd78487b5d94737514232162&amp;chksm=ce40458ff937cc997b713085dbb7298fc7fee1ba7b7825f06e40dd5a4b5020e7a96174d65157&amp;scene=0&amp;xtrack=1&amp;key=2495f607594ce962957990176ff0ddb668a77980f3c3dec4db1de46351a0c8d3ada572bdb632e2fa802062bd8e53ec924c538ca1346257e0b89e57b1e713d519891bf408009d3e9adfc970424927a87d&amp;ascene=14&amp;uin=MjE3NTkwMDQyMA%3D%3D&amp;devicetype=Windows&#43;10&amp;version=62080079&amp;lang=zh_CN&amp;exportkey=AQGUunafp%2FrGut2qObQGz7w%3D&amp;pass_ticket=7l13YI2o1Gse5In5S%2BVZ4HZ%2BGP20HBV2if7cHqRZPNOKVsi2ybcmgKVvdMgryGy3" target="_blank" rel="external nofollow noopener noreferrer">cookie、session和application都是些什么神？</a></p>
+<h3 class="heading-element" id="ftp文件传输协议"><span>FTP：文件传输协议</span>
+  <a href="#ftp%e6%96%87%e4%bb%b6%e4%bc%a0%e8%be%93%e5%8d%8f%e8%ae%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>HTTP 和 FTP 都是运行在 TCP 上，然而 FTP 使用了两个并行的 TCP 连接来传输文件，一个是控制连接（control connection），一个是数据连接（data connection）。</p>
+<p><img loading="lazy" src='/images/FTP.png' alt="/images/FTP.png"></p>
 <p>控制连接用于发送用户的标识和口令，发送改变远程目录的命令，它会贯穿整个用户会话期间（持续连接），而数据连接会在每次用户需要传输文件时被打开，传送后被关闭（即数据连接是非持续的）。  此外 HTTP 是无状态的，而 FTP 服务器会在整个会话旗舰保留用户的状态。</p>
-<h3 id="https">HTTPS</h3>
-<p><strong>HTTP</strong> 协议以明文方式发送内容，不提供任何方式的数据加密，如果攻击者截取了 Web 浏览器和网站服务器之间的传输报文，就可以直接读懂其中的信息，因此，HTTP 协议不适合传输一些敏感信息，比如：信用卡号、密码等支付信息。</p>
+<h3 class="heading-element" id="https"><span>HTTPS</span>
+  <a href="#https" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p><strong>HTTP</strong> 协议以明文方式发送内容，不提供任何方式的数据加密，如果攻击者截取了 Web 浏览器和网站服务器之间的传输报文，就可以直接读懂其中的信息，因此，HTTP 协议不适合传输一些敏感信息，比如：信用卡号、密码等支付信息。</p>
 <p><strong>HTTPS</strong>（Hypertext Transfer Protocol Secure：超文本传输安全协议）是一种透过计算机网络进行安全通信的传输协议。HTTPS 经由 HTTP 进行通信，但利用 SSL / TLS 来加密数据包。HTTPS 开发的主要目的，是提供对网站服务器的身份认证，保护交换数据的隐私与完整性。</p>
-<h4 id="http-与-https-区别">HTTP 与 HTTPS 区别</h4>
-<ul>
+<h4 class="heading-element" id="http-与-https-区别"><span>HTTP 与 HTTPS 区别</span>
+  <a href="#http-%e4%b8%8e-https-%e5%8c%ba%e5%88%ab" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><ul>
 <li>HTTP 明文传输，数据都是未加密的，安全性较差，HTTPS（SSL+HTTP） 数据传输过程是加密的，安全性较好。</li>
 <li>使用 HTTPS 协议需要到 CA（Certificate Authority，数字证书认证机构） 申请证书，一般免费证书较少，因而 <strong>需要一定费用</strong>。证书颁发机构如：Symantec、Comodo、GoDaddy 和 GlobalSign 等。</li>
 <li>HTTP 页面 <strong>响应速度比 HTTPS 快</strong>，主要是因为 HTTP 使用 TCP 三次握手建立连接，客户端和服务器需要交换 3 个包，而 HTTPS除了 TCP 的三个包，还要加上 SSL 握手需要的 9 个包，所以一共是 12 个包。</li>
 <li>HTTP 和 HTTPS 使用的是完全不同的连接方式，用的端口也不一样，前者是 80，后者是 443。</li>
 <li>HTTPS 其实就是建构在 SSL / TLS 之上的 HTTP 协议，所以，要比较 HTTPS 比 HTTP 要更<strong>耗费服务器资源</strong>。</li>
 </ul>
-<p><img src="/images/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86.jpg" alt=""></p>
-<h4 id="https-工作原理">HTTPS 工作原理</h4>
-<p>客户端在使用HTTPS方式与Web服务器通信时有以下几个步骤，如图所示。</p>
+<p><img loading="lazy" src='/images/非对称加密.jpg' alt="/images/非对称加密.jpg"></p>
+<h4 class="heading-element" id="https-工作原理"><span>HTTPS 工作原理</span>
+  <a href="#https-%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%86" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h4><p>客户端在使用HTTPS方式与Web服务器通信时有以下几个步骤，如图所示。</p>
 <ol>
 <li>客户使用 HTTPS 的 URL 访问 Web 服务器，要求与 Web 服务器建立 SSL 连接。</li>
 <li>Web 服务器收到客户端请求后，会将网站的证书信息（证书中包含 <strong>公钥</strong>）传送一份给客户端。</li>
@@ -240,25 +239,34 @@
 <li>服务端返回时会先对响应体用 Hash 函数，生成摘要，然后使用私钥对摘要加密，生成数字签名。</li>
 <li>为了防止网站被篡改或劫持，服务端可以去证书中心 Certificate Authority 为公钥做认证，证书中心用自己的私钥和一些相关信息生成数字证书。如此，服务端在返回时需同时附上数字签名和数字证书，客户端用证书中心的公钥去解密数字证书就可以获取网站真实的公钥了，再去解密数字签名就能拿到真实的内容摘要了。</li>
 </ol>
-<h1 id="运输层">运输层</h1>
-<h3 id="tcp-报文段结构">TCP 报文段结构</h3>
-<p>下图显示了 TCP 报文段的结构，其首部包括源端口号和目的端口号，它被用于多路复用/分解来自或送到上层应用的数据。</p>
+<h1 class="heading-element" id="运输层"><span>运输层</span>
+  <a href="#%e8%bf%90%e8%be%93%e5%b1%82" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h1><h3 class="heading-element" id="tcp-报文段结构"><span>TCP 报文段结构</span>
+  <a href="#tcp-%e6%8a%a5%e6%96%87%e6%ae%b5%e7%bb%93%e6%9e%84" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>下图显示了 TCP 报文段的结构，其首部包括源端口号和目的端口号，它被用于多路复用/分解来自或送到上层应用的数据。</p>
 <ul>
 <li>检验和字段（checksum field）</li>
 <li>32 Bits 的序号字段和 32 Bits 的确认号字段，用来实现可靠数据传输服务</li>
 <li>16 Bits 的接收窗口字段，用于流量控制</li>
 <li>6 Bits 的 <strong>标志字段</strong>，ACK Bit 用于指示确认字段中的值是有效的，即该报文段包括一个对已被成功接收报文段的确认 。 RST、SYN 和 FIN 比特用于连接建立和拆除，</li>
 </ul>
-<p><img src="/images/TCP%E6%8A%A5%E6%96%87%E7%BB%93%E6%9E%84.png" alt=""></p>
-<h3 id="可靠数据传输">可靠数据传输</h3>
-<p>TCP 在 lP 不可靠的尽力而为服务之上创建了 一种 <strong>可靠数据传输服务</strong>，确保一个进程从其接收缓存中读出的数据流是无损坏、无间隔、非冗余和按序的数据流；即该字节流与连接的另 一方端系统发送出的字节流是完全相同 。   （丢包重传、超时重传）</p>
+<p><img loading="lazy" src='/images/TCP报文结构.png' alt="/images/TCP报文结构.png"></p>
+<h3 class="heading-element" id="可靠数据传输"><span>可靠数据传输</span>
+  <a href="#%e5%8f%af%e9%9d%a0%e6%95%b0%e6%8d%ae%e4%bc%a0%e8%be%93" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>TCP 在 lP 不可靠的尽力而为服务之上创建了 一种 <strong>可靠数据传输服务</strong>，确保一个进程从其接收缓存中读出的数据流是无损坏、无间隔、非冗余和按序的数据流；即该字节流与连接的另 一方端系统发送出的字节流是完全相同 。   （丢包重传、超时重传）</p>
 <p>通过 <strong>三次握手</strong> 来建立一条 TCP 连接：</p>
 <ol>
 <li>第一次握手：客户端通过向服务器发送一段含有同步标志（SYN = 1）的数据，向服务器请求建立连接，通过这个数据段，客户端告诉服务器，<strong>我想要和你通信</strong>，你可以使用哪个序列号作为起始数据段来回应我。</li>
 <li>第二次握手：服务器收到客户端的请求后，为该 TCP 连接分配 TCP 缓存和变量，用一个带有确认应答（ACK）和同步序列号（SYN = 1）标志位的数据段响应客户端，也告诉服务器两件事情：<strong>1.我已经收到你的请求，你可以传输数据了。2.你要用那个数据段来回应我</strong>。</li>
 <li>第三次握手：客户端收到这个数据段之后，也要给该连接分配缓存和变量，再发送一个确认应答，确认已经收到服务器的数据段。告诉服务器，<strong>我已经收到回复，现在可以传输实际数据了</strong>。</li>
 </ol>
-<p><img src="/images/%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B.png" alt=""></p>
+<p><img loading="lazy" src='/images/三次握手.png' alt="/images/三次握手.png"></p>
 <p>通过 <strong>四次挥手</strong> 来断开一条 TCP 连接：</p>
 <ol>
 <li>第一次，当客户端完成数据传输后，将控制位 FIN 置 1，<strong>提出停止 TCP 连接的请求</strong>。</li>
@@ -267,117 +275,95 @@
 <li>第四次，客户端对服务器的请求进行确认，将 ACK 置 1，双方关闭结束，释放用于该连接的所有资源。</li>
 <li>为什么需要四次挥手：客户端在数据传输结束后发出连续释放的通知，待对方确认后进入半关闭状态；服务器在传输完最后一段数据后，也发出释放通知，待对方确认后再完全关闭 TCP 连接。</li>
 </ol>
-<p><img src="/images/%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B.png" alt=""></p>
-<h3 id="流量控制">流量控制</h3>
-<p>每一侧主机都为 TCP 连接设置了接收缓存，接收到的数据会被放入接收缓存，相关的应用进程会从该缓存中读取数据。如果某应用程序 <strong>读取数据时相对缓慢</strong>，而发送方发送得太多 、 太快，发送的数据就会很容易地使该连接的接收缓存溢出 。</p>
+<p><img loading="lazy" src='/images/四次挥手.png' alt="/images/四次挥手.png"></p>
+<h3 class="heading-element" id="流量控制"><span>流量控制</span>
+  <a href="#%e6%b5%81%e9%87%8f%e6%8e%a7%e5%88%b6" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>每一侧主机都为 TCP 连接设置了接收缓存，接收到的数据会被放入接收缓存，相关的应用进程会从该缓存中读取数据。如果某应用程序 <strong>读取数据时相对缓慢</strong>，而发送方发送得太多 、 太快，发送的数据就会很容易地使该连接的接收缓存溢出 。</p>
 <p>TCP 为其应用程序提供了流量控制服务，以 <strong>消除发送方使接收方缓存溢出的可能性</strong>。流量控制因此是个速度匹配服务。TCP 是全双工通信，在连接两端的发送方都各自维护一个 <code>接收窗口</code>，给发送方一个指示 —— 该接收方还有多少可用的缓存空间，以实现流量控制。</p>
-<p><img src="/images/%E6%B5%81%E9%87%8F%E6%8E%A7%E5%88%B6.png" alt=""></p>
+<p><img loading="lazy" src='/images/流量控制.png' alt="/images/流量控制.png"></p>
 <p>与之相对的，TCP 发送方也可能因为 IP 网络的拥塞而被遏制（通过拥塞窗口），称为 <strong>拥塞控制</strong>。</p>
-<h3 id="udp-协议">UDP 协议</h3>
-<p>使用 UDP 时，因为发送方和接收方的运输层实体之间没有握手，UDP 也被称为是无连接的。 UDP 相比 TCP 有以下几个特点：</p>
+<h3 class="heading-element" id="udp-协议"><span>UDP 协议</span>
+  <a href="#udp-%e5%8d%8f%e8%ae%ae" class="heading-mark">
+    <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
+  </a>
+</h3><p>使用 UDP 时，因为发送方和接收方的运输层实体之间没有握手，UDP 也被称为是无连接的。 UDP 相比 TCP 有以下几个特点：</p>
 <ul>
 <li>没有流量控制和拥塞控制，更适合实时应用。</li>
 <li>无需握手，不会引入建立连接的时延。</li>
 <li>UDP 不需要维护连接状态，一般能支持更多的活跃客户。</li>
 <li>相比 TCP 20 个字节的首部开销，UDP 仅有 8 字节。</li>
 </ul>
+</div><div class="post-footer" id="post-footer">
+  <div class="post-info">
+    <div class="post-info-line">
+      <div class="post-info-mod"><span title="Updated on 2020-02-27 13:19:47">Updated on 2020-02-27&nbsp;</span>
+      </div><div class="post-info-license">
+            <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
+          </div></div><div class="post-info-line">
+        <div class="post-info-md"></div>
+        <div class="post-info-share">
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/net-http-tcp/" data-title="Net：计算机网络读书笔记" data-hashtags="Net"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/net-http-tcp/" data-hashtag="Net"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/net-http-tcp/" data-title="Net：计算机网络读书笔记"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+  </span>
+        </div>
+      </div></div>
 
-    </div>
-
-    <div class="post-copyright">
-             
-            <p class="copyright-item">
-                <span>Author:</span>
-                <span>Chenghao.Zheng </span>
-                </p>
-            
-           
-             
-            <p class="copyright-item">
-                    <span>Link:</span>
-                    <a href=https://hoffmanzheng.github.io/2020/net-http-tcp/>https://hoffmanzheng.github.io/2020/net-http-tcp/</span>
-            </p>
-            
-             
-            <p class="copyright-item lincese">
-                本文采用 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/" target="_blank">知识共享署名-非商业性使用 4.0 国际许可协议</a> 进行许可
-            </p>
-            
-    </div>
-
-  
-    <div class="post-tags">
-        
-            <section>
-            <i class="iconfont icon-tag"></i>Tag(s): 
-            
-            <span class="tag"><a href="https://hoffmanzheng.github.io/tags/net/">
-                    #Net</a></span>
-            
-            </section>
-        
-        <section>
-                <a href="javascript:window.history.back();">back</a></span> · 
-                <span><a href="https://hoffmanzheng.github.io/">home</a></span>
-        </section>
-    </div>
-
-    <div class="post-nav">
-        
-        <a href="https://hoffmanzheng.github.io/2020/net-url/" class="prev" rel="prev" title="Web：浅析 URL"><i class="iconfont icon-left"></i>&nbsp;Web：浅析 URL</a>
-         
-        
-        <a href="https://hoffmanzheng.github.io/2020/database-mysql/" class="next" rel="next" title="Database：MySQL 数据库">Database：MySQL 数据库&nbsp;<i class="iconfont icon-right"></i></a>
-        
-    </div>
-
-    <div class="post-comment">
-          
-                 
-          
-    </div>
+  <div class="post-info-more">
+    <section class="post-tags"><i class="fa-solid fa-tags me-1" aria-hidden="true"></i><a href="/tags/net/" class="post-tag" title="Tags - Net">Net</a></section>
+    <section><span><a href="javascript:void(0);" onclick="window.history.back();">Back</a></span>&nbsp;|&nbsp;<span><a href="/">Home</a></span>
+    </section>
+  </div><div class="post-nav"><a href="/2020/net-url/" class="post-nav-item" rel="prev" title="Web：浅析 URL"><i class="fa-solid fa-angle-left" aria-hidden="true"></i>Web：浅析 URL</a><a href="/2020/database-mysql/" class="post-nav-item" rel="next" title="Database：MySQL 数据库">Database：MySQL 数据库<i class="fa-solid fa-angle-right" aria-hidden="true"></i></a></div>
+</div>
 </article>
-          </div>
-		   </main>
-      <footer class="footer">
-    <div class="copyright">
-        &copy;
-        
-        <span itemprop="copyrightYear">2019 - 2023</span>
-        
-        <span class="with-love">
-    	 <i class="iconfont icon-love"></i> 
-         </span>
-         
-            <span class="author" itemprop="copyrightHolder"><a href="https://hoffmanzheng.github.io/">Chenghao.Zheng</a> | </span> 
-         
 
-         
-		  <span>Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow">Hugo</a> & <a href="https://github.com/liuzc/leaveit" target="_blank" rel="external nofollow">LeaveIt</a></span> 
-    </div>
-</footer>
+  <aside class="toc" id="toc-auto" aria-label="Contents"><h2 class="toc-title">Contents&nbsp;<i class="toc-icon fa-solid fa-angle-down" aria-hidden="true"></i></h2>
+      <div class="toc-content" id="toc-content-auto"></div></aside><dialog id="toc-dialog" aria-labelledby="toc-dialog-title" role="dialog">
+      <div class="toc">
+        <h2 class="toc-title">Contents</h2>
+        <div class="toc-content" id="toc-content-drawer"><nav >
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#http-协议">HTTP 协议</a>
+          <ul>
+            <li><a href="#非持续连接和持续连接">非持续连接和持续连接</a></li>
+            <li><a href="#http-报文格式">HTTP 报文格式</a></li>
+            <li><a href="#cookie-与-session">Cookie 与 Session</a></li>
+          </ul>
+        </li>
+        <li><a href="#ftp文件传输协议">FTP：文件传输协议</a></li>
+        <li><a href="#https">HTTPS</a>
+          <ul>
+            <li><a href="#http-与-https-区别">HTTP 与 HTTPS 区别</a></li>
+            <li><a href="#https-工作原理">HTTPS 工作原理</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 
-
-
-
-
-
-
-
-
-
-
-
-
-    
-     <link href="//lib.baomitu.com/lightgallery/1.6.11/css/lightgallery.min.css" rel="stylesheet">  
-      
-     <script src="/js/vendor_gallery.min.js" async="" ></script>
-    
-  
-
-
-
-     </div>
-  </body>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#tcp-报文段结构">TCP 报文段结构</a></li>
+        <li><a href="#可靠数据传输">可靠数据传输</a></li>
+        <li><a href="#流量控制">流量控制</a></li>
+        <li><a href="#udp-协议">UDP 协议</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav></div>
+      </div>
+    </dialog></main><footer class="footer">
+    <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
+        </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>
+            <span itemprop="copyrightYear">2026</span><span class="author" itemprop="copyrightHolder">
+              <a href="/"></a></span></div></div>
+  </footer></div><div class="widgets"><div class="fixed-buttons"><div class="fixed-button back-to-top animate__faster d-none" role="button" aria-label="Back to Top"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></div><div id="toc-drawer-button" class="fixed-button toc-drawer-button d-none" role="button" aria-label="Contents"><i class="fa-solid fa-bars" aria-hidden="true"></i></div></div><div id="mask"></div><noscript>
+    <div class="noscript-warning">This website works best with JavaScript enabled.</div>
+  </noscript>
+</div><link rel="stylesheet" href="/lib/cookieconsent/cookieconsent.min.css"><script src="/lib/sharer/sharer.min.js" async defer></script><script src="/lib/cookieconsent/cookieconsent.min.js" defer></script><script src="/js/config/91bfe509e0a7eec970ecc1574733fad7.js" defer></script><script src="/js/theme.min.js" defer></script></body>
 </html>
