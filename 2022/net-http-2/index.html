@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -14,7 +14,7 @@
   <meta itemprop="datePublished" content="2022-11-09T13:19:47+01:00">
   <meta itemprop="dateModified" content="2022-11-09T13:19:47+01:00">
   <meta itemprop="wordCount" content="317">
-  <meta itemprop="keywords" content="Net"><meta property="og:url" content="https://hoffmanzheng.github.io/2022/net-http-2/">
+  <meta itemprop="keywords" content="Net"><meta property="og:url" content="http://localhost:1313/2022/net-http-2/">
   <meta property="og:site_name" content="人间一场大梦">
   <meta property="og:title" content="HTTP/2：漫谈 RFC 7540">
   <meta property="og:description" content="HTTP/2 在引入头部字段压缩和允许单连接并发交换后，使更加高效的网络资源使用和更低的接收延迟成为可能。同时也引入了从服务端到客户端的主动推送。本篇结合 RFC 7540 谈谈 HTTP version 2。
@@ -33,7 +33,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2022/net-http-2/" title="HTTP/2：漫谈 RFC 7540 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2022/code-refactor/" title="重构：改善既有代码的设计" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/draft/database-mysql-release/" title="Database：[译] MySQL 5.6 5.7 8.0 Release Notes" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/2022/net-http-2/" title="HTTP/2：漫谈 RFC 7540 - 人间一场大梦" /><link rel="prev" type="text/html" href="http://localhost:1313/2022/code-refactor/" title="重构：改善既有代码的设计" /><link rel="next" type="text/html" href="http://localhost:1313/draft/database-mysql-release/" title="Database：[译] MySQL 5.6 5.7 8.0 Release Notes" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -43,9 +43,9 @@
     "inLanguage": "en-us",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/hoffmanzheng.github.io\/2022\/net-http-2\/"
+      "@id": "http:\/\/localhost:1313\/2022\/net-http-2\/"
     },"genre": "posts","keywords": "Net","wordcount":  317 ,
-    "url": "https:\/\/hoffmanzheng.github.io\/2022\/net-http-2\/","datePublished": "2022-11-09T13:19:47+01:00","dateModified": "2022-11-09T13:19:47+01:00","publisher": {
+    "url": "http:\/\/localhost:1313\/2022\/net-http-2\/","datePublished": "2022-11-09T13:19:47+01:00","dateModified": "2022-11-09T13:19:47+01:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -112,7 +112,7 @@
     </li>
   </ul>
 </nav></div>
-      </div><div class="content" id="content"><p>HTTP/2 在引入头部字段压缩和允许单连接并发交换后，使更加高效的网络资源使用和更低的接收延迟成为可能。同时也引入了从服务端到客户端的主动推送。本篇结合 <a href="https://www.rfc-editor.org/rfc/rfc7540" target="_blank" rel="external nofollow noopener noreferrer">RFC 7540</a> 谈谈 HTTP version 2。</p>
+      </div><div class="content" id="content"><p>HTTP/2 在引入头部字段压缩和允许单连接并发交换后，使更加高效的网络资源使用和更低的接收延迟成为可能。同时也引入了从服务端到客户端的主动推送。本篇结合 <a href="https://www.rfc-editor.org/rfc/rfc7540" target="_blank" rel="external nofollow noopener noreferrer">RFC 7540<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 谈谈 HTTP version 2。</p>
 <h3 class="heading-element" id="前言"><span>前言</span>
   <a href="#%e5%89%8d%e8%a8%80" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
@@ -132,23 +132,23 @@
   </a>
 </h3><p>一个 HTTP/2 连接是一个运行在 TCP 连接之上的应用层协议。客户端是 TCP 连接的初始化器。HTTP/2 使用与 HTTP/1.1 相同的 http 和 https URI 帧。HTTP/2 共享着相同的默认端口，http URIs 80，https URIs 443。因此，对于目标资源比如 “http://example.org/foo” 或者 “https://example.com/bar” 的 URLs 的请求实现被要求首先判断（客户端希望立即与之建立连接的）上游服务是否支持 HTTP/2。</p>
 <p>客户端可以在没有先验知识的情况下通过 HTTP <strong>升级</strong> 机制，在 HTTP/1.1 请求中包含一个带有 h2c 令牌的升级头字段和一个 <code>HTTP2-Settings</code> 头字段来支持 HTTP/2。（基于 TLS 的 HTTP/2 使用 <code>h2</code> 作为协议标识符）</p>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-http" data-lang="http"><span style="display:flex;"><span><span style="color:#a6e22e">GET</span> / <span style="color:#66d9ef">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span>
-</span></span><span style="display:flex;"><span>Host<span style="color:#f92672">:</span> <span style="color:#ae81ff">Server.example.com</span>
-</span></span><span style="display:flex;"><span>Connection<span style="color:#f92672">:</span> <span style="color:#ae81ff">Upgrade, HTTP2-Settings</span>
-</span></span><span style="display:flex;"><span>Upgrade<span style="color:#f92672">:</span> <span style="color:#ae81ff">h2c</span>
-</span></span><span style="display:flex;"><span>HTTP2-Settings<span style="color:#f92672">:</span> <span style="color:#ae81ff">&lt;base64url encoding of HTTP/2 SETTINGS payload&gt;</span></span></span></code></pre></div><p>一个不支持 HTTP/2 的服务端能够在缺少升级头字段的情况下响应请求。而支持 HTTP/2 的服务会给出一个 101 交换协议的响应。在一个结束 101 响应的空行后，服务可以开始发送 HTTP/2 帧。</p>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// 不支持 HTTP/2 的服务
-</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">200</span> <span style="color:#a6e22e">OK</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Content</span><span style="color:#f92672">-</span><span style="color:#a6e22e">Length</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">243</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Content</span><span style="color:#f92672">-</span><span style="color:#a6e22e">Type</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">text</span><span style="color:#f92672">/</span><span style="color:#a6e22e">html</span>
-</span></span><span style="display:flex;"><span>...
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// 支持 HTTP/2 的服务
-</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">1.1</span> <span style="color:#ae81ff">101</span> <span style="color:#a6e22e">Switching</span> <span style="color:#a6e22e">Protocols</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Connection</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Upgrade</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">Upgrade</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">h2c</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>[ <span style="color:#a6e22e">HTTP</span><span style="color:#f92672">/</span><span style="color:#ae81ff">2</span> <span style="color:#a6e22e">connection</span> ... ]</span></span></code></pre></div><p>这个提前发送来升级的请求会被认定为流 1，在 HTTP/2 连接开始后，流 1 会被用来作响应。因为升级只会应用在接下来的连接，客户端在发送 HTTP2-Settings 头字段时必须也发送 HTTP2-Settings 作为连接头字段的连接选项来防止请求被转发。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-http"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-http" data-lang="http"><span class="line"><span class="cl"><span class="nf">GET</span> <span class="nn">/</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+</span></span><span class="line"><span class="cl"><span class="n">Host</span><span class="o">:</span> <span class="l">Server.example.com</span>
+</span></span><span class="line"><span class="cl"><span class="n">Connection</span><span class="o">:</span> <span class="l">Upgrade, HTTP2-Settings</span>
+</span></span><span class="line"><span class="cl"><span class="n">Upgrade</span><span class="o">:</span> <span class="l">h2c</span>
+</span></span><span class="line"><span class="cl"><span class="n">HTTP2-Settings</span><span class="o">:</span> <span class="l">&lt;base64url encoding of HTTP/2 SETTINGS payload&gt;</span></span></span></code></pre></div></div><p>一个不支持 HTTP/2 的服务端能够在缺少升级头字段的情况下响应请求。而支持 HTTP/2 的服务会给出一个 101 交换协议的响应。在一个结束 101 响应的空行后，服务可以开始发送 HTTP/2 帧。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-javascript"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-javascript" data-lang="javascript"><span class="line"><span class="cl"><span class="c1">// 不支持 HTTP/2 的服务
+</span></span></span><span class="line"><span class="cl"><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">200</span> <span class="nx">OK</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Content</span><span class="o">-</span><span class="nx">Length</span><span class="o">:</span> <span class="mi">243</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Content</span><span class="o">-</span><span class="nx">Type</span><span class="o">:</span> <span class="nx">text</span><span class="o">/</span><span class="nx">html</span>
+</span></span><span class="line"><span class="cl"><span class="p">...</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1">// 支持 HTTP/2 的服务
+</span></span></span><span class="line"><span class="cl"><span class="nx">HTTP</span><span class="o">/</span><span class="mf">1.1</span> <span class="mi">101</span> <span class="nx">Switching</span> <span class="nx">Protocols</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Connection</span><span class="o">:</span> <span class="nx">Upgrade</span>
+</span></span><span class="line"><span class="cl"><span class="nx">Upgrade</span><span class="o">:</span> <span class="nx">h2c</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span> <span class="nx">HTTP</span><span class="o">/</span><span class="mi">2</span> <span class="nx">connection</span> <span class="p">...</span> <span class="p">]</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>这个提前发送来升级的请求会被认定为流 1，在 HTTP/2 连接开始后，流 1 会被用来作响应。因为升级只会应用在接下来的连接，客户端在发送 HTTP2-Settings 头字段时必须也发送 HTTP2-Settings 作为连接头字段的连接选项来防止请求被转发。</p>
 <p>在有先验知识的情况下，客户端必须发送连接引语和 HTTP/2 帧，服务器就可以通过连接引语来识别这些连接。</p>
 <h3 class="heading-element" id="头部压缩与解压"><span>头部压缩与解压</span>
   <a href="#%e5%a4%b4%e9%83%a8%e5%8e%8b%e7%bc%a9%e4%b8%8e%e8%a7%a3%e5%8e%8b" class="heading-mark">
@@ -199,7 +199,7 @@
   </a>
 </h3><p>HTTP/2 允许服务端向客户端端推送响应，这在客户端需要这些响应来处理原始请求时会很有用。PUSH_PROMISE 帧会被服务端发送在任一客户端初始的流上，其中包含完整的请求头字段，且推送的响应要与具体的客户端请求相关联。</p>
 <p>发送 <code>PUSH_PROMISE</code> 帧将为服务端创建一个本地预留状态的流，给客户端一个远程预留的流。随后客户端可以开始递送响应，并将服务端侧流置为远程半关闭状态，客户端侧的流置为本地半关闭状态，在推送以 <code>END_STREAM</code> 帧结束后，再将流置为已关闭状态。如果客户端决定不想接收服务端的推送或者服务端在开始推送时花费过长的时间，客户端可以发送一个 <code>RST_STREAM</code> 帧。</p>
-<p>客户端在收到推送后必须鉴权服务端或者提供推送的代理，比如一个只给 example.com 提供证书的服务端并不被允许推送一个响应到 <a href="https://www.example.org/doc" target="_blank" rel="external nofollow noopener noreferrer">https://www.example.org/doc</a>。</p>
+<p>客户端在收到推送后必须鉴权服务端或者提供推送的代理，比如一个只给 example.com 提供证书的服务端并不被允许推送一个响应到 <a href="https://www.example.org/doc" target="_blank" rel="external nofollow noopener noreferrer">https://www.example.org/doc<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a>。</p>
 </div><div class="post-footer" id="post-footer">
   <div class="post-info">
     <div class="post-info-line">
@@ -207,11 +207,11 @@
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"></div>
+        <div class="post-info-md"><span><a href="vscode://file//Users/hoffman.zheng/Documents/CodeLocal/HoffmanZheng.github.io.creator/content/posts/net-http-2.md" title="Open in editor" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">Open in editor</a></span></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2022/net-http-2/" data-title="HTTP/2：漫谈 RFC 7540" data-hashtags="Net"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2022/net-http-2/" data-hashtag="Net"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2022/net-http-2/" data-title="HTTP/2：漫谈 RFC 7540"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/2022/net-http-2/" data-title="HTTP/2：漫谈 RFC 7540" data-hashtags="Net"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/2022/net-http-2/" data-hashtag="Net"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/2022/net-http-2/" data-title="HTTP/2：漫谈 RFC 7540"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>

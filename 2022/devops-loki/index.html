@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -16,7 +16,7 @@
   <meta itemprop="datePublished" content="2022-04-21T03:19:47+01:00">
   <meta itemprop="dateModified" content="2022-04-21T03:19:47+01:00">
   <meta itemprop="wordCount" content="245">
-  <meta itemprop="keywords" content="Distributed"><meta property="og:url" content="https://hoffmanzheng.github.io/2022/devops-loki/">
+  <meta itemprop="keywords" content="Distributed"><meta property="og:url" content="http://localhost:1313/2022/devops-loki/">
   <meta property="og:site_name" content="人间一场大梦">
   <meta property="og:title" content="Devops：[译] 日志聚合系统 Grafana Loki ">
   <meta property="og:description" content="原文地址：The original design doc of Loki
@@ -37,7 +37,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2022/devops-loki/" title="Devops：[译] 日志聚合系统 Grafana Loki  - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2022/database-couchbase/" title="Couchbase: Blazing Fast. Surprisingly Affordable." /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2022/code-refactor/" title="重构：改善既有代码的设计" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/2022/devops-loki/" title="Devops：[译] 日志聚合系统 Grafana Loki  - 人间一场大梦" /><link rel="prev" type="text/html" href="http://localhost:1313/2022/database-couchbase/" title="Couchbase: Blazing Fast. Surprisingly Affordable." /><link rel="next" type="text/html" href="http://localhost:1313/2022/code-refactor/" title="重构：改善既有代码的设计" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -47,9 +47,9 @@
     "inLanguage": "en-us",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/hoffmanzheng.github.io\/2022\/devops-loki\/"
+      "@id": "http:\/\/localhost:1313\/2022\/devops-loki\/"
     },"genre": "posts","keywords": "Distributed","wordcount":  245 ,
-    "url": "https:\/\/hoffmanzheng.github.io\/2022\/devops-loki\/","datePublished": "2022-04-21T03:19:47+01:00","dateModified": "2022-04-21T03:19:47+01:00","publisher": {
+    "url": "http:\/\/localhost:1313\/2022\/devops-loki\/","datePublished": "2022-04-21T03:19:47+01:00","dateModified": "2022-04-21T03:19:47+01:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -123,7 +123,7 @@
     </li>
   </ul>
 </nav></div>
-      </div><div class="content" id="content"><p>原文地址：<a href="https://docs.google.com/document/d/11tjK_lvp1-SVsFZjgOTr1vV3-q6vBAsZYIQ5ZeYBkyM/view" target="_blank" rel="external nofollow noopener noreferrer">The original design doc of Loki</a></p>
+      </div><div class="content" id="content"><p>原文地址：<a href="https://docs.google.com/document/d/11tjK_lvp1-SVsFZjgOTr1vV3-q6vBAsZYIQ5ZeYBkyM/view" target="_blank" rel="external nofollow noopener noreferrer">The original design doc of Loki<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></p>
 <p>本篇旨在解释 Grafana Loki 服务的动机和设计。本文档并不试图深入描述设计的每一个可能的细节，但希望能解释关键点，并让我们提前发现任何明显的错误。本文档不仅回答我们如何打算构建它的问题，而且还回答我们为什么构建它，它将用来做什么，以及谁将使用它的问题。</p>
 <h3 class="heading-element" id="背景与动机"><span>背景与动机</span>
   <a href="#%e8%83%8c%e6%99%af%e4%b8%8e%e5%8a%a8%e6%9c%ba" class="heading-mark">
@@ -133,7 +133,7 @@
   <a href="#%e4%ba%8b%e4%bb%b6%e5%93%8d%e5%ba%94--%e4%b8%8a%e4%b8%8b%e6%96%87%e5%88%87%e6%8d%a2" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h4><p>虽然 <a href="https://grafana.com/metrics/" target="_blank" rel="external nofollow noopener noreferrer">Metrics</a> 和 Alerts 可以在时间序列上预警发生的事件，但它们只能用来暴露预先定义好的行为。为了得到事件的全貌，工程师通常通过日志来获取更多的细节信息。</p>
+</h4><p>虽然 <a href="https://grafana.com/metrics/" target="_blank" rel="external nofollow noopener noreferrer">Metrics<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 和 Alerts 可以在时间序列上预警发生的事件，但它们只能用来暴露预先定义好的行为。为了得到事件的全貌，工程师通常通过日志来获取更多的细节信息。</p>
 <p><img loading="lazy" src='/images/loki-incident-response.png' alt="/images/loki-incident-response.png"></p>
 <p>通常事件发生时会首先引起警报，并伴随着仪表盘出现特定的表象。在定位异常来源的具体服务或实例前，工程师会尝试在服务/实例的日志中寻找其根本原因。而现状是，Metrics 和 logs 被存储在两个分离的系统中，工程师需要将查询从一种语言和接口转换到另一个。因此设计 Loki 的第一个设想是减少在 logs 和 metrics 之间切换上下文的开销，来更快地响应事件而改善用户体验。</p>
 <h4 class="heading-element" id="现存的解决方案"><span>现存的解决方案</span>
@@ -150,7 +150,7 @@
   </a>
 </h4><p>随着向 SaaS 日志聚合的迁移，此类系统的过高成本越发突显。 这种成本不仅来自用于实现全文搜索的技术 —— 对倒排索引进行扩展和分片也很困难； 要么写入触及的每个分片，要么必须从每个分片读取；此外操作也具有一定的复杂性。</p>
 <p>买家寻求日志聚合系统的的一个常见经验是，在收到超出他们预算的基于现有日志负载的初始报价后，转向工程师并要求他们减少日志记录。 由于日志记录的存在是为了覆盖意外的错误（见上文），工程师的典型反应是难以置信 —— “如果我必须知道我该记录什么，那么记录日志又有什么意义？”。</p>
-<p>最近出现的一些系统在这点上提供了不同的权衡。 Peter Bourgon 的开源 <a href="https://github.com/oklog/oklog" target="_blank" rel="external nofollow noopener noreferrer">OKLOG 项目</a>（现已存档）避开了基于时间的所有形式的索引，并采用最终一致的基于网格的分发策略。 这两个设计决策提供了巨大的成本节约和从根本上更简单的操作，但我们认为不符合我们的其他设计要求 —— 查询不够表现力且过于昂贵。 然而，我们确实认识到这是一个有吸引力的本地解决方案。</p>
+<p>最近出现的一些系统在这点上提供了不同的权衡。 Peter Bourgon 的开源 <a href="https://github.com/oklog/oklog" target="_blank" rel="external nofollow noopener noreferrer">OKLOG 项目<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a>（现已存档）避开了基于时间的所有形式的索引，并采用最终一致的基于网格的分发策略。 这两个设计决策提供了巨大的成本节约和从根本上更简单的操作，但我们认为不符合我们的其他设计要求 —— 查询不够表现力且过于昂贵。 然而，我们确实认识到这是一个有吸引力的本地解决方案。</p>
 <p>因此第三个设想是，一个显着更具成本效益的解决方案，具有稍微不同的索引权衡，将是一个非常大的问题&hellip;&hellip;</p>
 <h4 class="heading-element" id="kubernetes"><span>Kubernetes</span>
   <a href="#kubernetes" class="heading-mark">
@@ -164,7 +164,7 @@
   </a>
 </h4><p>最后值得一提的是普罗米修斯是如何融入的。 Prometheus 是一个以时间序列数据库为中心的监控系统。 TSDB 使用一组键值对索引样本集合（时间序列）。 可以通过指定这些标签的子集（匹配器）来查询这些时间序列，返回与这些标签匹配的所有时间序列。其与传统 Graphite 分层标签之类的区别是，可以对新的或变化的标签的存在与否进行查询。</p>
 <p>在 Prometheus（和 Cortex）中，这些标签存储在倒排索引中，使针对这些标签的查询更快速。Cortex 中的这种倒排索引存在于内存中以存储最近的数据，并存在于分布式 KV 存储（BigTable、DynamoDB 或 Cassandra）中以存储历史数据。 Cortex 索引能够根据余量和吞吐量线性扩展，但其会在设计上受限于给定标签的基数。</p>
-<p>Prometheus 系统包含许多组件，但值得在本次讨论中注意的一个组件是 mtail (<a href="https://github.com/google/mtail" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/google/mtail</a>)。 Mtail 允许您“从应用程序日志中提取白盒监控数据以收集到时间序列数据库中”。 这允许您为不公开任何本机指标的应用程序构建时间序列监控和警报。</p>
+<p>Prometheus 系统包含许多组件，但值得在本次讨论中注意的一个组件是 mtail (<a href="https://github.com/google/mtail" target="_blank" rel="external nofollow noopener noreferrer">https://github.com/google/mtail<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a>)。 Mtail 允许您“从应用程序日志中提取白盒监控数据以收集到时间序列数据库中”。 这允许您为不公开任何本机指标的应用程序构建时间序列监控和警报。</p>
 <h3 class="heading-element" id="提出方案"><span>提出方案</span>
   <a href="#%e6%8f%90%e5%87%ba%e6%96%b9%e6%a1%88" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
@@ -181,7 +181,7 @@
   <a href="#%e4%bb%a3%e7%90%86" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h4><p>第一个挑战是获取与时间序列/指标相关的元数据一致的可靠元数据。为了实现这一点，我们将使用与 Prometheus 相同的服务发现和标签重新标记库。这将被打包在一个守护进程中，其发现目标、生成元数据标签并跟踪日志文件以生成日志流，这些日志会暂时缓冲在客户端，然后被发送到服务。鉴于对节点故障时的最新日志的要求，它可以执行的批处理量有一个基本限制。（这个组件已经存在，叫做 <a href="https://github.com/grafana/loki/tree/main/clients/pkg/promtail" target="_blank" rel="external nofollow noopener noreferrer">Promtail</a>）</p>
+</h4><p>第一个挑战是获取与时间序列/指标相关的元数据一致的可靠元数据。为了实现这一点，我们将使用与 Prometheus 相同的服务发现和标签重新标记库。这将被打包在一个守护进程中，其发现目标、生成元数据标签并跟踪日志文件以生成日志流，这些日志会暂时缓冲在客户端，然后被发送到服务。鉴于对节点故障时的最新日志的要求，它可以执行的批处理量有一个基本限制。（这个组件已经存在，叫做 <a href="https://github.com/grafana/loki/tree/main/clients/pkg/promtail" target="_blank" rel="external nofollow noopener noreferrer">Promtail<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a>）</p>
 <h4 class="heading-element" id="写入请求的一生"><span>写入请求的一生</span>
   <a href="#%e5%86%99%e5%85%a5%e8%af%b7%e6%b1%82%e7%9a%84%e4%b8%80%e7%94%9f" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
@@ -202,7 +202,7 @@
 <li>每次操作的成本与存储成本；当块对象较小时，每次操作的成本占主导地位，并且将它们存储在数据库（例如 Bigtable）中更便宜。</li>
 <li>每个块索引的负载 —— 每个块都需要索引其中的条目；运行 Cortex 的经验告诉我们，这是运行系统的最大成本组件，但考虑到更大的块大小，我怀疑这里不会出现这种情况。</li>
 <li>构建块的内存成本和丢失风险。这可能是限制因素。我们应该期望能够为每台机器处理 1000 台主机的流，以便能够经济高效地运行服务；如果每个流需要 1MB 的内存并且每个主机需要 30 个流，这意味着每个摄取者需要 30GB 的内存（WAL 类似）。1000 台主机也意味着 130MB/s 的入站和出站带宽以及入站压缩，这是一种推动。</li>
-<li>压缩效率 —— 在非常小的尺寸（10s 字节）下，压缩是无效的；日志行将需要一起批处理以实现更接近最佳压缩。（<a href="https://docs.google.com/spreadsheets/d/1zTtln0kKspSWsHtwmamZzSnsHspHQigd-1jotZ8l9gc/edit#gid=0" target="_blank" rel="external nofollow noopener noreferrer">在示例日志数据上尝试的各种压缩方案和块大小</a>）</li>
+<li>压缩效率 —— 在非常小的尺寸（10s 字节）下，压缩是无效的；日志行将需要一起批处理以实现更接近最佳压缩。（<a href="https://docs.google.com/spreadsheets/d/1zTtln0kKspSWsHtwmamZzSnsHspHQigd-1jotZ8l9gc/edit#gid=0" target="_blank" rel="external nofollow noopener noreferrer">在示例日志数据上尝试的各种压缩方案和块大小<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a>）</li>
 </ul>
 <p>例如，12 小时的日志数据将产生约 100 MB 未压缩和约 10 MB 压缩的块。12 小时也是我们在 Cortex 中使用的块长度的上限。考虑到构建这些的内存要求，接近 1 MB（压缩）的块大小看起来更有可能。</p>
 <p>该提议是由一系列块 blocks 组成的块 chunk；第一个块是 gorilla 风格的时间索引，随后的块包含压缩的日志数据。一旦产生了足够多的块 blocks 以形成足够大的块 chunk，它们将被附加在一起以形成一个块。需要进行一些实验才能找到正确的块格式，欢迎在此处输入。</p>
@@ -226,11 +226,11 @@
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"></div>
+        <div class="post-info-md"><span><a href="vscode://file//Users/hoffman.zheng/Documents/CodeLocal/HoffmanZheng.github.io.creator/content/posts/devops-loki.md" title="Open in editor" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">Open in editor</a></span></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2022/devops-loki/" data-title="Devops：[译] 日志聚合系统 Grafana Loki " data-hashtags="Distributed"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2022/devops-loki/" data-hashtag="Distributed"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2022/devops-loki/" data-title="Devops：[译] 日志聚合系统 Grafana Loki "><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/2022/devops-loki/" data-title="Devops：[译] 日志聚合系统 Grafana Loki " data-hashtags="Distributed"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/2022/devops-loki/" data-hashtag="Distributed"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/2022/devops-loki/" data-title="Devops：[译] 日志聚合系统 Grafana Loki "><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>

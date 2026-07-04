@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -16,7 +16,7 @@
   <meta itemprop="datePublished" content="2022-02-21T13:19:47+01:00">
   <meta itemprop="dateModified" content="2022-02-21T13:19:47+01:00">
   <meta itemprop="wordCount" content="530">
-  <meta itemprop="keywords" content="Database"><meta property="og:url" content="https://hoffmanzheng.github.io/2022/database-couchbase/">
+  <meta itemprop="keywords" content="Database"><meta property="og:url" content="http://localhost:1313/2022/database-couchbase/">
   <meta property="og:site_name" content="人间一场大梦">
   <meta property="og:title" content="Couchbase: Blazing Fast. Surprisingly Affordable.">
   <meta property="og:description" content="Couchbase 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。
@@ -37,7 +37,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2022/database-couchbase/" title="Couchbase: Blazing Fast. Surprisingly Affordable. - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2022/distribute-redlock/" title="分布式：[译] 基于 Redis 的分布式锁 " /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2022/devops-loki/" title="Devops：[译] 日志聚合系统 Grafana Loki " /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/2022/database-couchbase/" title="Couchbase: Blazing Fast. Surprisingly Affordable. - 人间一场大梦" /><link rel="prev" type="text/html" href="http://localhost:1313/2022/distribute-redlock/" title="分布式：[译] 基于 Redis 的分布式锁 " /><link rel="next" type="text/html" href="http://localhost:1313/2022/devops-loki/" title="Devops：[译] 日志聚合系统 Grafana Loki " /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -47,9 +47,9 @@
     "inLanguage": "en-us",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/hoffmanzheng.github.io\/2022\/database-couchbase\/"
+      "@id": "http:\/\/localhost:1313\/2022\/database-couchbase\/"
     },"genre": "posts","keywords": "Database","wordcount":  530 ,
-    "url": "https:\/\/hoffmanzheng.github.io\/2022\/database-couchbase\/","datePublished": "2022-02-21T13:19:47+01:00","dateModified": "2022-02-21T13:19:47+01:00","publisher": {
+    "url": "http:\/\/localhost:1313\/2022\/database-couchbase\/","datePublished": "2022-02-21T13:19:47+01:00","dateModified": "2022-02-21T13:19:47+01:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -132,24 +132,24 @@
     </li>
   </ul>
 </nav></div>
-      </div><div class="content" id="content"><p><a href="https://www.couchbase.com/" target="_blank" rel="external nofollow noopener noreferrer">Couchbase</a> 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。</p>
-<p>本篇基于 <a href="https://docs.couchbase.com/home/server.html" target="_blank" rel="external nofollow noopener noreferrer">Couchbase 官网文档</a> 介绍其数据模型、内存存储、服务与搜索、集群可用性等。</p>
+      </div><div class="content" id="content"><p><a href="https://www.couchbase.com/" target="_blank" rel="external nofollow noopener noreferrer">Couchbase<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 是为企业应用设计的现代分布式文档数据库，具有强大的搜索引擎和内置的操作和分析能力。它拥有 NoSQL 的强大功能，并提供快速、高效的数据双向同步。</p>
+<p>本篇基于 <a href="https://docs.couchbase.com/home/server.html" target="_blank" rel="external nofollow noopener noreferrer">Couchbase 官网文档<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 介绍其数据模型、内存存储、服务与搜索、集群可用性等。</p>
 <h3 class="heading-element" id="数据"><span>数据</span>
   <a href="#%e6%95%b0%e6%8d%ae" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h3><p>Couchbase 中的每个数据都是一个键值对型的 item，它拥有在 bucket 中唯一的键，它的值可以是任何形式的二进制或者 JSON (可以包含基本/复杂的数据类型)。</p>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;a1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;a2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>,
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;a3&#34;</span> <span style="color:#f92672">:</span> {   <span style="color:#75715e">// nested array
-</span></span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;b1&#34;</span> <span style="color:#f92672">:</span> [ <span style="color:#a6e22e">number</span>, <span style="color:#a6e22e">number</span>, <span style="color:#a6e22e">number</span> ]
-</span></span><span style="display:flex;"><span>    },
-</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;a4&#34;</span> <span style="color:#f92672">:</span> [   <span style="color:#75715e">// array contains objects
-</span></span></span><span style="display:flex;"><span>    { <span style="color:#e6db74">&#34;c1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>, <span style="color:#e6db74">&#34;c2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span> },
-</span></span><span style="display:flex;"><span>    { <span style="color:#e6db74">&#34;c1&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;string&#34;</span>, <span style="color:#e6db74">&#34;c2&#34;</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">number</span> }
-</span></span><span style="display:flex;"><span>  ]
-</span></span><span style="display:flex;"><span>}</span></span></code></pre></div><h4 class="heading-element" id="数据模型"><span>数据模型</span>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-js"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;a1&#34;</span> <span class="o">:</span> <span class="nx">number</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;a2&#34;</span> <span class="o">:</span> <span class="s2">&#34;string&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;a3&#34;</span> <span class="o">:</span> <span class="p">{</span>   <span class="c1">// nested array
+</span></span></span><span class="line"><span class="cl">    <span class="s2">&#34;b1&#34;</span> <span class="o">:</span> <span class="p">[</span> <span class="nx">number</span><span class="p">,</span> <span class="nx">number</span><span class="p">,</span> <span class="nx">number</span> <span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;a4&#34;</span> <span class="o">:</span> <span class="p">[</span>   <span class="c1">// array contains objects
+</span></span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;c1&#34;</span> <span class="o">:</span> <span class="s2">&#34;string&#34;</span><span class="p">,</span> <span class="s2">&#34;c2&#34;</span> <span class="o">:</span> <span class="nx">number</span> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span> <span class="s2">&#34;c1&#34;</span> <span class="o">:</span> <span class="s2">&#34;string&#34;</span><span class="p">,</span> <span class="s2">&#34;c2&#34;</span> <span class="o">:</span> <span class="nx">number</span> <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h4 class="heading-element" id="数据模型"><span>数据模型</span>
   <a href="#%e6%95%b0%e6%8d%ae%e6%a8%a1%e5%9e%8b" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
@@ -170,36 +170,36 @@
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h4><p>在关系型数据库中，数据以一致的结构存储在表中，并通过主键相互关联。相比之下，Couchbase 使用 JSON 这种更灵活的数据模式，以及针对 JSON 增强的 SQL N1QL。N1QL 将数据作为格式自由的文档处理，并将数据聚集在一个称作 <code>keyspaces</code> 的大集合中。</p>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-js" data-lang="js"><span style="display:flex;"><span>(<span style="color:#a6e22e">HRData</span> <span style="color:#a6e22e">keyspace</span>)
-</span></span><span style="display:flex;"><span> {
-</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;Name&#39;</span><span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Jamie&#39;</span>
-</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;SSN&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">234</span>
-</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;Wage&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">123</span>
-</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;History&#39;</span><span style="color:#f92672">:</span>   <span style="color:#75715e">// 在关系型数据库中，这数组会存在另一个关联表中
-</span></span></span><span style="display:flex;"><span>      [
-</span></span><span style="display:flex;"><span>       [<span style="color:#e6db74">&#39;Yahoo&#39;</span>, <span style="color:#ae81ff">2005</span>, <span style="color:#ae81ff">2006</span>],
-</span></span><span style="display:flex;"><span>       [<span style="color:#e6db74">&#39;Oracle&#39;</span>, <span style="color:#ae81ff">2006</span>, <span style="color:#ae81ff">2012</span>],
-</span></span><span style="display:flex;"><span>     ]
-</span></span><span style="display:flex;"><span> },
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span> {
-</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;Name&#39;</span><span style="color:#f92672">:</span> <span style="color:#a6e22e">Steve</span>
-</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;SSN&#39;</span><span style="color:#f92672">:</span>  <span style="color:#ae81ff">123</span>,
-</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;Wage&#39;</span><span style="color:#f92672">:</span> <span style="color:#ae81ff">456</span>,
-</span></span><span style="display:flex;"><span> }</span></span></code></pre></div><p>N1QL 中的 <code>FROM</code> 被用来在不同的数据源 keyspaces 中检索。同样每个文档也会视自身为一个数据源，并在其嵌套元素中执行查询。嵌套元素可以通过点操作符 <code>.</code> 进入，数组元素通过中括号 <code>[]</code> 来索引。检索出的属性可以通过 <code>AS</code> 操作符来重命名：</p>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>SELECT firstjob FROM HRData.History<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> AS firstjob
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;firstjob&#39;</span>: <span style="color:#f92672">[</span><span style="color:#e6db74">&#39;Yahoo&#39;</span>, 2005, 2006<span style="color:#f92672">]</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>SELECT firstjob<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span> FROM HRData.History<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> AS firstjob
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>     <span style="color:#e6db74">&#39;firstjob[2]&#39;</span>: <span style="color:#ae81ff">2006</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span></span></span></code></pre></div><p>此外，N1QL 在实现多表关联时有不同的实现方式，它只支持 loopup doc 主键形式 left-to-right 关联，关联的左表需要能够生成右表文档的主键：</p>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>SELECT &lt;select_list&gt;
-</span></span><span style="display:flex;"><span>FROM Table_A A
-</span></span><span style="display:flex;"><span>LEFT JOIN Table_B B
-</span></span><span style="display:flex;"><span>ON KEYS &lt;keys-clause<span style="color:#f92672">(</span>A<span style="color:#f92672">)</span>&gt;</span></span></code></pre></div><p>参考：<a href="https://dzone.com/articles/visually-explaining-n1ql-joins" target="_blank" rel="external nofollow noopener noreferrer">Visually Explaining N1QL JOINs</a></p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-js"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="p">(</span><span class="nx">HRData</span> <span class="nx">keyspace</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">     <span class="s1">&#39;Name&#39;</span><span class="o">:</span> <span class="s1">&#39;Jamie&#39;</span>
+</span></span><span class="line"><span class="cl">     <span class="s1">&#39;SSN&#39;</span><span class="o">:</span> <span class="mi">234</span>
+</span></span><span class="line"><span class="cl">     <span class="s1">&#39;Wage&#39;</span><span class="o">:</span> <span class="mi">123</span>
+</span></span><span class="line"><span class="cl">     <span class="s1">&#39;History&#39;</span><span class="o">:</span>   <span class="c1">// 在关系型数据库中，这数组会存在另一个关联表中
+</span></span></span><span class="line"><span class="cl">      <span class="p">[</span>
+</span></span><span class="line"><span class="cl">       <span class="p">[</span><span class="s1">&#39;Yahoo&#39;</span><span class="p">,</span> <span class="mi">2005</span><span class="p">,</span> <span class="mi">2006</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">       <span class="p">[</span><span class="s1">&#39;Oracle&#39;</span><span class="p">,</span> <span class="mi">2006</span><span class="p">,</span> <span class="mi">2012</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl">     <span class="p">]</span>
+</span></span><span class="line"><span class="cl"> <span class="p">},</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">     <span class="s1">&#39;Name&#39;</span><span class="o">:</span> <span class="nx">Steve</span>
+</span></span><span class="line"><span class="cl">     <span class="s1">&#39;SSN&#39;</span><span class="o">:</span>  <span class="mi">123</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">     <span class="s1">&#39;Wage&#39;</span><span class="o">:</span> <span class="mi">456</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"> <span class="p">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>N1QL 中的 <code>FROM</code> 被用来在不同的数据源 keyspaces 中检索。同样每个文档也会视自身为一个数据源，并在其嵌套元素中执行查询。嵌套元素可以通过点操作符 <code>.</code> 进入，数组元素通过中括号 <code>[]</code> 来索引。检索出的属性可以通过 <code>AS</code> 操作符来重命名：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-shell"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">SELECT firstjob FROM HRData.History<span class="o">[</span>0<span class="o">]</span> AS firstjob
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">     <span class="s1">&#39;firstjob&#39;</span>: <span class="o">[</span><span class="s1">&#39;Yahoo&#39;</span>, 2005, 2006<span class="o">]</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">SELECT firstjob<span class="o">[</span>2<span class="o">]</span> FROM HRData.History<span class="o">[</span>0<span class="o">]</span> AS firstjob
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">     <span class="s1">&#39;firstjob[2]&#39;</span>: <span class="m">2006</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span></span></span></code></pre></div></div><p>此外，N1QL 在实现多表关联时有不同的实现方式，它只支持 loopup doc 主键形式 left-to-right 关联，关联的左表需要能够生成右表文档的主键：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-shell"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">SELECT &lt;select_list&gt;
+</span></span><span class="line"><span class="cl">FROM Table_A A
+</span></span><span class="line"><span class="cl">LEFT JOIN Table_B B
+</span></span><span class="line"><span class="cl">ON KEYS &lt;keys-clause<span class="o">(</span>A<span class="o">)</span>&gt;</span></span></code></pre></div></div><p>参考：<a href="https://dzone.com/articles/visually-explaining-n1ql-joins" target="_blank" rel="external nofollow noopener noreferrer">Visually Explaining N1QL JOINs<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></p>
 <h3 class="heading-element" id="buckets-内存与存储"><span>Buckets, 内存与存储</span>
   <a href="#buckets-%e5%86%85%e5%ad%98%e4%b8%8e%e5%ad%98%e5%82%a8" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
@@ -271,30 +271,30 @@
 </h4><p>与关系型数据库一样，Couchbase 也拥有基于每个对象唯一 key 的主键索引和基于文档内属性的二级索引（也被称作全局二级索引 GSI）。GSI 可以被独立（不依赖于 vBuckets 的划分）划分在有索引服务的集群节点，也就是说，数据对象和它的索引可以有不同的划分下标，对应不同的集群节点。GSI 可以被复制到其他的集群节点来实现高可用性和高性能（负载均衡）。</p>
 <p>应用和数据库驱动会将 N1QL 查询提交到集群中其中一个可用的查询节点，查询节点会分析语句，规划出最优的执行计划。根据执行计划将查询递交给索引节点或数据节点来执行，其流程如下图所示：</p>
 <p><img loading="lazy" src='/images/couchbase-query_execution.png' alt="/images/couchbase-query_execution.png"></p>
-<p>有关索引对查询性能的优化可以参考另一篇博文：<a href="https://hoffmanzheng.github.io/2020/database-index/" target="_blank" rel="external nofollow noopener noreferrer">Database：高性能 MySQL - 索引</a></p>
+<p>有关索引对查询性能的优化可以参考另一篇博文：<a href="https://hoffmanzheng.github.io/2020/database-index/" target="_blank" rel="external nofollow noopener noreferrer">Database：高性能 MySQL - 索引<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></p>
 <h4 class="heading-element" id="全文搜索"><span>全文搜索</span>
   <a href="#%e5%85%a8%e6%96%87%e6%90%9c%e7%b4%a2" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h4><p>Couchbase 使用基于 <a href="http://blevesearch.com/" target="_blank" rel="external nofollow noopener noreferrer">Bleve</a> 的全文搜索，首先要在执行搜索的 bucket 上创建全文索引，默认的 <code>default</code> 的 Type Mappings 指可以对 bucket 内的所有文档进行搜索，如下图所示：</p>
+</h4><p>Couchbase 使用基于 <a href="http://blevesearch.com/" target="_blank" rel="external nofollow noopener noreferrer">Bleve<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 的全文搜索，首先要在执行搜索的 bucket 上创建全文索引，默认的 <code>default</code> 的 Type Mappings 指可以对 bucket 内的所有文档进行搜索，如下图所示：</p>
 <p><img loading="lazy" src='/images/couchbase-defaultFullTextIndex.png' alt="/images/couchbase-defaultFullTextIndex.png"></p>
 <p>当然也可以只索引 bucket 中某个类型的文档，这样有助于减少空间和内存使用。例如指定文档 ID 下划线前的字符串为类型，hotel 为类型映射，然后将 default type mappings 取消即可，如下图所示：</p>
 <p><img loading="lazy" src='/images/couchbase-typeMapping.png' alt="/images/couchbase-typeMapping.png"></p>
 <p>此外还可以仅索引文档中的某个字段，如下图所示：</p>
 <p><img loading="lazy" src='/images/couchbase-searchField.png' alt="/images/couchbase-searchField.png"></p>
 <p>在网页管理员控制台测试搜索功能后，就可以用 REST API 来实现搜索：</p>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">curl</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">u</span> <span style="color:#a6e22e">Administrator</span><span style="color:#f92672">:</span><span style="color:#a6e22e">password</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">X</span> <span style="color:#a6e22e">POST</span> <span style="color:#f92672">-</span><span style="color:#a6e22e">H</span> <span style="color:#e6db74">&#34;Content-Type: application/json&#34;</span> <span style="color:#f92672">\</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">http</span><span style="color:#f92672">:</span><span style="color:#75715e">//localhost:8094/api/index/travel-FTS/query \
-</span></span></span><span style="display:flex;"><span><span style="color:#f92672">-</span><span style="color:#a6e22e">d</span> <span style="color:#e6db74">&#39;{
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;explain&#34;: true,
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;fields&#34;: [
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;*&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  ],
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;highlight&#34;: {},
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  &#34;query&#34;: {
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">    &#34;query&#34;: &#34;hotel&#34;
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  }
-</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">}&#39;</span></span></span></code></pre></div><h3 class="heading-element" id="集群与可用性"><span>集群与可用性</span>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-js"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-js" data-lang="js"><span class="line"><span class="cl"><span class="nx">curl</span> <span class="o">-</span><span class="nx">u</span> <span class="nx">Administrator</span><span class="o">:</span><span class="nx">password</span> <span class="o">-</span><span class="nx">X</span> <span class="nx">POST</span> <span class="o">-</span><span class="nx">H</span> <span class="s2">&#34;Content-Type: application/json&#34;</span> <span class="o">\</span>
+</span></span><span class="line"><span class="cl"><span class="nx">http</span><span class="o">:</span><span class="c1">//localhost:8094/api/index/travel-FTS/query \
+</span></span></span><span class="line"><span class="cl"><span class="o">-</span><span class="nx">d</span> <span class="s1">&#39;{
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#34;explain&#34;: true,
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#34;fields&#34;: [
+</span></span></span><span class="line"><span class="cl"><span class="s1">    &#34;*&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s1">  ],
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#34;highlight&#34;: {},
+</span></span></span><span class="line"><span class="cl"><span class="s1">  &#34;query&#34;: {
+</span></span></span><span class="line"><span class="cl"><span class="s1">    &#34;query&#34;: &#34;hotel&#34;
+</span></span></span><span class="line"><span class="cl"><span class="s1">  }
+</span></span></span><span class="line"><span class="cl"><span class="s1">}&#39;</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><h3 class="heading-element" id="集群与可用性"><span>集群与可用性</span>
   <a href="#%e9%9b%86%e7%be%a4%e4%b8%8e%e5%8f%af%e7%94%a8%e6%80%a7" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
@@ -322,7 +322,7 @@
 <li>Graceful: 这是一个在线操作，要求零停机时间。当要移除的节点包含数据服务时，在剩下的集群节点上的副本 vBuckets 会被提升为激活状态，而要移除的节点上的活跃 vBuckets 会是 dead 状态。在整个过程中，数据服务节点会被主动、有序地移除，集群为每个 bucket 保持所有 1024 个活跃的 vBuckets。</li>
 <li>Hard: 当节点失效时自动采取的故障转移过程，被动地从集群中移去节点，因为节点已经变得不可用或不稳定。当失去的节点曾运行数据服务，这个过程会从剩下的集群节点中将副本 vBuckets 提升激活，直到每个 bucket 有 1024 个活跃的 vBuckets。</li>
 </ul>
-<p>Hard Failover 应该只在某个节点变成不可用时被使用，当失效节点曾有数据服务时，集群会进入一个降级状态。部分副本 vBuckets 会被升级成活跃 vBuckets，集群则因减少的副本 vBuckets 缺少再一次对抗节点停电的资源。如果失效的节点运行着集群中唯一一个索引服务，索引会在强制故障转移期间变得不可用。ref: <a href="https://docs.couchbase.com/server/6.0/learn/clusters-and-availability/hard-failover.html#hard-failover-example" target="_blank" rel="external nofollow noopener noreferrer">Hard Failover Example</a></p>
+<p>Hard Failover 应该只在某个节点变成不可用时被使用，当失效节点曾有数据服务时，集群会进入一个降级状态。部分副本 vBuckets 会被升级成活跃 vBuckets，集群则因减少的副本 vBuckets 缺少再一次对抗节点停电的资源。如果失效的节点运行着集群中唯一一个索引服务，索引会在强制故障转移期间变得不可用。ref: <a href="https://docs.couchbase.com/server/6.0/learn/clusters-and-availability/hard-failover.html#hard-failover-example" target="_blank" rel="external nofollow noopener noreferrer">Hard Failover Example<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></p>
 <h4 class="heading-element" id="集群内复制"><span>集群内复制</span>
   <a href="#%e9%9b%86%e7%be%a4%e5%86%85%e5%a4%8d%e5%88%b6" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
@@ -350,11 +350,11 @@
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"></div>
+        <div class="post-info-md"><span><a href="vscode://file//Users/hoffman.zheng/Documents/CodeLocal/HoffmanZheng.github.io.creator/content/posts/database-couchbase.md" title="Open in editor" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">Open in editor</a></span></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2022/database-couchbase/" data-title="Couchbase: Blazing Fast. Surprisingly Affordable." data-hashtags="Database"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2022/database-couchbase/" data-hashtag="Database"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2022/database-couchbase/" data-title="Couchbase: Blazing Fast. Surprisingly Affordable."><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/2022/database-couchbase/" data-title="Couchbase: Blazing Fast. Surprisingly Affordable." data-hashtags="Database"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/2022/database-couchbase/" data-hashtag="Database"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/2022/database-couchbase/" data-title="Couchbase: Blazing Fast. Surprisingly Affordable."><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>

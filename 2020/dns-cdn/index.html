@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -16,7 +16,7 @@
   <meta itemprop="datePublished" content="2020-07-26T09:19:47+01:00">
   <meta itemprop="dateModified" content="2020-07-26T09:19:47+01:00">
   <meta itemprop="wordCount" content="272">
-  <meta itemprop="keywords" content="Net"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/dns-cdn/">
+  <meta itemprop="keywords" content="Net"><meta property="og:url" content="http://localhost:1313/2020/dns-cdn/">
   <meta property="og:site_name" content="人间一场大梦">
   <meta property="og:title" content="深入 Web 请求过程">
   <meta property="og:description" content="由于之前找工作，刚来上海挺多事，些久没写博客；至此打算新开一个 “学习录” 系列（以读书笔记和实战心得为主），记录自己 Java 学习路上的收获，共勉。
@@ -37,7 +37,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/dns-cdn/" title="深入 Web 请求过程 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2020/deploy/" title="Java：程序的部署和 Nginx 负载均衡" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/java-io/" title="深入分析 Java I/O 的工作机制" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/2020/dns-cdn/" title="深入 Web 请求过程 - 人间一场大梦" /><link rel="prev" type="text/html" href="http://localhost:1313/2020/deploy/" title="Java：程序的部署和 Nginx 负载均衡" /><link rel="next" type="text/html" href="http://localhost:1313/2020/java-io/" title="深入分析 Java I/O 的工作机制" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -47,9 +47,9 @@
     "inLanguage": "en-us",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/dns-cdn\/"
+      "@id": "http:\/\/localhost:1313\/2020\/dns-cdn\/"
     },"genre": "posts","keywords": "Net","wordcount":  272 ,
-    "url": "https:\/\/hoffmanzheng.github.io\/2020\/dns-cdn\/","datePublished": "2020-07-26T09:19:47+01:00","dateModified": "2020-07-26T09:19:47+01:00","publisher": {
+    "url": "http:\/\/localhost:1313\/2020\/dns-cdn\/","datePublished": "2020-07-26T09:19:47+01:00","dateModified": "2020-07-26T09:19:47+01:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -127,7 +127,7 @@
   </ul>
 </nav></div>
       </div><div class="content" id="content"><p>由于之前找工作，刚来上海挺多事，些久没写博客；至此打算新开一个 “学习录” 系列（以读书笔记和实战心得为主），记录自己 Java 学习路上的收获，共勉。</p>
-<p>以 <a href="https://book.douban.com/subject/25953851/" target="_blank" rel="external nofollow noopener noreferrer">《深入分析 Java Web 技术内幕》</a> 第一章 深入 Web 请求过程的内容为参考，此篇讲解游览器缓存、DNS 域名解析的过程和 CDN 工作机制。</p>
+<p>以 <a href="https://book.douban.com/subject/25953851/" target="_blank" rel="external nofollow noopener noreferrer">《深入分析 Java Web 技术内幕》<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 第一章 深入 Web 请求过程的内容为参考，此篇讲解游览器缓存、DNS 域名解析的过程和 CDN 工作机制。</p>
 <h1 class="heading-element" id="游览器缓存"><span>游览器缓存</span>
   <a href="#%e6%b8%b8%e8%a7%88%e5%99%a8%e7%bc%93%e5%ad%98" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
@@ -141,7 +141,7 @@
   </a>
 </h4><p>我们在游览一个页面时发现有异常，通常考虑的就是是不是游览器做的缓存，这个时候可以按 <strong>Ctrl + F5</strong> 来重新请求到没有缓存的页面。这个组合键会直接向目标 URL 发送请求，而不会使用游览器缓存的数据；它会在 HTTP 的请求头中增加一些请求头，告诉服务器我们要获取最新的数据而不是缓存（以此也可以跳过前端部署的缓存服务器）。</p>
 <blockquote>
-<p>对 HTTP 请求头不太熟悉的同学可以先参考下我的计网学习笔记：<a href="https://hoffmanzheng.github.io/2020/net-http-tcp/" target="_blank" rel="external nofollow noopener noreferrer">Net：计算机网络读书笔记</a>。</p>
+<p>对 HTTP 请求头不太熟悉的同学可以先参考下我的计网学习笔记：<a href="https://hoffmanzheng.github.io/2020/net-http-tcp/" target="_blank" rel="external nofollow noopener noreferrer">Net：计算机网络读书笔记<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a>。</p>
 </blockquote>
 <p><img loading="lazy" src='/images/游览器缓存.jpg' alt="/images/游览器缓存.jpg"></p>
 <p>使用 Ctrl + F5 组合键后在 HTTP 请求头中增加了两项 <code>Pragma:no-cache</code> 和 <code>Cache-Control:no-cache</code>，其字段可选值如下表所示：</p>
@@ -205,7 +205,7 @@
   </a>
 </h1><p>我们通常使用 URL 域名来请求网络资源，它需要被解析成 IP 地址才能与远程主机建立连接，如何将域名解析成 IP 地址就属于 DNS 解析的工作范畴了。</p>
 <blockquote>
-<p>对 URL 域名仍不了解的同学可以先阅读下：<a href="https://hoffmanzheng.github.io/2020/net-url/" target="_blank" rel="external nofollow noopener noreferrer">Web：浅析 URL</a></p>
+<p>对 URL 域名仍不了解的同学可以先阅读下：<a href="https://hoffmanzheng.github.io/2020/net-url/" target="_blank" rel="external nofollow noopener noreferrer">Web：浅析 URL<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></p>
 </blockquote>
 <h4 class="heading-element" id="域名缓存"><span>域名缓存</span>
   <a href="#%e5%9f%9f%e5%90%8d%e7%bc%93%e5%ad%98" class="heading-mark">
@@ -248,11 +248,11 @@
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"></div>
+        <div class="post-info-md"><span><a href="vscode://file//Users/hoffman.zheng/Documents/CodeLocal/HoffmanZheng.github.io.creator/content/posts/dns-cdn.md" title="Open in editor" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">Open in editor</a></span></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/dns-cdn/" data-title="深入 Web 请求过程" data-hashtags="Net"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/dns-cdn/" data-hashtag="Net"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/dns-cdn/" data-title="深入 Web 请求过程"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/2020/dns-cdn/" data-title="深入 Web 请求过程" data-hashtags="Net"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/2020/dns-cdn/" data-hashtag="Net"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/2020/dns-cdn/" data-title="深入 Web 请求过程"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>

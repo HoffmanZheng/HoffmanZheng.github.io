@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -16,7 +16,7 @@
   <meta itemprop="datePublished" content="2022-12-19T13:19:47+01:00">
   <meta itemprop="dateModified" content="2022-12-19T13:19:47+01:00">
   <meta itemprop="wordCount" content="99">
-  <meta itemprop="keywords" content="Database"><meta property="og:url" content="https://hoffmanzheng.github.io/draft/database-mysql-release/">
+  <meta itemprop="keywords" content="Database"><meta property="og:url" content="http://localhost:1313/draft/database-mysql-release/">
   <meta property="og:site_name" content="人间一场大梦">
   <meta property="og:title" content="Database：[译] MySQL 5.6 5.7 8.0 Release Notes">
   <meta property="og:description" content="MySQL 在 1996 年发布了第一个官网正式发行版 3.11.1，虽在 2008 年和 2009 年先后被 Sun 和 Oracle 收购，但凭借着其性能好、成本低、可靠性好，其在网站开发中被广泛使用。根据 DB-Engines 对各个数据库产品的综合排名，MySQL 与 Oracle、SQL Server 自 2013 年起就稳定地占据着 最受欢迎的数据库管理系统 的前三名。
@@ -37,7 +37,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/draft/database-mysql-release/" title="Database：[译] MySQL 5.6 5.7 8.0 Release Notes - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2022/net-http-2/" title="HTTP/2：漫谈 RFC 7540" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/draft/confluence/" title="多人协作平台 Confluence 搭建" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/draft/database-mysql-release/" title="Database：[译] MySQL 5.6 5.7 8.0 Release Notes - 人间一场大梦" /><link rel="prev" type="text/html" href="http://localhost:1313/2022/net-http-2/" title="HTTP/2：漫谈 RFC 7540" /><link rel="next" type="text/html" href="http://localhost:1313/draft/confluence/" title="多人协作平台 Confluence 搭建" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -47,9 +47,9 @@
     "inLanguage": "en-us",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/hoffmanzheng.github.io\/draft\/database-mysql-release\/"
+      "@id": "http:\/\/localhost:1313\/draft\/database-mysql-release\/"
     },"genre": "draft","keywords": "Database","wordcount":  99 ,
-    "url": "https:\/\/hoffmanzheng.github.io\/draft\/database-mysql-release\/","datePublished": "2022-12-19T13:19:47+01:00","dateModified": "2022-12-19T13:19:47+01:00","publisher": {
+    "url": "http:\/\/localhost:1313\/draft\/database-mysql-release\/","datePublished": "2022-12-19T13:19:47+01:00","dateModified": "2022-12-19T13:19:47+01:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -85,27 +85,27 @@
     </nav>
   </div>
 </header><main class="fi-container"><article class="page single special">
-    <div class="header"><h1 class="single-title animate__animated animate__pulse animate__faster">Database：[译] MySQL 5.6 5.7 8.0 Release Notes</h1></div><div class="content" id="content"><p>MySQL 在 1996 年发布了第一个官网正式发行版 3.11.1，虽在 2008 年和 2009 年先后被 Sun 和 Oracle 收购，但凭借着其性能好、成本低、可靠性好，其在网站开发中被广泛使用。根据 <a href="https://db-engines.com/" target="_blank" rel="external nofollow noopener noreferrer">DB-Engines</a> 对各个数据库产品的综合排名，MySQL 与 Oracle、SQL Server 自 2013 年起就稳定地占据着 <strong>最受欢迎的数据库管理系统</strong> 的前三名。</p>
+    <div class="header"><h1 class="single-title animate__animated animate__pulse animate__faster">Database：[译] MySQL 5.6 5.7 8.0 Release Notes</h1></div><div class="content" id="content"><p>MySQL 在 1996 年发布了第一个官网正式发行版 3.11.1，虽在 2008 年和 2009 年先后被 Sun 和 Oracle 收购，但凭借着其性能好、成本低、可靠性好，其在网站开发中被广泛使用。根据 <a href="https://db-engines.com/" target="_blank" rel="external nofollow noopener noreferrer">DB-Engines<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 对各个数据库产品的综合排名，MySQL 与 Oracle、SQL Server 自 2013 年起就稳定地占据着 <strong>最受欢迎的数据库管理系统</strong> 的前三名。</p>
 <p><img loading="lazy" src='/images/mysql-rank.png' alt="/images/mysql-rank.png"></p>
 <blockquote>
-<p>相关阅读：<a href="https://learnku.com/articles/40537" target="_blank" rel="external nofollow noopener noreferrer">MySQL 的前世今生</a></p>
+<p>相关阅读：<a href="https://learnku.com/articles/40537" target="_blank" rel="external nofollow noopener noreferrer">MySQL 的前世今生<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></p>
 </blockquote>
-<p>自 <a href="https://www.oracle.com/corporate/pressrelease/oracle-buys-sun-042009.html" target="_blank" rel="external nofollow noopener noreferrer">2009 年 Oracle 以 74 亿美元收购 Sun Microsystems</a> 后，MySQL 随后又在 2010-12-03 发布了 5.5 GA 版本，2013-02-05 发布了 5.6 GA 版本，2015-10-21 发布了 5.7 GA 版本，2018-04-19 发布了 8.0 GA 版本。基于市面上 MySQL 的中文学习书籍比如 <a href="https://book.douban.com/subject/23008813/" target="_blank" rel="external nofollow noopener noreferrer">高性能 MySQL</a> 和 <a href="https://book.douban.com/subject/24708143/" target="_blank" rel="external nofollow noopener noreferrer">MySQL技术内幕</a> 对新版本的 MySQL 的新特性描述较少，笔者本着学习的态度翻译 5.6 5.7 8.0 版本的 MySQL Release Notes，如有不足之处，欢迎批评指正。</p>
+<p>自 <a href="https://www.oracle.com/corporate/pressrelease/oracle-buys-sun-042009.html" target="_blank" rel="external nofollow noopener noreferrer">2009 年 Oracle 以 74 亿美元收购 Sun Microsystems<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 后，MySQL 随后又在 2010-12-03 发布了 5.5 GA 版本，2013-02-05 发布了 5.6 GA 版本，2015-10-21 发布了 5.7 GA 版本，2018-04-19 发布了 8.0 GA 版本。基于市面上 MySQL 的中文学习书籍比如 <a href="https://book.douban.com/subject/23008813/" target="_blank" rel="external nofollow noopener noreferrer">高性能 MySQL<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 和 <a href="https://book.douban.com/subject/24708143/" target="_blank" rel="external nofollow noopener noreferrer">MySQL技术内幕<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 对新版本的 MySQL 的新特性描述较少，笔者本着学习的态度翻译 5.6 5.7 8.0 版本的 MySQL Release Notes，如有不足之处，欢迎批评指正。</p>
 <h1 class="heading-element" id="mysql-56-release-notes"><span>MySQL 5.6 Release Notes</span>
   <a href="#mysql-56-release-notes" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h1><p>原文地址：<a href="https://dev.mysql.com/doc/refman/5.6/en/mysql-nutshell.html" target="_blank" rel="external nofollow noopener noreferrer">What Is New in MySQL 5.6</a></p>
+</h1><p>原文地址：<a href="https://dev.mysql.com/doc/refman/5.6/en/mysql-nutshell.html" target="_blank" rel="external nofollow noopener noreferrer">What Is New in MySQL 5.6<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></p>
 <h1 class="heading-element" id="mysql-57-release-notes"><span>MySQL 5.7 Release Notes</span>
   <a href="#mysql-57-release-notes" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h1><p>原文地址：<a href="https://dev.mysql.com/doc/refman/5.7/en/mysql-nutshell.html" target="_blank" rel="external nofollow noopener noreferrer">What Is New in MySQL 5.7</a></p>
+</h1><p>原文地址：<a href="https://dev.mysql.com/doc/refman/5.7/en/mysql-nutshell.html" target="_blank" rel="external nofollow noopener noreferrer">What Is New in MySQL 5.7<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></p>
 <h1 class="heading-element" id="mysql-80-release-notes"><span>MySQL 8.0 Release Notes</span>
   <a href="#mysql-80-release-notes" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h1><p>原文地址：<a href="https://dev.mysql.com/doc/refman/8.0/en/mysql-nutshell.html" target="_blank" rel="external nofollow noopener noreferrer">What Is New in MySQL 8.0</a></p>
+</h1><p>原文地址：<a href="https://dev.mysql.com/doc/refman/8.0/en/mysql-nutshell.html" target="_blank" rel="external nofollow noopener noreferrer">What Is New in MySQL 8.0<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></p>
 </div></article></main><footer class="footer">
     <div class="footer-container"><div class="footer-line powered">Powered by <a href="https://gohugo.io/" target="_blank" rel="external nofollow noopener noreferrer" title="Hugo 0.156.0"><img class="hugo-icon" src="/images/hugo.min.svg" alt="Hugo logo" /> Hugo</a> | Theme - <a href="https://github.com/hugo-fixit/FixIt" target="_blank" rel="external" title="FixIt v0.4.3-20260130042349-e23a50d7"><img class="fixit-icon" src="/images/fixit.min.svg" alt="FixIt logo" /> FixIt</a>
         </div><div class="footer-line copyright" itemscope itemtype="http://schema.org/CreativeWork"><i class="fa-regular fa-copyright" aria-hidden="true"></i>

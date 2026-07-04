@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -14,7 +14,7 @@ Maven 的生命周期 1. Maven 简介 Maven 是一个项目管理工具，它包
   <meta itemprop="datePublished" content="2019-12-29T23:37:47+01:00">
   <meta itemprop="dateModified" content="2019-12-29T23:37:47+01:00">
   <meta itemprop="wordCount" content="223">
-  <meta itemprop="keywords" content="Tools"><meta property="og:url" content="https://hoffmanzheng.github.io/2019/maven/">
+  <meta itemprop="keywords" content="Tools"><meta property="og:url" content="http://localhost:1313/2019/maven/">
   <meta property="og:site_name" content="人间一场大梦">
   <meta property="og:title" content="Maven：生命周期、插件及包管理">
   <meta property="og:description" content="Maven 作为一个强大的项目管理工具，在项目清理、开发、部署时有着强大的功能。此外，Maven 还可以自动管理 Java 包的传递性依赖，解决包的依赖冲突并对依赖的 scope 进行控制。 本篇对其功能和用法做简单的介绍。
@@ -33,7 +33,7 @@ Maven 的生命周期 1. Maven 简介 Maven 是一个项目管理工具，它包
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2019/maven/" title="Maven：生命周期、插件及包管理 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2019/git/" title="Git 与 GitHub 使用指北" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/java-collection/" title="Java：Collection、Map 集合工具类" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/2019/maven/" title="Maven：生命周期、插件及包管理 - 人间一场大梦" /><link rel="prev" type="text/html" href="http://localhost:1313/2019/git/" title="Git 与 GitHub 使用指北" /><link rel="next" type="text/html" href="http://localhost:1313/2020/java-collection/" title="Java：Collection、Map 集合工具类" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -43,9 +43,9 @@ Maven 的生命周期 1. Maven 简介 Maven 是一个项目管理工具，它包
     "inLanguage": "en-us",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/hoffmanzheng.github.io\/2019\/maven\/"
+      "@id": "http:\/\/localhost:1313\/2019\/maven\/"
     },"genre": "posts","keywords": "Tools","wordcount":  223 ,
-    "url": "https:\/\/hoffmanzheng.github.io\/2019\/maven\/","datePublished": "2019-12-29T23:37:47+01:00","dateModified": "2019-12-29T23:37:47+01:00","publisher": {
+    "url": "http:\/\/localhost:1313\/2019\/maven\/","datePublished": "2019-12-29T23:37:47+01:00","dateModified": "2019-12-29T23:37:47+01:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -142,14 +142,14 @@ Maven 的生命周期 1. Maven 简介 Maven 是一个项目管理工具，它包
   </a>
 </h3><p>Maven 有三个内置的构建生命周期：<code>default</code>生命周期处理你的项目开发，<code>clean</code> 生命周期负责清理，而 <code>site </code> 生命周期处理项目站点文档的创建。</p>
 <p><img loading="lazy" src='/images/maven生命周期.png' alt="/images/maven生命周期.png"></p>
-<p>具体的生命周期及其顺序可参见 <a href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Build_Lifecycle_Basics" target="_blank" rel="external nofollow noopener noreferrer">Apache Maven 官方生命周期文档</a>，在我们使用命令调动生命周期的时候，比如 <code>mvn verify</code>，它会按照顺序执行 verify 之前的每个默认的生命周期阶段。</p>
+<p>具体的生命周期及其顺序可参见 <a href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html#Build_Lifecycle_Basics" target="_blank" rel="external nofollow noopener noreferrer">Apache Maven 官方生命周期文档<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a>，在我们使用命令调动生命周期的时候，比如 <code>mvn verify</code>，它会按照顺序执行 verify 之前的每个默认的生命周期阶段。</p>
 <h3 class="heading-element" id="3-maven-中的插件"><span>3. Maven 中的插件</span>
   <a href="#3-maven-%e4%b8%ad%e7%9a%84%e6%8f%92%e4%bb%b6" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h3><p>Maven 实际上只是 Maven 插件集合的核心框架。插件是大多数操作实际执行的地方，几乎可以想到的对项目的所有操作都是由 Maven 插件来执行的。</p>
 <p>Maven 在某个生命周期中执行的职责与该阶段绑定的插件目标 <code>plugin : goal</code> 有关，插件的 goal 代表一个特定的任务。当 maven 的生命周期运行到插件所绑定的阶段时，便会运行该阶段内所声明的插件任务。</p>
-<p>插件的配置可以参考 <a href="https://maven.apache.org/guides/mini/guide-configuring-plugins.html" target="_blank" rel="external nofollow noopener noreferrer">Apache Maven 官方插件配置指南</a>，下图以 <code>spotbugs</code> 插件为例图示插件在 pom.xml 文件中的配置。</p>
+<p>插件的配置可以参考 <a href="https://maven.apache.org/guides/mini/guide-configuring-plugins.html" target="_blank" rel="external nofollow noopener noreferrer">Apache Maven 官方插件配置指南<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a>，下图以 <code>spotbugs</code> 插件为例图示插件在 pom.xml 文件中的配置。</p>
 <p><img loading="lazy" src='/images/maven插件.png' alt="/images/maven插件.png">　</p>
 <h1 class="heading-element" id="maven-下的-java-包管理"><span>Maven 下的 Java 包管理</span>
   <a href="#maven-%e4%b8%8b%e7%9a%84-java-%e5%8c%85%e7%ae%a1%e7%90%86" class="heading-mark">
@@ -172,8 +172,8 @@ Maven 的生命周期 1. Maven 简介 Maven 是一个项目管理工具，它包
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h4><ul>
-<li>Maven 收录了几乎所有的 Java 包保存在其远程的 <a href="http://repo1.maven.org/maven2/" target="_blank" rel="external nofollow noopener noreferrer">中央仓库</a>，并对包的 ID 给出了三个约定，分别为 <code>Groupid、Artifactid、version</code> ，用结构化的方式，把包分门别类的放到一起，实现了方便检索的目的。</li>
-<li>同时，包的版本号受到了<a href="https://semver.org/lang/zh-CN/" target="_blank" rel="external nofollow noopener noreferrer"> 语义化版本控制规范 </a></li>
+<li>Maven 收录了几乎所有的 Java 包保存在其远程的 <a href="http://repo1.maven.org/maven2/" target="_blank" rel="external nofollow noopener noreferrer">中央仓库<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a>，并对包的 ID 给出了三个约定，分别为 <code>Groupid、Artifactid、version</code> ，用结构化的方式，把包分门别类的放到一起，实现了方便检索的目的。</li>
+<li>同时，包的版本号受到了<a href="https://semver.org/lang/zh-CN/" target="_blank" rel="external nofollow noopener noreferrer"> 语义化版本控制规范 <i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></li>
 </ul>
 <h4 class="heading-element" id="22-自动化包管理"><span>2.2 自动化包管理</span>
   <a href="#22-%e8%87%aa%e5%8a%a8%e5%8c%96%e5%8c%85%e7%ae%a1%e7%90%86" class="heading-mark">
@@ -268,7 +268,7 @@ Maven 的生命周期 1. Maven 简介 Maven 是一个项目管理工具，它包
 <li>第十七章：编写 Maven 插件，没有需要可以不看。</li>
 </ul>
 </li>
-<li><a href="https://blindpirate.github.io/2019/05/10/Maven/" target="_blank" rel="external nofollow noopener noreferrer"> 彰德老师的Maven讲解</a></li>
+<li><a href="https://blindpirate.github.io/2019/05/10/Maven/" target="_blank" rel="external nofollow noopener noreferrer"> 彰德老师的Maven讲解<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></li>
 </ul>
 </div><div class="post-footer" id="post-footer">
   <div class="post-info">
@@ -277,11 +277,11 @@ Maven 的生命周期 1. Maven 简介 Maven 是一个项目管理工具，它包
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"></div>
+        <div class="post-info-md"><span><a href="vscode://file//Users/hoffman.zheng/Documents/CodeLocal/HoffmanZheng.github.io.creator/content/posts/maven.md" title="Open in editor" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">Open in editor</a></span></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2019/maven/" data-title="Maven：生命周期、插件及包管理" data-hashtags="Tools"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2019/maven/" data-hashtag="Tools"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2019/maven/" data-title="Maven：生命周期、插件及包管理"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/2019/maven/" data-title="Maven：生命周期、插件及包管理" data-hashtags="Tools"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/2019/maven/" data-hashtag="Tools"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/2019/maven/" data-title="Maven：生命周期、插件及包管理"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>

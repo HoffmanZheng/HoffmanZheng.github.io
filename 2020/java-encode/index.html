@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -18,7 +18,7 @@
   <meta itemprop="datePublished" content="2020-08-29T09:19:47+01:00">
   <meta itemprop="dateModified" content="2020-08-29T09:19:47+01:00">
   <meta itemprop="wordCount" content="446">
-  <meta itemprop="keywords" content="Java"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/java-encode/">
+  <meta itemprop="keywords" content="Java"><meta property="og:url" content="http://localhost:1313/2020/java-encode/">
   <meta property="og:site_name" content="人间一场大梦">
   <meta property="og:title" content="深入分析 Java Web 中的中文编码问题">
   <meta property="og:description" content="作为非英语国家程序员，编码问题是我们一直都绕不过去的一道坎。
@@ -41,7 +41,7 @@
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/java-encode/" title="深入分析 Java Web 中的中文编码问题 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2020/java-io/" title="深入分析 Java I/O 的工作机制" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/java-compile/" title="Javac 编译原理与 class 文件结构" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/2020/java-encode/" title="深入分析 Java Web 中的中文编码问题 - 人间一场大梦" /><link rel="prev" type="text/html" href="http://localhost:1313/2020/java-io/" title="深入分析 Java I/O 的工作机制" /><link rel="next" type="text/html" href="http://localhost:1313/2020/java-compile/" title="Javac 编译原理与 class 文件结构" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -51,9 +51,9 @@
     "inLanguage": "en-us",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/java-encode\/"
+      "@id": "http:\/\/localhost:1313\/2020\/java-encode\/"
     },"genre": "posts","keywords": "Java","wordcount":  446 ,
-    "url": "https:\/\/hoffmanzheng.github.io\/2020\/java-encode\/","datePublished": "2020-08-29T09:19:47+01:00","dateModified": "2020-08-29T09:19:47+01:00","publisher": {
+    "url": "http:\/\/localhost:1313\/2020\/java-encode\/","datePublished": "2020-08-29T09:19:47+01:00","dateModified": "2020-08-29T09:19:47+01:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -135,7 +135,7 @@
   </ul>
 </nav></div>
       </div><div class="content" id="content"><p>作为非英语国家程序员，编码问题是我们一直都绕不过去的一道坎。</p>
-<p>本篇以 <a href="https://book.douban.com/subject/25953851/" target="_blank" rel="external nofollow noopener noreferrer">《深入分析 Java Web 技术内幕》</a> 第三章 深入分析 Java Web 中的中文编码问题 的内容为参考，讲解常见的编码格式、Java 中的编解码、Java Web 中的编解码，及常见乱码问题分析等。</p>
+<p>本篇以 <a href="https://book.douban.com/subject/25953851/" target="_blank" rel="external nofollow noopener noreferrer">《深入分析 Java Web 技术内幕》<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 第三章 深入分析 Java Web 中的中文编码问题 的内容为参考，讲解常见的编码格式、Java 中的编解码、Java Web 中的编解码，及常见乱码问题分析等。</p>
 <p>计算机中存储信息的最小单元是 1 个字节，即 8 bits，所以能表示的字符范围是 0~255 个，而我们人类的语言太多，表示这些语言的符号太多，因而必须要经过一些翻译工作，才能让计算机理解我们的语言。这个翻译工作就是从 char 到 byte 的编码过程。</p>
 <h3 class="heading-element" id="常见的编码格式"><span>常见的编码格式</span>
   <a href="#%e5%b8%b8%e8%a7%81%e7%9a%84%e7%bc%96%e7%a0%81%e6%a0%bc%e5%bc%8f" class="heading-mark">
@@ -180,7 +180,7 @@
   <a href="#java-%e4%b8%ad%e7%9a%84%e7%bc%96%e8%a7%a3%e7%a0%81" class="heading-mark">
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
-</h3><p>通过 <a href="https://hoffmanzheng.github.io/2020/java-io/" target="_blank" rel="external nofollow noopener noreferrer">深入分析 Java I/O 的工作机制</a> 我们知道 Java 中 InputStream 可以读取输入的字节流，而 <code>InputStreamReader</code> 则在 I/O 读取字节流的过程中完成了字节到字符的转换，这个解码过程它又委托 <code>StreamDecoder</code> 去做，这个过程中需要用户指定 Charset 编码格式。</p>
+</h3><p>通过 <a href="https://hoffmanzheng.github.io/2020/java-io/" target="_blank" rel="external nofollow noopener noreferrer">深入分析 Java I/O 的工作机制<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 我们知道 Java 中 InputStream 可以读取输入的字节流，而 <code>InputStreamReader</code> 则在 I/O 读取字节流的过程中完成了字节到字符的转换，这个解码过程它又委托 <code>StreamDecoder</code> 去做，这个过程中需要用户指定 Charset 编码格式。</p>
 <p><img loading="lazy" src='/images/Charset.png' alt="/images/Charset.png"></p>
 <p>如果用户没有指定，将会使用本地环境中的默认字符集，如在中文环境中使用 GBK 编码。如果编解码都在中文环境中，通常也没有问题，但还是强烈建议不要使用操作系统的默认编码，因为这样会使应用程序的编码格式和运行环境绑定起来，在跨环境时很可能出现 <strong>乱码问题</strong>。</p>
 <p>除了 I/O 过程涉及编码外，Java 也提供了在内存中字符和字节之间的相互转换接口，如 <code>string.getBytes(charset)</code> 和 <code>charset.encode(string);charset.decode(byteBuffer)</code>，可以通过 <code>Charset.forName(&quot;UTF-8&quot;)</code> 来获取指定的编码字符集，只要我们设置的编码格式统一，一般都不会出现问题。</p>
@@ -197,14 +197,14 @@
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h4><p>当在百度中搜索 &ldquo;技术内幕&rdquo; 时，我们得到的 URL 是这样的：<code>https://www.baidu.com/s?ie=UTF-8&amp;wd=%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95</code>，显然游览器对其中的中文字符进行了 UTF-8 编码，并以十六进制表示了出来。</p>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>String string <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;技术内幕&#34;</span>;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> utf <span style="color:#f92672">=</span> string.<span style="color:#a6e22e">getBytes</span>(<span style="color:#e6db74">&#34;UTF-8&#34;</span>);
-</span></span><span style="display:flex;"><span>StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder();
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">byte</span> b : utf) {
-</span></span><span style="display:flex;"><span>     sb.<span style="color:#a6e22e">append</span>(String.<span style="color:#a6e22e">format</span>(<span style="color:#e6db74">&#34;%02X&#34;</span>, b));
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(sb.<span style="color:#a6e22e">toString</span>());
-</span></span><span style="display:flex;"><span><span style="color:#f92672">//</span> prints:  E68A80E69CAFE58685E5B995</span></span></code></pre></div><p>查阅 <a href="https://datatracker.ietf.org/doc/rfc3986/" target="_blank" rel="external nofollow noopener noreferrer">URL 编码规范 RFC 3986</a> 可知，游览器编码 URL 是将 <strong>非 ASCⅡ 字符</strong> 按照某种编码格式编码成百分号加十六进制表示的字节 <code>percent-encoded octets</code> ，不同游览器对 PathInfo 和 QueryString 的编码是不一样的，那服务器如 Tomcat 又是如何对接收到的 URL 进行解码的呢。</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-java"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="n">String</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;技术内幕&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">utf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">string</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&#34;UTF-8&#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">StringBuilder</span><span class="w"> </span><span class="n">sb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringBuilder</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">utf</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">     </span><span class="n">sb</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&#34;%02X&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">sb</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="o">//</span><span class="w"> </span><span class="n">prints</span><span class="p">:</span><span class="w">  </span><span class="n">E68A80E69CAFE58685E5B995</span></span></span></code></pre></div></div><p>查阅 <a href="https://datatracker.ietf.org/doc/rfc3986/" target="_blank" rel="external nofollow noopener noreferrer">URL 编码规范 RFC 3986<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a> 可知，游览器编码 URL 是将 <strong>非 ASCⅡ 字符</strong> 按照某种编码格式编码成百分号加十六进制表示的字节 <code>percent-encoded octets</code> ，不同游览器对 PathInfo 和 QueryString 的编码是不一样的，那服务器如 Tomcat 又是如何对接收到的 URL 进行解码的呢。</p>
 <p>对 URL 的 URI 部分的解码的过程是在 <code>org.apache.catalina.connector.CoyoteAdapter</code> 中的 <code>convertURI</code> 方法中完成的，它会使用 <code>&lt;Connector URIEncoding=&quot;UTF-8&quot; /&gt;</code> 中定义的编码格式进行解析，如果没有定义则将以默认编码 ISO-8859-1 解析。</p>
 <p>对 QueryString 以及 POST 请求中的表单参数，都是通过 <code>org.apache.catalina.connector.Request</code> 中的 <code>request.getParameter</code> 获取参数值，对它们的解码是在这个方法第一次被调用时，会调用 parseParameters 这个方法。</p>
 <p>对 QueryString 的解码，会先去获取 Connector 中的 <strong>useBodyEncodingForURI</strong> 参数，如果为 true，就会使用 Header 中 ContentType 定义的 Charset 进行解码，否则就使用默认的 ISO-8859-1。</p>
@@ -229,28 +229,28 @@
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h4><p>例如字符串 “技术内幕” 变成了 “¼¼ÊõÄÚÄ»”，中文字符变成了奇怪的西欧字符，且是一个汉字字符变成两个乱码字符，用代码复现其编码解码过程如下：</p>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    String string <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;技术内幕&#34;</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> chars <span style="color:#f92672">=</span> string.<span style="color:#a6e22e">toCharArray</span>();
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">char</span> cha : chars) {
-</span></span><span style="display:flex;"><span>        System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">print</span>(Integer.<span style="color:#a6e22e">toHexString</span>(cha) <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span>);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(<span style="color:#e6db74">&#34; &#34;</span>);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> gbk <span style="color:#f92672">=</span> string.<span style="color:#a6e22e">getBytes</span>(<span style="color:#e6db74">&#34;GBK&#34;</span>);   <span style="color:#75715e">// GBK 编码</span>
-</span></span><span style="display:flex;"><span>    StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder();
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">byte</span> b : gbk) {
-</span></span><span style="display:flex;"><span>        sb.<span style="color:#a6e22e">append</span>(String.<span style="color:#a6e22e">format</span>(<span style="color:#e6db74">&#34;%02X&#34;</span>, b));
-</span></span><span style="display:flex;"><span>        sb.<span style="color:#a6e22e">append</span>(<span style="color:#e6db74">&#34; &#34;</span>);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(sb.<span style="color:#a6e22e">toString</span>());
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    String result <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String(gbk, <span style="color:#e6db74">&#34;ISO-8859-1&#34;</span>);   <span style="color:#75715e">// ISO-8859-1 解码</span>
-</span></span><span style="display:flex;"><span>    System.<span style="color:#a6e22e">out</span>.<span style="color:#a6e22e">println</span>(result);
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 输出的结果为：</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 6280 672f 5185 5e55  </span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// BC BC CA F5 C4 DA C4 BB </span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">//</span> <span style="color:#960050;background-color:#1e0010">¼¼</span>ÊõÄÚÄ<span style="color:#960050;background-color:#1e0010">»</span></span></span></code></pre></div><p>编码与解码过程如下：</p>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-java"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">string</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&#34;技术内幕&#34;</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">char</span><span class="o">[]</span><span class="w"> </span><span class="n">chars</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">string</span><span class="p">.</span><span class="na">toCharArray</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">char</span><span class="w"> </span><span class="n">cha</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">chars</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="n">Integer</span><span class="p">.</span><span class="na">toHexString</span><span class="p">(</span><span class="n">cha</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&#34; &#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&#34; &#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kt">byte</span><span class="o">[]</span><span class="w"> </span><span class="n">gbk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">string</span><span class="p">.</span><span class="na">getBytes</span><span class="p">(</span><span class="s">&#34;GBK&#34;</span><span class="p">);</span><span class="w">   </span><span class="c1">// GBK 编码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">StringBuilder</span><span class="w"> </span><span class="n">sb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">StringBuilder</span><span class="p">();</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">byte</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">gbk</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">sb</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">String</span><span class="p">.</span><span class="na">format</span><span class="p">(</span><span class="s">&#34;%02X&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">sb</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="s">&#34; &#34;</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">sb</span><span class="p">.</span><span class="na">toString</span><span class="p">());</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">gbk</span><span class="p">,</span><span class="w"> </span><span class="s">&#34;ISO-8859-1&#34;</span><span class="p">);</span><span class="w">   </span><span class="c1">// ISO-8859-1 解码</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">result</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 输出的结果为：</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// 6280 672f 5185 5e55  </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="c1">// BC BC CA F5 C4 DA C4 BB </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="o">//</span><span class="w"> </span><span class="err">¼¼</span><span class="n">ÊõÄÚÄ</span><span class="err">»</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><p>编码与解码过程如下：</p>
 <p><img loading="lazy" src='/images/encode.png' alt="/images/encode.png"></p>
 <h4 class="heading-element" id="一个汉字变成一个问号"><span>一个汉字变成一个问号</span>
   <a href="#%e4%b8%80%e4%b8%aa%e6%b1%89%e5%ad%97%e5%8f%98%e6%88%90%e4%b8%80%e4%b8%aa%e9%97%ae%e5%8f%b7" class="heading-mark">
@@ -275,11 +275,11 @@
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"></div>
+        <div class="post-info-md"><span><a href="vscode://file//Users/hoffman.zheng/Documents/CodeLocal/HoffmanZheng.github.io.creator/content/posts/java-encode.md" title="Open in editor" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">Open in editor</a></span></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/java-encode/" data-title="深入分析 Java Web 中的中文编码问题" data-hashtags="Java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/java-encode/" data-hashtag="Java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/java-encode/" data-title="深入分析 Java Web 中的中文编码问题"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/2020/java-encode/" data-title="深入分析 Java Web 中的中文编码问题" data-hashtags="Java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/2020/java-encode/" data-hashtag="Java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/2020/java-encode/" data-title="深入分析 Java Web 中的中文编码问题"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>

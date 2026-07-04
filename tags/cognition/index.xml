@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cognition - Tag - 人间一场大梦</title>
+    <link>http://localhost:1313/tags/cognition/</link>
+    <description>个人博客</description>
+    <generator>Hugo 0.156.0 &amp; FixIt v0.4.3-20260130042349-e23a50d7</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 24 Feb 2026 13:19:47 +0100</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/cognition/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>武装的中国革命</title>
+      <link>http://localhost:1313/2026/chinese-armed-revolution/</link>
+      <pubDate>Tue, 24 Feb 2026 13:19:47 +0100</pubDate>
+      <guid>http://localhost:1313/2026/chinese-armed-revolution/</guid>
+      <category domain="http://localhost:1313/categories/reading-notes/">Reading Notes</category>
+      <description>&lt;p&gt;战争，是众多政治手段中的一种。当人们决定要发动一场战争&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>

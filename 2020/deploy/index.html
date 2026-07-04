@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html itemscope itemtype="http://schema.org/WebPage" lang="en-us">
-  <head>
+  <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
     <meta name="robots" content="noodp" />
@@ -14,7 +14,7 @@ Java 程序的部署 Maven exec 插件部署 导入 Maven 的 exec 插件：Mave
   <meta itemprop="datePublished" content="2020-04-21T11:30:47+01:00">
   <meta itemprop="dateModified" content="2020-04-21T11:30:47+01:00">
   <meta itemprop="wordCount" content="302">
-  <meta itemprop="keywords" content="Java"><meta property="og:url" content="https://hoffmanzheng.github.io/2020/deploy/">
+  <meta itemprop="keywords" content="Java"><meta property="og:url" content="http://localhost:1313/2020/deploy/">
   <meta property="og:site_name" content="人间一场大梦">
   <meta property="og:title" content="Java：程序的部署和 Nginx 负载均衡">
   <meta property="og:description" content="本篇介绍 Java 程序部署的三种方式：exec 插件、jar 包、Docker 方式部署，以及使用 Nginx 实现简单的负载均衡。
@@ -33,7 +33,7 @@ Java 程序的部署 Maven exec 插件部署 导入 Maven 的 exec 插件：Mave
 <meta name="application-name" content="FixIt">
 <meta name="apple-mobile-web-app-title" content="FixIt"><meta name="theme-color" data-light="#f8f8f8" data-dark="#252627" content="#f8f8f8"><meta name="msapplication-TileColor" content="#da532c"><link rel="shortcut icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="https://hoffmanzheng.github.io/2020/deploy/" title="Java：程序的部署和 Nginx 负载均衡 - 人间一场大梦" /><link rel="prev" type="text/html" href="https://hoffmanzheng.github.io/2020/java-threadpool/" title="Java：线程池原理、源码分析" /><link rel="next" type="text/html" href="https://hoffmanzheng.github.io/2020/dns-cdn/" title="深入 Web 请求过程" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"><link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png"><link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"><link rel="canonical" type="text/html" href="http://localhost:1313/2020/deploy/" title="Java：程序的部署和 Nginx 负载均衡 - 人间一场大梦" /><link rel="prev" type="text/html" href="http://localhost:1313/2020/java-threadpool/" title="Java：线程池原理、源码分析" /><link rel="next" type="text/html" href="http://localhost:1313/2020/dns-cdn/" title="深入 Web 请求过程" /><link rel="stylesheet" href="/css/config.min.css"><link rel="stylesheet" href="/css/style.min.css"><link rel="preload" href="/lib/fontawesome-free/all.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/fontawesome-free/all.min.css"></noscript><link rel="preload" href="/lib/animate/animate.min.css" as="style" onload="this.removeAttribute('onload');this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="/lib/animate/animate.min.css"></noscript><script type="application/ld+json">
   {
@@ -43,9 +43,9 @@ Java 程序的部署 Maven exec 插件部署 导入 Maven 的 exec 插件：Mave
     "inLanguage": "en-us",
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": "https:\/\/hoffmanzheng.github.io\/2020\/deploy\/"
+      "@id": "http:\/\/localhost:1313\/2020\/deploy\/"
     },"genre": "posts","keywords": "Java","wordcount":  302 ,
-    "url": "https:\/\/hoffmanzheng.github.io\/2020\/deploy\/","datePublished": "2020-04-21T11:30:47+01:00","dateModified": "2020-04-21T11:30:47+01:00","publisher": {
+    "url": "http:\/\/localhost:1313\/2020\/deploy\/","datePublished": "2020-04-21T11:30:47+01:00","dateModified": "2020-04-21T11:30:47+01:00","publisher": {
       "@type": "Organization",
       "name": ""},"author": {
         "@type": "Person",
@@ -122,31 +122,31 @@ Java 程序的部署 Maven exec 插件部署 导入 Maven 的 exec 插件：Mave
     <svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z"></path></svg>
   </a>
 </h3><ol>
-<li>导入 Maven 的 exec 插件：<a href="https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin" target="_blank" rel="external nofollow noopener noreferrer">Maven Repository：exec-maven-plugin</a>，然后在 pom.xml 中进行配置，使之可以调用外部命令执行 Java 程序并自动加载依赖的 classpath 路径：</li>
+<li>导入 Maven 的 exec 插件：<a href="https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin" target="_blank" rel="external nofollow noopener noreferrer">Maven Repository：exec-maven-plugin<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a>，然后在 pom.xml 中进行配置，使之可以调用外部命令执行 Java 程序并自动加载依赖的 classpath 路径：</li>
 </ol>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>&lt;<span style="color:#f92672">plugin</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">groupId</span>&gt;org.codehaus.mojo&lt;/<span style="color:#f92672">groupId</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">artifactId</span>&gt;exec-maven-plugin&lt;/<span style="color:#f92672">artifactId</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">version</span>&gt;1.6.0&lt;/<span style="color:#f92672">version</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">executions</span>&gt;
-</span></span><span style="display:flex;"><span>	&lt;<span style="color:#f92672">execution</span>&gt;
-</span></span><span style="display:flex;"><span>		&lt;<span style="color:#f92672">id</span>&gt;run&lt;/<span style="color:#f92672">id</span>&gt;
-</span></span><span style="display:flex;"><span>		&lt;<span style="color:#f92672">goals</span>&gt;
-</span></span><span style="display:flex;"><span>			&lt;<span style="color:#f92672">goal</span>&gt;exec&lt;/<span style="color:#f92672">goal</span>&gt;
-</span></span><span style="display:flex;"><span>		&lt;/<span style="color:#f92672">goals</span>&gt;
-</span></span><span style="display:flex;"><span>		&lt;<span style="color:#f92672">configuration</span>&gt;
-</span></span><span style="display:flex;"><span>			&lt;<span style="color:#f92672">executable</span>&gt;java&lt;/<span style="color:#f92672">executable</span>&gt;
-</span></span><span style="display:flex;"><span>			&lt;<span style="color:#f92672">arguments</span>&gt;
-</span></span><span style="display:flex;"><span>				&lt;<span style="color:#f92672">argument</span>&gt;-classpath&lt;/<span style="color:#f92672">argument</span>&gt;
-</span></span><span style="display:flex;"><span>	<span style="color:#75715e">&lt;!-- automatically creates the classpath using all project dependencies,
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">          also adding the project build directory --&gt;</span>
-</span></span><span style="display:flex;"><span>				&lt;<span style="color:#f92672">classpath</span>/&gt;
-</span></span><span style="display:flex;"><span>				&lt;<span style="color:#f92672">argument</span>&gt;com.github.hoffmanzheng.springboot.Application&lt;/<span style="color:#f92672">argument</span>&gt;
-</span></span><span style="display:flex;"><span>			&lt;/<span style="color:#f92672">arguments</span>&gt;
-</span></span><span style="display:flex;"><span>		&lt;/<span style="color:#f92672">configuration</span>&gt;
-</span></span><span style="display:flex;"><span>	&lt;/<span style="color:#f92672">execution</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">executions</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">plugin</span>&gt;</span></span></code></pre></div><ol start="2">
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-html"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-html" data-lang="html"><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">plugin</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">groupId</span><span class="p">&gt;</span>org.codehaus.mojo<span class="p">&lt;/</span><span class="nt">groupId</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">artifactId</span><span class="p">&gt;</span>exec-maven-plugin<span class="p">&lt;/</span><span class="nt">artifactId</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">version</span><span class="p">&gt;</span>1.6.0<span class="p">&lt;/</span><span class="nt">version</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;</span><span class="nt">executions</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">&lt;</span><span class="nt">execution</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">&lt;</span><span class="nt">id</span><span class="p">&gt;</span>run<span class="p">&lt;/</span><span class="nt">id</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">&lt;</span><span class="nt">goals</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">&lt;</span><span class="nt">goal</span><span class="p">&gt;</span>exec<span class="p">&lt;/</span><span class="nt">goal</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">&lt;/</span><span class="nt">goals</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">&lt;</span><span class="nt">configuration</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">&lt;</span><span class="nt">executable</span><span class="p">&gt;</span>java<span class="p">&lt;/</span><span class="nt">executable</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">&lt;</span><span class="nt">arguments</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="p">&lt;</span><span class="nt">argument</span><span class="p">&gt;</span>-classpath<span class="p">&lt;/</span><span class="nt">argument</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="c">&lt;!-- automatically creates the classpath using all project dependencies,
+</span></span></span><span class="line"><span class="cl"><span class="c">          also adding the project build directory --&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="p">&lt;</span><span class="nt">classpath</span><span class="p">/&gt;</span>
+</span></span><span class="line"><span class="cl">				<span class="p">&lt;</span><span class="nt">argument</span><span class="p">&gt;</span>com.github.hoffmanzheng.springboot.Application<span class="p">&lt;/</span><span class="nt">argument</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">			<span class="p">&lt;/</span><span class="nt">arguments</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">&lt;/</span><span class="nt">configuration</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl">	<span class="p">&lt;/</span><span class="nt">execution</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">executions</span><span class="p">&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="p">&lt;/</span><span class="nt">plugin</span><span class="p">&gt;</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><ol start="2">
 <li><code>mvn exec:exec@[executionID]</code> 即可完成程序的部署；<code>-X</code> 参数可以用于排查部署时出现的问题，<code>-DskipTests</code>  可以跳过测试。</li>
 <li>windosw下（需使用系统 cmd） <code>netstat -ano | findstr &quot;8080&quot;</code> 可以查看当前端口被占用的情况，<code>tasklist |findstr &quot;进程id号&quot;</code>  查找对应的进程名称，然后 <code>taskkill /f /t /im &quot;进程id或者进程名称&quot;</code> 杀掉当前占用端口的进程</li>
 </ol>
@@ -168,12 +168,12 @@ Java 程序的部署 Maven exec 插件部署 导入 Maven 的 exec 插件：Mave
 </h3><ol>
 <li>编写 Dockerfile 将之前打的 jar 包放进去，对外暴露 8080 端口。</li>
 </ol>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-dockerfile" data-lang="dockerfile"><span style="display:flex;"><span><span style="color:#66d9ef">FROM</span> <span style="color:#e6db74">java:openjdk-8u111-alpine</span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">RUN</span> mkdir /app<span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">WORKDIR</span> <span style="color:#e6db74">/app</span>       //工作目录<span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">COPY</span> target/Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar /app<span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">EXPOSE</span> <span style="color:#e6db74">8080</span><span style="color:#960050;background-color:#1e0010">
-</span></span></span><span style="display:flex;"><span><span style="color:#66d9ef">CMD</span> [<span style="color:#e6db74">&#34;java&#34;</span>,<span style="color:#e6db74">&#34;-jar&#34;</span>,<span style="color:#e6db74">&#34;Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar&#34;</span>]</span></span></code></pre></div><ol start="2">
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-dockerfile"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="1" style="--fi-max-shown-lines:10;--fi-line-digit:1;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-dockerfile" data-lang="dockerfile"><span class="line"><span class="cl"><span class="k">FROM</span><span class="w"> </span><span class="s">java:openjdk-8u111-alpine</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="k">RUN</span> mkdir /app<span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>       //工作目录<span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="k">COPY</span> target/Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar /app<span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="k">EXPOSE</span><span class="w"> </span><span class="s">8080</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;java&#34;</span><span class="p">,</span><span class="s2">&#34;-jar&#34;</span><span class="p">,</span><span class="s2">&#34;Multiplayer-Online-Blog-Platform-0.0.1-SNAPSHOT.jar&#34;</span><span class="p">]</span></span></span></code></pre></div></div><ol start="2">
 <li>
 <p>构建一个 Docker 镜像：<code>docker build .</code> 随后可以用 <code>docker tag [imageID] [imageName]:tag</code> 来修改生成镜像的名字和版本</p>
 </li>
@@ -182,7 +182,7 @@ Java 程序的部署 Maven exec 插件部署 导入 Maven 的 exec 插件：Mave
 </li>
 <li>
 <p>由于 Docker 容器内外环境完全隔离，这就导致容器内的 Java 程序无法正常连接数据库，需要通过 -v 参数将外部的  application.properties（数据库连接的 URL 中的 localhost 改为当前局域网的 IP） 映射到容器内工作目录的 /config 下。</p>
-<p>参考：<a href="https://docs.spring.io/spring-boot/docs/1.2.2.RELEASE/reference/html/boot-features-external-config.html" target="_blank" rel="external nofollow noopener noreferrer">Spring Boot features：Externalized Configuration</a></p>
+<p>参考：<a href="https://docs.spring.io/spring-boot/docs/1.2.2.RELEASE/reference/html/boot-features-external-config.html" target="_blank" rel="external nofollow noopener noreferrer">Spring Boot features：Externalized Configuration<i class="fa-solid fa-external-link-alt fa-xs ms-1 text-secondary" aria-hidden="true"></i></a></p>
 </li>
 <li>
 <p><code>docker exec -it [containerID] bash</code> 可以进到容器内部排查问题</p>
@@ -221,22 +221,22 @@ Java 程序的部署 Maven exec 插件部署 导入 Maven 的 exec 插件：Mave
 <p>在宿主机上配置好 nginx.conf 然后映射到 Docker 容器内部：</p>
 </li>
 </ul>
-<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;-webkit-text-size-adjust:none;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>events <span style="color:#f92672">{</span> <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>http <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    upstream myapp1 <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        server 192.168.217.65:8080;   // 本地局域网
-</span></span><span style="display:flex;"><span>        server 192.168.217.65:8081;
-</span></span><span style="display:flex;"><span>        server 192.168.217.65:8082;
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    server <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        listen 80;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        location / <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            proxy_pass http://myapp1;
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span></span></span></code></pre></div><ul>
+<div class="code-block highlight line-nos-hidden" data-mode="classic" data-copyable="true"><div class="code-header language-shell"><span class="code-title"><i class="arrow fa-solid fa-chevron-down" aria-hidden="true"></i></span><span class="ellipses-btn" aria-label="Show more options" role="button"><i class="fa-solid fa-ellipsis-h" aria-hidden="true"></i></span><span class="line-nos-btn" aria-label="Toggle line numbers" role="button" title="Toggle line numbers"><i class="fa-solid fa-list-ol" aria-hidden="true"></i></span><span class="line-wrap-btn" aria-label="Toggle code wrap" role="button" title="Toggle code wrap"><i class="fa-solid fa-right-left" aria-hidden="true"></i></span><span class="copy-btn" aria-label="Copy to clipboard" role="button" title="Copy to clipboard"><i class="fa-regular fa-clone" aria-hidden="true"></i></span></div><div class="code-wrapper" data-max="10" data-line-digit="2" style="--fi-max-shown-lines:10;--fi-line-digit:2;--fi-line-start:1;"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">events <span class="o">{</span> <span class="o">}</span>
+</span></span><span class="line"><span class="cl">http <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    upstream myapp1 <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        server 192.168.217.65:8080<span class="p">;</span>   // 本地局域网
+</span></span><span class="line"><span class="cl">        server 192.168.217.65:8081<span class="p">;</span>
+</span></span><span class="line"><span class="cl">        server 192.168.217.65:8082<span class="p">;</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    server <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        listen 80<span class="p">;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        location / <span class="o">{</span>
+</span></span><span class="line"><span class="cl">            proxy_pass http://myapp1<span class="p">;</span>
+</span></span><span class="line"><span class="cl">        <span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span></span></span></code></pre></div><div class="code-expand-btn" aria-label="Expand or collapse code block" role="button"><i class="fa-solid fa-angles-down" aria-hidden="true"></i></div></div><ul>
 <li>
 <p>出问题后，可以打印日志 <code>docker logs [containerID]</code>，也可以进到 Nginx 容器内部进行排查：<code>docker exec -it ID bash</code>，测试下网络连通性等。</p>
 </li>
@@ -252,11 +252,11 @@ Java 程序的部署 Maven exec 插件部署 导入 Maven 的 exec 插件：Mave
       </div><div class="post-info-license">
             <span><a rel="license external nofollow noopener noreferrer" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a></span>
           </div></div><div class="post-info-line">
-        <div class="post-info-md"></div>
+        <div class="post-info-md"><span><a href="vscode://file//Users/hoffman.zheng/Documents/CodeLocal/HoffmanZheng.github.io.creator/content/posts/deploy.md" title="Open in editor" target="_blank" rel="external nofollow noopener noreferrer" class="link-to-vscode">Open in editor</a></span></div>
         <div class="post-info-share">
-          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="https://hoffmanzheng.github.io/2020/deploy/" data-title="Java：程序的部署和 Nginx 负载均衡" data-hashtags="Java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="https://hoffmanzheng.github.io/2020/deploy/" data-hashtag="Java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
-  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="https://hoffmanzheng.github.io/2020/deploy/" data-title="Java：程序的部署和 Nginx 负载均衡"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
+          <span><a href="javascript:void(0);" title="Share on X" data-sharer="twitter" data-url="http://localhost:1313/2020/deploy/" data-title="Java：程序的部署和 Nginx 负载均衡" data-hashtags="Java"><i class="fa-brands fa-x-twitter" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on Facebook" data-sharer="facebook" data-url="http://localhost:1313/2020/deploy/" data-hashtag="Java"><i class="fa-brands fa-facebook-square" aria-hidden="true"></i></a>
+  <a href="javascript:void(0);" title="Share on 微博" data-sharer="weibo" data-url="http://localhost:1313/2020/deploy/" data-title="Java：程序的部署和 Nginx 负载均衡"><i class="fa-brands fa-weibo" aria-hidden="true"></i></a>
   </span>
         </div>
       </div></div>
